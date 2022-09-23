@@ -18,6 +18,11 @@ echo "linking singularity containers"
 ln -s /project/a/arisvoin/edickie/containers/fmriprep-21.0.2.simg containers/fmriprep-21.0.2.simg
 ln -s /project/a/arisvoin/edickie/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
-## use the fmriprep containers to download templateflow templates
+## copy in Erin's freesurfer licence
+cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt ${BASEDIR}/.freesurfer.txt
+
+## copy in Erin's templates
 echo "copying templates..this might take a bit"
 scp -r /project/a/arisvoin/edickie/templateflow templates/.cache/templateflow
+
+
