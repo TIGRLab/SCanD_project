@@ -1,0 +1,11 @@
+{
+    "--drop-dummy-TRs": 3,
+    "--detrend": true,
+    "--standardize": true,
+    "--low-pass": 0.1,
+    "--high-pass": 0.01,
+    "--cf-cols": "trans_x,trans_y,trans_z,rot_x,rot_y,rot_z,csf,white_matter,global_signal",
+    "--cf-sqtd-cols": "trans_x,trans_y,trans_z,rot_x,rot_y,rot_z,csf,white_matter,global_signal",
+    "--cf-td-cols": "trans_x,trans_y,trans_z,rot_x,rot_y,rot_z,csf,white_matter,global_signal",
+    "--cf-sq-cols": "trans_x,trans_y,trans_z,rot_x,rot_y,rot_z,csf,white_matter,global_signal"
+}
