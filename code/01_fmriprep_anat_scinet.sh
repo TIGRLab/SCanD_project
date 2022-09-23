@@ -49,9 +49,9 @@ bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-export SINGULARITYENV_TEMPLATEFLOW_HOME=/project/a/arisvoin/edickie/templateflow
+export SINGULARITYENV_TEMPLATEFLOW_HOME=/home/fmriprep/.cache/templateflow
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=${BASEDIR}/.freesurfer.txt
+export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 # # Remove IsRunning files from FreeSurfer
 # for subject in $SUBJECTS: do
