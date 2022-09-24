@@ -73,7 +73,7 @@ singularity run --cleanenv \
     --nthreads 40 \
     --low-mem \
     --mem-mb 12000 \
-    --output-space T1w MNI152NLin2009cAsym:res-2 \
+    --output-space anat MNI152NLin2009cAsym:res-2 \
     --notrack \
     --anat-only 
 
