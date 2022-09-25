@@ -38,7 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep-21.0.2.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/
+export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${BBUFFER}/SCanD/fmriprep
 export LOGS_DIR=${BASEDIR}/logs

@@ -37,7 +37,7 @@ export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep-21.0.2.simg
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/
+export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${BBUFFER}/SCanD/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
@@ -48,7 +48,6 @@ bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-export SINGULARITYENV_TEMPLATEFLOW_HOME=/project/a/arisvoin/edickie/templateflow
 # Make sure FS_LICENSE is defined in the container.
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/.freesurfer.txt
 
@@ -72,7 +71,7 @@ singularity run --cleanenv \
     --nthreads 40 \
     --low-mem \
     --mem-mb 12000 \
-    --output-space T1w MNI152NLin2009cAsym \
+    --output-space anat MNI152NLin2009cAsym:res-2 \
     --use-aroma \
     --notrack \
     --use-syn-sdc \
