@@ -157,7 +157,6 @@ Running the functional step looks pretty similar to running the anat step. The t
 
 Note -  the script enclosed uses some interesting extra opions:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is outputing cifti files (HCP fsLR91k space as well as MNI and native space outputs)
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong.
 
 ```sh
