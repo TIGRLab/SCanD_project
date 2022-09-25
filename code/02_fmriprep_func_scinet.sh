@@ -49,7 +49,7 @@ SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head 
 
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=${BASEDIR}/.freesurfer.txt
+export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 # # Remove IsRunning files from FreeSurfer
 # for subject in $SUBJECTS: do
