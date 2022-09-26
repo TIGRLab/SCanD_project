@@ -111,6 +111,27 @@ cd ${SCRATCH}/SCanD_project/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
+Before running fmriprep anat get need to download/"get" the anat derivatives
+
+```
+cd bids
+datalad get sub*/anat/*T1w.nii.gz
+```
+Before running fmriprep func - we need to download the fmri scans
+
+```
+cd bids
+datalad get sub*/func/*
+```
+
+But - with this dataset - there is also the issue that this dataset is old enough that no Phase Encoding Direction was given for the fMRI scans - we really want at least to have this so we can run Synth Distortion Correction. So we are going to guess it..
+
+To guess - we add this line into the middle of the top level json ().
+
+```
+"PhaseEncodingDirection": "j-",
+```
+
 note: now - thanks to the people at repronim - we can also add the repronim derivatives !
 
 ```{r}
@@ -157,15 +178,12 @@ Running the functional step looks pretty similar to running the anat step. The t
 
 Note -  the script enclosed uses some interesting extra opions:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong.
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
 
-## don't forget to make sure that $BASEDIR and $OPENNEURO_DSID are defined..
-
-module load singularity/3.8.0
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
