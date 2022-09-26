@@ -17,5 +17,5 @@ subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${FMRIPREP_LOCAL_DIR}/*html ${FMRIPREP_SHARE_DIR}/
 for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
- rsync -av ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/figures
+ rsync -av ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
 done
