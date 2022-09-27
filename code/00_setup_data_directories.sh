@@ -15,7 +15,8 @@ mkdir -p logs
 
 ## link the containers
 echo "linking singularity containers"
-ln -s /project/a/arisvoin/edickie/containers/fmriprep-21.0.2.simg containers/fmriprep-21.0.2.simg
+#ln -s /project/a/arisvoin/edickie/containers/fmriprep-21.0.2.simg containers/fmriprep-21.0.2.simg
+ln -s /project/a/arisvoin/edickie/containers/fmriprep-20.1.1.simg containers/fmriprep-20.1.1.simg
 ln -s /project/a/arisvoin/edickie/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 ## copy in Erin's freesurfer licence
