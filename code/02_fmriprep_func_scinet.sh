@@ -34,7 +34,7 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-21.0.2.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.1.1.simg
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep
@@ -69,8 +69,7 @@ singularity run --cleanenv \
     --skip-bids-validation \
     --omp-nthreads 8 \
     --nthreads 40 \
-    --low-mem \
-    --mem-mb 12000 \
+    --mem-mb 15000 \
     --output-space anat MNI152NLin2009cAsym:res-2 \
     --use-aroma \
     --notrack \
