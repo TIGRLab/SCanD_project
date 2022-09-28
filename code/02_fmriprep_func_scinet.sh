@@ -73,7 +73,7 @@ singularity run --cleanenv \
     --output-space anat MNI152NLin2009cAsym:res-2 \
     --use-aroma \
     --notrack \
-    --use-syn-sdc warn \
+    --use-syn-sdc \
     --ignore fieldmaps
 
 exitcode=$?
