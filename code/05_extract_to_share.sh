@@ -7,7 +7,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
 FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep
-FMRIPREP_LOCAL_DIR=${PROJECT_DIR}./data/local/fmriprep
+FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/fmriprep
 
 mkdir -p ${FMRIPREP_SHARE_DIR}
 
