@@ -10,6 +10,8 @@ SUB_SIZE=8 ## number of subjects to run
 CORES=40
 export THREADS_PER_COMMAND=2
 
+module load gnu-parallel/20191122
+
 ####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
 ## set the second environment variable to get the base directory
