@@ -199,6 +199,25 @@ cd ${SCRATCH}/SCanD_project
 sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
+### running ciftify
 
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=8 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ${SCRATCH}/SCanD_project/data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+cd ${SCRATCH}/SCanD_project
+sbatch --array=0-${array_job_length} ./code/03_ciftify_scinet.sh
+```
 
 
