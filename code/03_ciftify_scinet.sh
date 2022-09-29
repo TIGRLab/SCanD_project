@@ -40,8 +40,6 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/
-# export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
@@ -64,12 +62,10 @@ parallel -j 8 "singularity run --cleanenv \
     -H $(mktemp -d -t wb-XXXXXXXXXX) \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
-    -B ${WORK_DIR}:/work \
     -B ${ORIG_FS_LICENSE}:${SINGULARITYENV_FS_LICENSE} \
     ${SING_CONTAINER} \
       /bids /derived participant \
       --participant_label={} \
-      --fmriprep-workdir /work \
       --read-from-derivatives /derived \
       --fs-license ${SINGULARITYENV_FS_LICENSE} \
       --n_cpus 10" \
