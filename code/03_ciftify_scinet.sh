@@ -60,9 +60,8 @@ export SINGULARITYENV_FS_LICENSE=/.freesurfer.txt
 #     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
 # done
 
-parallel -j 8 "sing_home=$(mktemp -d -t wb-XXXXXXXXXX); \
-    singularity run --cleanenv \
-    -B ${sing_home}:/home/fmriprep --home /home/fmriprep \
+parallel -j 8 "singularity run --cleanenv \
+    -H $(mktemp -d -t wb-XXXXXXXXXX) \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
