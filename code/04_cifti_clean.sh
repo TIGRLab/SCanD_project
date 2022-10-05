@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=80
-#SBATCH --time=00:30:00
+#SBATCH --time=00:20:00
 #SBATCH --job-name="cifti_clean"
 #SBATCH --output=logs/cifti_clean_%j.txt
 
