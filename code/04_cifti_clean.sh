@@ -1,12 +1,15 @@
 #!/bin/bash
 #SBATCH --nodes=1
+#SBATCH --ntasks=80
 #SBATCH --time=00:30:00
-#SBATCH --export=ALL
 #SBATCH --job-name="cifti_clean"
 #SBATCH --output=logs/cifti_clean_%j.txt
 
 ## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
+
+## this script requires gnu-parallel
+module load gnu-parallel/20191122
 
 ## this assumes that this repo is cloned into the place it's supposed to be (according ot the README)
 CODEDIR=${BASEDIR}/code
