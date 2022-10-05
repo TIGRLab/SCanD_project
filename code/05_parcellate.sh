@@ -84,6 +84,7 @@ run_parcellation() {
     
     echo "Running parcellation on ${cleaned_dtseries}"
 
+    # parcellate to a ptseries file
     singularity exec \
     -H ${sing_home} \
     -B ${DERIVED_DIR}:/output \
@@ -96,6 +97,7 @@ run_parcellation() {
     /output/${output_ptseries} \
     -include-empty
 
+    # convert the ptseries to a csv
     singularity exec \
     -H ${sing_home} \
     -B ${DERIVED_DIR}:/output \
@@ -113,4 +115,4 @@ export -f run_parcellation
 
 parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_parcellation {1}" \
-    ::: ${subjects} 
+    ::: ${THESE_DTSERIES} 
