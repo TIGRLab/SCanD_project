@@ -49,7 +49,6 @@ ciftify_folder=${DERIVED_DIR}/ciftify
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 SUB_SIZE=10 ## number of subjects to run
-CORES=2
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 ## using bash fancyness to pull a subset of the outputs based on the slurm array id
@@ -120,6 +119,6 @@ rm -r ${sing_home}
 
 export -f run_cleaning_script
 
-parallel -j${CORES} --tag --line-buffer --compress \
+parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_cleaning_script {1}" \
     ::: ${THESE_DTSERIES} 
