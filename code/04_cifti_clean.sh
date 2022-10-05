@@ -12,7 +12,7 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## this assumes that this repo is cloned into the place it's supposed to be (according ot the README)
-CODEDIR=${BASEDIR}/code
+export CODEDIR=${BASEDIR}/code
 echo "the CODEDIR is $CODEDIR"
 clean_config=cleaning_settings.json
 
