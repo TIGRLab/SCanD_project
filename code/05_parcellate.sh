@@ -111,6 +111,6 @@ run_parcellation() {
 
 export -f run_parcellation
 
-parallel -j ${THESE_DTSERIES} --tag --line-buffer --compress \
+parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_parcellation {1}" \
     ::: ${subjects} 

@@ -220,4 +220,58 @@ cd ${SCRATCH}/SCanD_project
 sbatch --array=0-${array_job_length} ./code/03_ciftify_scinet.sh
 ```
 
+## running cifti clean
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_DTSERIES=$(ls -1d ./data/local/ciftify/sub*/MNINonLinear/Results/*task*/*dtseries.nii | wc -l)
+array_job_length=$(echo "$N_DTSERIES/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/04_cifti_clean.sh
+```
+
+## running the parcellation step
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_DTSERIES=$(ls -1d ./data/local/ciftify/sub*/MNINonLinear/Results/*task*/*dtseries.nii | wc -l)
+array_job_length=$(echo "$N_DTSERIES/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/05_parcellate.sh
+```
+
+## syncing the data with to the share directory
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+source ./code/06_extract_and_share.sh
+```
+
+
 
