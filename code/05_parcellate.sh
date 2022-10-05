@@ -13,9 +13,9 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-parcellation_dir=${BASEDIR}/templates/parcellations
-dlabel_file="tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii"
-atlas="atlas-GlasserTianS2"
+export parcellation_dir=${BASEDIR}/templates/parcellations
+export dlabel_file="tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii"
+export atlas="atlas-GlasserTianS2"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -51,12 +51,7 @@ SUB_SIZE=10 ## number of subjects to run
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 # select the dtseries to run in this chunk
-THESE_DTSERIES=`head -n ${bigger_bit} ${ALL_DTSERIES} | tail -n ${SUB_SIZE}`
-
-
-
-task_dir=$(find ${ciftify_folder}/sub-${SUBJECT}/MNINonLinear/Results/ -type d -name "*_task-*")
-cifti_bold=$(find ${task_dir}/ -type f -name "*_task-*_bold.dtseries.nii")
+THESE_DTSERIES=`for dt in ${ALL_DTSERIES}; do echo $dt; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 
 run_parcellation() {
 
@@ -109,10 +104,8 @@ run_parcellation() {
     /output/${output_csv} \
     -col-delim ","
 
-fi
-done
 
-rm -r ${sing_home}
+    rm -r ${sing_home}
 
 }
 
