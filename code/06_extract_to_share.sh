@@ -15,6 +15,7 @@ mkdir -p ${FMRIPREP_SHARE_DIR}
 
 cp ${FMRIPREP_LOCAL_DIR}/dataset_description.json ${FMRIPREP_SHARE_DIR}/
 cp ${FMRIPREP_LOCAL_DIR}/logs ${FMRIPREP_SHARE_DIR}/
+cp ${FMRIPREP_LOCAL_DIR}/*dseg.tsv ${FMRIPREP_SHARE_DIR}/ # also grab some anatomical derivatives
 
 subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${FMRIPREP_LOCAL_DIR}/*html ${FMRIPREP_SHARE_DIR}/
@@ -46,7 +47,7 @@ singularity exec \
 
 ## copy over the ciftify QC outputs
 echo "copying over the resting state images from cleaned images"
-rsync -a ${PROJECT_DIR}/data/local/cifti_clean/qc_rsn ${PROJECT_DIR}/data/share/ciftify/cifti_clean
+rsync -a ${PROJECT_DIR}/data/local/cifti_clean/qc_rsn ${PROJECT_DIR}/data/share/cifti_clean
 
 ## also run freesurfer ENIGMA scripts
 
@@ -58,4 +59,4 @@ rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
 
 ## create a spreadsheet output for wether or not outputs were found (each step) for each functional file
 
-## zip all the outputs for transfer
+## zip all the outputs for transfer ?
