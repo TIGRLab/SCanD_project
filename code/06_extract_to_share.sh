@@ -60,3 +60,15 @@ rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
 ## create a spreadsheet output for wether or not outputs were found (each step) for each functional file
 
 ## zip all the outputs for transfer ?
+
+## run the mriqc group step and copy over all outputs
+echo "running mriqc group and copying files"
+singularity run --cleanenv \
+    -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
+    -B ${PROJECT_DIR}/data/local/bids:/bids \
+    -B ${PROJECT_DIR}/data/local/mriqc:/derived \
+    ${PROJECT_DIR}/containers/mriqc-22.0.6.simg \
+    /bids /derived group 
+
+rsync -a ${PROJECT_DIR}/data/local/mriqc ${PROJECT_DIR}/data/share/
+
