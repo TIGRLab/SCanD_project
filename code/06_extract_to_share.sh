@@ -3,6 +3,8 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata to 
 
+echo "copying over the fmriprep metadata and qc images"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
@@ -22,6 +24,7 @@ for subject in ${subjects}; do
 done
 
 ## also run ciftify group step
+echo "copying over the ciftify qc images"
 
 singularity run \
     -B ${PROJECT_DIR}/data/local/:/data \
