@@ -69,7 +69,6 @@ singularity run --cleanenv \
     /bids /derived participant \
     --participant-label ${SUBJECTS} \
     -w /work \
-    --skip-bids-validation \
     --nprocs 12 \
     --ants-nthreads 8 \
     --verbose-reports \
