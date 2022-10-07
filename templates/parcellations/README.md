@@ -14,3 +14,11 @@ Citations:
 Tian, Ye, Daniel S. Margulies, Michael Breakspear, and Andrew Zalesky. 2020. “Topographic Organization of the Human Subcortex Unveiled with Functional Connectivity Gradients.” Nature Neuroscience 23 (11): 1421–32.
 
 Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. “A Multi-Modal Parcellation of Human Cerebral Cortex.” Nature 536 (7615): 171–78.
+
+
+## parcellations to add
+ - Yeo plus FSSubcortical
+ - Gordon plus FSSubcortical
+ - Ji?
+ - Schaefer - parcels?
+ - something cerebellum
