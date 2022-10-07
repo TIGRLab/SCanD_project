@@ -70,5 +70,5 @@ singularity run --cleanenv \
     ${PROJECT_DIR}/containers/mriqc-22.0.6.simg \
     /bids /derived group 
 
-rsync -a ${PROJECT_DIR}/data/local/mriqc ${PROJECT_DIR}/data/share/
-
+rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}/data/share/mriqc
+rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc
