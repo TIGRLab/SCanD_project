@@ -14,7 +14,7 @@ FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/fmriprep
 mkdir -p ${FMRIPREP_SHARE_DIR}
 
 cp ${FMRIPREP_LOCAL_DIR}/dataset_description.json ${FMRIPREP_SHARE_DIR}/
-cp ${FMRIPREP_LOCAL_DIR}/logs ${FMRIPREP_SHARE_DIR}/
+# cp ${FMRIPREP_LOCAL_DIR}/logs ${FMRIPREP_SHARE_DIR}/ permissions not working for this one
 cp ${FMRIPREP_LOCAL_DIR}/*dseg.tsv ${FMRIPREP_SHARE_DIR}/ # also grab some anatomical derivatives
 
 subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
@@ -71,5 +71,5 @@ singularity run --cleanenv \
     /bids /derived group 
 
 mkdir ${PROJECT_DIR}/data/share/mriqc
-rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}/data/share/mriqc
+rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}/data/share/mriqc/
 rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
