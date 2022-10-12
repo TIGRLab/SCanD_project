@@ -19,6 +19,7 @@ echo "linking singularity containers"
 ln -s /project/a/arisvoin/edickie/containers/fmriprep-20.1.1.simg containers/fmriprep-20.1.1.simg
 ln -s /project/a/arisvoin/edickie/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 ln -s /project/a/arisvoin/edickie/containers/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg 
+ln -s /project/a/arisvoin/edickie/containers/qsiprep_0.16.0RC3.simg containers/qsiprep_0.16.0RC3.simg
 
 ## copy in Erin's freesurfer licence
 cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
