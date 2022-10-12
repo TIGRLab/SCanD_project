@@ -4,6 +4,9 @@ This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD)
 
 General folder structure for the repo (when all is run)
 
+See this slide for a flow chart of the plan
+https://docs.google.com/presentation/d/1b6BCsbIAqcMyDCKzFDOnF1o8w0pegVztHbCcf0iGTRk/edit?usp=sharing
+
 ```
 ${BASEDIR}
 ├── code                         # a clone of this repo
@@ -302,3 +305,11 @@ datalad clone https://github.com/OpenNeuroDerivatives/ds000115-mriqc.git mriqc
 ```
 
 getting the data files we actually use for downstream ciftify things
+
+
+#### for the first dwi testing - we are using the ds000030
+
+```
+cd ${SCRATCH}/SCanD_project/data/local/
+datalad clone https://github.com/OpenNeuroDatasets/ds000030.git bids
+```
