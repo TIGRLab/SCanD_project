@@ -58,7 +58,7 @@ For amazing tools and tutorials for learning how to BIDS convert your data, chec
 
 ## Deface the BIDS data (if not done during step 1)
 
-(Instructions/code TBA)
+A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
 ## Setting your SciNet enviroment/code/and data
 
