@@ -15,16 +15,17 @@ mkdir -p logs
 
 ## link the containers
 echo "linking singularity containers"
-#ln -s /project/a/arisvoin/edickie/containers/fmriprep-21.0.2.simg containers/fmriprep-21.0.2.simg
-ln -s /project/a/arisvoin/edickie/containers/fmriprep-20.1.1.simg containers/fmriprep-20.1.1.simg
-ln -s /project/a/arisvoin/edickie/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
-ln -s /project/a/arisvoin/edickie/containers/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg 
+CONTAINER_DIR=/scinet/course/ss2019/3/5_neuroimaging/containers
+#ln -s ${CONTAINER_DIR}/fmriprep-21.0.2.simg containers/fmriprep-21.0.2.simg
+ln -s ${CONTAINER_DIR}/fmriprep-20.1.1.simg containers/fmriprep-20.1.1.simg
+ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
+ln -s ${CONTAINER_DIR}/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg 
 
 ## copy in Erin's freesurfer licence
 cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
 
 ## copy in Erin's templates
 echo "copying templates..this might take a bit"
-scp -r /project/a/arisvoin/edickie/templateflow templates/.cache/
+scp -r /scinet/course/ss2019/3/5_neuroimaging/fs_license/templateflow templates/.cache/
 
 cd ${CURRENT_DIR}
