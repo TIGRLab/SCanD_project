@@ -26,6 +26,6 @@ cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.free
 
 ## copy in Erin's templates
 echo "copying templates..this might take a bit"
-scp -r /scinet/course/ss2019/3/5_neuroimaging/fs_license/templateflow templates/.cache/
+scp -r /scinet/course/ss2019/3/5_neuroimaging/templateflow templates/.cache/
 
 cd ${CURRENT_DIR}
