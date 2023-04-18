@@ -246,7 +246,7 @@ ssh niagara.scinet.utoronto.ca
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/06_extract_and_share.sh
+source ./code/06_extract_to_share.sh
 ```
 
 # Appendix - Adding a test dataset from openneuro
