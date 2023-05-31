@@ -67,21 +67,19 @@ run_cleaning_script() {
     # determine the output filenames based on the input filename
     func_base=$(basename $(dirname ${dtseries}))
     sub=$(basename $(dirname $(dirname $(dirname $(dirname ${dtseries})))))
-    task=$(echo $func_base | sed 's/_desc-preproc//g')
+    ses_task=$(echo $func_base | sed 's/_desc-preproc//g')
 
     if [[ "$dtseries" == *"ses"* ]]; then
 
         ses="$(cut -f1 -nd "_" <<< "$func_base")"
-        ses_="${ses}_"
 
     else
         ses=""
-        ses_=""
 
     fi
 
-    confounds_tsv=fmriprep/${sub}/${ses}/func/${sub}_${ses_}${task}_desc-confounds_regressors.tsv
-    cleaned_dtseries=cifti_clean/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
+    confounds_tsv=fmriprep/${sub}/${ses}/func/${sub}_${ses_task}_desc-confounds_regressors.tsv
+    cleaned_dtseries=cifti_clean/${sub}/${ses}/func/${sub}_${ses_task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
 
     mkdir -p ${DERIVED_DIR}/cifti_clean/${sub}/${ses}/func/
 
