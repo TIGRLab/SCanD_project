@@ -78,7 +78,7 @@ run_cleaning_script() {
 
     fi
 
-    confounds_tsv=fmriprep/${sub}/${ses}/func/${sub}_${ses_task}_desc-confounds_regressors.tsv
+    confounds_tsv=fmriprep/${sub}/${ses}/func/${sub}_${ses_task}_desc-confounds_timeseries.tsv
     cleaned_dtseries=cifti_clean/${sub}/${ses}/func/${sub}_${ses_task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
 
     mkdir -p ${DERIVED_DIR}/cifti_clean/${sub}/${ses}/func/
