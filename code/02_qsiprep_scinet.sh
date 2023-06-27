@@ -53,12 +53,6 @@ SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head 
 # Make sure FS_LICENSE is defined in the container.
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
-# # Remove IsRunning files from FreeSurfer
-# for subject in $SUBJECTS: do
-#     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
-# done
-
-
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
@@ -81,10 +75,6 @@ singularity run --cleanenv \
     --force-syn
 
 exitcode=$?
-
- #   -B ${BIDS_DIR}:/bids \
- #   -B ${OUTPUT_DIR}:/out \
- #   -B ${LOCAL_FREESURFER_DIR}:/fsdir \
 
 # Output results to a table
 for subject in $SUBJECTS; do
