@@ -53,6 +53,20 @@ rsync -a ${PROJECT_DIR}/data/local/cifti_clean/qc_rsn ${PROJECT_DIR}/data/share/
 
 ## copy over the freesurfer results
 
+## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
+QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep
+
+rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
+
+## copy over the qsiprep html files
+subjects=`cd ${QSIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
+cp ${QSIPREP_LOCAL_DIR}/*html ${QSIPREP_SHARE_DIR}/
+for subject in ${subjects}; do
+ mkdir -p ${QSIPREP_SHARE_DIR}/${subject}/figures
+ rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
+done
+
 ## copy over the parcellated files
 echo "copying over the parcellated files"
 rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
