@@ -11,20 +11,23 @@ ${BASEDIR}
 ├── containers                   # the singularity image are copied or linked to here
 │   ├── fmriprep-20.2.7.simg 
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg 
-│   └── mriqc-22.0.6.simg simg
+│   ├── mriqc-22.0.6.simg simg
+│   └── qsiprep_0.16.0RC3.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
 │   │   ├── bids                 # the defaced BIDS dataset
 │   │   ├── mriqc                # mriqc derivatives
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
+│   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
 │   │   ├── cifti_clean          # dtseries post confound regression
 │   │   └── parcellated          # parcellated timeseries
 │   |
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── ciftify              # contains only copied over qc images and logs
-│       ├── fmriprep             # contains only qc images, metadata and anat tsvs
+│       ├── fmriprep             # contains only qc images and metadata
+│       ├── qsiprep              # contains only qc images and metadata
 │       └── parcellated          # contains the parcellated data
 ├── logs                       # logs from jobs run on cluster                 
 |── README.md
@@ -88,6 +91,12 @@ We want to put your data into:
 ```
 ./data/local/bids
 ```
+
+#### for a test run of the code
+
+For a test run of this available code you can work with a test dataset from open neuro - [check out the appendix for add the code to download test data](#appendix---adding-a-test-dataset-from-openneuro) . 
+
+#### your own data - continue from here
 
 You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
 
@@ -280,7 +289,7 @@ ssh niagara.scinet.utoronto.ca
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/06_extract_and_share.sh
+source ./code/06_extract_to_share.sh
 ```
 
 # Appendix - Adding a test dataset from openneuro
