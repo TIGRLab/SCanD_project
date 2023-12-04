@@ -9,7 +9,7 @@ ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
 ├── containers                   # the singularity image are copied or linked to here
-│   ├── fmriprep-20.1.1.simg 
+│   ├── fmriprep-20.2.7.simg 
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg 
 │   └── mriqc-22.0.6.simg simg
 ├── data
@@ -38,17 +38,22 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 # The general overview of what to do
 
-1. Organize your data into BIDS..
-2. Deface the BIDS data (if not done during step 1)
-3. Setting your SciNet enviroment/code/and data
-   1. Clone the Repo
-   2. Run the software set-up script (takes a few seconds)
-   3. Copy or link your bids data to this folder
-4. Run MRIQC
-5. Run fmriprep
-6. Run ciftify
-7.  Run ciftify_clean and parcellate
-8.  Run the scripts to extract sharable data into the sharable folder 
+
+
+| Day |  #	| Step	|   How Long Does it take to run? 	|
+|---    |---	|---	|---	|
+| Day 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
+|^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
+|Day 1|   0c	|   [Setting up the SciNet environment](#setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
+|^|   01d	|   [Move you bids data to the corrent place](#put-your-bids-data-into-the-datalocal-folder)	| depends on time to transfer data to SciNet  	|
+|^|   01a	|  [Run MRIQC](#running-mriqc) 	|   	|
+|^|   01b	|  [Run fMRIprep anat](#running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|Day 2|   02a	|  [Run fMRIprep func](#submitting-the-fmriprep-func-step) 	|  12 hours of slurm 	|
+|^ |   02b	|  [Run QSIprep](#running-qsiprep) 	|   20 hours on slurm	|
+|Day 3 |   03b	|  [Run ciftify](#running-ciftify) 	|   12 hours on slurm	|
+|Day 4|   04b	|  [Run ciftify_clean](#running-cifti-clean) 	|   20 mins on slurm	|
+|^ |   05b	|  Run ciftify_parcellate 	|   20 mins on slurm	|
+|Last|   10	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
 
@@ -104,6 +109,8 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 
 ## Running mriqc
 
+
+
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
@@ -125,6 +132,12 @@ sbatch --array=0-${array_job_length} ./code/01_mriqc.sh
 ## Running fmriprep-anatomical (includes freesurfer)
 
 Note: this step uses and estimated **16hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
+
+#### potential changes to script for your data
+ 
+Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happenned. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_anat_scinet.sh`
+
+
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes

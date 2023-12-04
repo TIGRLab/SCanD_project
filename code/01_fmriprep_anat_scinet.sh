@@ -78,11 +78,10 @@ singularity run --cleanenv \
     --notrack \
     --anat-only 
 
+# tip: add this line to the above command if skull stripping has already been done
+#   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
 exitcode=$?
 
- #   -B ${BIDS_DIR}:/bids \
- #   -B ${OUTPUT_DIR}:/out \
- #   -B ${LOCAL_FREESURFER_DIR}:/fsdir \
 
 # Output results to a table
 for subject in $SUBJECTS; do
