@@ -78,11 +78,10 @@ singularity run --cleanenv \
     --use-syn-sdc \
     --ignore fieldmaps
 
+# note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
+
 exitcode=$?
 
- #   -B ${BIDS_DIR}:/bids \
- #   -B ${OUTPUT_DIR}:/out \
- #   -B ${LOCAL_FREESURFER_DIR}:/fsdir \
 
 # Output results to a table
 for subject in $SUBJECTS; do
