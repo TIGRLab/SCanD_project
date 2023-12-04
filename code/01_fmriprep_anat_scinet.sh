@@ -34,12 +34,12 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.1.1.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.2.7.simg
 
 
 ## setting up the output folders
-# export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+# export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${BBUFFER}/SCanD/fmriprep
@@ -74,7 +74,7 @@ singularity run --cleanenv \
     --omp-nthreads 8 \
     --nthreads 40 \
     --mem-mb 15000 \
-    --output-space anat MNI152NLin2009cAsym:res-2 \
+    --output-space anat MNI152NLin6Asym:res-2 \
     --notrack \
     --anat-only 
 
