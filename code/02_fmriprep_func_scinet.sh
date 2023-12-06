@@ -37,8 +37,8 @@ export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.2.7.simg
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-#export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
+#export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 
 export WORK_DIR=${BBUFFER}/SCanD/fmriprep
