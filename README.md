@@ -74,7 +74,7 @@ cd $SCRATCH
 git clone https://github.com/TIGRLab/SCanD_project.git
 ```
 
-### Run the software set-up script
+## Run the software set-up script
 
 ```sh
 cd ${SCRATCH}/SCanD_project
@@ -163,7 +163,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 ```
 
-### running qsiprep
+## running qsiprep
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
