@@ -212,7 +212,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
 
-### running xcp-d
+## running xcp-d
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
