@@ -19,7 +19,7 @@ CONTAINER_DIR=/scinet/course/ss2019/3/5_neuroimaging/containers
 ln -s ${CONTAINER_DIR}/fmriprep-20.2.7.simg containers/fmriprep-20.2.7.simg
 ln -s ${CONTAINER_DIR}/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg 
 ln -s ${CONTAINER_DIR}/qsiprep_0.16.0RC3.simg containers/qsiprep_0.16.0RC3.simg 
-ln -s ${CONTAINER_DIR}/xcp_d.simg containers/xcp_d.simg
+ln -s ${CONTAINER_DIR}/xcp_d-0.6.0.simg containers/xcp_d-0.6.0.simg
 
 ## copy in Erin's freesurfer licence
 cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
