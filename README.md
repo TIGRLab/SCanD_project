@@ -13,6 +13,7 @@ ${BASEDIR}
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg 
 │   ├── mriqc-22.0.6.simg simg
 │   └── qsiprep_0.16.0RC3.simg
+│   └── xcp_d-0.6.0.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
 │   │   ├── bids                 # the defaced BIDS dataset
@@ -20,15 +21,12 @@ ${BASEDIR}
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
 │   │   ├── qsiprep              # full qsiprep derivatives
-│   │   ├── ciftify              # ciftify derivatives
-│   │   ├── cifti_clean          # dtseries post confound regression
-│   │   └── parcellated          # parcellated timeseries
+│   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
-│       ├── ciftify              # contains only copied over qc images and logs
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
-│       └── parcellated          # contains the parcellated data
+│       └── xcp_d                # contains xcp results
 ├── logs                       # logs from jobs run on cluster                 
 |── README.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
