@@ -65,7 +65,7 @@ For amazing tools and tutorials for learning how to BIDS convert your data, chec
 
 A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
-### Setting your SciNet enviroment/code/and data
+## Setting your SciNet enviroment/code/and data
 
 ### Cloning this Repo
 
