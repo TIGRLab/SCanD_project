@@ -48,12 +48,10 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01d	|   [Move you bids data to the corrent place](#put-your-bids-data-into-the-datalocal-folder)	| depends on time to transfer data to SciNet  	|
 |^|   01a	|  [Run MRIQC](#running-mriqc) 	|   	|
 |^|   01b	|  [Run fMRIprep anat](#running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|^ |   01c	|  [Run QSIprep](#running-qsiprep) 	|   20 hours on slurm	|
 |Day 2|   02a	|  [Run fMRIprep func](#submitting-the-fmriprep-func-step) 	|  12 hours of slurm 	|
-|^ |   02b	|  [Run QSIprep](#running-qsiprep) 	|   20 hours on slurm	|
-|Day 3 |   03b	|  [Run ciftify](#running-ciftify) 	|   12 hours on slurm	|
-|Day 4|   04b	|  [Run ciftify_clean](#running-cifti-clean) 	|   20 mins on slurm	|
-|^ |   05b	|  Run ciftify_parcellate 	|   20 mins on slurm	|
-|Last|   10	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
+|Day 3 |   03b	|  [Run xcp-d](#running-xcp-d) 	|   12 hours on slurm	|
+|Day 4|   04a	|  10	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
 
