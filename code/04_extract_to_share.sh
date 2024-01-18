@@ -24,34 +24,6 @@ for subject in ${subjects}; do
  rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
 done
 
-## also run ciftify group step
-echo "copying over the ciftify qc images"
-
-singularity run \
-    -B ${PROJECT_DIR}/data/local/:/data \
-    ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
-      /data/bids /data group 
-
-## copy over the ciftify QC outputs
-rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
-rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_fmri  ${PROJECT_DIR}/data/share/ciftify/
-
-## also run ciftify group step - on the cleaned RSN maps
-
-singularity exec \
-  -B ${PROJECT_DIR}/data/local:/derived \
-  ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
-  cifti_vis_RSN index \
-  --qcdir /derived/cifti_clean/qc_rsn \
-  --ciftify-work-dir /derived/ciftify 
-
-## copy over the ciftify QC outputs
-echo "copying over the resting state images from cleaned images"
-rsync -a ${PROJECT_DIR}/data/local/cifti_clean/qc_rsn ${PROJECT_DIR}/data/share/cifti_clean
-
-## also run freesurfer ENIGMA scripts
-
-## copy over the freesurfer results
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
@@ -67,13 +39,6 @@ for subject in ${subjects}; do
  rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
 done
 
-## copy over the parcellated files
-echo "copying over the parcellated files"
-rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
-
-## create a spreadsheet output for wether or not outputs were found (each step) for each functional file
-
-## zip all the outputs for transfer ?
 
 ## run the mriqc group step and copy over all outputs
 echo "running mriqc group and copying files"
