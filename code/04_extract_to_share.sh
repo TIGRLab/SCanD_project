@@ -59,6 +59,8 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mr
 XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
 XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
 
+mkdir ${XCP_SHARE_DIR}
+
 rsync -a --include "*/" --include="*.json" --exclude="*" ${xcp_LOCAL_DIR} ${xcp_SHARE_DIR}
 
 ## copy over the xcp html files
