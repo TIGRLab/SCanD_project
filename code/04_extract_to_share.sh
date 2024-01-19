@@ -61,7 +61,7 @@ XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
 
 mkdir ${XCP_SHARE_DIR}
 
-rsync -a --include "*/" --include="*.json" --exclude="*" ${xcp_LOCAL_DIR} ${xcp_SHARE_DIR}
+rsync -a --include "*/" --include="*.json" --exclude="*" ${XCP_LOCAL_DIR} ${XCP_SHARE_DIR}
 
 ## copy over the xcp html files
 subjects=`cd ${XCP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
