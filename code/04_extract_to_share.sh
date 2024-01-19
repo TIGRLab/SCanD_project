@@ -56,8 +56,8 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mr
 
 
 ## copy over the xcp json files 
-XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp
-XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp
+XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
+XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
 
 rsync -a --include "*/" --include="*.json" --exclude="*" ${xcp_LOCAL_DIR} ${xcp_SHARE_DIR}
 
