@@ -28,6 +28,8 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+export BIDS_DIR=${BASEDIR}/data/local/bids
+
 export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 
 
