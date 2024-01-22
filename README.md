@@ -69,7 +69,7 @@ A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym
 
 ```sh
 cd $SCRATCH
-git clone https://github.com/TIGRLab/SCanD_project.git
+git clone https://github.com/GhazalehManj/SCanD_project_GMANJ.git
 ```
 
 ## Run the software set-up script
