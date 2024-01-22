@@ -1,4 +1,4 @@
-# SCanD_project
+# SCanD_project_GMANJ
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
 
@@ -75,7 +75,7 @@ git clone https://github.com/GhazalehManj/SCanD_project_GMANJ.git
 ## Run the software set-up script
 
 ```sh
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 source code/00_setup_data_directories.sh
 ```
 
@@ -101,13 +101,13 @@ To copy the data from another computer/server you should be on the datamover nod
 ```sh
 ssh <cc_username>@niagara.scinet.utoronto.ca
 ssh nia-dm1
-rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
+rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project_GMANJ/data/local/
 ```
 
 To link existing data from another location on SciNet Niagara to this folder:
 
 ```sh
-ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
+ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 ```
 
 
@@ -119,7 +119,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -148,7 +148,7 @@ ssh niagara.scinet.utoronto.ca
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -168,7 +168,7 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
 ## figuring out appropriate array-job size
@@ -178,7 +178,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
 
@@ -196,7 +196,7 @@ Note -  the script enclosed uses some interesting extra opions:
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
 ## figuring out appropriate array-job size
@@ -217,7 +217,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
 ## figuring out appropriate array-job size
@@ -227,7 +227,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ```
 
@@ -244,7 +244,7 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
 source ./code/04_extract_to_share.sh
@@ -268,7 +268,7 @@ module load datalad/0.15.5 # this is the datalad module in Erin's folder
 ##### using datalad to install a download a dataset
 
 ```
-cd ${SCRATCH}/SCanD_project/data/local/
+cd ${SCRATCH}/SCanD_project_GMANJ/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
@@ -296,7 +296,7 @@ To guess - we add this line into the middle of the top level json ().
 note: now - thanks to the people at repronim - we can also add the repronim derivatives !
 
 ```{r}
-cd ${SCRATCH}/SCanD_project/data/local/ls
+cd ${SCRATCH}/SCanD_project_GMANJ/data/local/ls
 
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-fmriprep.git fmriprep
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-mriqc.git mriqc
