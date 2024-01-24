@@ -80,7 +80,7 @@ cd ${SCRATCH}/SCanD_project_GMANJ
 source code/00_setup_data_directories.sh
 ```
 
-### put your bids data into the data/local folder
+### put your bids data into the data/local folder and add lables to participants.tsv file
 
 We want to put your data into:
 
