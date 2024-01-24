@@ -218,8 +218,13 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 
 ```sh
-python3 -m venv venv
-source venv/bin/activate
+module load NiaEnv/2019b python/3.11.5
+module load TeachEnv/2022a python/3.11.5
+mkdir ~/.virtualenvs
+cd ~/.virtualenvs
+virtualenv --system-site-packages ~/.virtualenvs/myenv
+source ~/.virtualenvs/myenv/bin/activate 
+
 python3 -m pip install -U templateflow
 python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Lin'])"
 ```
