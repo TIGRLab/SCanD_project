@@ -69,6 +69,7 @@ singularity run --cleanenv \
     --participant_label ${SUBJECTS} \
     -w /work \
     --skip-bids-validation \
+    --cifti-output 91k \
     --omp-nthreads 8 \
     --nthreads 40 \
     --mem-mb 15000 \
