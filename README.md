@@ -214,6 +214,13 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 
 ## running xcp-d
 
+If it's your first time running the pipline, you need to download some files from templateflow as login nodes have access to the Internet but compute nodes are isolated
+
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install -U templateflow
+python -c "from templateflow.api import get; get(['fsLR', 'MNI152NLin2009cAsym', 'MNI152NLin6Asym', 'OASIS30ANTs', 'MNIPediatricAsym', 'MNIInfant'])"
+
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
