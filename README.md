@@ -223,6 +223,7 @@ source venv/bin/activate
 python3 -m pip install -U templateflow
 python -c "from templateflow.api import get; get(['fsLR', 'MNI152NLin2009cAsym', 'MNI152NLin6Asym', 'OASIS30ANTs', 'MNIPediatricAsym', 'MNIInfant'])"
 ```
+If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
