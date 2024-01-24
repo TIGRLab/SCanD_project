@@ -54,6 +54,8 @@ singularity run --cleanenv  ${SING_CONTAINER} \
     participant\
     --participant_label ${SUBJECTS} \
     -w ${WORK_DIR} \
+    --cifti \
+    --smoothing 0 \
     --notrack
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
