@@ -78,12 +78,14 @@ singularity run --cleanenv \
 
 exitcode=$?
 
- #   -B ${BIDS_DIR}:/bids \
- #   -B ${OUTPUT_DIR}:/out \
- #   -B ${LOCAL_FREESURFER_DIR}:/fsdir \
-
+ 
 # Output results to a table
 for subject in $SUBJECTS; do
-echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    $exitcode" \
-      >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    mriqc failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
 done
