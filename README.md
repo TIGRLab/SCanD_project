@@ -218,8 +218,8 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 
 ```sh
+#First load a python module
 module load NiaEnv/2019b python/3.11.5
-module load TeachEnv/2022a python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
