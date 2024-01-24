@@ -220,12 +220,18 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 ```sh
 module load NiaEnv/2019b python/3.11.5
 module load TeachEnv/2022a python/3.11.5
+
+# Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 virtualenv --system-site-packages ~/.virtualenvs/myenv
+
+# Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
 python3 -m pip install -U templateflow
+
+# Run a Python script to import specified templates using the 'templateflow' package
 python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Lin'])"
 ```
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
