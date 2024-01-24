@@ -221,7 +221,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -U templateflow
-python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Lin', 'MNI152NLin2009cAsym', 'MNI152NLin6Asym'])"
+python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Lin'])"
 ```
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
