@@ -59,6 +59,9 @@ This is the longest - most human intensive - step. But it will make everything e
 
 For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
 
+## Prepare participants.tsv file
+After organizing the bids folder, proceed to populate the participant labels within the 'ScanD_project_GMANJ/data/local/bids/participants.tsv' file.
+
 ## Deface the BIDS data (if not done during step 1)
 
 A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
