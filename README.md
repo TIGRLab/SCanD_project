@@ -129,7 +129,6 @@ SUB_SIZE=10
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
-Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
 
 
 ## submit the array job to the queue
