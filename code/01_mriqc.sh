@@ -47,6 +47,9 @@ mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
 
 if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
     SUBJECTS=$(sed -n -E "s/sub-(\S*)>.*/\1/gp" data/local/bids_2/participants.tsv | head -n "$N_SUBJECTS" | tail -n "$Tail")
