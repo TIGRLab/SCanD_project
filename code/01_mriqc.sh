@@ -3,7 +3,7 @@
 #SBATCH --output=logs/mriqc%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=80
-#SBATCH --time=12:00:00
+#SBATCH --time=16:00:00
 
 
 SUB_SIZE=10 ## number of subjects to run
