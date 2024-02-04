@@ -251,7 +251,6 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-cd ${SCRATCH}/SCanD_project_GMANJ
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ```
 
