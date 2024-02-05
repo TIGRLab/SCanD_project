@@ -58,6 +58,7 @@ ssh niagara.scinet.utoronto.ca
 cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
+##fmriprep_func
 ## figuring out appropriate array-job size
 SUB_SIZE=2 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
