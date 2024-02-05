@@ -26,7 +26,6 @@ sbatch --array=0-${array_job_length} ./code/01_mriqc.sh
 
 
 ##fmriprep_anat
-
 ## figuring out appropriate array-job size
 SUB_SIZE=1
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -38,7 +37,6 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 
 
 #qsiprep
-
 ## figuring out appropriate array-job size
 SUB_SIZE=2 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
