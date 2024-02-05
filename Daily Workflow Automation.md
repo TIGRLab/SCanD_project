@@ -5,9 +5,19 @@ In this project, we have devised a streamlined solution for managing multiple da
 After organizing your bids folder and participants.csv file, you need to run the codes for each day.
 
 ## Day 1:
+```sh
+
+```
 
 
 ## Day 2:
 
+```sh
+
+```
 
 ## Day 3:
+
+```sh
+
+```
