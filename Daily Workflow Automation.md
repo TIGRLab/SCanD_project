@@ -4,19 +4,25 @@ In this project, we have devised a streamlined solution for managing multiple da
 
 After setting up the scinet environment and organizing your bids folder and participants.csv file, you can run the codes for each day.
 
-## Day 1:
+## Day 1 (mriqc, fmriprep_anat, qsiprep):
 ```sh
 
 ```
 
 
-## Day 2:
+## Day 2 (fmriprep_func):
 
 ```sh
 
 ```
 
-## Day 3:
+## Day 3 (xcp_scinet):
+
+```sh
+
+```
+
+## Day 4 (extract data to share folder):
 
 ```sh
 
