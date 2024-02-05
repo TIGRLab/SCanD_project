@@ -50,7 +50,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01b	|  [Run fMRIprep anat](#running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#running-qsiprep) 	|   6 hours on slurm	|
 |Day 2|   02a	|  [Run fMRIprep func](#submitting-the-fmriprep-func-step) 	|  12 hours of slurm 	|
-|Day 3 |   03a	|  [Run xcp-d](#running-xcp-d) 	|  3 hours on slurm 	|
+|Day 3 |   03a	|  [Run xcp-d](#running-xcp-d) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
