@@ -22,19 +22,19 @@ ${BASEDIR}
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
+│   │   ├── parcellated          # ciftify derivatives
 │   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
+│       ├── mriqc                # contains only qc images and metadata
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
+│       ├── parcellate           # contains only qc images and metadata
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
-|── README.md
-└── templates                    # an extra folder with pre-downloaded fmriprep templates (see setup section)
-    └── parcellations
-        ├── README.md
-        └── tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii
+└── README.md
+    
 ```
 
 Currently this repo is going to be set up for running things on SciNet Niagara cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
@@ -55,7 +55,8 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |Day 2|   02a	|  [Run fMRIprep func](#submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
 |Day 3 |   03a	|  [Run ciftify-anat](#running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#running-xcp-d) 	|  10 hours on slurm 	|
-|Day 4 |   03b	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
+|Day 4 |   04a	|  [running the parcellation step](#running_the_parcellation_step) 	|   20 mins on slurm	|
+|^ |   04b	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
 
