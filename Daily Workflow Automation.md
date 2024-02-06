@@ -101,7 +101,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
 ```
 
-## Day 4 (extract data to share folder):
+## Day 4 (parcellation, extract data to share folder):
 
 ```sh
 
