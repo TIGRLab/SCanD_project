@@ -104,6 +104,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ## Day 4 (extract data to share folder):
 
 ```sh
+
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
 
@@ -111,6 +112,16 @@ ssh niagara.scinet.utoronto.ca
 cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
+SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_DTSERIES=$(ls -1d ./data/local/ciftify/sub*/MNINonLinear/Results/*task*/*dtseries.nii | wc -l)
+array_job_length=$(echo "$N_DTSERIES/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/04_parcellate_scinet.sh
+```
+
+```sh
 source ./code/04_extract_to_share.sh
 
 ```
