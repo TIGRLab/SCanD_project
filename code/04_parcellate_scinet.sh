@@ -3,8 +3,8 @@
 #SBATCH --ntasks=80
 #SBATCH --time=00:30:00
 #SBATCH --export=ALL
-#SBATCH --job-name="cifti_parcellate"
-#SBATCH --output=logs/cifti_parcellate_%j.txt
+#SBATCH --job-name="xcp_parcellate"
+#SBATCH --output=logs/xcp_parcellate_%j.txt
 
 ## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
@@ -13,9 +13,9 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/templates/parcellations
-export dlabel_file="tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii"
-export atlas="atlas-GlasserTianS2"
+export parcellation_dir=${BASEDIR}/data/local/xcp
+export dlabel_file="space-fsLR_atlas-Glasser_den-91k_dseg.dlabel.nii"
+export atlas="atlas-Glasser"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -42,8 +42,8 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export DERIVED_DIR=${BASEDIR}/data/local
 
 # find all dtseries inputs for this study - by globbing the ciftify outputs
-ciftify_folder=${DERIVED_DIR}/ciftify
-ALL_DTSERIES=$(ls -1d ${ciftify_folder}/sub*/MNINonLinear/Results/*task*/*dtseries*)
+xcp_folder=${DERIVED_DIR}/xcp
+ALL_DTSERIES=$(ls -1d ${xcp_folder}/sub*/ses*/func/*dtseries*)
 
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
@@ -75,7 +75,7 @@ run_parcellation() {
 
     fi
 
-    cleaned_dtseries=cifti_clean/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
+    cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
     output_ptseries=parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii
     output_csv=parcellated/${atlas}/csv/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_meants.csv
 
