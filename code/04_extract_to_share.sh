@@ -71,3 +71,20 @@ for subject in ${subjects}; do
  rsync -a ${XCP_LOCAL_DIR}/${subject}/figures ${XCP_SHARE_DIR}/${subject}/
 done
 
+## also run ciftify group step
+echo "copying over the ciftify qc images"
+
+singularity run \
+    -B ${PROJECT_DIR}/data/local/:/data \
+    ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
+      /data/bids /data group 
+
+## copy over the ciftify QC outputs
+rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
+
+
+## copy over the parcellated files
+echo "copying over the parcellated files"
+rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
+
+
