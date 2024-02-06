@@ -14,7 +14,7 @@ module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export dlabel_file="space-fsLR_atlas-Tian_den-91k_dseg.dlabel.nii"
+export dlabel_file="pace-fsLR_atlas-Tian_den-91k_dseg.dlabel.nii"
 export atlas="Tian"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
