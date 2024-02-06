@@ -14,8 +14,8 @@ module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export dlabel_file="space-fsLR_atlas-Glasser_den-91k_dseg.dlabel.nii"
-export atlas="atlas-Glasser"
+export dlabel_file="space-fsLR_atlas-Tian_den-91k_dseg.dlabel.nii"
+export atlas="Tian"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -61,8 +61,8 @@ run_parcellation() {
 
     # determine the output filenames based on the input filename
     func_base=$(basename $(dirname ${dtseries}))
-    sub=$(basename $(dirname $(dirname $(dirname $(dirname ${dtseries})))))
-    task=$(echo $func_base | sed 's/_desc-preproc//g')
+    sub=$(basename $(dirname $(dirname $(dirname ${}))))
+    task=$(echo $dtseries | sed 's/_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii//g')
 
     if [[ "$dtseries" == *"ses"* ]]; then
 
