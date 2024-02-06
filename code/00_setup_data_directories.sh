@@ -9,8 +9,6 @@ mkdir -p containers
 mkdir -p data
 mkdir -p data/local
 mkdir -p data/share
-mkdir -p templates
-mkdir -p templates/.cache
 mkdir -p logs
 
 ## link the containers
@@ -26,8 +24,5 @@ ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ci
 ## copy in Erin's freesurfer licence
 cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
 
-## copy in Erin's templates
-echo "copying templates..this might take a bit"
-scp -r /scinet/course/ss2019/3/5_neuroimaging/templateflow templates/.cache/
 
 cd ${CURRENT_DIR}
