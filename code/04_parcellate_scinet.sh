@@ -61,21 +61,14 @@ run_parcellation() {
 
     # determine the output filenames based on the input filename
     func_base=$(basename $(dirname ${dtseries}))
-    sub=$(basename $(dirname $(dirname $(dirname ${}))))
-    task=$(echo $dtseries | sed 's/_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii//g')
+    sub=$(basename $(dirname $(dirname $(dirname ${dtseries}))))
+    ses=$(basename $(dirname $(dirname ${dtseries})))
+    ses_="${ses}_"
 
-    if [[ "$dtseries" == *"ses"* ]]; then
+    task=$(echo "$dtseries" | sed 's/.*task-\([^_]*\)_.*_run-\([^_]*\).*/task-\1_run-\2/')
+    
 
-        ses="$(cut -f1 -nd "_" <<< "$func_base")"
-        ses_="${ses}_"
-
-    else
-        ses=""
-        ses_=""
-
-    fi
-
-    cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
+    cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii
     output_ptseries=parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii
     output_csv=parcellated/${atlas}/csv/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_meants.csv
 
