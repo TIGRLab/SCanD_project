@@ -77,6 +77,7 @@ parallel -j 8 "singularity run --cleanenv \
       --participant_label={} \
       --read-from-derivatives /derived \
       --fs-license ${SINGULARITYENV_FS_LICENSE} \
+      --anat_only \
       --n_cpus 10" \
       ::: ${SUBJECTS}
 
