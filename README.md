@@ -26,6 +26,7 @@ ${BASEDIR}
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
+│       ├── ciftify              # contains only qc images and metadata
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
