@@ -4,7 +4,7 @@
 #SBATCH --time=00:30:00
 #SBATCH --export=ALL
 #SBATCH --job-name="xcp_parcellate"
-#SBATCH --output=logs/xcp_parcellate_%j.txt
+#SBATCH --output=logs/xcp_parcellate_%j.out
 
 ## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
