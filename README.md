@@ -20,6 +20,7 @@ ${BASEDIR}
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
 │   │   ├── qsiprep              # full qsiprep derivatives
+│   │   ├── ciftify              # ciftify derivatives
 │   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
