@@ -65,7 +65,7 @@ run_parcellation() {
     ses=$(basename $(dirname $(dirname ${dtseries})))
     ses_="${ses}_"
 
-    task=$(echo "$func_base" | sed 's/.*task-\([^_]*\)_.*_run-\([^_]*\).*/task-\1_run-\2/')
+    task=$(echo "$dtseries" | sed 's/.*task-\([^_/]*\).*_run-\([^_/]*\).*/task-\1_run-\2/')
     
 
     cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii
