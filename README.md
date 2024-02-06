@@ -33,7 +33,11 @@ ${BASEDIR}
 │       ├── parcellate           # contains only qc images and metadata
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
-└── README.md
+|── README.md
+└── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
+    └── parcellations
+        ├── README.md
+        └── tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii
     
 ```
 
