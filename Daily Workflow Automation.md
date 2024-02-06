@@ -69,7 +69,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
-## Day 3 (xcp_scinet):
+## Day 3 (ciftify_anat, xcp_scinet):
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
