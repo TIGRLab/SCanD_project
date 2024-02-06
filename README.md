@@ -292,7 +292,7 @@ git pull
 
 ## figuring out appropriate array-job size
 SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_DTSERIES=$(ls -1d ./data/local/ciftify/sub*/MNINonLinear/Results/*task*/*dtseries.nii | wc -l)
+N_DTSERIES=$(ls -1d ./data/local/xcp_d/sub*/ses*/func/*dtseries* | wc -l)
 array_job_length=$(echo "$N_DTSERIES/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
