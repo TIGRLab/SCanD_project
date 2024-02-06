@@ -13,7 +13,7 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/data/local/xcp
+export parcellation_dir=${BASEDIR}/data/local/xcp_d
 export dlabel_file="space-fsLR_atlas-Glasser_den-91k_dseg.dlabel.nii"
 export atlas="atlas-Glasser"
 
@@ -42,7 +42,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export DERIVED_DIR=${BASEDIR}/data/local
 
 # find all dtseries inputs for this study - by globbing the ciftify outputs
-xcp_folder=${DERIVED_DIR}/xcp
+xcp_folder=${DERIVED_DIR}/xcp_d
 ALL_DTSERIES=$(ls -1d ${xcp_folder}/sub*/ses*/func/*dtseries*)
 
 
