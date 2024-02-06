@@ -74,11 +74,6 @@ done
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
 
-singularity run \
-    -B ${PROJECT_DIR}/data/local/:/data \
-    ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
-      /data/bids /data group 
-
 ## copy over the ciftify QC outputs
 rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
 
