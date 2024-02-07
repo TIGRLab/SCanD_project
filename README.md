@@ -177,7 +177,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 ```
 
-## running qsiprep
+## Running qsiprep
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
