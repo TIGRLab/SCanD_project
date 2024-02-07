@@ -86,5 +86,6 @@ rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
 
 
 ## copy over the Enigma_extract outputs
+echo "copying over the ENIGMA extracted cortical and subcortical files"
 rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
 
