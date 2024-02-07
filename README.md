@@ -221,6 +221,8 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
 
+## Running enigma_dti
+
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
