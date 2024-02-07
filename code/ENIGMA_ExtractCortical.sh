@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
+
 SUBJECTS_DIR=/archive/data/PREDICTS/pipelines/in_progress/fmriprep_20.2.7/freesurfer/
 PREFIX=sub-
 
