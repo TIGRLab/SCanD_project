@@ -1,3 +1,5 @@
+## stage 3 (ciftify_anat, xcp_scinet, enigma extract):
+
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
 
