@@ -113,7 +113,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 source ./code/03_ENIGMA_ExtractCortical.sh
 ```
 
-## stage 4 (parcellation, extract data to share folder):
+## stage 4 (parcellation):
 
 ```sh
 
@@ -132,8 +132,15 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/04_parcellate_scinet.sh
 ```
+## stage 5 (extract data to share folder):
 
 ```sh
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project_GMANJ
+git pull
+
 source ./code/04_extract_to_share.sh
 
 ```
