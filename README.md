@@ -51,16 +51,17 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |---    |---	|---	|---	|
 | Day 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |   0c	|   [Setting up the SciNet environment](#setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
-|^ |   01d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
-|Day 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  16 hours on slurm 	|
-|^|   01b	|  [Run fMRIprep anat](#running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |   01c	|  [Run QSIprep](#running-qsiprep) 	|   6 hours on slurm	|
-|Day 2|   02a	|  [Run fMRIprep func](#submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
-|Day 3 |   03a	|  [Run ciftify-anat](#running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp-d](#running-xcp-d) 	|  10 hours on slurm 	|
-|Day 4 |   04a	|  [Running the parcellation step](#running-the-parcellation-step) 	|   20 mins on slurm	|
-|^ |   04b	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
+|^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
+|^ |   01d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
+|Day 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  16 hours on slurm 	|
+|^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|Day 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
+|^ |   02b	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
+|Day 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
+|^ |   03b	|  [Run enigma_dti](#Running-enigma-dti) 	|  10 hours on slurm 	|
+|Day 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
+|^ |   04b	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
 
@@ -89,7 +90,7 @@ cd ${SCRATCH}/SCanD_project_GMANJ
 source code/00_setup_data_directories.sh
 ```
 
-### put your bids data into the data/local folder and add lables to participants.tsv file
+### Put your bids data into the data/local folder and add lables to participants.tsv file
 
 We want to put your data into:
 
@@ -98,11 +99,11 @@ We want to put your data into:
 ```
 After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project_GMANJ/data/local/bids/participants.tsv' file.
 
-#### for a test run of the code
+#### For a test run of the code
 
 For a test run of this available code you can work with a test dataset from open neuro - [check out the appendix for add the code to download test data](#appendix---adding-a-test-dataset-from-openneuro) . 
 
-#### your own data - continue from here
+#### Your own data - continue from here
 
 You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
 
@@ -148,7 +149,7 @@ sbatch --array=0-${array_job_length} ./code/01_mriqc.sh
 
 Note: this step uses and estimated **16hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
 
-#### potential changes to script for your data
+#### Potential changes to script for your data
  
 Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happenned. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_anat_scinet.sh`
 
@@ -194,7 +195,7 @@ sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
 
 
-## submitting the fmriprep func step 
+## Submitting the fmriprep func step 
 
 Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
 
@@ -241,7 +242,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_enigma_dti_scinet.sh
 ```
 
-## running ciftify-anat
+## Running ciftify-anat
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -262,7 +263,7 @@ sbatch --array=0-${array_job_length} ./code/03_ciftify_anat_scinet.sh
 ```
 
 
-## running xcp-d
+## Running xcp-d
 
 If you're initiating the pipeline for the first time, it's crucial to acquire specific files from templateflow. Keep in mind that login nodes have internet access, while compute nodes operate in isolation. Therefore, make sure to download the required files as compute nodes lack direct internet connectivity. Here are the steps for pre-download:
 
@@ -305,7 +306,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ```
 
 
-## running the parcellation step
+## Running the parcellation step
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -326,7 +327,7 @@ sbatch --array=0-${array_job_length} ./code/04_parcellate_scinet.sh
 ```
 
 
-## syncing the data with to the share directory
+## Syncing the data with to the share directory
 
 This step does calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
 
@@ -349,7 +350,7 @@ source ./code/04_extract_to_share.sh
 
 To get an openneuro dataset for testing - we will use datalad
 
-##### loading datalad on SciNet niagara
+##### Loading datalad on SciNet niagara
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
@@ -358,7 +359,7 @@ module use /project/a/arisvoin/edickie/modules #this let's you read modules from
 module load datalad/0.15.5 # this is the datalad module in Erin's folder
 ```
 
-##### using datalad to install a download a dataset
+##### Using datalad to install a download a dataset
 
 ```
 cd ${SCRATCH}/SCanD_project_GMANJ/data/local/
