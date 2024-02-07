@@ -6,30 +6,29 @@ After setting up the scinet environment and organizing your bids folder and part
 
 ## stage 1 (mriqc, fmriprep_anat, qsiprep):
 ```sh
-./stage_
+source ./stage_1.sh
 ```
 
 
 ## stage 2 (fmriprep_func, enigma_dti):
 
 ```sh
-
+source ./stage_2.sh
 ```
 
 ## stage 3 (ciftify_anat, xcp_scinet, enigma extract):
 
 ```sh
-
+source ./stage_3.sh
 ```
 
 ## stage 4 (parcellation):
 
 ```sh
-
+source ./stage_4.sh
 ```
 ## stage 5 (extract data to share folder):
 
 ```sh
-
-
+source ./stage_5.sh
 ```
