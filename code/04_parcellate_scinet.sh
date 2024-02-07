@@ -14,7 +14,7 @@ module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export atlases=("Tian" "HCP" "Gordon")  # Define the atlases here
+export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -74,13 +74,7 @@ run_parcellation() {
     echo "Running parcellation on ${cleaned_dtseries}"
 
     # Set dlabel_file according to the current atlas
-    if [ "$atlas" == "Tian" ]; then
-        export dlabel_file="space-fsLR_atlas-Tian_den-91k_dseg.dlabel.nii"
-    elif [ "$atlas" == "HCP" ]; then
-        export dlabel_file="space-fsLR_atlas-HCP_den-91k_dseg.dlabel.nii"
-    elif [ "$atlas" == "Gordon" ]; then
-        export dlabel_file="space-fsLR_atlas-Gordon_den-91k_dseg.dlabel.nii"
-    fi
+    dlabel_file="space-fsLR_atlas-${atlas}_den-91k_dseg.dlabel.nii"
 
     # parcellate to a ptseries file
     singularity exec \
