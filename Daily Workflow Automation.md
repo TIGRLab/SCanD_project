@@ -79,7 +79,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_enigma_dti_scinet.sh
 ```
 
-## stage 3 (ciftify_anat, xcp_scinet):
+## stage 3 (ciftify_anat, xcp_scinet, enigma extract):
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -109,6 +109,8 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
+##enigma_extract
+source ./code/03_ENIGMA_ExtractCortical.sh
 ```
 
 ## stage 4 (parcellation, extract data to share folder):
