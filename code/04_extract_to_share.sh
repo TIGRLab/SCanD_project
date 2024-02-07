@@ -83,3 +83,8 @@ echo "copying over the parcellated files"
 rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
 
 
+
+
+## copy over the Enigma_extract outputs
+rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
+
