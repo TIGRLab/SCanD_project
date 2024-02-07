@@ -14,8 +14,7 @@ module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export dlabel_file="space-fsLR_atlas-HCP_den-91k_dseg.dlabel.nii"
-export atlas="HCP"
+export atlases=("Tian" "HCP")  # Define the atlases here
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -37,7 +36,6 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
-
 ## setting up the output folders
 export DERIVED_DIR=${BASEDIR}/data/local
 
@@ -45,17 +43,16 @@ export DERIVED_DIR=${BASEDIR}/data/local
 xcp_folder=${DERIVED_DIR}/xcp_d
 ALL_DTSERIES=$(ls -1d ${xcp_folder}/sub*/ses*/func/*dtseries*)
 
-
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 SUB_SIZE=10 ## number of subjects to run
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+bigger_bit=$(echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc)
 
 # select the dtseries to run in this chunk
-THESE_DTSERIES=`for dt in ${ALL_DTSERIES}; do echo $dt; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+THESE_DTSERIES=$(for dt in ${ALL_DTSERIES}; do echo $dt; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 
 run_parcellation() {
-
-    dtseries=${1}
+    atlas=$1
+    dtseries=${2}
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
 
@@ -66,7 +63,6 @@ run_parcellation() {
     ses_="${ses}_"
 
     task=$(echo "$dtseries" | sed 's/.*task-\([^_/]*\).*_run-\([^_/]*\).*/task-\1_run-\2/')
-    
 
     cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii
     output_ptseries=parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii
@@ -76,6 +72,13 @@ run_parcellation() {
     mkdir -p ${DERIVED_DIR}/parcellated/${atlas}/csv/${sub}/${ses}/func
     
     echo "Running parcellation on ${cleaned_dtseries}"
+
+    # Set dlabel_file according to the current atlas
+    if [ "$atlas" == "Tian" ]; then
+        export dlabel_file="space-fsLR_atlas-Tian_den-91k_dseg.dlabel.nii"
+    elif [ "$atlas" == "HCP" ]; then
+        export dlabel_file="space-fsLR_atlas-HCP_den-91k_dseg.dlabel.nii"
+    fi
 
     # parcellate to a ptseries file
     singularity exec \
@@ -99,13 +102,12 @@ run_parcellation() {
     /output/${output_csv} \
     -col-delim ","
 
-
     rm -r ${sing_home}
-
 }
 
 export -f run_parcellation
 
-parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
- "run_parcellation {1}" \
-    ::: ${THESE_DTSERIES} 
+# Loop over the atlases
+for atlas in "${atlases[@]}"; do
+    parallel -j ${SUB_SIZE} --tag --line-buffer --compress "run_parcellation ${atlas} {1}" ::: ${THESE_DTSERIES}
+done
