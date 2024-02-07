@@ -3,7 +3,7 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
-SUBJECTS_DIR=/archive/data/PREDICTS/pipelines/in_progress/fmriprep_20.2.7/freesurfer/
+SUBJECTS_DIR=${PROJECT_DIR}/data/local/freesurfer/
 PREFIX=sub-
 
 cd ${SUBJECTS_DIR}
