@@ -47,20 +47,20 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 
 
-| Day |  #	| Step	|   How Long Does it take to run? 	|
+| stage |  #	| Step	|   How Long Does it take to run? 	|
 |---    |---	|---	|---	|
-| Day 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
+| stage 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
 |^ |   01d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
-|Day 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  16 hours on slurm 	|
+|stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  16 hours on slurm 	|
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|Day 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
+|stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
 |^ |   02b	|  [Run enigma_dti ](#Running-enigma-dti) 	|  10 hours of slurm 	|
-|Day 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
+|stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp_d](#Running-xcp-d) 	|  10 hours on slurm 	|
-|Day 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
+|stage 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
