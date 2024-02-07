@@ -59,7 +59,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |Day 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  20 hours of slurm 	|
 |^ |   02b	|  [Run enigma_dti ](#Running-enigma-dti) 	|  10 hours of slurm 	|
 |Day 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp_d(#Running-xcp-d) 	|  10 hours on slurm 	|
+|^ |   03b	|  [Run xcp_d](#Running-xcp-d) 	|  10 hours on slurm 	|
 |Day 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
@@ -222,7 +222,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
 
-## Running enigma_dti
+## Running enigma-dti
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
