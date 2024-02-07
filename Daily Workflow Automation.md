@@ -1,10 +1,10 @@
 # Automated Daily Pipeline Coordination and Code Integration for Efficient Workflow Execution
 
-In this project, we have devised a streamlined solution for managing multiple daily pipelines with a focus on seamless coordination and code integration. Our approach involves the creation of an automated system that orchestrates the execution of diverse pipelines each day. By combining and organizing the necessary codes for each day's tasks, we aim to optimize workflow efficiency.
+In this project, we have devised a streamlined solution for managing multiple daily pipelines with a focus on seamless coordination and code integration. Our approach involves the creation of an automated system that orchestrates the execution of diverse pipelines each stage. By combining and organizing the necessary codes for each stage's tasks, we aim to optimize workflow efficiency.
 
-After setting up the scinet environment and organizing your bids folder and participants.csv file, you can run the codes for each day.
+After setting up the scinet environment and organizing your bids folder and participants.csv file, you can run the codes for each stage.
 
-## Day 1 (mriqc, fmriprep_anat, qsiprep):
+## stage 1 (mriqc, fmriprep_anat, qsiprep):
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
@@ -48,7 +48,7 @@ sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
 
 
-## Day 2 (fmriprep_func, enigma_dti):
+## stage 2 (fmriprep_func, enigma_dti):
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -79,7 +79,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_enigma_dti_scinet.sh
 ```
 
-## Day 3 (ciftify_anat, xcp_scinet):
+## stage 3 (ciftify_anat, xcp_scinet):
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -111,7 +111,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
 ```
 
-## Day 4 (parcellation, extract data to share folder):
+## stage 4 (parcellation, extract data to share folder):
 
 ```sh
 
