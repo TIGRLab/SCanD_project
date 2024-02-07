@@ -25,6 +25,7 @@ for subject in ${subjects}; do
 done
 
 
+echo "copying over the qsiprep metadata and qc images"
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
 QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep
@@ -54,6 +55,7 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}
 rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
 
 
+echo "copying over the xcp_d metadata and qc images"
 
 ## copy over the xcp json files 
 XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
