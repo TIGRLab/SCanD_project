@@ -23,6 +23,7 @@ ${BASEDIR}
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
 │   │   ├── parcellated          # ciftify derivatives
+│   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
@@ -31,6 +32,7 @@ ${BASEDIR}
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
 │       ├── parcellate           # contains only qc images and metadata
+│       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
@@ -60,6 +62,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02b	|  [Run enigma_dti ](#Running-enigma-dti) 	|  10 hours of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp_d](#Running-xcp-d) 	|  10 hours on slurm 	|
+|^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |stage 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
@@ -303,6 +306,21 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
+```
+
+
+## Running enigma extract
+
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project_GMANJ
+git pull
+
+source ./code/03_ENIGMA_ExtractCortical.sh
 ```
 
 
