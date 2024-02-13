@@ -119,3 +119,19 @@ singularity exec \
 
 
 
+##### STEP 3 - run the ENIGMA DTI participant workflow ########################
+
+ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
+
+ENIGMA_CONTAINER=${SCRATCH}/SCanD_SPINS/containers/tbss.simg
+
+mkdir -p ${ENIGMA_DTI_OUT}
+
+singularity run \
+  -H ${TMP_DIR} \
+  -B ${ENIGMA_DTI_OUT}:/enigma_dir \
+  -B ${DTIFIT_dir}:/dtifit_dir \
+  ${ENIGMA_CONTAINER} \
+  --calc-all --debug \
+  /enigma_dir/sub-${SUBJECTS}_ses-01\
+  /dtifit_dir/${DTIFIT_name}_FA.nii.gz
