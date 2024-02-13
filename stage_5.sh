@@ -1,3 +1,4 @@
+## stage 5 (extract and hare files):
 ssh niagara.scinet.utoronto.ca
 
 ## go to the repo and pull new changes
