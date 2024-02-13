@@ -62,7 +62,37 @@ fi
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
 
+singularity run --cleanenv \
+    -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
+    -B ${BIDS_DIR}:/bids \
+    -B ${QSIPREP_DIR}:/derived \
+    -B ${WORK_DIR}:/work \
+    -B ${OUTPUT_DIR}:/out \
+    ${SING_CONTAINER} \
+    /bids /out participant \
+    --skip-bids-validation \
+    --participant_label ${SUBJECTS} \
+    -w /work \
+    --skip-bids-validation \
+    --omp-nthreads 8 \
+    --nthreads 40 \
+    --recon-only \
+    --recon-spec reorient_fslstd \
+    --recon-input /derived \
+    --output-resolution 2.0 
 
+ exitcode=$?
+
+# Output results to a table
+for subject in $SUBJECTS; do
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
 
 QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
 DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
