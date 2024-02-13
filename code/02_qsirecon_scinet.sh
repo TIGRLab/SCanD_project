@@ -62,7 +62,7 @@ fi
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
 echo singularity run --cleanenv \
-    -B ${SCRATCH}/SCanD_SPINS/templates:/home/qsiprep --home /home/qsiprep \
+    -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${QSIPREP_DIR}:/derived \
     -B ${OUT_DIR}:/out \
@@ -82,7 +82,7 @@ echo singularity run --cleanenv \
     --output-resolution 2.0 \
     --fs-license-file /li
 singularity run --cleanenv \
-    -B ${SCRATCH}/SCanD_SPINS/templates:/home/qsiprep --home /home/qsiprep \
+    -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${QSIPREP_DIR}:/derived \
     -B ${OUT_DIR}:/out \
