@@ -1,4 +1,4 @@
-## stage 3 (ciftify_anat, xcp_scinet, enigma extract):
+## stage 3 (ciftify_anat, xcp-d, enigma extract, enigma-dti):
 
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
@@ -29,3 +29,6 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
 ##enigma_extract
 source ./code/03_ENIGMA_ExtractCortical.sh
+
+##enigma-dti
+sbatch  ./code/03_enigma_dti_scinet.sh
