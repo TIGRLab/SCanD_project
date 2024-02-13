@@ -93,8 +93,9 @@ for subject in $SUBJECTS; do
     fi
 done
 
-QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
-DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+
+QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
 DTIFIT_dir=$(dirname ${DTIFIT_OUT})
 DTIFIT_name=$(basename ${DTIFIT_OUT})
 
@@ -132,6 +133,6 @@ singularity run \
   -B ${DTIFIT_dir}:/dtifit_dir \
   ${ENIGMA_CONTAINER} \
   --calc-all --debug \
-  /enigma_dir/sub-${SUBJECTS}_${session} \
+  /enigma_dir/sub-${SUBJECTS}_ses-01\
   /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
