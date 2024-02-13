@@ -167,3 +167,16 @@ singularity run \
   --calc-all --debug \
   /enigma_dir/sub-${subject_id}_${session} \
   /dtifit_dir/${DTIFIT_name}_FA.nii.gz
+
+exitcode=$?
+
+# Output results to a table
+for subject in $SUBJECTS; do
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
