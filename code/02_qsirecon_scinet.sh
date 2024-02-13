@@ -105,6 +105,19 @@ singularity exec \
   --save_tensor --sse \
   -o /out/$DTIFIT_name
 
+ exitcode=$?
+
+# Output results to a table
+for subject in $SUBJECTS; do
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
+
 ##### STEP 3 - run the ENIGMA DTI participant workflow ########################
 
 ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
@@ -124,16 +137,5 @@ singularity run \
   /enigma_dir/sub-${SUBJECTS}_ses-01\
   /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
- exitcode=$?
 
-# Output results to a table
-for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
-done
 
