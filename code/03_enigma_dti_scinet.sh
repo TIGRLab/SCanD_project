@@ -32,7 +32,7 @@ ${BASEDIR}/code/run_group_enigma_concat.py \
 ${BASEDIR}/code/run_group_qc_index.py ${OUT_DIR} ${metric}skel
 done
 
-${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \a
+${BASEDIR}/code/run_group_enigma_concat.py --output-nVox \a
   ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
 
-python ${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_dir
+python ${BASEDIR}/code/run_group_dtifit_qc.py --debug /dtifit_dir
