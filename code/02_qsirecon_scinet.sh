@@ -123,7 +123,7 @@ singularity exec \
 
 ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
 
-ENIGMA_CONTAINER=${SCRATCH}/SCanD_SPINS/containers/tbss.simg
+ENIGMA_CONTAINER=${BASEDIR}/containers/tbss.simg
 
 mkdir -p ${ENIGMA_DTI_OUT}
 
