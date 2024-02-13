@@ -64,7 +64,7 @@ export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 echo singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
-    -B ${QSIPREP_DIR}:/derived \
+    -B ${OUTPUT_DIR}:/derived \
     -B ${OUT_DIR}:/out \
     -B ${WORK_DIR}:/work \
     -B ${fs_license}:/li \
