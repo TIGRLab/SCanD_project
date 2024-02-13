@@ -14,9 +14,9 @@ ENIGMA_SCRIPT=${BASEDIR}/code/enigma_group.sh
 
 singularity exec -H ${BASEDIR}/tmp \
   -B $PROJECT/ENIGMA_DTI_BIDS \
-  -B /project/a/arisvoin/smansour/SPASD/SPASD_enigmaDTI/data/enigmaDTI:/enigma_dir \
-  -B /project/a/arisvoin/smansour/SPASD/SPASD_enigmaDTI/data/dtifit:/dtifit_dir \
-  /scratch/a/arisvoin/smansour/SCanD_SPINS/containers/tbss2.simg \
+  -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
+  -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
+  ${BASEDIR}/containers/tbss2.simg \
   /bin/bash
 
 DTIFIT_DIR=/dtifit_dir
