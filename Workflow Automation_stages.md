@@ -10,13 +10,13 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (fmriprep_func, enigma_dti):
+## stage 2 (fmriprep_func, qsirecon):
 
 ```sh
 source ./stage_2.sh
 ```
 
-## stage 3 (ciftify_anat, xcp_scinet, enigma extract):
+## stage 3 (ciftify_anat, xcp_scinet, enigma extract, enigma_dti):
 
 ```sh
 source ./stage_3.sh
