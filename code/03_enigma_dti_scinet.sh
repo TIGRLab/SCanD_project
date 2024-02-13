@@ -10,9 +10,9 @@
 DTIFIT_DIR=OUTPUT_DIR=${BASEDIR}/data/local/dtifit
 ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
-ENIGMA_SCRIPT=/project/a/arisvoin/smansour/SPINS/SPINS_enigmaDTI/code/enigma_group.sh
+ENIGMA_SCRIPT=${BASEDIR}/code/enigma_group.sh
 
-singularity exec -H /project/a/arisvoin/smansour/SPASD/SPASD_enigmaDTI/tmp \
+singularity exec -H ${BASEDIR}/tmp \
   -B $PROJECT/ENIGMA_DTI_BIDS \
   -B /project/a/arisvoin/smansour/SPASD/SPASD_enigmaDTI/data/enigmaDTI:/enigma_dir \
   -B /project/a/arisvoin/smansour/SPASD/SPASD_enigmaDTI/data/dtifit:/dtifit_dir \
