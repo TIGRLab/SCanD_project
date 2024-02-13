@@ -5,13 +5,13 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=10:00:00
 
-DTIFIT_DIR=OUTPUT_DIR=${BASEDIR}/data/local/dtifit
-ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/enigmaDTI
+DTIFIT_DIR=OUTPUT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
+ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
 
 singularity exec -H ${BASEDIR}/tmp \
-  -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
-  -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
+  -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
+  -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss2.simg \
   /bin/bash
 
