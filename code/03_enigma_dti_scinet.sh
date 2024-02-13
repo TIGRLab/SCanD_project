@@ -10,7 +10,6 @@ ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
 
 singularity exec -H ${BASEDIR}/tmp \
-  -B $PROJECT/ENIGMA_DTI_BIDS \
   -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss2.simg \
