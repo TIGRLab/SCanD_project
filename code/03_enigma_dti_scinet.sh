@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=10:00:00
 
-# Built from https://hub.docker.com/repository/docker/salimmansour/tbss/general
-
 DTIFIT_DIR=OUTPUT_DIR=${BASEDIR}/data/local/dtifit
 ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
