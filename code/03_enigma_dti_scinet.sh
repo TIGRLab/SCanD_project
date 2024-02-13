@@ -27,9 +27,9 @@ ENIGMA_DTI_BIDS=/opt/ENIGMA_DTI_BIDS
 ENIGMA_DTI_BIDS=$PROJECT/ENIGMA_DTI_BIDS
 
 for metric in FA MD RD AD; do
-${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py \
+${BASEDIR}/code/run_group_enigma_concat.py \
   ${OUT_DIR} ${metric} ${OUT_DIR}/group_enigmaDTI_${metric}.csv
-${ENIGMA_DTI_BIDS}/run_group_qc_index.py ${OUT_DIR} ${metric}skel
+${BASEDIR}/code/run_group_qc_index.py ${OUT_DIR} ${metric}skel
 done
 
 ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \a
