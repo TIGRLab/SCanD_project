@@ -21,9 +21,6 @@ singularity exec -H ${BASEDIR}/tmp \
 DTIFIT_DIR=/dtifit_dir
 OUT_DIR=/enigma_dir
 
-# modify this to the location you cloned the repo to
-ENIGMA_DTI_BIDS=/opt/ENIGMA_DTI_BIDS
-ENIGMA_DTI_BIDS=$PROJECT/ENIGMA_DTI_BIDS
 
 for metric in FA MD RD AD; do
 ${BASEDIR}/code/run_group_enigma_concat.py \
