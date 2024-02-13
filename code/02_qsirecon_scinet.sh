@@ -80,8 +80,21 @@ singularity run --cleanenv \
     --recon-input /derived \
     --output-resolution 2.0 
 
-QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${subject_id}/ses-01/dwi/sub-${subject_id}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
-DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${subject_id}/ses-01/dwi/sub-${subject_id}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+    exitcode=$?
+
+# Output results to a table
+for subject in $SUBJECTS; do
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
+
+QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_${session}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
 DTIFIT_dir=$(dirname ${DTIFIT_OUT})
 DTIFIT_name=$(basename ${DTIFIT_OUT})
 
@@ -111,8 +124,6 @@ ENIGMA_CONTAINER=${SCRATCH}/SCanD_SPINS/containers/tbss.simg
 
 mkdir -p ${ENIGMA_DTI_OUT}
 
-# python ${CODE_DIR}/run_participant_enigma_extract.py --calc-all --debug \
-#   ${ENIGMA_DTI_OUT}/sub-${subject_id}_${session} ${DTIFIT_OUT}_FA.nii.gz
 
 
 singularity run \
@@ -121,18 +132,6 @@ singularity run \
   -B ${DTIFIT_dir}:/dtifit_dir \
   ${ENIGMA_CONTAINER} \
   --calc-all --debug \
-  /enigma_dir/sub-${subject_id}_${session} \
+  /enigma_dir/sub-${SUBJECTS}_${session} \
   /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
-exitcode=$?
-
-# Output results to a table
-for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
-done
