@@ -325,6 +325,21 @@ source ./code/03_ENIGMA_ExtractCortical.sh
 ```
 
 
+## Running enigma-dti
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project_GMANJ
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/03_enigma_dti_scinet.sh
+```
+
+
 ## Running the parcellation step
 
 ```sh
