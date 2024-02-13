@@ -68,7 +68,7 @@ singularity run --cleanenv \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
     ${SING_CONTAINER} \
-    /bids /out participant \
+    /bids /derived participant \
     --skip-bids-validation \
     --participant_label ${SUBJECTS} \
     -w /work \
