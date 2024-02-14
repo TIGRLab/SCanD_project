@@ -126,7 +126,6 @@ ENIGMA_CONTAINER=${BASEDIR}/containers/tbss.simg
 mkdir -p ${ENIGMA_DTI_OUT}
 
 singularity run \
-  -H ${TMP_DIR} \
   -B ${ENIGMA_DTI_OUT}:/enigma_dir \
   -B ${DTIFIT_dir}:/dtifit_dir \
   ${ENIGMA_CONTAINER} \
