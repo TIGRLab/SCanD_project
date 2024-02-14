@@ -15,7 +15,7 @@ singularity exec \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss.simg \
-  /bin/bash
+  /bin/bash -c'
 
 DTIFIT_DIR=/dtifit_dir
 OUT_DIR=/enigma_dir
@@ -31,3 +31,4 @@ ${BASEDIR}/code/run_group_enigma_concat.py --output-nVox \a
 ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
 
 python ${BASEDIR}/code/run_group_dtifit_qc.py --debug /dtifit_dir
+'
