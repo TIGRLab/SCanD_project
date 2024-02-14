@@ -9,10 +9,10 @@ DTIFIT_DIR=OUTPUT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
 ENIGMA_DIR=OUTPUT_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss.simg
 
-singularity exec 
+singularity exec \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
-  ${BASEDIR}/containers/tbss2.simg \
+  ${BASEDIR}/containers/tbss.simg \
   /bin/bash
 
 DTIFIT_DIR=/dtifit_dir
