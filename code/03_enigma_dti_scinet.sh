@@ -22,7 +22,7 @@ DTIFIT_DIR=/dtifit_dir
 OUT_DIR=/enigma_dir
 
 # modify this to the location you cloned the repo to
-ENIGMA_DTI_BIDS=$SCRATCH/SCanD_project_GMANJ/code
+ENIGMA_DTI_BIDS=$PROJECT/SCanD_project_GMANJ/code
 
 for metric in FA MD RD AD; do
 ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py \
