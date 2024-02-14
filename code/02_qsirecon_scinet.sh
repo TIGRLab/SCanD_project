@@ -1,4 +1,4 @@
-#!/bin/bash
+o#!/bin/bash
 #SBATCH --job-name=qsirecon
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
@@ -102,7 +102,7 @@ DTIFIT_name=$(basename ${DTIFIT_OUT})
 mkdir -p $DTIFIT_dir
 
 
-singularity exec \
+echo singularity exec \
   -H ${TMP_DIR} \
   -B ${QSIRECON_OUT}_dwi.nii.gz \
   -B ${QSIRECON_OUT}_mask.nii.gz \
@@ -117,6 +117,20 @@ singularity exec \
   --save_tensor --sse \
   -o /out/$DTIFIT_name
 
+singularity exec \
+  -H ${TMP_DIR} \
+  -B ${QSIRECON_OUT}_dwi.nii.gz \
+  -B ${QSIRECON_OUT}_mask.nii.gz \
+  -B ${QSIRECON_OUT}_dwi.bvec \
+  -B ${QSIRECON_OUT}_dwi.bval \
+  -B ${DTIFIT_dir}:/out \
+  ${SING_CONTAINER} \
+  dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
+  -m ${QSIRECON_OUT}_mask.nii.gz \
+  -r ${QSIRECON_OUT}_dwi.bvec \
+  -b ${QSIRECON_OUT}_dwi.bval \
+  --save_tensor --sse \
+  -o /out/$DTIFIT_name
 
 
 ##### STEP 3 - run the ENIGMA DTI participant workflow ########################
