@@ -12,7 +12,7 @@ ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
 TBSS_CONTAINER=${BASEDIR}/containers/tbss.simg
 
 singularity exec \
-  -B $SCRATCH/SCanD_project_GMANJ \
+  -B $PROJECT/SCanD_project_GMANJ \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss.simg \
