@@ -1,4 +1,4 @@
-## stage 4 (parcellation):
+## stage 4 (parcellations):
 
 ## note step one is to make sure you are on one of the login nodes
 ssh niagara.scinet.utoronto.ca
