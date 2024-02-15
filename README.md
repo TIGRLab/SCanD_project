@@ -336,7 +336,7 @@ cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/03_enigma_dti_scinet.sh
+source  ./code/03_enigma_dti_scinet.sh
 ```
 
 
