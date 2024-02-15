@@ -41,7 +41,7 @@ import glob
 import subprocess
 import sys
 
-convert_directory = '/usr/bin/convert'
+convert_directory =/usr/bin/convert
 
 ### Erin's little function for running things in the shell
 def docmd(cmdlist):
