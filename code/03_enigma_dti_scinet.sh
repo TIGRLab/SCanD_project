@@ -1,9 +1,4 @@
-#!/bin/bash
-#SBATCH --job-name=enigma
-#SBATCH --output=logs/%x_%j.out
-#SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
-#SBATCH --time=10:00:00
+
 
 
 BASEDIR=${SLURM_SUBMIT_DIR}
