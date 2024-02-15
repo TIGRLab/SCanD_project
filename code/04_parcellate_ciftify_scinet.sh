@@ -13,8 +13,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
+export parcellation_dir=${BASEDIR}/templates/parcellations
+export atlases="atlas-Glasser"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -34,8 +34,6 @@ trap "cleanup_ramdisk" TERM
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export SING_CONTAINER=${BASEDIR}/container/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
-
-
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
 export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
@@ -43,9 +41,6 @@ export ciftify_folder="${BASEDIR}/data/local/ciftify/"
 
 export cifti_dense_anat="${BASEDIR}/data/local/cifti_dense_anat/"
 export parcellated="${BASEDIR}/data/local/parcellated_2/"
-
-ALL_SUBJECTS=$(for sub in $(ls -1d ${ciftify_folder}/sub*); do echo $(basename ${sub}); done)
-
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 SUB_SIZE=1 ## number of subjects to run
