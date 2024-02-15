@@ -47,6 +47,8 @@ def docmd(cmdlist):
     if DEBUG: print(' '.join(cmdlist))
     if not DRYRUN: subprocess.call(cmdlist)
 
+convert_command = 'convert'
+
 def main():
 
     global DEBUG
@@ -177,22 +179,22 @@ def main():
     #get rid of the tmpdir
     shutil.rmtree(tmpdirbase)
 
-def gif_gridtoline(input_gif,output_gif,tmpdir):
+def gif_gridtoline(input_gif, output_gif, tmpdir):
     '''
     uses imagemagick to take a grid from fsl slices and convert to one line (like in slicesdir)
     '''
-    docmd(['convert',input_gif, '-resize', '384x384',input_gif])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+0', os.path.join(tmpdir,'sag.gif')])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+128', os.path.join(tmpdir,'cor.gif')])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+256', os.path.join(tmpdir,'ax.gif')])
+    docmd([convert_command, input_gif, '-resize', '384x384', input_gif])
+    docmd([convert_command, input_gif,\
+        '-crop', '100x33%+0+0', os.path.join(tmpdir, 'sag.gif')])
+    docmd([convert_command, input_gif,\
+        '-crop', '100x33%+0+128', os.path.join(tmpdir, 'cor.gif')])
+    docmd([convert_command, input_gif,\
+        '-crop', '100x33%+0+256', os.path.join(tmpdir, 'ax.gif')])
     docmd(['montage', '-mode', 'concatenate', '-tile', '3x1', \
-        os.path.join(tmpdir,'sag.gif'),\
-        os.path.join(tmpdir,'cor.gif'),\
-        os.path.join(tmpdir,'ax.gif'),\
-        os.path.join(output_gif)])
+        os.path.join(tmpdir, 'sag.gif'),\
+        os.path.join(tmpdir, 'cor.gif'),\
+        os.path.join(tmpdir, 'ax.gif'),\
+        output_gif])
 
 def mask_overlay(background_nii,mask_nii, overlay_gif, tmpdir):
     '''
