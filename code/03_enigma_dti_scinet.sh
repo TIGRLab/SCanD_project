@@ -1,7 +1,18 @@
+module load NiaEnv/2019b python/3.11.5
+
+# Create a directory for virtual environments if it doesn't exist
+mkdir ~/.virtualenvs
+cd ~/.virtualenvs
+virtualenv --system-site-packages ~/.virtualenvs/myenv
+
+# Activate the virtual environment
+source ~/.virtualenvs/myenv/bin/activate 
 
 
+python3 -m pip install docopt
 
-BASEDIR=${SLURM_SUBMIT_DIR}
+
+BASEDIR=${PROJECT}/SCanD_project_GMANJ
 
 chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
 chmod +x ${BASEDIR}/code/run_group_enigma_concat.py
@@ -35,4 +46,8 @@ ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \
 
 python ${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_di
 
+exit
 
+deactivate
+
+cd ${PROJECT}/SCanD_project_GMANJ
