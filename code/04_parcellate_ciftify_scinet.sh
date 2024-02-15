@@ -224,4 +224,4 @@ export -f run_parcellation
 
 parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_parcellation {1}" \
-    ::: ${THESE_SUBJECTS}
+    ::: ${SUBJECTS}
