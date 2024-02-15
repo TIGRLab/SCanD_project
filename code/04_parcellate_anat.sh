@@ -13,8 +13,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load parallel
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/templates/parcellations
-export atlases="atlas-Glasser"
+export parcellation_dir=${BASEDIR}/data/local/xcp_d
+export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -32,7 +32,7 @@ trap "cleanup_ramdisk" TERM
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export SING_CONTAINER=${BASEDIR}/containers/tigrlab_fmriprep_ciftify_v1.3.2-2.3.3-2019-08-16-c0fcb37f1b56.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 
 
@@ -41,9 +41,8 @@ export SING_CONTAINER=${BASEDIR}/containers/tigrlab_fmriprep_ciftify_v1.3.2-2.3.
 export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
 export ciftify_folder="${BASEDIR}/data/local/ciftify/"
 
-#export cifti_clean="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_clean/"
-#export cifti_dense_anat="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_dense_anat/"
-export parcellated="${BASEDIR}/data/local/parcellated/"
+export cifti_dense_anat="${BASEDIR}/data/local/cifti_dense_anat/"
+export parcellated="${BASEDIR}/data/local/parcellated_2/"
 
 ALL_SUBJECTS=$(for sub in $(ls -1d ${ciftify_folder}/sub*); do echo $(basename ${sub}); done)
 
@@ -58,6 +57,7 @@ THESE_SUBJECTS=`for sub in ${ALL_SUBJECTS}; do echo ${sub}; done | head -n ${big
 run_parcellation() {
 
     sub=${1}
+    atlas=${2}
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
     hemi_anat=$(mktemp -d -t hemi-XXXXXXXXXX)
@@ -216,6 +216,9 @@ run_parcellation() {
 
 export -f run_parcellation
 
-parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
- "run_parcellation {1}" \
-    ::: ${THESE_SUBJECTS} 
+# Loop over the atlases
+for atlas in "${atlases[@]}"; do
+    parallel -j ${SUB_SIZE} --tag --line-buffer --compress "run_parcellation {1} ${atlas}" ::: ${THESE_DTSERIES}
+done
+
+
