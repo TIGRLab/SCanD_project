@@ -244,7 +244,7 @@ def V1_overlay(background_nii,V1_nii, overlay_gif, tmpdir):
         docmd(['slices',os.path.join(tmpdir,'V1'+axis+'abs.nii.gz'),'-o',os.path.join(tmpdir,'V1'+axis+'abs.gif')])
         # docmd(['convert', os.path.join(tmpdir,'V1'+axis+'abs.gif'),\
         #         '-fuzz', '15%', '-transparent', 'black', os.path.join(tmpdir,'V1'+axis+'set.gif')])
-    docmd(['convert', os.path.join(tmpdir,'V10000abs.gif'),\
+    docmd([os.path.join(convert_directory, 'convert'), os.path.join(tmpdir,'V10000abs.gif'),\
         os.path.join(tmpdir,'V10001abs.gif'), os.path.join(tmpdir,'V10002abs.gif'),\
         '-set', 'colorspace', 'RGB', '-combine', '-set', 'colorspace', 'sRGB',\
         os.path.join(tmpdir,'dirmap.gif')])
