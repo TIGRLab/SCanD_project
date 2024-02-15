@@ -13,8 +13,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load parallel
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/data/local/xcp_d
-export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
+export parcellation_dir=${BASEDIR}/templates/parcellations
+export atlases="atlas-Glasser"
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -32,7 +32,7 @@ trap "cleanup_ramdisk" TERM
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
+export SING_CONTAINER=${BASEDIR}/container/tigrlab_fmriprep_ciftify_v1.3.2-2.3.3-2019-08-16-c0fcb37f1b56.simg
 
 
 
@@ -57,7 +57,6 @@ THESE_SUBJECTS=`for sub in ${ALL_SUBJECTS}; do echo ${sub}; done | head -n ${big
 run_parcellation() {
 
     sub=${1}
-    atlas=${2}
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
     hemi_anat=$(mktemp -d -t hemi-XXXXXXXXXX)
@@ -216,9 +215,6 @@ run_parcellation() {
 
 export -f run_parcellation
 
-# Loop over the atlases
-for atlas in "${atlases[@]}"; do
-    parallel -j ${SUB_SIZE} --tag --line-buffer --compress "run_parcellation {1} ${atlas}" ::: ${THESE_DTSERIES}
-done
-
-
+parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
+ "run_parcellation {1}" \
+    ::: ${THESE_SUBJECTS}
