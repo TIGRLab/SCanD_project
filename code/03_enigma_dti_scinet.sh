@@ -5,7 +5,12 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=10:00:00
 
+
 BASEDIR=${SLURM_SUBMIT_DIR}
+
+chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
+chmod +x ${BASEDIR}/code/run_group_enigma_concat.py
+chmod +x ${BASEDIR}/code/run_group_qc_index.py
 
 DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
 ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
