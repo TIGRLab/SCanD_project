@@ -5,37 +5,45 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=10:00:00
 
+# Load necessary modules if needed
+# module load python
 
-BASEDIR=${PROJECT}/SCanD_project_GMANJ
+# Set environment variables
+export BASEDIR=${PROJECT}/SCanD_project_GMANJ
+export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
+export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
+export TBSS_CONTAINER=${BASEDIR}/containers/tbss.simg
 
+# Make Python scripts executable
 chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
 chmod +x ${BASEDIR}/code/run_group_enigma_concat.py
 chmod +x ${BASEDIR}/code/run_group_qc_index.py
 
-DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
-ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
-TBSS_CONTAINER=${BASEDIR}/containers/tbss.simg
-
+# Execute Singularity container
 singularity exec \
-  -B $PROJECT/SCanD_project_GMANJ \
+  -B ${PROJECT}/SCanD_project_GMANJ \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss.simg \
-   /bin/bash
+  /bin/bash << 'EOF'
 
+# Inside the Singularity container
 DTIFIT_DIR=/dtifit_dir
 OUT_DIR=/enigma_dir
 
-# modify this to the location you cloned the repo to
-ENIGMA_DTI_BIDS=$PROJECT/SCanD_project_GMANJ/code
+# Modify this to the location you cloned the repo to
+ENIGMA_DTI_BIDS=${PROJECT}/SCanD_project_GMANJ/code
 
+# Run Python scripts
 for metric in FA MD RD AD; do
-${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py \
-  ${OUT_DIR} ${metric} ${OUT_DIR}/group_enigmaDTI_${metric}.csv
-${ENIGMA_DTI_BIDS}/run_group_qc_index.py ${OUT_DIR} ${metric}skel
+  ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py \
+    ${OUT_DIR} ${metric} ${OUT_DIR}/group_enigmaDTI_${metric}.csv
+  ${ENIGMA_DTI_BIDS}/run_group_qc_index.py ${OUT_DIR} ${metric}skel
 done
 
 ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \
   ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
 
 ${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_dir
+
+EOF
