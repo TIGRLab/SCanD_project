@@ -32,7 +32,7 @@ trap "cleanup_ramdisk" TERM
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export SING_CONTAINER=${BASEDIR}/container/tigrlab_fmriprep_ciftify_v1.3.2-2.3.3-2019-08-16-c0fcb37f1b56.simg
+export SING_CONTAINER=${BASEDIR}/container/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 
 
