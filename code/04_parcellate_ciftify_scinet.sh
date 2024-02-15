@@ -13,8 +13,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/templates/parcellations
-export atlases="atlas-Glasser"
+export parcellation_dir=${BASEDIR}/data/local/xcp_d
+export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
