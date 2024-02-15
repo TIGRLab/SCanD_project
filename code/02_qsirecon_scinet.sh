@@ -80,6 +80,45 @@ singularity run --cleanenv \
     --recon-input /derived \
     --output-resolution 2.0
     
+ 
+QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+DTIFIT_dir=$(dirname ${DTIFIT_OUT})
+DTIFIT_name=$(basename ${DTIFIT_OUT})
+
+mkdir -p $DTIFIT_dir
+
+
+singularity exec \
+  -B ${QSIRECON_OUT}_dwi.nii.gz \
+  -B ${QSIRECON_OUT}_mask.nii.gz \
+  -B ${QSIRECON_OUT}_dwi.bvec \
+  -B ${QSIRECON_OUT}_dwi.bval \
+  -B ${DTIFIT_dir}:/out \
+  ${SING_CONTAINER} \
+  dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
+  -m ${QSIRECON_OUT}_mask.nii.gz \
+  -r ${QSIRECON_OUT}_dwi.bvec \
+  -b ${QSIRECON_OUT}_dwi.bval \
+  --save_tensor --sse \
+  -o ${DTIFIT_dir}/$DTIFIT_name
+
+
+##### STEP 3 - run the ENIGMA DTI participant workflow ########################
+
+ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
+
+ENIGMA_CONTAINER=${BASEDIR}/containers/tbss.simg
+
+mkdir -p ${ENIGMA_DTI_OUT}
+
+singularity run \
+  -B ${ENIGMA_DTI_OUT}:/enigma_dir \
+  -B ${DTIFIT_dir}:/dtifit_dir \
+  ${ENIGMA_CONTAINER} \
+  --calc-all --debug \
+  /enigma_dir/sub-${SUBJECTS}_ses-01\
+  /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
 
   exitcode=$?
