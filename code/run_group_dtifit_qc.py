@@ -41,13 +41,18 @@ import glob
 import subprocess
 import sys
 
+convert_directory = '/usr/bin/convert'
+
 ### Erin's little function for running things in the shell
 def docmd(cmdlist):
     "sends a command (inputed as a list) to the shell"
     if DEBUG: print(' '.join(cmdlist))
-    if not DRYRUN: subprocess.call(cmdlist)
+    if not DRYRUN:
+        # Modify the PATH environment variable to include the directory
+        env = os.environ.copy()
+        env['PATH'] = convert_directory + os.pathsep + env.get('PATH', '')
+        subprocess.call(cmdlist, env=env)
 
-convert_command = 'convert'
 
 def main():
 
@@ -183,19 +188,19 @@ def gif_gridtoline(input_gif, output_gif, tmpdir):
     '''
     uses imagemagick to take a grid from fsl slices and convert to one line (like in slicesdir)
     '''
-    docmd([convert_command, input_gif, '-resize', '384x384', input_gif])
-    docmd([convert_command, input_gif,\
+    docmd([os.path.join(convert_directory, 'convert'), input_gif, '-resize', '384x384', input_gif])
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
         '-crop', '100x33%+0+0', os.path.join(tmpdir, 'sag.gif')])
-    docmd([convert_command, input_gif,\
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
         '-crop', '100x33%+0+128', os.path.join(tmpdir, 'cor.gif')])
-    docmd([convert_command, input_gif,\
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
         '-crop', '100x33%+0+256', os.path.join(tmpdir, 'ax.gif')])
-    docmd(['montage', '-mode', 'concatenate', '-tile', '3x1', \
+    docmd([os.path.join(convert_directory, 'montage'), '-mode', 'concatenate', '-tile', '3x1', \
         os.path.join(tmpdir, 'sag.gif'),\
         os.path.join(tmpdir, 'cor.gif'),\
         os.path.join(tmpdir, 'ax.gif'),\
         output_gif])
-
+  
 def mask_overlay(background_nii,mask_nii, overlay_gif, tmpdir):
     '''
     use slices from fsl to overlay the mask on the background (both nii)
