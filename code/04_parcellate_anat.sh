@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks=2
+#SBATCH --ntasks=80
 #SBATCH --time=00:30:00
 #SBATCH --export=ALL
 #SBATCH --job-name="cifti_anatparc"
@@ -10,7 +10,7 @@
 BASEDIR=${SLURM_SUBMIT_DIR}
 
 ## this script requires gnu-parallel
-module load parallel
+module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
