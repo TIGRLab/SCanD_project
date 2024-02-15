@@ -46,8 +46,9 @@ ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \
 
 python ${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_di
 
-exit
-
 deactivate
 
 cd ${PROJECT}/SCanD_project_GMANJ
+
+exit
+
