@@ -65,6 +65,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |^ |   03d	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |stage 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
+|^ |   04b	|  [Running the parcellation-anat step](#Running-the-parcellation-anat-step) 	|   20 mins on slurm	|
 |stage 5 |   05a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
@@ -360,7 +361,25 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/04_parcellate_scinet.sh
 ```
 
+## Running the parcellation-anat step
 
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh niagara.scinet.utoronto.ca
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project_GMANJ
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/04_parcellate_anat.sh
+```
 ## Syncing the data with to the share directory
 
 This step does calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
