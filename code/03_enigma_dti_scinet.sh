@@ -38,4 +38,4 @@ done
 ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \
   ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
 
-python ${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_dir
+${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_dir
