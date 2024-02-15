@@ -12,7 +12,7 @@
 export BASEDIR=${PROJECT}/SCanD_project_GMANJ
 export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
 export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
-export TBSS_CONTAINER=${BASEDIR}/containers/tbss.simg
+export TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
 
 # Make Python scripts executable
 chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
