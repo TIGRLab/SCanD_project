@@ -32,18 +32,18 @@ trap "cleanup_ramdisk" TERM
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export SING_CONTAINER=/KIMEL/tigrlab/archive/code/containers/FMRIPREP_CIFTIFY/tigrlab_fmriprep_ciftify_v1.3.2-2.3.3-2019-08-16-c0fcb37f1b56.simg
+export SING_CONTAINER=${BASEDIR}/containers/tigrlab_fmriprep_ciftify_v1.3.2-2.3.3-2019-08-16-c0fcb37f1b56.simg
 
 
 
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
-export fmriprep_folder="/KIMEL/tigrlab/archive/data/TAY/pipelines/bids_apps/fmriprep-ciftify/fmriprep/"
-export ciftify_folder="/KIMEL/tigrlab//scratch/jwong/ciftify/output/ciftify/"
+export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
+export ciftify_folder="${BASEDIR}/data/local/ciftify/"
 
-export cifti_clean="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_clean/"
-export cifti_dense_anat="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_dense_anat/"
-export parcellated="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/parcellated/"
+#export cifti_clean="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_clean/"
+#export cifti_dense_anat="/KIMEL/tigrlab/scratch/edickie/TAY_parcellated/cifti_dense_anat/"
+export parcellated="${BASEDIR}/data/local/parcellated/"
 
 ALL_SUBJECTS=$(for sub in $(ls -1d ${ciftify_folder}/sub*); do echo $(basename ${sub}); done)
 
