@@ -41,11 +41,18 @@ import glob
 import subprocess
 import sys
 
+convert_directory = '/usr/bin'
+
 ### Erin's little function for running things in the shell
 def docmd(cmdlist):
     "sends a command (inputed as a list) to the shell"
     if DEBUG: print(' '.join(cmdlist))
-    if not DRYRUN: subprocess.call(cmdlist)
+    if not DRYRUN:
+        # Modify the PATH environment variable to include the directory
+        env = os.environ.copy()
+        env['PATH'] = convert_directory + os.pathsep + env.get('PATH', '')
+        subprocess.call(cmdlist, env=env)
+
 
 def main():
 
@@ -177,22 +184,22 @@ def main():
     #get rid of the tmpdir
     shutil.rmtree(tmpdirbase)
 
-def gif_gridtoline(input_gif,output_gif,tmpdir):
+def gif_gridtoline(input_gif, output_gif, tmpdir):
     '''
     uses imagemagick to take a grid from fsl slices and convert to one line (like in slicesdir)
     '''
-    docmd(['convert',input_gif, '-resize', '384x384',input_gif])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+0', os.path.join(tmpdir,'sag.gif')])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+128', os.path.join(tmpdir,'cor.gif')])
-    docmd(['convert', input_gif,\
-        '-crop', '100x33%+0+256', os.path.join(tmpdir,'ax.gif')])
-    docmd(['montage', '-mode', 'concatenate', '-tile', '3x1', \
-        os.path.join(tmpdir,'sag.gif'),\
-        os.path.join(tmpdir,'cor.gif'),\
-        os.path.join(tmpdir,'ax.gif'),\
-        os.path.join(output_gif)])
+    docmd([os.path.join(convert_directory, 'convert'), input_gif, '-resize', '384x384', input_gif])
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
+        '-crop', '100x33%+0+0', os.path.join(tmpdir, 'sag.gif')])
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
+        '-crop', '100x33%+0+128', os.path.join(tmpdir, 'cor.gif')])
+    docmd([os.path.join(convert_directory, 'convert'), input_gif,\
+        '-crop', '100x33%+0+256', os.path.join(tmpdir, 'ax.gif')])
+    docmd([os.path.join(convert_directory, 'montage'), '-mode', 'concatenate', '-tile', '3x1', \
+        os.path.join(tmpdir, 'sag.gif'),\
+        os.path.join(tmpdir, 'cor.gif'),\
+        os.path.join(tmpdir, 'ax.gif'),\
+        output_gif])
 
 def mask_overlay(background_nii,mask_nii, overlay_gif, tmpdir):
     '''
@@ -237,7 +244,7 @@ def V1_overlay(background_nii,V1_nii, overlay_gif, tmpdir):
         docmd(['slices',os.path.join(tmpdir,'V1'+axis+'abs.nii.gz'),'-o',os.path.join(tmpdir,'V1'+axis+'abs.gif')])
         # docmd(['convert', os.path.join(tmpdir,'V1'+axis+'abs.gif'),\
         #         '-fuzz', '15%', '-transparent', 'black', os.path.join(tmpdir,'V1'+axis+'set.gif')])
-    docmd(['convert', os.path.join(tmpdir,'V10000abs.gif'),\
+    docmd([[os.path.join(convert_directory, 'convert'), os.path.join(tmpdir,'V10000abs.gif'),\
         os.path.join(tmpdir,'V10001abs.gif'), os.path.join(tmpdir,'V10002abs.gif'),\
         '-set', 'colorspace', 'RGB', '-combine', '-set', 'colorspace', 'sRGB',\
         os.path.join(tmpdir,'dirmap.gif')])
