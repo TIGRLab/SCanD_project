@@ -8,9 +8,6 @@
 
 BASEDIR=${PROJECT}/SCanD_project_GMANJ
 
-source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install docopt
-
 chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
 chmod +x ${BASEDIR}/code/run_group_enigma_concat.py
 chmod +x ${BASEDIR}/code/run_group_qc_index.py
