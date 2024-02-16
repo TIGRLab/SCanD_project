@@ -24,7 +24,7 @@ singularity exec \
   -B ${SCRATCH}/SCanD_project_GMANJ \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
-  ${BASEDIR}/containers/tbss.simg \
+  ${BASEDIR}/containers/tbss2.simg \
   /bin/bash << 'EOF'
 
 # Inside the Singularity container
