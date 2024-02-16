@@ -78,7 +78,7 @@ run_parcellation() {
       -B ${parcellation_dir}:/parcellations \
       ${SING_CONTAINER} \
       wb_command -cifti-parcellate \
-      /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.thickness.32k_fs_LR.dscalar.nii \
+      /ciftify/sub-${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.thickness.32k_fs_LR.dscalar.nii \
       /parcellations/tpl-fsLR_res-91k_${atlas}_dseg.dlabel.nii \
       COLUMN \
       /parcellated/${atlas}/ptseries/sub-${sub}/anat/sub-${sub}_${atlas}_thickness.pscalar.nii \
