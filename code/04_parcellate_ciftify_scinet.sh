@@ -48,7 +48,7 @@ ALL_SUBJECTS=$(for sub in $(ls -1d ${ciftify_folder}/sub*); do echo $(basename $
 
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
-SUB_SIZE=1 ## number of subjects to run
+SUB_SIZE=10 ## number of subjects to run
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 # select the dtseries to run in this chunk
