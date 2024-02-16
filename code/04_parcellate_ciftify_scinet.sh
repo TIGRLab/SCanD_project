@@ -43,7 +43,7 @@ export cifti_dense_anat="${BASEDIR}/data/local/cifti_dense_anat/"
 export parcellated="${BASEDIR}/data/local/parcellated_2/"
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
-SUB_SIZE=1 ## number of subjects to run
+SUB_SIZE=10 ## number of subjects to run
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
