@@ -37,13 +37,13 @@ ${BASEDIR}
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
-|── work
+|── work                         #work directory for xcp-d
 |── LICENSE
 |──stage_1.sh
 |──stage_2.sh
 |──stage_3.sh
 |──stage_4.sh
-|── stage_5.sh
+|──stage_5.sh
 |── Workflow Automation_stages.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
