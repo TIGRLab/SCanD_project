@@ -52,7 +52,8 @@ SUB_SIZE=1 ## number of subjects to run
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 # select the dtseries to run in this chunk
-THESE_SUBJECTS=`for sub in ${aJECTS}; do echo ${sub}; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+THESE_SUBJECTS=`for sub in ${ALL_SUBJECTS}; do echo ${sub}; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+
 
 run_parcellation() {
 
