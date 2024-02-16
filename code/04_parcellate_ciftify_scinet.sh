@@ -32,7 +32,7 @@ trap "cleanup_ramdisk" TERM
 export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export SING_CONTAINER=${BASEDIR}/container/fmriprep_ciftity-v1.3.2-2.3.3.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
