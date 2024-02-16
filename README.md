@@ -22,7 +22,8 @@ ${BASEDIR}
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
-│   │   ├── parcellated          # ciftify derivatives
+│   │   ├── parcellated          # parcellation-xcp derivatives
+│   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │   │   └── xcp_d                # xcp
 │   |
