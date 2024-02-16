@@ -41,18 +41,36 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
 export ciftify_folder="${BASEDIR}/data/local/ciftify/"
 
-export cifti_dense_anat="${BASEDIR}/data/local/cifti_dense_anat/"
-export parcellated="${BASEDIR}/data/local/parcellated_2/"
 
-ALL_SUBJECTS=$(for sub in $(ls -1d ${ciftify_folder}/sub*); do echo $(basename ${sub}); done)
+export parcellated="${BASEDIR}/data/local/parcellated_ciftify/"
+export cifti_dense_anat="${parcellated}/cifti_dense_anat/"
+
+export BIDS_DIR=${BASEDIR}/data/local/bids
 
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 SUB_SIZE=10 ## number of subjects to run
+
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
-# select the dtseries to run in this chunk
-THESE_SUBJECTS=`for sub in ${ALL_SUBJECTS}; do echo ${sub}; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
+
+if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
+else
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+fi
+
+
+SUBJECTS_WITH_PREFIX=()
+for subject in ${SUBJECTS}; do
+    SUBJECTS_WITH_PREFIX+=("sub-${subject}")
+done
+
+# Reassign SUBJECTS variable
+SUBJECTS="${SUBJECTS_WITH_PREFIX[@]}"
 
 
 run_parcellation() {
@@ -211,11 +229,11 @@ run_parcellation() {
     done
   
     rm -r ${sing_home}
-
 }
 
 export -f run_parcellation
 
 parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_parcellation {1}" \
-    ::: ${THESE_SUBJECTS} 
+    ::: ${SUBJECTS} 
+
