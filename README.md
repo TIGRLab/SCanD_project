@@ -64,8 +64,8 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm 	|
 |^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |^ |   03d	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
-|stage 4 |   04a	|  [Running the parcellation step](#Running-the-parcellation-step) 	|   20 mins on slurm	|
-|^ |   04b	|  [Running the parcellation-anat step](#Running-the-parcellation-anat-step) 	|   20 mins on slurm	|
+|stage 4 |   04a	|  [Running the parcellation-xcp step](#Running-the-parcellation-xcp-step) 	|   20 mins on slurm	|
+|^ |   04b	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |stage 5 |   05a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
@@ -341,7 +341,7 @@ sbatch  ./code/03_enigma_dti_scinet.sh
 ```
 
 
-## Running the parcellation step
+## Running the parcellation-xcp step
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -361,7 +361,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/04_parcellate_xcp_scinet.sh
 ```
 
-## Running the parcellation-anat step
+## Running the parcellation-ciftify step
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
