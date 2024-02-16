@@ -58,7 +58,7 @@ fi
 
 run_parcellation() {
 
-    sub=${1}
+    sub=sub-{1} 
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
     hemi_anat=$(mktemp -d -t hemi-XXXXXXXXXX)
