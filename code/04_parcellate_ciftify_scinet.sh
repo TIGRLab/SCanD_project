@@ -58,15 +58,15 @@ fi
 
 run_parcellation() {
 
-    sub=sub-{1} 
+    sub=${1}
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
     hemi_anat=$(mktemp -d -t hemi-XXXXXXXXXX)
 
     for atlas in ${atlases}; do
 
-      mkdir -p ${parcellated}/${atlas}/ptseries/${sub}/anat
-      mkdir -p ${parcellated}/${atlas}/csv/${sub}/anat
+      mkdir -p ${parcellated}/${atlas}/ptseries/sub-${sub}/anat
+      mkdir -p ${parcellated}/${atlas}/csv/sub-${sub}/anat
       
       echo "parcellating thickness using ${atlas}"
   
@@ -78,16 +78,16 @@ run_parcellation() {
       -B ${parcellation_dir}:/parcellations \
       ${SING_CONTAINER} \
       wb_command -cifti-parcellate \
-      /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
+      /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.thickness.32k_fs_LR.dscalar.nii \
       /parcellations/tpl-fsLR_res-91k_${atlas}_dseg.dlabel.nii \
       COLUMN \
-      /parcellated/${atlas}/ptseries/${sub}/anat/${sub}_${atlas}_thickness.pscalar.nii \
+      /parcellated/${atlas}/ptseries/sub-${sub}/anat/sub-${sub}_${atlas}_thickness.pscalar.nii \
       -include-empty
     
     done
     
-    mkdir -p ${parcellated}/atlas-aparc/ptseries/${sub}/anat
-    mkdir -p ${parcellated}/atlas-aparc/csv/${sub}/anat
+    mkdir -p ${parcellated}/atlas-aparc/ptseries/sub-${sub}/anat
+    mkdir -p ${parcellated}/atlas-aparc/csv/sub-${sub}/anat
     
     # parcellate to a pscalar file using the aparc atlas
     echo "parcellating thickness using aparc atlas"
@@ -97,10 +97,10 @@ run_parcellation() {
     -B ${parcellated}:/parcellated \
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /ciftify/sub-${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.thickness.32k_fs_LR.dscalar.nii \
+    /ciftify/sub-${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
-    /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_thickness.pscalar.nii \
+    /parcellated/atlas-aparc/ptseries/sub-${sub}/anat/sub-${sub}_atlas-aparc_thickness.pscalar.nii \
     -include-empty 
 
 
@@ -115,8 +115,8 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
           wb_command -surface-vertex-areas \
-          /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.midthickness.32k_fs_LR.surf.gii \
-          /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_surfacearea.shape.gii
+          /ciftify/sub-${sub}/T1w/fsaverage_LR32k/sub-${sub}.${hemi}.midthickness.32k_fs_LR.surf.gii \
+          /hemi_anat/sub-${sub}_space-fsLR_den-91k_hemi-${hemi}_surfacearea.shape.gii
           
       ## calculate wedge volume from white and pial surface
       echo "calculating wedge volumme for ${hemi} hemisphere"
@@ -126,9 +126,9 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
         wb_command -surface-wedge-volume \
-           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.white.32k_fs_LR.surf.gii \
-           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
-           /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_volume.shape.gii
+           /ciftify/sub-${sub}/T1w/fsaverage_LR32k/sub-${sub}.${hemi}.white.32k_fs_LR.surf.gii \
+           /ciftify/sub-${sub}/T1w/fsaverage_LR32k/sub-${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
+           /hemi_anat/sub-${sub}_space-fsLR_den-91k_hemi-${hemi}_volume.shape.gii
     done
     
     mkdir -p ${cifti_dense_anat}/${sub}/anat    
@@ -145,11 +145,11 @@ run_parcellation() {
         -B ${parcellation_dir}:/parcellations \
         ${SING_CONTAINER} \
            wb_command -cifti-create-dense-scalar \
-           /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
-          -left-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-L_${metric}.shape.gii \
-          -roi-left /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.L.atlasroi.32k_fs_LR.shape.gii \
-          -right-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-R_${metric}.shape.gii \
-          -roi-right /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.R.atlasroi.32k_fs_LR.shape.gii
+           /cifti_dense_anat/sub-${sub}/anat/sub-${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
+          -left-metric /hemi_anat/sub-${sub}_space-fsLR_den-91k_hemi-L_${metric}.shape.gii \
+          -roi-left /ciftify/sub-${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.L.atlasroi.32k_fs_LR.shape.gii \
+          -right-metric /hemi_anat/sub-${sub}_space-fsLR_den-91k_hemi-R_${metric}.shape.gii \
+          -roi-right /ciftify/sub0${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.R.atlasroi.32k_fs_LR.shape.gii
         
       for atlas in ${atlases}; do
       
@@ -164,10 +164,10 @@ run_parcellation() {
         -B ${parcellation_dir}:/parcellations \
         ${SING_CONTAINER} \
         wb_command -cifti-parcellate \
-        /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
+        /cifti_dense_anat/sub-${sub}/anat/sub-${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
         /parcellations/tpl-fsLR_res-91k_${atlas}_dseg.dlabel.nii \
         COLUMN \
-        /parcellated/${atlas}/ptseries/${sub}/anat/${sub}_${atlas}_${metric}.pscalar.nii \
+        /parcellated/${atlas}/ptseries/sub-${sub}/anat/sub-${sub}_${atlas}_${metric}.pscalar.nii \
         -include-empty \
         -method SUM
         
@@ -183,10 +183,10 @@ run_parcellation() {
     -B ${parcellated}:/parcellated \
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
-    /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /cifti_dense_anat/sub-${sub}/anat/sub-${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
+    /ciftify/sub-${sub}/MNINonLinear/fsaverage_LR32k/sub-${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
-    /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_${metric}.pscalar.nii \
+    /parcellated/atlas-aparc/ptseries/sub-${sub}/anat/sub-${sub}_atlas-aparc_${metric}.pscalar.nii \
     -include-empty \
     -method SUM
       
@@ -203,8 +203,8 @@ run_parcellation() {
       -H ${sing_home} \
       -B ${parcellated}:/parcellated \
       ${SING_CONTAINER} wb_command -cifti-convert -to-text \
-      /parcellated/${atlas}/ptseries/${sub}/anat/${sub}_${atlas}_${metric}.pscalar.nii \
-      /parcellated/${atlas}/csv/${sub}/anat/${sub}_${atlas}_${metric}.csv \
+      /parcellated/${atlas}/ptseries/sub-${sub}/anat/sub-${sub}_${atlas}_${metric}.pscalar.nii \
+      /parcellated/${atlas}/csv/sub-${sub}/anat/sub-${sub}_${atlas}_${metric}.csv \
       -col-delim ","
       
       done
