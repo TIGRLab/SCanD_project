@@ -404,7 +404,7 @@ ssh niagara.scinet.utoronto.ca
 cd ${SCRATCH}/SCanD_project_GMANJ
 git pull
 
-source ./code/04_extract_to_share.sh
+source ./code/05_extract_to_share.sh
 ```
 
 # Appendix - Adding a test dataset from openneuro
