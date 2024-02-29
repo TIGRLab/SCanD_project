@@ -91,3 +91,13 @@ rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
 echo "copying over the ENIGMA extracted cortical and subcortical files"
 rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
 
+## copy over the parcellated_ciftify files
+echo "copying over the parcellated files"
+rsync -a ${PROJECT_DIR}/data/local/parcellated_ciftify ${PROJECT_DIR}/data/share/
+
+
+## copy over the enigmaDTI files
+echo "copying over the enigmaDTI files"
+mkdir ${PROJECT_DIR}/data/share/qsiprep/enigmaDTI
+rsync -a ${PROJECT_DIR}/data/local/qsiprep/enigmaDTI/group*  ${PROJECT_DIR}/data/share/qsiprep/enigmaDTI
+rsync -a ${PROJECT_DIR}/data/local/qsiprep/enigmaDTI/*.html  ${PROJECT_DIR}/data/share/qsiprep/enigmaDTI
