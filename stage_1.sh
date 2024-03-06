@@ -16,7 +16,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_mriqc.sh
+sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 
 
 ##fmriprep_anat
