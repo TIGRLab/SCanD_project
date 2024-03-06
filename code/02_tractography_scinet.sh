@@ -59,19 +59,20 @@ fi
 
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
+    -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
-    derivatives/qsiprep derivatives participant \
-    --recon_input derivatives/qsiprep \
+    derived/qsiprep derived participant \
+    --recon_input derived/qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
-    --freesurfer-input derivatives/freesurfer \
-    --fs-license-file /path/to/license.txt
+    --freesurfer-input derived/freesurfer \
+    --fs-license-file li
 
 
 exitcode=$?
