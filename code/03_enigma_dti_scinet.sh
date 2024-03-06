@@ -12,7 +12,7 @@
 export BASEDIR=${SCRATCH}/SCanD_project_GMANJ
 export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
 export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
-export TBSS_CONTAINER=${BASEDIR}/containers/tbss2.simg
+export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 # Make Python scripts executable
 chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
@@ -24,7 +24,7 @@ singularity exec \
   -B ${SCRATCH}/SCanD_project_GMANJ \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
-  ${BASEDIR}/containers/tbss2.simg \
+  ${BASEDIR}/containers/tbss_2023-10-10.simg \
   /bin/bash << 'EOF'
 
 # Inside the Singularity container
