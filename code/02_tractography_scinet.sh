@@ -72,7 +72,8 @@ singularity run --cleanenv \
     --recon_input derived/qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
     --freesurfer-input derived/freesurfer \
-    --fs-license-file /li
+    --fs-license-file /li \
+    --output-resolution 2.0 
 
 
 exitcode=$?
