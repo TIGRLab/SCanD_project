@@ -68,7 +68,7 @@ singularity run --cleanenv \
     -B ${WORK_DIR}:/work \
     -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
-    derived/qsiprep derived participant \
+    bids derived participant \
     --recon_input derived/qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
     --freesurfer-input derived/freesurfer \
