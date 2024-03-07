@@ -6,7 +6,7 @@
 #SBATCH --time=16:00:00
 
 
-SUB_SIZE=10 ## number of subjects to run
+SUB_SIZE=4 ## number of subjects to run
 export THREADS_PER_COMMAND=2
 
 ####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
