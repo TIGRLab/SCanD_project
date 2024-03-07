@@ -73,7 +73,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02b	|  [Run qsirecon ](#Running-qsirecon) 	|  5 hours of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm 	
-|^ |   03c	|  [Run tractography](#Running-tractography) 	|  18 hours on slurm 	|
+|^ |   03c	|  [Run tractography](#Running-tractography) 	|  21 hours on slurm 	|
 |^ |   03d	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |^ |   03e	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |stage 4 |   04a	|  [Running the parcellation-xcp step](#Running-the-parcellation-xcp-step) 	|   20 mins on slurm	|
