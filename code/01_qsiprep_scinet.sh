@@ -41,7 +41,7 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=20.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/qsiprep
+export WORK_DIR=${BASEDIR}/work/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
