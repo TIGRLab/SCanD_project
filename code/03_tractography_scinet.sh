@@ -6,7 +6,7 @@
 #SBATCH --time=24:00:00
 
 
-SUB_SIZE=2 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
+SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 CORES=40
 export THREADS_PER_COMMAND=2
 
