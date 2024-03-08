@@ -60,7 +60,7 @@ fi
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
 
-export fs_license=${BIDS_DIR}/templates/.freesurfer.txt
+export fs_license=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
