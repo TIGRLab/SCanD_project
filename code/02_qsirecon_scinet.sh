@@ -83,8 +83,8 @@ singularity run --cleanenv \
     --fs-license-file /li
     
  
-QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
-DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses*/dwi/sub-${SUBJECTS}_ses*_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses*/dwi/sub-${SUBJECTS}_ses*_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
 DTIFIT_dir=$(dirname ${DTIFIT_OUT})
 DTIFIT_name=$(basename ${DTIFIT_OUT})
 
@@ -119,7 +119,7 @@ singularity run \
   -B ${DTIFIT_dir}:/dtifit_dir \
   ${ENIGMA_CONTAINER} \
   --calc-all --debug \
-  /enigma_dir/sub-${SUBJECTS}_ses-01\
+  /enigma_dir/sub-${SUBJECTS}_ses-*\
   /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
 
