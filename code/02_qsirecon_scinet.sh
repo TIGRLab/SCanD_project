@@ -41,7 +41,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep  # use if version of fmriprep >=
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BASEDIR}/work/qsiprep
+export WORK_DIR=${BBUFFER}/SCanD/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
