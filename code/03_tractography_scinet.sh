@@ -70,7 +70,7 @@ singularity run --cleanenv \
     -B ${WORK_DIR}:/work \
     -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
-    /qsiprep /derived participant \
+    /bids /derived participant \
     --participant_label ${SUBJECTS} \
     --skip_bids_validation \
     --recon_input /qsiprep \
