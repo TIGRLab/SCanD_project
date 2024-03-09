@@ -72,6 +72,7 @@ singularity run --cleanenv \
     ${SING_CONTAINER} \
     /qsiprep /derived participant \
     --participant_label ${SUBJECTS} \
+    --skip_bids_validation \
     --recon_input /qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
     --freesurfer-input /freesurfer \
