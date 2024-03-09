@@ -82,6 +82,7 @@ singularity run --cleanenv \
     --recon-input /derived \
     --output-resolution 2.0 \
     --fs-license-file /li \
+    --stop-on-first-crash \
     --notrack
     
  
