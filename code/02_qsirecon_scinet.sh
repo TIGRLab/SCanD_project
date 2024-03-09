@@ -85,56 +85,54 @@ singularity run --cleanenv \
     --stop-on-first-crash \
     --notrack
     
- 
-QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
-DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
-DTIFIT_dir=$(dirname ${DTIFIT_OUT})
-DTIFIT_name=$(basename ${DTIFIT_OUT})
+# Get list of sessions for the subject
+SESSIONS=$(ls -d ${BIDS_DIR}/sub-${SUBJECTS}/ses-*/)
 
-mkdir -p $DTIFIT_dir
+for session in $SESSIONS; do
+    session_name=$(basename $session)
+    QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+    DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+    DTIFIT_dir=$(dirname ${DTIFIT_OUT})
+    DTIFIT_name=$(basename ${DTIFIT_OUT})
 
+    mkdir -p $DTIFIT_dir
 
-singularity exec \
-  -B ${QSIRECON_OUT}_dwi.nii.gz \
-  -B ${QSIRECON_OUT}_mask.nii.gz \
-  -B ${QSIRECON_OUT}_dwi.bvec \
-  -B ${QSIRECON_OUT}_dwi.bval \
-  -B ${DTIFIT_dir}:/out \
-  ${SING_CONTAINER} \
-  dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
-  -m ${QSIRECON_OUT}_mask.nii.gz \
-  -r ${QSIRECON_OUT}_dwi.bvec \
-  -b ${QSIRECON_OUT}_dwi.bval \
-  --save_tensor --sse \
-  -o ${DTIFIT_dir}/$DTIFIT_name
+    singularity exec \
+      -B ${QSIRECON_OUT}_dwi.nii.gz \
+      -B ${QSIRECON_OUT}_mask.nii.gz \
+      -B ${QSIRECON_OUT}_dwi.bvec \
+      -B ${QSIRECON_OUT}_dwi.bval \
+      -B ${DTIFIT_dir}:/out \
+      ${SING_CONTAINER} \
+      dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
+      -m ${QSIRECON_OUT}_mask.nii.gz \
+      -r ${QSIRECON_OUT}_dwi.bvec \
+      -b ${QSIRECON_OUT}_dwi.bval \
+      --save_tensor --sse \
+      -o ${DTIFIT_dir}/$DTIFIT_name
 
+    ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI/${session_name}
 
-##### STEP 3 - run the ENIGMA DTI participant workflow ########################
+    mkdir -p ${ENIGMA_DTI_OUT}
 
-ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
+    singularity run \
+      -B ${ENIGMA_DTI_OUT}:/enigma_dir \
+      -B ${DTIFIT_dir}:/dtifit_dir \
+      ${ENIGMA_CONTAINER} \
+      --calc-all --debug \
+      /enigma_dir/sub-${SUBJECTS}_${session_name} \
+      /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
-ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
+    exitcode=$?
 
-mkdir -p ${ENIGMA_DTI_OUT}
-
-singularity run \
-  -B ${ENIGMA_DTI_OUT}:/enigma_dir \
-  -B ${DTIFIT_dir}:/dtifit_dir \
-  ${ENIGMA_CONTAINER} \
-  --calc-all --debug \
-  /enigma_dir/sub-${SUBJECTS}_ses-01\
-  /dtifit_dir/${DTIFIT_name}_FA.nii.gz
-
-
-  exitcode=$?
- 
-# Output results to a table
-for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+    # Output results to a table
+    for subject in $SUBJECTS; do
+        if [ $exitcode -eq 0 ]; then
+            echo "sub-$subject   ${session_name}    0" \
+                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+        else
+            echo "sub-$subject   ${session_name}    qsirecon failed" \
+                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+        fi
+    done
 done
