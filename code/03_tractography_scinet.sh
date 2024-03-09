@@ -88,7 +88,7 @@ for subject in $SUBJECTS; do
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsiprep failed" \
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    tractography failed" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
 done
