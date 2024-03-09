@@ -113,6 +113,8 @@ for session in $SESSIONS; do
 
     ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
 
+    ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
+
     mkdir -p ${ENIGMA_DTI_OUT}
 
     singularity run \
