@@ -81,7 +81,8 @@ singularity run --cleanenv \
     --recon-spec reorient_fslstd \
     --recon-input /derived \
     --output-resolution 2.0 \
-    --fs-license-file /li
+    --fs-license-file /li \
+    --notrack
     
  
 QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/ses-01/dwi/sub-${SUBJECTS}_ses-01_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
