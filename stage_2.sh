@@ -1,7 +1,7 @@
 ## stage 2 (fmriprep_func, qsirecon):
 
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
