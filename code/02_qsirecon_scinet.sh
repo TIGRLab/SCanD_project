@@ -111,7 +111,7 @@ for session in $SESSIONS; do
       --save_tensor --sse \
       -o ${DTIFIT_dir}/$DTIFIT_name
 
-    ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI/${session_name}
+    ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
 
     mkdir -p ${ENIGMA_DTI_OUT}
 
