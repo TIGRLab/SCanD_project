@@ -62,27 +62,27 @@ fi
 
 export fs_license=${BASEDIR}/templates/.freesurfer.txt
 
-singularity run --cleanenv \
-    -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
-    -B ${BIDS_DIR}:/bids \
-    -B ${QSIPREP_DIR}:/derived \
-    -B ${WORK_DIR}:/work \
-    -B ${OUTPUT_DIR}:/out \
-    -B ${fs_license}:/li \
-    ${SING_CONTAINER} \
-    /bids /out participant \
-    --skip-bids-validation \
-    --participant_label ${SUBJECTS} \
-    -w /work \
-    --skip-bids-validation \
-    --omp-nthreads 8 \
-    --nthreads 40 \
-    --recon_only \
-    --recon-spec reorient_fslstd \
-    --recon-input /derived \
-    --output-resolution 2.0 \
-    --fs-license-file /li \
-    --notrack
+#singularity run --cleanenv \
+ #   -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
+  #  -B ${BIDS_DIR}:/bids \
+   # -B ${QSIPREP_DIR}:/derived \
+   # -B ${WORK_DIR}:/work \
+    #-B ${OUTPUT_DIR}:/out \
+    #-B ${fs_license}:/li \
+    #${SING_CONTAINER} \
+    #/bids /out participant \
+    #--skip-bids-validation \
+    #--participant_label ${SUBJECTS} \
+    #-w /work \
+    #--skip-bids-validation \
+    #--omp-nthreads 8 \
+    #--nthreads 40 \
+    #--recon_only \
+    #--recon-spec reorient_fslstd \
+    #--recon-input /derived \
+    #--output-resolution 2.0 \
+    #--fs-license-file /li \
+    #--notrack
     
 # Get list of sessions for the subject
 SESSIONS=$(ls -d ${BIDS_DIR}/sub-${SUBJECTS}/ses-*/)
