@@ -129,10 +129,10 @@ for session in $SESSIONS; do
     # Output results to a table
     for subject in $SUBJECTS; do
         if [ $exitcode -eq 0 ]; then
-            echo "sub-$subject   ${session_name}    0" \
+            echo "sub-$subject       0" \
                 >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
         else
-            echo "sub-$subject   ${session_name}    qsirecon failed" \
+            echo "sub-$subject    qsirecon failed" \
                 >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
         fi
     done
