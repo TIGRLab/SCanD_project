@@ -77,6 +77,7 @@ singularity run --cleanenv \
     --skip-bids-validation \
     --omp-nthreads 8 \
     --nthreads 40 \
+    --recon_only \
     --recon-spec reorient_fslstd \
     --recon-input /derived \
     --output-resolution 2.0 \
