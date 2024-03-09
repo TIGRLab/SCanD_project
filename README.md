@@ -145,7 +145,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -174,7 +174,7 @@ Most of the time the anatomical data includes the skull, but _sometimes_ people 
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
@@ -195,7 +195,7 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -222,7 +222,7 @@ Note -  the script enclosed uses some interesting extra opions:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -243,7 +243,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -263,7 +263,7 @@ sbatch --array=0-${array_job_length} ./code/02_qsirecon_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -306,7 +306,7 @@ If you've already set up the pipeline before, bypass the previously mentioned in
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -326,7 +326,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -348,7 +348,7 @@ sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -362,7 +362,7 @@ source ./code/03_ENIGMA_ExtractCortical.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -377,7 +377,7 @@ sbatch  ./code/03_enigma_dti_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -397,7 +397,7 @@ sbatch --array=0-${array_job_length} ./code/04_parcellate_xcp_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
@@ -420,7 +420,7 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh niagara.scinet.utoronto.ca
+ssh nia-login07
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project_GMANJ
