@@ -65,13 +65,15 @@ singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
+    -B ${OUTPUT_DIR}/qsiprep:/qsiprep \
+    -B ${OUTPUT_DIR}/freesurfer:/freesurfer \
     -B ${WORK_DIR}:/work \
     -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
-    /derived/qsiprep /derived participant \
-    --recon_input derived/qsiprep \
+    /qsiprep /derived participant \
+    --recon_input /qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
-    --freesurfer-input derived/freesurfer \
+    --freesurfer-input /freesurfer \
     --fs-license-file /li \
     --output-resolution 2.0 
 
