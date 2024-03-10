@@ -1,11 +1,5 @@
 ## stage 2 (fmriprep_func, qsirecon_step1):
 
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
-git pull
 
 ##fmriprep_func
 ## figuring out appropriate array-job size
