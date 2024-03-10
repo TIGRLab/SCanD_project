@@ -52,7 +52,7 @@ SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
 # Iterate over each subject in SUBJECTS
 for subject in $SUBJECTS; do
-    echo "$subject       0" >> ${BASEDIR}/logs/ENIGMA_ExtractCortical.tsv
+    echo "$subject       0" >> ${BASEDIR}/logs/parcellate_ciftify.tsv
 done
 
 
