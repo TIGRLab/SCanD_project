@@ -83,4 +83,10 @@ singularity run --cleanenv \
     --output-resolution 2.0 \
     --fs-license-file /li \
     --notrack
+
+    for subject in $SUBJECTS; do
+       
+      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    done
     
