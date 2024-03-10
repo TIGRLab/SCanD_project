@@ -8,6 +8,8 @@
 # Load necessary modules if needed
 # module load python
 
+BASEDIR=${SLURM_SUBMIT_DIR}
+
 SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
 # Iterate over each subject in SUBJECTS
