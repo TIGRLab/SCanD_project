@@ -63,6 +63,12 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
+for subject in $SUBJECTS; do
+    
+      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+done
+
 
 SUBJECTS_WITH_PREFIX=()
 for subject in ${SUBJECTS}; do
