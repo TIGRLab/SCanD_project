@@ -48,25 +48,11 @@ export cifti_dense_anat="${parcellated}/cifti_dense_anat/"
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk size
-SUB_SIZE=10 ## number of subjects to run
+SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-
-N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
-
-if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
-else
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
-fi
-
+# Iterate over each subject in SUBJECTS
 for subject in $SUBJECTS; do
-    
-      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    echo "$subject       0" >> ${BASEDIR}/logs/ENIGMA_ExtractCortical.tsv
 done
 
 
