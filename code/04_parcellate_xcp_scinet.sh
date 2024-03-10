@@ -48,7 +48,12 @@ SUB_SIZE=10 ## number of subjects to run
 bigger_bit=$(echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc)
 
 
+SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
+# Iterate over each subject in SUBJECTS
+for subject in $SUBJECTS; do
+    echo "$subject       0" >> ${BASEDIR}/logs/parcellate_xcp.tsv
+done
 
 
 # select the dtseries to run in this chunk
