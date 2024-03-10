@@ -1,11 +1,5 @@
 ## stage 4 (parcellations):
 
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
-git pull
 
 SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
 N_DTSERIES=$(ls -1d ./data/local/xcp_d/sub*/ses*/func/*dtseries* | wc -l)
