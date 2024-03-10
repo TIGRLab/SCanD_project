@@ -17,7 +17,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (fmriprep_func, qsirecon):
+## stage 2 (fmriprep_func, qsirecon1):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
