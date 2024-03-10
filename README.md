@@ -70,12 +70,13 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
-|^ |   02b	|  [Run qsirecon ](#Running-qsirecon) 	|  5 hours of slurm 	|
+|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon_step1) 	|  20 min of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm 	
 |^ |   03c	|  [Run tractography](#Running-tractography) 	|  24 hours on slurm 	|
 |^ |   03d	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |^ |   03e	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
+|^ |   03f	|  [Run qsirecon step2](#Running-qsirecon_step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-xcp step](#Running-the-parcellation-xcp-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -240,7 +241,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ```
 
 
-## Running qsirecon
+## Running qsirecon step1
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -257,7 +258,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 ```
 
 ## Running ciftify-anat
@@ -372,7 +373,25 @@ git pull
 ## submit the array job to the queue
 sbatch  ./code/03_enigma_dti_scinet.sh
 ```
+## Running qsirecon step2
 
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project_GMANJ
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_qsirecon_step2_scinet.sh
+```
 
 ## Running the parcellation-xcp step
 
