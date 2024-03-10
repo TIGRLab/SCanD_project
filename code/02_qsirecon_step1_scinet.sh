@@ -62,6 +62,12 @@ fi
 
 export fs_license=${BASEDIR}/templates/.freesurfer.txt
 
+for subject in $SUBJECTS; do
+    
+      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+done
+
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
@@ -84,9 +90,4 @@ singularity run --cleanenv \
     --fs-license-file /li \
     --notrack
 
-    for subject in $SUBJECTS; do
-       
-      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    done
     
