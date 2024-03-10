@@ -77,6 +77,7 @@ singularity run --cleanenv \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
     --freesurfer-input /freesurfer \
     --fs-license-file /li \
+    --skip-odf-reports \
     --output-resolution 2.0 
 
 
