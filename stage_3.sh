@@ -1,4 +1,4 @@
-## stage 3 (ciftify_anat, xcp-d, enigma extract, enigma-dti, tractography):
+## stage 3 (ciftify_anat, xcp-d, enigma extract, enigma-dti, tractography,qsirecon_step2):
 
 ## note step one is to make sure you are on one of the login nodes
 ssh nia-login07
