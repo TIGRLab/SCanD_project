@@ -82,7 +82,6 @@ singularity run --cleanenv \
     --recon-input /derived \
     --output-resolution 2.0 \
     --fs-license-file /li \
-    --skip-odf-reports \
     --notrack
     
 # Get list of sessions for the subject
