@@ -1,12 +1,5 @@
 ## stage 1 (mriqc, fmriprep_anat, qsiprep):
 
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
-git pull         #in case you need to pull new code
-
 
 ##mriqc
 ## calculate the length of the array-job given
