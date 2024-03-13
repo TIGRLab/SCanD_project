@@ -66,7 +66,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
 |^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
-|^ |   0e	|   [edit fmap files](#edit fmap files)	| 2 minutes in terminal 	|
+|^ |   0e	|   [edit fmap files](#edit-fmap-files)	| 2 minutes in terminal 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
