@@ -21,7 +21,7 @@ import json
 from bids import BIDSLayout
 # -
 
-bids_dir = "/archive/data/TAY/data/bids"
+bids_dir = "data/local/bids"
 layout = BIDSLayout(bids_dir, validate=False)
 
 subject_list = layout.get_subjects()
