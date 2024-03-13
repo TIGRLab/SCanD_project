@@ -162,10 +162,15 @@ python3 -m pip install bids
 cd $SCRATCH/SCandD_project_GMANJ
 
 python3 fmap_intended_for.py
-
 ```
 
- 
+In case you want to backup your json files before editting them:
+
+```sh
+mkdir bidsbackup_json
+rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
+```
+
 ## Running mriqc
 
 ```sh
