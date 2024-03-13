@@ -143,8 +143,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 ```
 ## edit fmap files
 
-In some cases dcm2niix to convertion fails to add "IntendedFor in the fmap files and so before moving to run the pipelines, we need to edit fmap file in the bids folder and add "intebndedFor". In order to edit these file we need to run a python code.
-Before running the code below, please 
+In some cases dcm2niix to convertion fails to add "IntendedFor in the fmap files which cause errors in fmriprep_func step.Therefore,  we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
 
 ``sh
 #First load a python module
@@ -161,6 +160,10 @@ source ~/.virtualenvs/myenv/bin/activate
 python3 -m pip install bids
 
 cd $SCRATCH/SCandD_project_GMANJ
+
+python3 fmap_intended_for.py
+```
+
  
 ## Running mriqc
 
