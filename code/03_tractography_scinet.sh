@@ -73,6 +73,7 @@ singularity run --cleanenv \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
     --skip_bids_validation \
+    -w /work \
     --recon_input /qsiprep \
     --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
     --freesurfer-input /freesurfer \
