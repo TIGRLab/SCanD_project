@@ -143,7 +143,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 ```
 ## edit fmap files
 
-In some cases dcm2niix to convertion fails to add "IntendedFor in the fmap files which cause errors in fmriprep_func step.Therefore,  we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
+In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
 
 ```sh
 ## First load a python module
