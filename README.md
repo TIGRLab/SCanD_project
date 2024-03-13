@@ -146,15 +146,15 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 In some cases dcm2niix to convertion fails to add "IntendedFor in the fmap files which cause errors in fmriprep_func step.Therefore,  we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
 
 ``sh
-#First load a python module
+## First load a python module
 module load NiaEnv/2019b python/3.11.5
 
-# Create a directory for virtual environments if it doesn't exist
+## Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
-# Activate the virtual environment
+## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
 python3 -m pip install bids
@@ -162,6 +162,7 @@ python3 -m pip install bids
 cd $SCRATCH/SCandD_project_GMANJ
 
 python3 fmap_intended_for.py
+
 ```
 
  
