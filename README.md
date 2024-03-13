@@ -145,7 +145,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
 
 In some cases dcm2niix to convertion fails to add "IntendedFor in the fmap files which cause errors in fmriprep_func step.Therefore,  we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
 
-``sh
+```sh
 ## First load a python module
 module load NiaEnv/2019b python/3.11.5
 
@@ -167,7 +167,6 @@ python3 fmap_intended_for.py
 
  
 ## Running mriqc
-
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
