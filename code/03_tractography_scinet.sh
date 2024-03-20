@@ -38,7 +38,10 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
+
+export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep 
+export FREESURFER_DIR=${BASEDIR}/data/local/freesurfer
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${BBUFFER}/SCanD/qsiprep
@@ -65,8 +68,8 @@ singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
-    -B ${OUTPUT_DIR}/qsiprep:/qsiprep \
-    -B ${OUTPUT_DIR}/freesurfer:/freesurfer \
+    -B ${QSIPREP_DIR}:/qsiprep \
+    -B ${FREESURFER_DIR}:/freesurfer \
     -B ${WORK_DIR}:/work \
     -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
