@@ -15,6 +15,7 @@ module load gnu-parallel/20191122
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
 export atlases="atlas-Glasser"
+export atlases=( $(ls ${parcellation_dir}/tpl-fsLR_rest-91k_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -33,8 +34,6 @@ trap "cleanup_ramdisk" TERM
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
-
-
 
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
