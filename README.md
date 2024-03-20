@@ -26,6 +26,9 @@ ${BASEDIR}
 │   │   ├── parcellated          # parcellation-xcp derivatives
 │   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
+│   │   ├── dtifit               #dtifit
+│   │   ├── enigmaDTI            #enigmadti
+│   │   ├── qsirecon             #qsirecon derivatives
 │   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
