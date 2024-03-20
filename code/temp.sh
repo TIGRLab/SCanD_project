@@ -62,8 +62,7 @@ for subject in ${SUBJECTS}; do
     SUBJECTS_WITH_PREFIX+=("sub-${subject}")
 done
 
-# Reassign SUBJECTS variable
-SUBJECTS="${SUBJECTS_WITH_PREFIX[@]}"
+
 
 
 run_parcellation() {
