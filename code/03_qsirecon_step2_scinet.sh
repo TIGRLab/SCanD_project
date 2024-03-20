@@ -37,7 +37,7 @@ export QSIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local  # use if version of fmriprep >=20.2
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
@@ -89,7 +89,7 @@ for session in $SESSIONS; do
       --save_tensor --sse \
       -o ${DTIFIT_dir}/$DTIFIT_name
 
-    ENIGMA_DTI_OUT=${BASEDIR}/data/local/qsiprep/enigmaDTI
+    ENIGMA_DTI_OUT=${BASEDIR}/data/local/enigmaDTI
 
     ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
