@@ -14,7 +14,6 @@ module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
-export atlases="atlas-Glasser"
 export atlases=( $(ls ${parcellation_dir}/tpl-fsLR_res-91k_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
