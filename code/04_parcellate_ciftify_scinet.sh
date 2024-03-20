@@ -12,6 +12,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 ## this script requires gnu-parallel
 module load gnu-parallel/20191122
 
+SUB_SIZE=10 
+
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
 export atlases="atlas-Glasser"
