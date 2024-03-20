@@ -78,7 +78,7 @@ singularity run --cleanenv \
     --skip_bids_validation \
     -w /work \
     --recon_input /qsiprep \
-    --recon_spec mrtrix_multishell_msmt_ACT-hsvs \
+    --recon_spec mrtrix_singleshell_ss3t_ACT-hsvs \
     --freesurfer-input /freesurfer \
     --fs-license-file /li \
     --skip-odf-reports \
