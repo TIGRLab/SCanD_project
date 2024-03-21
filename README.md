@@ -54,8 +54,8 @@ ${BASEDIR}
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
-        └── tpl-fsLR_res-91k_atlas-Glasser_dseg.dlabel.nii
-    
+        |── tpl-fsLR_res-91k_atlas-Glasser_dseg.dlabel.nii
+        └── ...  #and 13 other atlases
 ```
 
 Currently this repo is going to be set up for running things on SciNet Niagara cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
