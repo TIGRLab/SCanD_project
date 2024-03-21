@@ -77,7 +77,6 @@ singularity run --cleanenv \
     --participant_label ${SUBJECTS} \
     --skip_bids_validation \
     -w /work \
-    --recon_input /qsiprep \
     --recon_spec mrtrix_singleshell_ss3t_ACT-hsvs \
     --freesurfer-input /freesurfer \
     --fs-license-file /li \
