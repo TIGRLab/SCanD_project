@@ -36,18 +36,16 @@ trap "cleanup_ramdisk" TERM
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 
-
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
 export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
 export ciftify_folder="${BASEDIR}/data/local/ciftify/"
 
 
-export parcellated="${BASEDIR}/data/local/parcellated_ciftify/"
+export parcellated="${BASEDIR}/data/local/parcellated_ciftify_2/"
 export cifti_dense_anat="${parcellated}/cifti_dense_anat/"
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
-
 
 SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
@@ -55,14 +53,6 @@ SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 for subject in $SUBJECTS; do
     echo "$subject       0" >> ${BASEDIR}/logs/parcellate_ciftify.tsv
 done
-
-
-SUBJECTS_WITH_PREFIX=()
-for subject in ${SUBJECTS}; do
-    SUBJECTS_WITH_PREFIX+=("sub-${subject}")
-done
-
-
 
 
 run_parcellation() {
