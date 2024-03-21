@@ -11,12 +11,12 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 
 ## this script requires gnu-parallel
 module load gnu-parallel/20191122
-
 SUB_SIZE=10 
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
-export atlases="atlas-Glasser"
+export atlases="atlas-4S1056Parcels atlas-4S156Parcels atlas-4S256Parcels atlas-4S356Parcels atlas-4S456Parcel atlas-4S556Parcels atlas-4S656Parcels atlas-4S756Parcels atlas-4S856Parcels  atlas-4S956Parcels atlas-Glasser atlas-Gordon atlas-HCP atlas-Tian"
+
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -37,7 +37,6 @@ trap "cleanup_ramdisk" TERM
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
 
-
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
 export fmriprep_folder="${BASEDIR}/data/local/fmriprep/"
@@ -49,22 +48,12 @@ export cifti_dense_anat="${parcellated}/cifti_dense_anat/"
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-
 SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
 # Iterate over each subject in SUBJECTS
 for subject in $SUBJECTS; do
     echo "$subject       0" >> ${BASEDIR}/logs/parcellate_ciftify.tsv
 done
-
-
-#SUBJECTS_WITH_PREFIX=()
-#for subject in ${SUBJECTS}; do
- #   SUBJECTS_WITH_PREFIX+=("sub-${subject}")
-#done
-
-# Reassign SUBJECTS variable
-#SUBJECTS="${SUBJECTS_WITH_PREFIX[@]}"
 
 
 run_parcellation() {
@@ -230,4 +219,3 @@ export -f run_parcellation
 parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
  "run_parcellation {1}" \
     ::: ${SUBJECTS} 
-
