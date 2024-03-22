@@ -3,8 +3,8 @@
 #SBATCH --ntasks=80
 #SBATCH --time=00:30:00
 #SBATCH --export=ALL
-#SBATCH --job-name="cifti_parcellate"
-#SBATCH --output=logs/cifti_parcellate_%j.txt
+#SBATCH --job-name="xcp_parcellate"
+#SBATCH --output=logs/xcp_parcellate_%j.out
 
 ## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
@@ -13,9 +13,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 module load gnu-parallel/20191122
 
 ## note the dlabel file path must be a relative to the output folder
-export parcellation_dir=${BASEDIR}/templates/parcellations
-export dlabel_file="tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii"
-export atlas="atlas-GlasserTianS2"
+export parcellation_dir=${BASEDIR}/data/local/xcp_d
+export atlases=( $(ls ${parcellation_dir}/space-fsLR_atlas-*.dlabel.nii | xargs -n 1 basename | cut -d'-' -f3 | cut -d'_' -f1) )
 
 ## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
@@ -37,45 +36,44 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 
-
 ## setting up the output folders
 export DERIVED_DIR=${BASEDIR}/data/local
 
 # find all dtseries inputs for this study - by globbing the ciftify outputs
-ciftify_folder=${DERIVED_DIR}/ciftify
-ALL_DTSERIES=$(ls -1d ${ciftify_folder}/sub*/MNINonLinear/Results/*task*/*dtseries*)
-
+xcp_folder=${DERIVED_DIR}/xcp_d
+ALL_DTSERIES=$(ls -1d ${xcp_folder}/sub*/ses*/func/*dtseries*)
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 SUB_SIZE=10 ## number of subjects to run
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+bigger_bit=$(echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc)
+
+
+SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
+
+# Iterate over each subject in SUBJECTS
+for subject in $SUBJECTS; do
+    echo "$subject       0" >> ${BASEDIR}/logs/parcellate_xcp.tsv
+done
+
 
 # select the dtseries to run in this chunk
-THESE_DTSERIES=`for dt in ${ALL_DTSERIES}; do echo $dt; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+THESE_DTSERIES=$(for dt in ${ALL_DTSERIES}; do echo $dt; done | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 
 run_parcellation() {
-
-    dtseries=${1}
+    atlas=$1
+    dtseries=${2}
 
     sing_home=$(mktemp -d -t wb-XXXXXXXXXX)
 
     # determine the output filenames based on the input filename
     func_base=$(basename $(dirname ${dtseries}))
-    sub=$(basename $(dirname $(dirname $(dirname $(dirname ${dtseries})))))
-    task=$(echo $func_base | sed 's/_desc-preproc//g')
+    sub=$(basename $(dirname $(dirname $(dirname ${dtseries}))))
+    ses=$(basename $(dirname $(dirname ${dtseries})))
+    ses_="${ses}_"
 
-    if [[ "$dtseries" == *"ses"* ]]; then
+    task=$(echo "$dtseries" | sed 's/.*task-\([^_/]*\).*_run-\([^_/]*\).*/task-\1_run-\2/')
 
-        ses="$(cut -f1 -nd "_" <<< "$func_base")"
-        ses_="${ses}_"
-
-    else
-        ses=""
-        ses_=""
-
-    fi
-
-    cleaned_dtseries=cifti_clean/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-cleaneds0_bold.dtseries.nii
+    cleaned_dtseries=xcp_d/${sub}/${ses}/func/${sub}_${ses_}${task}_space-fsLR_den-91k_desc-denoised_bold.dtseries.nii
     output_ptseries=parcellated/${atlas}/ptseries/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_bold.ptseries.nii
     output_csv=parcellated/${atlas}/csv/${sub}/${ses}/func/${sub}_${ses_}${task}_${atlas}_desc-cleaneds0_meants.csv
 
@@ -83,6 +81,9 @@ run_parcellation() {
     mkdir -p ${DERIVED_DIR}/parcellated/${atlas}/csv/${sub}/${ses}/func
     
     echo "Running parcellation on ${cleaned_dtseries}"
+
+    # Set dlabel_file according to the current atlas
+    dlabel_file="space-fsLR_atlas-${atlas}_den-91k_dseg.dlabel.nii"
 
     # parcellate to a ptseries file
     singularity exec \
@@ -106,13 +107,12 @@ run_parcellation() {
     /output/${output_csv} \
     -col-delim ","
 
-
     rm -r ${sing_home}
-
 }
 
 export -f run_parcellation
 
-parallel -j ${SUB_SIZE} --tag --line-buffer --compress \
- "run_parcellation {1}" \
-    ::: ${THESE_DTSERIES} 
+# Loop over the atlases
+for atlas in "${atlases[@]}"; do
+    parallel -j ${SUB_SIZE} --tag --line-buffer --compress "run_parcellation ${atlas} {1}" ::: ${THESE_DTSERIES}
+done

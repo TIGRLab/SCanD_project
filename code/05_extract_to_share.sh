@@ -24,35 +24,8 @@ for subject in ${subjects}; do
  rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
 done
 
-## also run ciftify group step
-echo "copying over the ciftify qc images"
 
-singularity run \
-    -B ${PROJECT_DIR}/data/local/:/data \
-    ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
-      /data/bids /data group 
-
-## copy over the ciftify QC outputs
-rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
-rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_fmri  ${PROJECT_DIR}/data/share/ciftify/
-
-## also run ciftify group step - on the cleaned RSN maps
-
-singularity exec \
-  -B ${PROJECT_DIR}/data/local:/derived \
-  ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
-  cifti_vis_RSN index \
-  --qcdir /derived/cifti_clean/qc_rsn \
-  --ciftify-work-dir /derived/ciftify 
-
-## copy over the ciftify QC outputs
-echo "copying over the resting state images from cleaned images"
-rsync -a ${PROJECT_DIR}/data/local/cifti_clean/qc_rsn ${PROJECT_DIR}/data/share/cifti_clean
-
-## also run freesurfer ENIGMA scripts
-
-## copy over the freesurfer results
-
+echo "copying over the qsiprep metadata and qc images"
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
 QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep
@@ -67,13 +40,6 @@ for subject in ${subjects}; do
  rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
 done
 
-## copy over the parcellated files
-echo "copying over the parcellated files"
-rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
-
-## create a spreadsheet output for wether or not outputs were found (each step) for each functional file
-
-## zip all the outputs for transfer ?
 
 ## run the mriqc group step and copy over all outputs
 echo "running mriqc group and copying files"
@@ -87,3 +53,51 @@ singularity run --cleanenv \
 mkdir ${PROJECT_DIR}/data/share/mriqc
 rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}/data/share/mriqc/
 rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
+
+
+echo "copying over the xcp_d metadata and qc images"
+
+## copy over the xcp json files 
+XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
+XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
+
+mkdir ${XCP_SHARE_DIR}
+
+rsync -a --include "*/" --include="*.json" --exclude="*" ${XCP_LOCAL_DIR} ${XCP_SHARE_DIR}
+
+## copy over the xcp html files
+subjects=`cd ${XCP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
+cp ${XCP_LOCAL_DIR}/*html ${XCP_SHARE_DIR}/
+for subject in ${subjects}; do
+ mkdir -p ${XCP_SHARE_DIR}/${subject}/figures
+ rsync -a ${XCP_LOCAL_DIR}/${subject}/figures ${XCP_SHARE_DIR}/${subject}/
+done
+
+## also run ciftify group step
+echo "copying over the ciftify qc images"
+
+## copy over the ciftify QC outputs
+rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
+
+
+## copy over the parcellated files
+echo "copying over the parcellated files"
+rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
+
+
+
+
+## copy over the Enigma_extract outputs
+echo "copying over the ENIGMA extracted cortical and subcortical files"
+rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
+
+## copy over the parcellated_ciftify files
+echo "copying over the parcellated_ciftify files"
+rsync -a ${PROJECT_DIR}/data/local/parcellated_ciftify ${PROJECT_DIR}/data/share/
+
+
+## copy over the enigmaDTI files
+echo "copying over the enigmaDTI files"
+mkdir ${PROJECT_DIR}/data/share/enigmaDTI
+rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/group*  ${PROJECT_DIR}/data/share/enigmaDTI
+rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/*.html  ${PROJECT_DIR}/data/share/enigmaDTI

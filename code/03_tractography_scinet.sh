@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=fmriprep_anat
+#SBATCH --job-name=tractography
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=16:00:00
+#SBATCH --time=23:00:00
 
 
-SUB_SIZE=1 ## number of subjects to run
+SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 CORES=40
 export THREADS_PER_COMMAND=2
 
@@ -33,20 +33,21 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
-export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.2.7.simg
-
+export QSIPREP_HOME=${BASEDIR}/templates
+export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
+export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
+
+export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep 
+export FREESURFER_DIR=${BASEDIR}/data/local/freesurfer
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/fmriprep
+export WORK_DIR=${BBUFFER}/SCanD/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -60,37 +61,31 @@ else
 fi
 
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-# export SINGULARITYENV_TEMPLATEFLOW_HOME=/home/fmriprep/.cache/templateflow
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
-
-# # Remove IsRunning files from FreeSurfer
-# for subject in $SUBJECTS: do
-#     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
-# done
-
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
-    -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
+    -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
+    -B ${QSIPREP_DIR}:/qsiprep \
+    -B ${FREESURFER_DIR}:/freesurfer \
     -B ${WORK_DIR}:/work \
+    -B ${ORIG_FS_LICENSE}:/li\
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
+    --skip_bids_validation \
     -w /work \
-    --skip-bids-validation \
-    --omp-nthreads 8 \
-    --nthreads 40 \
-    --mem-mb 15000 \
-    --output-space anat MNI152NLin6Asym:res-2 \
-    --notrack \
-    --anat-only 
+    --recon_input /qsiprep \
+    --recon_spec mrtrix_singleshell_ss3t_ACT-hsvs \
+    --freesurfer-input /freesurfer \
+    --fs-license-file /li \
+    --skip-odf-reports \
+    --output-resolution 2.0 
 
-# tip: add this line to the above command if skull stripping has already been done
-#   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
+
 exitcode=$?
-
 
 # Output results to a table
 for subject in $SUBJECTS; do
@@ -98,8 +93,7 @@ for subject in $SUBJECTS; do
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    fmriprep_anat failed" \
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    tractography failed" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
 done
-
