@@ -58,6 +58,7 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mr
 echo "copying over the xcp_d metadata and qc images"
 
 ## copy over the xcp json files 
+rm -rf ${PROJECT_DIR}/data/share/xcp_d
 XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
 XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
 
