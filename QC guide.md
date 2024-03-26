@@ -8,7 +8,18 @@ Here are guidelines to QC each pipeline results.
 1) Good Brain Extraction Segmentation:
     * Red outline (skullstrip) doesn’t include skull, outlines the brain
     * Blue outline traces white matter area (lighter parts of brain)
+  
+      <img width="683" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/44712162-3d37-4ebf-bc42-2180dcdf6db5">
 
+  
+2) Good MNI wrap:
+   * “Participant” brain only includes brain (no skull being included)
+   * Make sure that the brain isn’t being stretched down into the cerebellum (indicative of BET segmentation issue)
+  
+   <img width="683" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/79e64c99-485a-4394-9c9e-97fd2a588e5c">
+
+     
+### Anatomical Scans
 
 ## qsiprep
 
