@@ -1,5 +1,10 @@
 # QC guide
 
-Here is a guideline to QC each pipeline results.
+Here are guidelines to QC each pipeline results.
+
+##fmriprep
 
 
+##qsiprep
+
+##ciftify
