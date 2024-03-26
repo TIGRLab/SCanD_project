@@ -1,3 +1,5 @@
 # QC guide
 
-Here is a guideline to QC each pipleine results.
+Here is a guideline to QC each pipeline results.
+
+
