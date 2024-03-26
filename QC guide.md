@@ -2,9 +2,9 @@
 
 Here are guidelines to QC each pipeline results.
 
-##fmriprep
+## fmriprep
 
 
-##qsiprep
+## qsiprep
 
-##ciftify
+## ciftify
