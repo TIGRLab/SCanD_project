@@ -16,7 +16,9 @@ Here are guidelines to QC each pipeline results.
    * “Participant” brain only includes brain (no skull being included)
    * Make sure that the brain isn’t being stretched down into the cerebellum (indicative of BET segmentation issue)
   
-   <img width="683" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/79e64c99-485a-4394-9c9e-97fd2a588e5c">
+     
+![image](https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/6b1feea8-5066-4c10-8db2-b448f0033cb4)
+
 
      
 ### Anatomical Scans
