@@ -35,6 +35,19 @@ Here are guidelines to QC each pipeline results.
 
   <img width="763" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/0437fb6e-dd61-4185-a278-5ca663bc3e76">
 
+
+3) Clipping:
+   In some cases the bottom part of the cerebellum gets clipped, this is acceptable (a pass) but should still be annotated as having a Clipping issue. However, if any part of the cortex itself is clipped (bottom or top) this rating should always result in a fail.
+
+   <img width="800" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/cb6ec006-fdb2-4bdd-886d-5d3df2ae5aca">
+
+
+5) EPI signal dropout:
+   Large signal dropout in the EPI image but not in the T1, which should always result in a Fail.
+
+   ![image](https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/00eca287-7d1a-4f61-99cb-07376bcf7754)
+
+
       
 ## qsiprep
 
