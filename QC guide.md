@@ -17,7 +17,8 @@ Here are guidelines to QC each pipeline results.
    * Make sure that the brain isn’t being stretched down into the cerebellum (indicative of BET segmentation issue)
   
      
-![image](https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/6b1feea8-5066-4c10-8db2-b448f0033cb4)
+<img width="728" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/3fa6435f-ee59-4480-90ab-cf232037078d">
+
 
 
      
