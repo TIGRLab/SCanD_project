@@ -94,7 +94,7 @@ Each of the different directions as indicated by the different colors need to be
 
 **Things to check:**
 
-1) EPI to T1 registration (MNI)
+1) EPI to T1 registration (MNI):
   
 Apparent alignment issues between the MNI-transformed version of the EPI and T1 data (below). Note that this may be a consequence of the visualization method. EPI to T1 alignment should be double checked via fMRIPrep (and cross-referenced to fMRIPrep participants.tsv). 
    
