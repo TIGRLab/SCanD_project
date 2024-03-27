@@ -104,6 +104,13 @@ Each of the different directions as indicated by the different colors need to be
 
 3) If the gray matter is missing part of the occipital lobe, the back of the brain will look split apart on the bottom view (far right).
 
+<img width="917" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/296f34da-6784-4ffb-807f-a684acafb7e8">
 
 4) A key place to look are the two temporal poles. Surface reconstruction in these area can fail.
+
+<img width="903" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/99b91b48-c8af-4f7e-93ac-1fa18d9fb1c6">
+
 5) For this participant, the surface reconstruction in the aparc view looks jagged (especially in the orbital frontal cortex)
+
+<img width="915" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a518d488-9bcb-4fb5-a81a-a0423cc22d7d">
+
