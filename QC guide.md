@@ -94,16 +94,8 @@ Each of the different directions as indicated by the different colors need to be
 
 **Things to check:**
 
-1) EPI to T1 registration (MNI):
-  
-Apparent alignment issues between the MNI-transformed version of the EPI and T1 data (below). Note that this may be a consequence of the visualization method. EPI to T1 alignment should be double checked via fMRIPrep (and cross-referenced to fMRIPrep participants.tsv). 
-   
-<img width="754" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/57278410-d787-4fc9-b264-17636783a4df">
-
-2) Seed-network maps:
-
-Seed correlation maps (i.e DMN as below) do not show any brain functional network structure.
-This is not a real issue. The data displayed by Ciftify has not been cleaned, the preferred approach would be to clean your data first then visualize seed correlation maps.
-
- <img width="766" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/b78f80b8-52ea-42fb-8137-4b29e6c13417">
-
+1) Make sure there is no black images, which happens if recon-all failed very early in the pipeline.
+2) check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up.
+3) If the gray matter is missing part of the occipital lobe, the back of the brain will look split apart on the bottom view (far right).
+4) A key place to look are the two temporal poles. Surface reconstruction in these area can fail.
+5) For this participant, the surface reconstruction in the aparc view looks jagged (especially in the orbital frontal cortex)
