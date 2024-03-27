@@ -31,7 +31,8 @@ Here are guidelines to QC each pipeline results.
 
   
 2) Good SDC correction:
-* The “After” Image should more closely align with the blue outline than the “Before” image
+
+The “After” Image should more closely align with the blue outline than the “Before” image
 
   <img width="763" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/0437fb6e-dd61-4185-a278-5ca663bc3e76">
 
