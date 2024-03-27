@@ -52,6 +52,9 @@ Here are guidelines to QC each pipeline results.
 
       
 ## qsiprep
+
+**Things to check:**
+
 1) Good motion and distortion corrected DWI file:
 
 
