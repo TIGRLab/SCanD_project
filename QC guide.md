@@ -56,27 +56,29 @@ Here are guidelines to QC each pipeline results.
 **Things to check:**
 
 1) Good motion and distortion corrected DWI file:
+This is the final image output of the pipeline, so it has been motion corrected, denoised, bias corrected, etc. So, this is the first image you should be checking to see if anything went wrong with those steps, namely if it has been distorted too much, cut off, etc. In this case, the images clearly resemble the shape of a brain and there are little to no artifacts visible outside of the brain.
 
 
    <img width="757" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/0855f9be-0d55-4a5f-84c0-615205c8554e">
 
 2) Good framewise displacement graph:
+The y axis has a relatively low maximum value, indicating overall lower levels of motion. The two traces do not significantly diverge from each other, with generally similar peaks and troughs.
 
 
    <img width="739" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/d45c1375-5475-49d6-bf25-67d944e7567a">
 
 3) Good Q-space sampling:
-
+Compare the two images by rotating the images around and ensuring that they both generally make out the shape of a ball as seen below.
 
    ![image](https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a171bc7c-9d33-4884-9002-ccc16e3251fc)
 
 4) Good brain mask:
-
+The brain mask creates a clear outline of the brain, with no significant deviations. Ensure to scroll through each of the sections, ensuring that the brain mask has correctly registered to the brain’s shape at each slice.
 
    <img width="746" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/8d6d4641-a407-4391-9bfc-2df81cafe377">
 
 5) Good Tensor image:
-
+Each of the different directions as indicated by the different colors need to be localized to their own locations and discernible from each other. For example the sagittal section shows a clear separation between the green and red tracts.
 
    <img width="750" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/d1793098-01e0-44b6-af85-66f64dec4506">
 
