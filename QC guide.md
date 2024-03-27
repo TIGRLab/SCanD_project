@@ -52,5 +52,29 @@ Here are guidelines to QC each pipeline results.
 
       
 ## qsiprep
+1) Good motion and distortion corrected DWI file:
+
+
+   <img width="757" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/0855f9be-0d55-4a5f-84c0-615205c8554e">
+
+2) Good framewise displacement graph:
+
+
+   <img width="739" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/d45c1375-5475-49d6-bf25-67d944e7567a">
+
+3) Good Q-space sampling:
+
+
+   ![image](https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a171bc7c-9d33-4884-9002-ccc16e3251fc)
+
+4) Good brain mask:
+
+
+   <img width="746" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/8d6d4641-a407-4391-9bfc-2df81cafe377">
+
+5) Good Tensor image:
+
+
+   <img width="750" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/d1793098-01e0-44b6-af85-66f64dec4506">
 
 ## ciftify
