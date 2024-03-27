@@ -98,7 +98,7 @@ Each of the different directions as indicated by the different colors need to be
 
 <img width="902" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a2d387a6-ffc9-4919-9375-5153659ad260">
 
-2) check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up like the example below.
+2) Aparc image: check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up like the example below.
 
 <img width="907" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/e2beb8b8-7355-46c2-ae5f-3dcb952ae5bc">
 
