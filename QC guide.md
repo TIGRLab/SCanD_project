@@ -5,7 +5,7 @@ Here are guidelines to QC each pipeline results.
 ## fmriprep
 ### Anatomical Scans
 **Things to check:**
-1) Good Brain Extraction Segmentation:
+1) Good BET (Brain Extraction Tool) Segmentation:
     * Red outline (skullstrip) doesn’t include skull, outlines the brain
     * Blue outline traces white matter area (lighter parts of brain)
   
