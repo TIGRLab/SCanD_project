@@ -95,7 +95,15 @@ Each of the different directions as indicated by the different colors need to be
 **Things to check:**
 
 1) Make sure there is no black images, which happens if recon-all failed very early in the pipeline.
+
+<img width="902" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a2d387a6-ffc9-4919-9375-5153659ad260">
+
 2) check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up.
+
+<img width="907" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/e2beb8b8-7355-46c2-ae5f-3dcb952ae5bc">
+
 3) If the gray matter is missing part of the occipital lobe, the back of the brain will look split apart on the bottom view (far right).
+
+
 4) A key place to look are the two temporal poles. Surface reconstruction in these area can fail.
 5) For this participant, the surface reconstruction in the aparc view looks jagged (especially in the orbital frontal cortex)
