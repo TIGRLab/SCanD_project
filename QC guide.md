@@ -98,7 +98,7 @@ Each of the different directions as indicated by the different colors need to be
 
 <img width="902" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/a2d387a6-ffc9-4919-9375-5153659ad260">
 
-2) check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up.
+2) check the quality of image. For a very poor quality anatomical, the surface will look shrivelled up like the example below.
 
 <img width="907" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/e2beb8b8-7355-46c2-ae5f-3dcb952ae5bc">
 
@@ -106,7 +106,7 @@ Each of the different directions as indicated by the different colors need to be
 
 <img width="917" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/296f34da-6784-4ffb-807f-a684acafb7e8">
 
-4) A key place to look are the two temporal poles. Surface reconstruction in these area can fail.
+4) A key place to look are the two temporal poles. Surface reconstruction in these area can fail. Here is an example:
 
 <img width="903" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/99b91b48-c8af-4f7e-93ac-1fa18d9fb1c6">
 
