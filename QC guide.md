@@ -100,7 +100,7 @@ Apparent alignment issues between the MNI-transformed version of the EPI and T1 
    
 <img width="754" alt="image" src="https://github.com/GhazalehManj/SCanD_project_GMANJ/assets/126309136/57278410-d787-4fc9-b264-17636783a4df">
 
-2) seed-network maps:
+2) Seed-network maps:
 
 Seed correlation maps (i.e DMN as below) do not show any brain functional network structure.
 This is not a real issue. The data displayed by Ciftify has not been cleaned, the preferred approach would be to clean your data first then visualize seed correlation maps.
