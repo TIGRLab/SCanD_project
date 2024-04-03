@@ -72,12 +72,6 @@ echo "copying over the ciftify qc images"
 rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
 
 
-## copy over the parcellated files
-echo "copying over the parcellated files"
-rsync -a ${PROJECT_DIR}/data/local/parcellated ${PROJECT_DIR}/data/share/
-
-
-
 
 ## copy over the Enigma_extract outputs
 echo "copying over the ENIGMA extracted cortical and subcortical files"
