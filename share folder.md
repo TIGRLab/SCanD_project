@@ -28,6 +28,22 @@ ${BASEDIR}/data/share
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
 ├── parcellated_ciftify
+│   ├── atlas-4S1056Parcels
+│   ├── atlas-4S156Parcels
+│   ├── atlas-4S256Parcels
+│   ├── atlas-4S256Parcels
+│   ├── atlas-4S456Parcel
+│   ├── atlas-4S556Parcels
+│   ├── atlas-4S656Parcels
+│   ├── atlas-4S756Parcels
+│   ├── atlas-4S856Parcels
+│   ├── atlas-4S956Parcels
+│   ├── atlas-aparc
+│   ├── atlas-Glasser
+│   ├── atlas-Gordon
+│   ├── atlas-HCP
+│   ├── atlas-Tian
+│   ├── cifti_dense_anat
 ├── qsiprep
 └── xcp-d
 
