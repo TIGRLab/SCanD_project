@@ -9,9 +9,9 @@ ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
 ├── containers                   # the singularity image are copied or linked to here
-│   ├── fmriprep-20.2.7.simg 
+│   ├── fmriprep-23.2.0.simg 
 │   ├── mriqc-22.0.6.simg simg
-│   ├── qsiprep_0.16.0RC3.simg
+│   ├── qsiprep_0.19.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg 
 │   └── xcp_d-0.6.0.simg
