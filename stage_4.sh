@@ -1,4 +1,4 @@
-## stage 4 (parcellation-ciftify):
+## stage 4 (parcellation_ciftify):
 
 
 SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
