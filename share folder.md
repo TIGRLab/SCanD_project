@@ -22,6 +22,7 @@ ${BASEDIR}/data/share
 │   ├── CorticalMeasuresENIGMA_ThickAvg.csv
 │   └── LandRvolumes.csv
 ├── fmriprep
+│   └── qc images and meta data for each scan
 ├── mriqc
 │   ├── dataset_description.json
 │   ├── group_bold.tsv
@@ -45,6 +46,7 @@ ${BASEDIR}/data/share
 │   ├── atlas-Tian
 │   ├── cifti_dense_anat
 ├── qsiprep
-│   └── qc page for each scan
+│   └── qc images and meta data for each scan
 └── xcp-d
+    └── qc images and meta data for each scan
 
