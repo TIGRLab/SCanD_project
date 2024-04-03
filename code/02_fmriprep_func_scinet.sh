@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=23:00:00
+#SBATCH --time=03:00:00
 
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
@@ -34,11 +34,11 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.2.7.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.0.simg
 
 ## setting up the output folders
-#export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
+export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+#export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 
 export WORK_DIR=${BBUFFER}/SCanD/fmriprep
@@ -78,14 +78,8 @@ singularity run --cleanenv \
     -w /work \
     --skip-bids-validation \
     --cifti-output 91k \
-    --omp-nthreads 8 \
-    --nthreads 40 \
-    --mem-mb 15000 \
-    --output-space anat MNI152NLin6Asym:res-2 \
-    --use-aroma \
-    --notrack \
     --use-syn-sdc \
-    --ignore fieldmaps
+    --output-space anat MNI152NLin6Asym:res-2 
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
