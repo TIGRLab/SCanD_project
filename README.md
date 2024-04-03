@@ -1,4 +1,4 @@
-# SCanD_project_GMANJ
+# SCanD_project
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
 
@@ -101,13 +101,13 @@ A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym
 
 ```sh
 cd $SCRATCH
-git clone https://github.com/GhazalehManj/SCanD_project_GMANJ.git
+git clone https://github.com/TIGRLab/SCanD_project.git
 ```
 
 ## Run the software set-up script
 
 ```sh
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 source code/00_setup_data_directories.sh
 ```
 
@@ -118,7 +118,7 @@ We want to put your data into:
 ```
 ./data/local/bids
 ```
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project_GMANJ/data/local/bids/participants.tsv' file.
+After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file.
 
 #### For a test run of the code
 
@@ -134,13 +134,13 @@ To copy the data from another computer/server you should be on the datamover nod
 ```sh
 ssh <cc_username>@niagara.scinet.utoronto.ca
 ssh nia-dm1
-rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project_GMANJ/data/local/
+rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
 To link existing data from another location on SciNet Niagara to this folder:
 
 ```sh
-ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
+ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 ## edit fmap files
 
@@ -160,7 +160,7 @@ source ~/.virtualenvs/myenv/bin/activate
 
 python3 -m pip install bids
 
-cd $SCRATCH/SCandD_project_GMANJ
+cd $SCRATCH/SCandD_project
 
 python3 fmap_intended_for.py
 ```
@@ -182,7 +182,7 @@ After setting up the scinet environment and organizing your bids folder and part
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -212,7 +212,7 @@ ssh nia-login07
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -232,7 +232,7 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -259,7 +259,7 @@ Note -  the script enclosed uses some interesting extra opions:
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -280,7 +280,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -300,7 +300,7 @@ sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -343,7 +343,7 @@ If you've already set up the pipeline before, bypass the previously mentioned in
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -363,7 +363,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -385,7 +385,7 @@ sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./code/03_ENIGMA_ExtractCortical.sh
@@ -399,7 +399,7 @@ source ./code/03_ENIGMA_ExtractCortical.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
@@ -412,7 +412,7 @@ sbatch  ./code/03_enigma_dti_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -432,7 +432,7 @@ sbatch --array=0-${array_job_length} ./code/02_qsirecon_step2_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -463,7 +463,7 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./code/05_extract_to_share.sh
@@ -487,7 +487,7 @@ module load datalad/0.15.5 # this is the datalad module in Erin's folder
 ##### Using datalad to install a download a dataset
 
 ```
-cd ${SCRATCH}/SCanD_project_GMANJ/data/local/
+cd ${SCRATCH}/SCanD_project/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
