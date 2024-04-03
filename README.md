@@ -515,7 +515,7 @@ To guess - we add this line into the middle of the top level json ().
 note: now - thanks to the people at repronim - we can also add the repronim derivatives !
 
 ```{r}
-cd ${SCRATCH}/SCanD_project_GMANJ/data/local/ls
+cd ${SCRATCH}/SCanD_project/data/local/ls
 
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-fmriprep.git fmriprep
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-mriqc.git mriqc
