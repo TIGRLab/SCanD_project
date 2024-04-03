@@ -18,7 +18,7 @@ for subject in $SUBJECTS; do
 done
 
 # Set environment variables
-export BASEDIR=${SCRATCH}/SCanD_project_GMANJ
+export BASEDIR=${SCRATCH}/SCanD_project
 export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
 export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
 export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
@@ -30,7 +30,7 @@ chmod +x ${BASEDIR}/code/run_group_qc_index.py
 
 # Execute Singularity container
 singularity exec \
-  -B ${SCRATCH}/SCanD_project_GMANJ \
+  -B ${SCRATCH}/SCanD_project \
   -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss_2023-10-10.simg \
@@ -41,7 +41,7 @@ DTIFIT_DIR=/dtifit_dir
 OUT_DIR=/enigma_dir
 
 # Modify this to the location you cloned the repo to
-ENIGMA_DTI_BIDS=${SCRATCH}/SCanD_project_GMANJ/code
+ENIGMA_DTI_BIDS=${SCRATCH}/SCanD_project/code
 
 # Run Python scripts
 for metric in FA MD RD AD; do
