@@ -69,7 +69,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
 |^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
-|^ |   0f	|   [Final step before running the pipleine](#Final-step-before-running-the-pipleine)	| a few days to get buffer space 	|
+|^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
@@ -171,7 +171,7 @@ In case you want to backup your json files before editting them:
 mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
-## Final step before running the pipleine
+## Final step before running the pipeline
 
 The working directory for pipelines is based on the $BBUFFER environment variable, which assumes access to the buffer space. This setup significantly enhances code execution speed and overall performance.
 
@@ -185,11 +185,11 @@ Hello,
 I'm [your name] working at [site name] as a [your role] and I would like to request bbuffer space to do some preprocessing on the SciNet cluster. Specifically, I would like to run preprocessing scripts that use third party software that utilize high I/O for both logging and temporary files, and we're running them on large datasets so it would be ideal to run them as efficiently as possible. My account is [your scinet ID].
 Let us know if you can get me access, any help would be greatly appreciated!
 ```
-If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
+If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
 
 ## Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipleine seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run piplines seperately.
+After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipeline seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run pipelines seperately.
 
 ## Running mriqc
 
