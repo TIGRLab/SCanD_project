@@ -10,7 +10,7 @@ After setting up the scinet environment and organizing your bids folder and part
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_1.sh
@@ -24,7 +24,7 @@ source ./stage_1.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_2.sh
@@ -37,7 +37,7 @@ source ./stage_2.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_3.sh
@@ -50,7 +50,7 @@ source ./stage_3.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_4.sh
@@ -62,7 +62,7 @@ source ./stage_4.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_5.sh
