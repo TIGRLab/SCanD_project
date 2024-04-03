@@ -1,4 +1,4 @@
-# SCanD_project_GMANJ
+# SCanD_project
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
 
@@ -23,7 +23,6 @@ ${BASEDIR}
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
-│   │   ├── parcellated          # parcellation-xcp derivatives
 │   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │   │   ├── dtifit               #dtifit
@@ -36,7 +35,6 @@ ${BASEDIR}
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
-│       ├── parcellated          # contains only qc images and metadata
 │       ├── parcellated_ciftify  # contains only qc images and metadata
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
@@ -70,21 +68,20 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
 |^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
-|^ |   0e	|   [edit fmap files](#edit-fmap-files)	| 2 minutes in terminal 	|
+|^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
+|^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon_step1) 	|  20 min of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm 	
-|^ |   03c	|  [Run tractography](#Running-tractography) 	|  24 hours on slurm 	|
-|^ |   03d	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
-|^ |   03e	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
-|^ |   03f	|  [Run qsirecon step2](#Running-qsirecon_step2) 	|  1 hour of slurm 	|
-|stage 4 |   04a	|  [Running the parcellation-xcp step](#Running-the-parcellation-xcp-step) 	|   20 mins on slurm	|
-|^ |   04b	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
-|^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
+|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
+|^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
+|^ |   03d	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
+|^ |   03e	|  [Run qsirecon step2](#Running-qsirecon_step2) 	|  1 hour of slurm 	|
+|stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
+|^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 5 |   05a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
@@ -104,13 +101,13 @@ A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym
 
 ```sh
 cd $SCRATCH
-git clone https://github.com/GhazalehManj/SCanD_project_GMANJ.git
+git clone https://github.com/TIGRLab/SCanD_project.git
 ```
 
 ## Run the software set-up script
 
 ```sh
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 source code/00_setup_data_directories.sh
 ```
 
@@ -121,7 +118,7 @@ We want to put your data into:
 ```
 ./data/local/bids
 ```
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project_GMANJ/data/local/bids/participants.tsv' file.
+After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file.
 
 #### For a test run of the code
 
@@ -137,15 +134,15 @@ To copy the data from another computer/server you should be on the datamover nod
 ```sh
 ssh <cc_username>@niagara.scinet.utoronto.ca
 ssh nia-dm1
-rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project_GMANJ/data/local/
+rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
 To link existing data from another location on SciNet Niagara to this folder:
 
 ```sh
-ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project_GMANJ/data/local/bids
+ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
-## edit fmap files
+## Edit fmap files
 
 In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
 
@@ -163,7 +160,7 @@ source ~/.virtualenvs/myenv/bin/activate
 
 python3 -m pip install bids
 
-cd $SCRATCH/SCandD_project_GMANJ
+cd $SCRATCH/SCandD_project
 
 python3 fmap_intended_for.py
 ```
@@ -174,9 +171,25 @@ In case you want to backup your json files before editting them:
 mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
+## Final step before running the pipeline
+
+The working directory for pipelines is based on the $BBUFFER environment variable, which assumes access to the buffer space. This setup significantly enhances code execution speed and overall performance.
+
+To request access: If you do not already have access to the buffer folder, it is recommended to reach out to the SCINET group at support@scinet.utoronto.ca to request access.
+
+Here is a sample email you can use:
+
+* Subject: Request for BBUFFER Space for Preprocessing on SciNet Cluster
+```
+Hello,
+I'm [your name] working at [site name] as a [your role] and I would like to request bbuffer space to do some preprocessing on the SciNet cluster. Specifically, I would like to run preprocessing scripts that use third party software that utilize high I/O for both logging and temporary files, and we're running them on large datasets so it would be ideal to run them as efficiently as possible. My account is [your scinet ID].
+Let us know if you can get me access, any help would be greatly appreciated!
+```
+If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
+
 ## Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipleine seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run piplines seperately.
+After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipeline seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run pipelines seperately.
 
 ## Running mriqc
 
@@ -185,7 +198,7 @@ After setting up the scinet environment and organizing your bids folder and part
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -215,7 +228,7 @@ ssh nia-login07
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
@@ -235,7 +248,7 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -262,7 +275,7 @@ Note -  the script enclosed uses some interesting extra opions:
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -283,7 +296,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -303,7 +316,7 @@ sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -346,7 +359,7 @@ If you've already set up the pipeline before, bypass the previously mentioned in
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -359,26 +372,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ```
 
-## Running tractography
-
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
-```
-
 
 ## Running enigma extract
 
@@ -388,7 +381,7 @@ sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./code/03_ENIGMA_ExtractCortical.sh
@@ -402,7 +395,7 @@ source ./code/03_ENIGMA_ExtractCortical.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
@@ -415,7 +408,7 @@ sbatch  ./code/03_enigma_dti_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -428,26 +421,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_qsirecon_step2_scinet.sh
 ```
 
-## Running the parcellation-xcp step
-
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_DTSERIES=$(ls -1d ./data/local/xcp_d/sub*/ses*/func/*dtseries* | wc -l)
-array_job_length=$(echo "$N_DTSERIES/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/04_parcellate_xcp_scinet.sh
-```
-
 ## Running the parcellation-ciftify step
 
 ```sh
@@ -455,7 +428,7 @@ sbatch --array=0-${array_job_length} ./code/04_parcellate_xcp_scinet.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
@@ -486,7 +459,7 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./code/05_extract_to_share.sh
@@ -510,7 +483,7 @@ module load datalad/0.15.5 # this is the datalad module in Erin's folder
 ##### Using datalad to install a download a dataset
 
 ```
-cd ${SCRATCH}/SCanD_project_GMANJ/data/local/
+cd ${SCRATCH}/SCanD_project/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
@@ -538,7 +511,7 @@ To guess - we add this line into the middle of the top level json ().
 note: now - thanks to the people at repronim - we can also add the repronim derivatives !
 
 ```{r}
-cd ${SCRATCH}/SCanD_project_GMANJ/data/local/ls
+cd ${SCRATCH}/SCanD_project/data/local/ls
 
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-fmriprep.git fmriprep
 datalad clone https://github.com/OpenNeuroDerivatives/ds000115-mriqc.git mriqc

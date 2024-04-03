@@ -10,7 +10,7 @@ After setting up the scinet environment and organizing your bids folder and part
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_1.sh
@@ -24,33 +24,33 @@ source ./stage_1.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_2.sh
 ```
 
-## stage 3 (ciftify_anat, xcp_scinet, enigma extract, enigma_dti, tractography, qsirecon2):
+## stage 3 (ciftify_anat, xcp_scinet, enigma extract, enigma_dti, qsirecon2):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_3.sh
 ```
 
-## stage 4 (parcellation):
+## stage 4 (parcellation_ciftify):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_4.sh
@@ -62,7 +62,7 @@ source ./stage_4.sh
 ssh nia-login07
 
 ## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project_GMANJ
+cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_5.sh
