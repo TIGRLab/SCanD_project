@@ -171,18 +171,21 @@ In case you want to backup your json files before editting them:
 mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
-## Final step before running the pipleine!
+## Final step before running the pipleine
 
-Working directory for piplines is based on $BBUFFER which assumes you have access to buffer folder to run the codes faster. It's better asking the scinet group to give you access to buffer folder. Here is a sample email you can use: support@scinet.utoronto.ca
+The working directory for pipelines is based on the $BBUFFER environment variable, which assumes access to the buffer space. This setup significantly enhances code execution speed and overall performance.
 
+To request access: If you do not already have access to the buffer folder, it is recommended to reach out to the SCINET group at support@scinet.utoronto.ca to request access.
+
+Here is a sample email you can use:
+
+* Subject: Request for BBUFFER Space for Preprocessing on SciNet Cluster
 ```
 Hello,
-
 I'm [your name] working at [site name] as a [your role] and I would like to request bbuffer space to do some preprocessing on the SciNet cluster. Specifically, I would like to run preprocessing scripts that use third party software that utilize high I/O for both logging and temporary files, and we're running them on large datasets so it would be ideal to run them as efficiently as possible. My account is [your scinet ID].
-
- Let us know if you can get me access, any help would be greatly appreciated!
+Let us know if you can get me access, any help would be greatly appreciated!
 ```
-In case you didn't hget the buffer folder or you don't want to get one (!), you need to edit the codes and everywhere you see "$BBUFFER" repalce it with "$SCRATCH/SCanD_project".
+If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
 
 ## Quick Start - Workflow Automation
 
