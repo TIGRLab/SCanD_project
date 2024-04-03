@@ -55,23 +55,15 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}
 rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
 
 
-echo "copying over the xcp_d metadata and qc images"
+echo "copying over the xcp_d folder"
 
 ## copy over the xcp json files 
-XCP_SHARE_DIR=${PROJECT_DIR}/data/share/xcp_d
-XCP_LOCAL_DIR=${PROJECT_DIR}/data/local/xcp_d
+rm -rf ${PROJECT_DIR}/data/share/xcp_d
 
-mkdir ${XCP_SHARE_DIR}
 
-rsync -a --include "*/" --include="*.json" --exclude="*" ${XCP_LOCAL_DIR} ${XCP_SHARE_DIR}
+## copy over the xcp  folder (all data)
+rsync -a ${PROJECT_DIR}/data/local/xcp_d  ${PROJECT_DIR}/data/share
 
-## copy over the xcp html files
-subjects=`cd ${XCP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
-cp ${XCP_LOCAL_DIR}/*html ${XCP_SHARE_DIR}/
-for subject in ${subjects}; do
- mkdir -p ${XCP_SHARE_DIR}/${subject}/figures
- rsync -a ${XCP_LOCAL_DIR}/${subject}/figures ${XCP_SHARE_DIR}/${subject}/
-done
 
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
