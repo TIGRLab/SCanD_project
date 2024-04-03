@@ -45,5 +45,6 @@ ${BASEDIR}/data/share
 │   ├── atlas-Tian
 │   ├── cifti_dense_anat
 ├── qsiprep
+│   └── qc page for each scan
 └── xcp-d
 
