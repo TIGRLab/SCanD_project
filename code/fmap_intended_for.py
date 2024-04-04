@@ -25,77 +25,81 @@ bids_dir = "data/local/bids"
 layout = BIDSLayout(bids_dir, validate=False)
 
 subject_list = layout.get_subjects()
-session = "01"
 
-for subject in subject_list:
-    dwi_fmaps = layout.get(subject=subject, session=session, acquisition="dwi", suffix="epi", extension=".json", return_type="file")
-    dwi_files = layout.get(subject=subject, session=session, suffix="dwi", extension=".nii.gz", return_type="file")
-    intended_files = ['/'.join((i.split('/')[-3:])) for i in dwi_files]
-    if not intended_files:
-        continue
-    if len(dwi_fmaps) == 1:
-        with open(dwi_fmaps[0], 'r+') as j:
-            json_dict = json.load(j)
-            json_dict_new = json_dict
-            json_dict_new['IntendedFor'] = intended_files
-            j.seek(0)
-            json.dump(json_dict_new, j, indent=2)
-            j.truncate()
-    else:
-        print(dwi_fmaps)
+sessions_per_subject = collections.defaultdict(list)
 
+# Iterate over each subject in subject_list
 for subject in subject_list:
-    nback_fmaps = layout.get(subject=subject, session=session, acquisition="nback", suffix="epi", extension=".json", return_type="file")
-    nback_files = layout.get(subject=subject, session=session, task="nback", suffix="bold", extension=".nii.gz", return_type="file")
-    intended_files = ['/'.join((i.split('/')[-3:])) for i in nback_files]
-    if not intended_files:
-        continue
-    for nback_fmap in nback_fmaps:
-        with open(nback_fmap, 'r+') as j:
-            json_dict = json.load(j)
-            json_dict_new = json_dict
-            json_dict_new['IntendedFor'] = intended_files
-            j.seek(0)
-            json.dump(json_dict_new, j, indent=2)
-            j.truncate()
+    sessions = layout.get_sessions(subject=subject)
+    sessions_per_subject[subject] = sessions
 
-for subject in subject_list:
-    rest_fmaps = layout.get(subject=subject, session=session, acquisition="rest", suffix="epi", extension=".json", return_type="file")
-    rest_files = layout.get(subject=subject, session=session, task="rest", suffix="bold", extension=".nii.gz", return_type="file")
-    intended_files = ['/'.join((i.split('/')[-3:])) for i in rest_files]
-    if not intended_files:
-        continue
-    for rest_fmap in rest_fmaps:
-        with open(rest_fmap, 'r+') as j:
-            json_dict = json.load(j)
-            json_dict_new = json_dict
-            json_dict_new['IntendedFor'] = intended_files
-            j.seek(0)
-            json.dump(json_dict_new, j, indent=2)
-            j.truncate()
 
-for subject in subject_list:
-    m0_files = layout.get(subject=subject, session=session, suffix="m0scan", extension=".json", return_type="file")
-    asl_files = layout.get(subject=subject, session=session, suffix="asl", extension=".nii.gz", return_type="file")
-    intended_files = ['/'.join((i.split('/')[-3:])) for i in asl_files]
-    if not intended_files:
-        continue
-    if len(m0_files) == 1:
-        # update json file
-        with open(m0_files[0], 'r+') as j:
-            json_dict = json.load(j)
-            json_dict_new = json_dict
-            json_dict_new['IntendedFor'] = intended_files[0]
-            j.seek(0)
-            json.dump(json_dict_new, j, indent=2)
-            j.truncate()
-          
-        # add aslcontext.tsv file
-        aslcontext_file = m0_files[0].replace('_m0scan.json','_aslcontext.tsv')
-        with open(aslcontext_file, 'w+') as f:
-            f.write('volume_type\n')
-            f.write('deltam\n')
-            f.write('m0scan')
-             
-    else:
-        print(m0_files)
+# Iterate over subjects and sessions
+for subject, sessions in sessions_per_subject.items():
+    for session in sessions:
+        # Process 'dwi' scans
+        dwi_fmaps = layout.get(subject=subject, session=session, acquisition="dwi", suffix="epi", extension=".json", return_type="file")
+        dwi_files = layout.get(subject=subject, session=session, suffix="dwi", extension=".nii.gz", return_type="file")
+        intended_files = ['/'.join((i.split('/')[-3:])) for i in dwi_files]
+        if intended_files:
+            if len(dwi_fmaps) == 1:
+                with open(dwi_fmaps[0], 'r+') as j:
+                    json_dict = json.load(j)
+                    json_dict_new = json_dict.copy()  # Create a copy of the dictionary
+                    json_dict_new['IntendedFor'] = intended_files
+                    j.seek(0)
+                    json.dump(json_dict_new, j, indent=2)
+                    j.truncate()
+            else:
+                print(dwi_fmaps)
+
+        # Process 'nback' scans
+        nback_fmaps = layout.get(subject=subject, session=session, acquisition="nback", suffix="epi", extension=".json", return_type="file")
+        nback_files = layout.get(subject=subject, session=session, task="nback", suffix="bold", extension=".nii.gz", return_type="file")
+        intended_files = ['/'.join((i.split('/')[-3:])) for i in nback_files]
+        if intended_files:
+            for nback_fmap in nback_fmaps:
+                with open(nback_fmap, 'r+') as j:
+                    json_dict = json.load(j)
+                    json_dict_new = json_dict.copy()  # Create a copy of the dictionary
+                    json_dict_new['IntendedFor'] = intended_files
+                    j.seek(0)
+                    json.dump(json_dict_new, j, indent=2)
+                    j.truncate()
+
+        # Process 'rest' scans
+        rest_fmaps = layout.get(subject=subject, session=session, acquisition="rest", suffix="epi", extension=".json", return_type="file")
+        rest_files = layout.get(subject=subject, session=session, task="rest", suffix="bold", extension=".nii.gz", return_type="file")
+        intended_files = ['/'.join((i.split('/')[-3:])) for i in rest_files]
+        if intended_files:
+            for rest_fmap in rest_fmaps:
+                with open(rest_fmap, 'r+') as j:
+                    json_dict = json.load(j)
+                    json_dict_new = json_dict.copy()  # Create a copy of the dictionary
+                    json_dict_new['IntendedFor'] = intended_files
+                    j.seek(0)
+                    json.dump(json_dict_new, j, indent=2)
+                    j.truncate()
+
+        # Process 'asl' scans
+        m0_files = layout.get(subject=subject, session=session, suffix="m0scan", extension=".json", return_type="file")
+        asl_files = layout.get(subject=subject, session=session, suffix="asl", extension=".nii.gz", return_type="file")
+        intended_files = ['/'.join((i.split('/')[-3:])) for i in asl_files]
+        if intended_files and len(m0_files) == 1:
+            # Update json file
+            with open(m0_files[0], 'r+') as j:
+                json_dict = json.load(j)
+                json_dict_new = json_dict.copy()  # Create a copy of the dictionary
+                json_dict_new['IntendedFor'] = intended_files[0]
+                j.seek(0)
+                json.dump(json_dict_new, j, indent=2)
+                j.truncate()
+
+            # Add aslcontext.tsv file
+            aslcontext_file = m0_files[0].replace('_m0scan.json', '_aslcontext.tsv')
+            with open(aslcontext_file, 'w+') as f:
+                f.write('volume_type\n')
+                f.write('deltam\n')
+                f.write('m0scan')
+        elif intended_files and len(m0_files) != 1:
+            print(m0_files)
