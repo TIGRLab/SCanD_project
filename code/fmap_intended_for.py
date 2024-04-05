@@ -75,6 +75,38 @@ for subject in subject_list:
             j.truncate()
 
 for subject in subject_list:
+    dwi_fmaps = layout.get(subject=subject, session=session, acquisition="dwitopup", suffix="epi", extension=".json", return_type="file")
+    dwi_files = layout.get(subject=subject, session=session, suffix="dwi", extension=".nii.gz", return_type="file")
+    intended_files = ['/'.join((i.split('/')[-3:])) for i in dwi_files]
+    if not intended_files:
+        continue
+    if len(dwi_fmaps) == 1:
+        with open(dwi_fmaps[0], 'r+') as j:
+            json_dict = json.load(j)
+            json_dict_new = json_dict
+            json_dict_new['IntendedFor'] = intended_files
+            j.seek(0)
+            json.dump(json_dict_new, j, indent=2)
+            j.truncate()
+    else:
+        print(dwi_fmaps)
+
+for subject in subject_list:
+    nback_fmaps = layout.get(subject=subject, session=session, acquisition="functopup", suffix="epi", extension=".json", return_type="file")
+    nback_files = layout.get(subject=subject, session=session, task="rest", suffix="bold", extension=".nii.gz", return_type="file")
+    intended_files = ['/'.join((i.split('/')[-3:])) for i in nback_files]
+    if not intended_files:
+        continue
+    for nback_fmap in nback_fmaps:
+        with open(nback_fmap, 'r+') as j:
+            json_dict = json.load(j)
+            json_dict_new = json_dict
+            json_dict_new['IntendedFor'] = intended_files
+            j.seek(0)
+            json.dump(json_dict_new, j, indent=2)
+            j.truncate()
+
+for subject in subject_list:
     m0_files = layout.get(subject=subject, session=session, suffix="m0scan", extension=".json", return_type="file")
     asl_files = layout.get(subject=subject, session=session, suffix="asl", extension=".nii.gz", return_type="file")
     intended_files = ['/'.join((i.split('/')[-3:])) for i in asl_files]
@@ -99,3 +131,4 @@ for subject in subject_list:
              
     else:
         print(m0_files)
+
