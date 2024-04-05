@@ -24,7 +24,7 @@ bids_dir = "data/local/bids"
 layout = BIDSLayout(bids_dir, validate=False)
 
 subject_list = layout.get_subjects()
-sessions = ["01", "02", "03", "04"]
+sessions = ["01", "02", "03", "04", "05", "06"]
 
 for session in sessions:
     for subject in subject_list:
