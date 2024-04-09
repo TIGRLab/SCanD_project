@@ -82,7 +82,6 @@ singularity run --cleanenv \
     --nthreads 40 \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
-    --use-aroma \
     --notrack \
     --use-syn-sdc \
     --ignore fieldmaps
