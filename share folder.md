@@ -16,7 +16,8 @@ ${BASEDIR}/data/share
 │   ├── group_enigmaDTI_MD.csv
 │   ├── group_enigmaDTI_RD.csv
 │   ├── MDskel_qc_index.html
-│   └── RDskel_qc_index.html
+│   ├── RDskel_qc_index.html
+│   └── each subject files
 ├── ENIGMA_extract
 │   ├── CorticalMeasuresENIGMA_SurfAvg.csv
 │   ├── CorticalMeasuresENIGMA_ThickAvg.csv
