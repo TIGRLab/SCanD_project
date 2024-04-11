@@ -15,7 +15,7 @@ SUB_SIZE=10
 
 ## note the dlabel file path must be a relative to the output folder
 export parcellation_dir=${BASEDIR}/templates/parcellations
-export atlases="atlas-Shaefer17  atlas-Shaefer7  atlas-Glasser atlas-Gordon"
+export atlases="atlas-Schaefer17  atlas-Schaefer7  atlas-Glasser atlas-Gordon"
 
 
 ## set up a trap that will clear the ramdisk if it is not cleared
