@@ -352,7 +352,8 @@ python3 -m pip install -U templateflow
 
 # Run a Python script to import specified templates using the 'templateflow' package
 python -c "from templateflow.api import get; get(['fsaverage'])"
-
+```
+```sh
 #First load a python module
 module load NiaEnv/2019b python/3.11.5
 
