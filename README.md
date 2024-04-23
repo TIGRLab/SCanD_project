@@ -351,7 +351,7 @@ source ~/.virtualenvs/myenv/bin/activate
 python3 -m pip install -U templateflow
 
 # Run a Python script to import specified templates using the 'templateflow' package
-python -c "from templateflow.api import get; get(['fsaverage'])"
+python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
 ```
 ```sh
 #First load a python module
