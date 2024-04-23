@@ -9,7 +9,7 @@ ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
 ├── containers                   # the singularity image are copied or linked to here
-│   ├── fmriprep-20.2.7.simg 
+│   ├── fmriprep-23.0.2.simg 
 │   ├── mriqc-22.0.6.simg simg
 │   ├── qsiprep_0.16.0RC3.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
@@ -336,6 +336,23 @@ sbatch --array=0-${array_job_length} ./code/03_ciftify_anat_scinet.sh
 If you're initiating the pipeline for the first time, it's crucial to acquire specific files from templateflow. Keep in mind that login nodes have internet access, while compute nodes operate in isolation. Therefore, make sure to download the required files as compute nodes lack direct internet connectivity. Here are the steps for pre-download:
 
 
+```sh
+#First load a python module
+module load NiaEnv/2019b python/3.6.8
+
+# Create a directory for virtual environments if it doesn't exist
+mkdir ~/.virtualenvs
+cd ~/.virtualenvs
+virtualenv --system-site-packages ~/.virtualenvs/myenv
+
+# Activate the virtual environment
+source ~/.virtualenvs/myenv/bin/activate 
+
+python3 -m pip install -U templateflow
+
+# Run a Python script to import specified templates using the 'templateflow' package
+python -c "from templateflow.api import get; get(['fsaverage'])"
+```
 ```sh
 #First load a python module
 module load NiaEnv/2019b python/3.11.5
