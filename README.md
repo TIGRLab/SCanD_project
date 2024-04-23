@@ -11,7 +11,7 @@ ${BASEDIR}
 ├── containers                   # the singularity image are copied or linked to here
 │   ├── fmriprep-23.2.0.simg 
 │   ├── mriqc-22.0.6.simg simg
-│   ├── qsiprep_0.16.0RC3.simg
+│   ├── qsiprep_0.19.0.sif
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg 
 │   └── xcp_d-0.6.0.simg
@@ -351,7 +351,7 @@ source ~/.virtualenvs/myenv/bin/activate
 python3 -m pip install -U templateflow
 
 # Run a Python script to import specified templates using the 'templateflow' package
-python -c "from templateflow.api import get; get(['fsaverage'])"
+python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
 ```
 ```sh
 #First load a python module
