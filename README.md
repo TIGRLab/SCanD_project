@@ -1,6 +1,6 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
+This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
 
 General folder structure for the repo (when all is run)
 
@@ -43,12 +43,13 @@ ${BASEDIR}
 |── README.md
 |── work                         #work directory for xcp-d
 |── LICENSE
+|── share folder.md
 |──stage_1.sh
 |──stage_2.sh
 |──stage_3.sh
 |──stage_4.sh
 |──stage_5.sh
-|── Workflow Automation_stages.md
+|── Quick start_workflow automation.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
