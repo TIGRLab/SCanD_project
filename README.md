@@ -1,6 +1,6 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
+This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
 
 General folder structure for the repo (when all is run)
 
@@ -43,12 +43,13 @@ ${BASEDIR}
 |── README.md
 |── work                         #work directory for xcp-d
 |── LICENSE
+|── share folder.md
 |──stage_1.sh
 |──stage_2.sh
 |──stage_3.sh
 |──stage_4.sh
 |──stage_5.sh
-|── Workflow Automation_stages.md
+|── Quick start_workflow automation.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
@@ -191,6 +192,7 @@ If BBUFFER space is unavailable or you choose not to use it, you need to navigat
 ## Quick Start - Workflow Automation
 
 After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipeline seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run pipelines seperately.
+* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
 
 ## Running mriqc
 
