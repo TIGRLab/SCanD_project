@@ -1,4 +1,4 @@
-## stage 3 (ciftify_anat, xcp-d, qsirecon_step2, tractography, enigma extract, enigma-dti):
+## stage 3 (ciftify_anat, xcp-d, qsirecon_step2, tractography, enigma extract):
 
 
 ##ciftify_anat
@@ -45,7 +45,4 @@ sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
 
 ##enigma_extract
 source ./code/03_ENIGMA_ExtractCortical.sh
-
-##enigma-dti
-sbatch  ./code/03_enigma_dti_scinet.sh
 
