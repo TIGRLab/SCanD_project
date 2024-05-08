@@ -1,4 +1,4 @@
-## stage 3 (ciftify_anat, xcp-d, qsirecon_step2, tractography, enigma extract, enigma-dti):
+## stage 3 (ciftify_anat, xcp-d, qsirecon_step2, tractography, enigma extract):
 
 
 ##ciftify_anat
