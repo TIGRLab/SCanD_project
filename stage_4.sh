@@ -1,4 +1,8 @@
-## stage 4 (parcellation_ciftify):
+## stage 4 (parcellation_ciftify, enigma_dti):
+
+
+##enigma-dti
+sbatch  ./code/04_enigma_dti_scinet.sh
 
 
 SUB_SIZE=10 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
