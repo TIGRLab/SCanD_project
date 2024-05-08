@@ -74,11 +74,11 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
-|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon_step1) 	|  20 min of slurm 	|
+|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
 |^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
-|^ |   03d	|  [Run qsirecon step2](#Running-qsirecon_step2) 	|  1 hour of slurm 	|
+|^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |^ |   03e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
@@ -405,20 +405,6 @@ git pull
 source ./code/03_ENIGMA_ExtractCortical.sh
 ```
 
-
-## Running enigma-dti
-
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## submit the array job to the queue
-sbatch  ./code/03_enigma_dti_scinet.sh
-```
 ## Running qsirecon step2
 
 ```sh
@@ -436,7 +422,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_step2_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ```
 
 ## Running tractography
@@ -457,6 +443,21 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_tractography_scinet.sh
+```
+
+
+## Running enigma-dti
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/04_enigma_dti_scinet.sh
 ```
 
 ## Running the parcellation-ciftify step
