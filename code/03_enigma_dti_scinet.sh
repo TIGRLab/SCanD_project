@@ -19,8 +19,8 @@ done
 
 # Set environment variables
 export BASEDIR=${SCRATCH}/SCanD_project
-export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
-export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
+export DTIFIT_DIR=${BASEDIR}/data/local/dtifit
+export ENIGMA_DIR=${BASEDIR}/data/local/enigmaDTI
 export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 # Make Python scripts executable
