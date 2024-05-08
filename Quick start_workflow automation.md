@@ -30,7 +30,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (ciftify_anat, xcp_scinet, tractography, qsirecon2, enigma extract, enigma_dti):
+## stage 3 (ciftify_anat, xcp_scinet, tractography, qsirecon2, enigma extract):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -43,7 +43,7 @@ git pull         #in case you need to pull new code
 source ./stage_3.sh
 ```
 
-## stage 4 (parcellation_ciftify):
+## stage 4 (enigma_dti, parcellation_ciftify):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes

@@ -68,8 +68,8 @@ SESSIONS=$(ls -d ${BIDS_DIR}/sub-${SUBJECTS}/ses-*/)
 
 for session in $SESSIONS; do
     session_name=$(basename $session)
-    QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
-    DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+    QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
+    DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd
     DTIFIT_dir=$(dirname ${DTIFIT_OUT})
     DTIFIT_name=$(basename ${DTIFIT_OUT})
 
