@@ -31,8 +31,8 @@ chmod +x ${BASEDIR}/code/run_group_qc_index.py
 # Execute Singularity container
 singularity exec \
   -B ${SCRATCH}/SCanD_project \
-  -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
-  -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
+  -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
+  -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss_2023-10-10.simg \
   /bin/bash << 'EOF'
 
