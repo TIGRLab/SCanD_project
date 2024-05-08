@@ -19,8 +19,8 @@ done
 
 # Set environment variables
 export BASEDIR=${SCRATCH}/SCanD_project
-export DTIFIT_DIR=${BASEDIR}/data/local/qsiprep/dtifit
-export ENIGMA_DIR=${BASEDIR}/data/local/qsiprep/enigmaDTI
+export DTIFIT_DIR=${BASEDIR}/data/local/dtifit
+export ENIGMA_DIR=${BASEDIR}/data/local/enigmaDTI
 export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 # Make Python scripts executable
@@ -31,8 +31,8 @@ chmod +x ${BASEDIR}/code/run_group_qc_index.py
 # Execute Singularity container
 singularity exec \
   -B ${SCRATCH}/SCanD_project \
-  -B ${BASEDIR}/data/local/qsiprep/enigmaDTI:/enigma_dir \
-  -B ${BASEDIR}/data/local/qsiprep/dtifit:/dtifit_dir \
+  -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
+  -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
   ${BASEDIR}/containers/tbss_2023-10-10.simg \
   /bin/bash << 'EOF'
 
