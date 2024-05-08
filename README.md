@@ -75,7 +75,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
-|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon_step1) 	|  20 min of slurm 	|
+|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
 |^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
