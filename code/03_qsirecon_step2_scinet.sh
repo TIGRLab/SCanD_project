@@ -34,7 +34,7 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.19.0.sif
+export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local  # use if version of fmriprep >=20.2
@@ -68,8 +68,14 @@ SESSIONS=$(ls -d ${BIDS_DIR}/sub-${SUBJECTS}/ses-*/)
 
 for session in $SESSIONS; do
     session_name=$(basename $session)
-    QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
-    DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+    filename=$(ls -1 ${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/*.nii.gz | head -n 1)
+    
+    if [[ $filename =~ (acq-.+?)_space ]]; then
+        acquisition="${BASH_REMATCH[1]}"
+    fi
+    
+    QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
+    DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
     DTIFIT_dir=$(dirname ${DTIFIT_OUT})
     DTIFIT_name=$(basename ${DTIFIT_OUT})
 
