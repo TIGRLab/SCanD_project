@@ -21,7 +21,7 @@ ln -s ${CONTAINER_DIR}/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg
 ln -s ${CONTAINER_DIR}/qsiprep-0.19.0.sif containers/qsiprep-0.19.0.sif
 ln -s ${CONTAINER_DIR}/xcp_d-0.6.0.simg containers/xcp_d-0.6.0.simg
 ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg 
-ln -s ${CONTAINER_DIR}/tbss_05-14-2024.simg containers/tbss_05-14-2024.simg
+ln -s ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 
 ## copy in Erin's freesurfer licence
 cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
