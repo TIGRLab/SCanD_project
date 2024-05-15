@@ -55,7 +55,7 @@ fi
 
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
-singularity run -a  singularity run \
+singularity run --cleanenv \
   -H ${TMP_DIR} \
   -B ${BIDS_DIR}:/bids \
   -B ${QSIPREP_DIR}:/qsiprep \
