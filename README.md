@@ -13,7 +13,7 @@ ${BASEDIR}
 │   ├── mriqc-22.0.6.simg simg
 │   ├── qsiprep_0.19.0.sif
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
-│   ├── tbss_05-14-2024.simg
+│   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.6.0.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
