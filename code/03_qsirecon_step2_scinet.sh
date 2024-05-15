@@ -103,7 +103,7 @@ for session in $SESSIONS; do
 
     ENIGMA_DTI_OUT=${BASEDIR}/data/local/enigmaDTI
 
-    ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_05-14-2024.simg
+    ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
     
     mkdir -p ${ENIGMA_DTI_OUT}
 
