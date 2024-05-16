@@ -59,7 +59,7 @@ singularity run --cleanenv \
   -H ${TMP_DIR} \
   -B ${BIDS_DIR}:/bids \
   -B ${QSIPREP_DIR}:/qsiprep \
-  -B ${OUT_DIR}:/out \
+  -B ${OUTPUT_DIR}:/out \
   -B ${WORK_DIR}:/work \
   -B ${SINGULARITYENV_FS_LICENSE}:/li \
   ${SING_CONTAINER} \
