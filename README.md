@@ -187,7 +187,7 @@ Hello,
 I'm [your name] working at [site name] as a [your role] and I would like to request bbuffer space to do some preprocessing on the SciNet cluster. Specifically, I would like to run preprocessing scripts that use third party software that utilize high I/O for both logging and temporary files, and we're running them on large datasets so it would be ideal to run them as efficiently as possible. My account is [your scinet ID].
 Let us know if you can get me access, any help would be greatly appreciated!
 ```
-If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
+If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project/work.
 
 ## Quick Start - Workflow Automation
 
