@@ -65,6 +65,7 @@ singularity run --cleanenv \
   ${SING_CONTAINER} \
   /bids /out participant \
   --skip-bids-validation \
+  --participant_label ${SUBJECTS} \
   --recon-only \
   --recon-spec amico_noddi \
   --recon-input /qsiprep \
@@ -73,6 +74,7 @@ singularity run --cleanenv \
   --fs-license-file /li \
   -w /work \
   --notrack
+
 
   exitcode=$?
 
