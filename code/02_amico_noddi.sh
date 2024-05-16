@@ -53,7 +53,7 @@ fi
 
 
 
-export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
+export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
   -H ${TMP_DIR} \
