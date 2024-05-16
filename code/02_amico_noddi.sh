@@ -65,7 +65,6 @@ singularity run --cleanenv \
   ${SING_CONTAINER} \
   /bids /out participant \
   --skip-bids-validation \
-  --participant_label `index` \
   --recon-only \
   --recon-spec amico_noddi \
   --recon-input /qsiprep \
