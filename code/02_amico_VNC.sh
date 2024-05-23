@@ -20,7 +20,6 @@ for SUBJECT in $PARTICIPANTS; do
     -B ${QSIPREP_DIR}:/qsiprep \
     -B ${OUTPUT_DIR}:/out \
     -B ${WORK_DIR}:/work \
-    -B ${BASEDIR}/code/amico_filter.json:/ft \
     -B ${SINGULARITYENV_FS_LICENSE}:/li \
     ${SING_CONTAINER} \
     /bids /out participant \
@@ -28,7 +27,6 @@ for SUBJECT in $PARTICIPANTS; do
     --participant_label ${SUBJECT} \
     --recon-only \
     --recon-spec amico_noddi \
-    --bids-filter-file /ft \
     --recon-input /qsiprep \
     --n_cpus 4 --omp-nthreads 2 \
     --output-resolution 1.7 \
