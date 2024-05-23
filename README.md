@@ -14,10 +14,12 @@ ${BASEDIR}
 │   ├── qsiprep_0.16.0RC3.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg
+│   ├── pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 │   └── xcp_d-0.6.0.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
 │   │   ├── bids                 # the defaced BIDS dataset
+│   │   ├── amico_noddi          # amico_noddi derivatives
 │   │   ├── mriqc                # mriqc derivatives
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
@@ -31,6 +33,7 @@ ${BASEDIR}
 │   │   └── xcp_d                # xcp
 │   |
 │   └── share                    # folder with a smaller subset ready to share
+│       ├── amico                # contains only qc images and metadata
 │       ├── mriqc                # contains only qc images and metadata
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
@@ -76,6 +79,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
+|^ |   02c	|  [Run amico noddi](#Running-amico-noddi) 	| 6 hours of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
 |^ |   03c	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
@@ -187,7 +191,7 @@ Hello,
 I'm [your name] working at [site name] as a [your role] and I would like to request bbuffer space to do some preprocessing on the SciNet cluster. Specifically, I would like to run preprocessing scripts that use third party software that utilize high I/O for both logging and temporary files, and we're running them on large datasets so it would be ideal to run them as efficiently as possible. My account is [your scinet ID].
 Let us know if you can get me access, any help would be greatly appreciated!
 ```
-If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
+If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project/work.
 
 ## Quick Start - Workflow Automation
 
@@ -310,6 +314,26 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
+```
+
+## Running amico noddi
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=2 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
 ```
 
 ## Running ciftify-anat
