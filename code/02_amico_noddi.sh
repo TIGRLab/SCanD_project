@@ -55,7 +55,7 @@ fi
 
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
-xvfb-run singularity run \
+singularity run --cleanenv \
   -H ${TMP_DIR} \
   -B ${BIDS_DIR}:/bids \
   -B ${QSIPREP_DIR}:/qsiprep \
