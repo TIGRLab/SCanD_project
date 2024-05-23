@@ -89,3 +89,16 @@ rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/group*  ${PROJECT_DIR}/data/share/e
 rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/*.html  ${PROJECT_DIR}/data/share/enigmaDTI
 
 rsync -a --include "*/" --include "*.png" --exclude "*" ${PROJECT_DIR}/data/local/enigmaDTI/ ${PROJECT_DIR}/data/share/enigmaDTI
+
+echo "copying over the amico noddi metadata and qc images"
+AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico
+AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/amico_noddi
+
+## copy over the amico noddi html files
+subjects=`cd ${AMICO_LOCAL_DIR}/qsirecon; ls -1d sub-* | grep -v html`
+mkdir ${AMICO_SHARE_DIR}
+cp ${AMICO_LOCAL_DIR}/qsirecon/*html ${AMICO_SHARE_DIR}/
+for subject in ${subjects}; do
+ mkdir -p ${AMICO_SHARE_DIR}/${subject}/figures
+ rsync -a ${AMICO_LOCAL_DIR}/qsirecon/${subject}/figures ${AMICO_SHARE_DIR}/${subject}/
+done
