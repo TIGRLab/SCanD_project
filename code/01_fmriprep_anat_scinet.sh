@@ -38,7 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.0.simg
 
 
 ## setting up the output folders
- export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
@@ -84,8 +84,9 @@ singularity run --cleanenv \
     --nthreads 40 \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
+    --cifti-output \
     --notrack \
-    --anat-only 
+    --level minimal
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
