@@ -1,4 +1,4 @@
-BASEDIR=$PROJECT/SCanD_project_GMANJ
+BASEDIR=$SCRATCH/SCanD_project
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
@@ -21,11 +21,9 @@ for SUBJECT in $PARTICIPANTS; do
     -B ${OUTPUT_DIR}:/out \
     -B ${WORK_DIR}:/work \
     -B ${SINGULARITYENV_FS_LICENSE}:/li \
-    -B ${BASEDIR}/code/amico_filter.json:/ft \
     ${SING_CONTAINER} \
     /bids /out participant \
     --skip-bids-validation \
-    --bids-filter-file /ft \
     --participant_label ${SUBJECT} \
     --recon-only \
     --recon-spec amico_noddi \
