@@ -333,6 +333,21 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
 ```
 
+To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
+1. [Install and connect to VNC](https://docs.alliancecan.ca/wiki/VNC).
+2. Open a terminal on VNC: navigate to Application > System Tools > MATE Terminal.
+3. Run the following command:
+   
+```sh
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+source ./code/03_amico_VNC.sh
+```
+
 ## Running ciftify-anat
 
 ```sh
