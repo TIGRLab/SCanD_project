@@ -2,7 +2,7 @@ BASEDIR=$SCRATCH/SCanD_project
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg 
+export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif 
 export OUTPUT_DIR=${BASEDIR}/data/local/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/amico_noddi/tmp
 export WORK_DIR=${BBUFFER}/SCanD/amico
