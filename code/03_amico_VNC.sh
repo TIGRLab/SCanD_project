@@ -14,7 +14,7 @@ PARTICIPANTS=$(tail -n +2 data/local/bids/participants.tsv | cut -f1)
 # Loop through each participant ID
 for SUBJECT in $PARTICIPANTS; do
   echo "Processing participant: $SUBJECT"
-   singularity run --cleanenv\
+   xvfb-run singularity run\
     -H ${TMP_DIR} \
     -B ${BIDS_DIR}:/bids \
     -B ${QSIPREP_DIR}:/qsiprep \
