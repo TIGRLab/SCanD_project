@@ -5,6 +5,8 @@ Here is a checklist for the share folder results.
 
 ```
 ${BASEDIR}/data/share
+├── amico                        
+│   └── a figure and html file for each scan
 ├── ciftify                        
 │   └── qc_recon_all
 ├── enigmaDTI                   
