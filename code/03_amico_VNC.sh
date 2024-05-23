@@ -1,4 +1,4 @@
-BASEDIR=$PROJECT/SCanD_project_GMANJ
+BASEDIR=$SCRATCH/SCanD_project
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
