@@ -14,7 +14,7 @@ ${BASEDIR}
 │   ├── qsiprep_0.16.0RC3.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg
-│   ├── 
+│   ├── pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 │   └── xcp_d-0.6.0.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
