@@ -85,7 +85,7 @@ singularity run --cleanenv \
     --nthreads 40 \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
-    --cifti-output 95k\
+    --cifti-output 91k\
     --notrack \
     --level resample
 
