@@ -31,7 +31,7 @@ trap "cleanup_ramdisk" TERM
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
+export SING_CONTAINER=${BASEDIR}/containers/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/amico_noddi 
 export TMP_DIR=${BASEDIR}/data/local/amico_noddi/tmp
 export WORK_DIR=${BBUFFER}/SCanD/amico
