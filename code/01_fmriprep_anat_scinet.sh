@@ -63,7 +63,7 @@ fi
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # export SINGULARITYENV_TEMPLATEFLOW_HOME=/home/fmriprep/.cache/templateflow
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
+export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 # # Remove IsRunning files from FreeSurfer
 # for subject in $SUBJECTS: do
@@ -85,9 +85,9 @@ singularity run --cleanenv \
     --nthreads 40 \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
-    --cifti-output \
+    --cifti-output 95k\
     --notrack \
-    --level minimal
+    --level resample
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
