@@ -87,7 +87,7 @@ singularity run --cleanenv \
     --output-space anat MNI152NLin6Asym:res-2 \
     --cifti-output 91k\
     --notrack \
-    --level rresampling
+    --level resampling
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
