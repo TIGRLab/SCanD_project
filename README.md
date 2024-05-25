@@ -218,15 +218,19 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 ```
 
-## Running fmriprep-anatomical (includes freesurfer)
+## Running fmriprep-fit (includes freesurfer)
 
-Note: this step uses and estimated **16hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
+Note: this step uses and estimated **6hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
 
 #### Potential changes to script for your data
  
 Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happenned. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_anat_scinet.sh`
 
+Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
 
+Note -  the script enclosed uses some interesting extra opions:
+ - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -244,7 +248,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
+sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ```
 
 ## Running qsiprep
