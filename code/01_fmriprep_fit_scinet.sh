@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fmriprep_anat
+#SBATCH --job-name=fmriprep_fit
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
