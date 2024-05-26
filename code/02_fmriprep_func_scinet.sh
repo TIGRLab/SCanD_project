@@ -80,7 +80,6 @@ singularity run --cleanenv \
     --skip-bids-validation \
     --cifti-output 91k \
     --use-syn-sdc \
-    --output-space anat MNI152NLin6Asym:res-2 \
     --level full
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
