@@ -59,12 +59,15 @@ fi
 
 singularity run --cleanenv \
 -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
+-B ${OUTPUT_DIR}:/out \
+-B ${FMRI_DIR}:/fmriprep \
+-B ${WORK_DIR}:/work \
 ${SING_CONTAINER} \
-    $FMRI_DIR\
-    $OUTPUT_DIR\
-    participant\
+    /fmriprep \
+    /out \
+    participant \
     --participant_label ${SUBJECTS} \
-    -w ${WORK_DIR} \
+    -w /work \
     --cifti \
     --smoothing 0 \
     --fd-thresh 0.5 \
