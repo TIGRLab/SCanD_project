@@ -34,10 +34,12 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/
-export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.6.0
+export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0
 
-export WORK_DIR=${BASEDIR}/work/xcp
+
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
@@ -55,7 +57,9 @@ else
 fi
 
 
-singularity run --cleanenv  ${SING_CONTAINER} \
+singularity run --cleanenv \
+-B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
+${SING_CONTAINER} \
     $FMRI_DIR\
     $OUTPUT_DIR\
     participant\
