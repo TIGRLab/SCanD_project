@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fmriprep_func
+#SBATCH --job-name=fmriprep_apply
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -75,6 +75,7 @@ singularity run --cleanenv \
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
+    --derivatives /derived \
     -w /work \
     --skip-bids-validation \
     --cifti-output 91k \
