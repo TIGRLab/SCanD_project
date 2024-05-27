@@ -12,7 +12,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 
 
-##fmriprep_anat
+##fmriprep_fit
 ## figuring out appropriate array-job size
 SUB_SIZE=1
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -20,7 +20,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
+sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 
 
 #qsiprep
