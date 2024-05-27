@@ -9,7 +9,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
 FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep
-FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/fmriprep
+FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/fmriprep/23.2.3
 
 mkdir -p ${FMRIPREP_SHARE_DIR}
 
@@ -28,7 +28,7 @@ done
 echo "copying over the qsiprep metadata and qc images"
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/21.4.0
 
 rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
 
