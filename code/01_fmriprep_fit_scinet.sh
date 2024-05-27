@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fmriprep_anat
+#SBATCH --job-name=fmriprep_fit
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -38,11 +38,12 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.0.simg
 
 
 ## setting up the output folders
- export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/fmriprep
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
@@ -62,7 +63,7 @@ fi
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # export SINGULARITYENV_TEMPLATEFLOW_HOME=/home/fmriprep/.cache/templateflow
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
+export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 # # Remove IsRunning files from FreeSurfer
 # for subject in $SUBJECTS: do
@@ -84,8 +85,10 @@ singularity run --cleanenv \
     --nthreads 40 \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
+    --cifti-output 91k\
+    --use-syn-sdc \
     --notrack \
-    --anat-only 
+    --level resampling
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
