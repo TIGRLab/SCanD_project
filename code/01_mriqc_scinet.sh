@@ -38,7 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/mriqc-22.0.6.simg
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/mriqc # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/mriqc/22.0.6 # use if version of fmriprep <=20.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${BBUFFER}/SCanD/mriqc
