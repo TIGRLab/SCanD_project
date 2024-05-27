@@ -23,9 +23,7 @@ ln -s ${CONTAINER_DIR}/fmriprep-23.2.3.simg containers/fmriprep-23.2.3.simg
 
 ln -s ${CONTAINER_DIR}/mriqc-24.0.0.simg containers/mriqc-24.0.0.simg
 
-ln -s ${CONTAINER_DIR}/qsiprep_0.16.0RC3.simg containers/qsiprep_0.16.0RC3.simg
 ln -s ${CONTAINER_DIR}/qsiprep-0.21.4.sif containers/qsiprep-0.21.4.sif
-ln -s ${CONTAINER_DIR}/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg ln -s ${CONTAINER_DIR}/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 
 ln -s ${CONTAINER_DIR}/xcp_d-0.7.3.simg containers/xcp_d-0.7.3.simg
 

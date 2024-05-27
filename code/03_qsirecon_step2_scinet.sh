@@ -34,7 +34,7 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
+export ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local  # use if version of fmriprep >=20.2
@@ -93,7 +93,7 @@ for session in $SESSIONS; do
       -B ${QSIRECON_OUT}_dwi.bvec \
       -B ${QSIRECON_OUT}_dwi.bval \
       -B ${DTIFIT_dir}:/out \
-      ${SING_CONTAINER} \
+      ${ENIGMA_CONTAINER} \
       dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
       -m ${QSIRECON_OUT}_mask.nii.gz \
       -r ${QSIRECON_OUT}_dwi.bvec \
@@ -103,7 +103,7 @@ for session in $SESSIONS; do
 
     ENIGMA_DTI_OUT=${BASEDIR}/data/local/enigmaDTI
 
-    ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
+    
     
     mkdir -p ${ENIGMA_DTI_OUT}
 

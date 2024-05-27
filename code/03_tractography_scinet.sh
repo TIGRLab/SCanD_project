@@ -34,17 +34,18 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep_0.16.0RC3.simg
+export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
 export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
 
-export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep/0.21.4
+export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
 export FREESURFER_DIR=${BASEDIR}/data/local/freesurfer
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/qsiprep
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
