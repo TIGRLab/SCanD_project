@@ -40,8 +40,9 @@ export SING_CONTAINER=${BASEDIR}/containers/mriqc-24.0.0.simg
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0 # use if version of fmriprep <=20.1
 
-# export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/mriqc
+
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
@@ -60,15 +61,6 @@ else
 fi
 
 
-## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-# export SINGULARITYENV_TEMPLATEFLOW_HOME=/home/fmriprep/.cache/templateflow
-# Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/mriqc/.freesurfer.txt
-
-# # Remove IsRunning files from FreeSurfer
-# for subject in $SUBJECTS: do
-#     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
-# done
 
 
 singularity run --cleanenv \
