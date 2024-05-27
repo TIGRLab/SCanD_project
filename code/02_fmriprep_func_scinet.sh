@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fmriprep_func
+#SBATCH --job-name=fmriprep_apply
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -37,11 +37,11 @@ export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.0.simg
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
-
-export WORK_DIR=${BBUFFER}/SCanD/fmriprep
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
@@ -59,7 +59,7 @@ else
 fi
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
+export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 # # Remove IsRunning files from FreeSurfer
 # for subject in $SUBJECTS: do
@@ -75,11 +75,12 @@ singularity run --cleanenv \
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
+    --derivatives /derived \
     -w /work \
     --skip-bids-validation \
     --cifti-output 91k \
     --use-syn-sdc \
-    --output-space anat MNI152NLin6Asym:res-2 
+    --level full
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
@@ -95,4 +96,3 @@ for subject in $SUBJECTS; do
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
 done
-
