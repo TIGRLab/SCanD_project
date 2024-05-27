@@ -19,7 +19,7 @@ ${BASEDIR}
 │   └── xcp_d-0.7.3.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
-│   ├── amico_noddi # amico_noddi derivatives
+│   │   ├──amico_noddi           # amico_noddi derivatives
 │   │   ├── bids                 # the defaced BIDS dataset
 │   │   ├── mriqc                # mriqc derivatives
 │   │   ├── fmriprep             # fmriprep derivatives
