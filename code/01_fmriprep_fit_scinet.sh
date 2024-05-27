@@ -34,11 +34,11 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.0.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1

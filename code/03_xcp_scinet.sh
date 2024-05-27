@@ -30,12 +30,12 @@ trap "cleanup_ramdisk" TERM
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
+export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.6.0
-export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.0
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.7.3
+export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3
 
 
 project_id=$(cat ${BASEDIR}/project_id)
