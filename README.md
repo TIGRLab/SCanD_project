@@ -9,14 +9,18 @@ ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
 ├── containers                   # the singularity image are copied or linked to here
-│   ├── fmriprep-23.2.0.simg 
+│   ├── fmriprep-23.2.0.simg
+│   ├──
 │   ├── mriqc-22.0.6.simg simg
-│   ├── qsiprep_0.19.0.sif
+│   ├──
+│   ├── qsiprep_
 │   ├── qsiprep_0.16.0RC3.simg
+│   ├── pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 │   ├── tbss_2023-10-10.simg
-│   └── xcp_d-0.6.0.simg
+│   ├── xcp_d-0.6.0.simg
+│   └── 
 ├── data
 │   ├── local                    # folder for the "local" dataset
 │   ├── amico_noddi # amico_noddi derivatives
