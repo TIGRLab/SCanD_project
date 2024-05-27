@@ -37,7 +37,7 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/
 export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
 
-export WORK_DIR=${BASEDIR}/work/xcp
+export WORK_DIR=${BBUFFER}/work/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
@@ -55,12 +55,17 @@ else
 fi
 
 
-singularity run --cleanenv  ${SING_CONTAINER} \
-    $FMRI_DIR\
-    $OUTPUT_DIR\
-    participant\
+singularity run --cleanenv \
+-B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
+-B ${OUTPUT_DIR}:/out \
+-B ${FMRI_DIR}:/fmriprep \
+-B ${WORK_DIR}:/work \
+${SING_CONTAINER} \
+    /fmriprep \
+    /out \
+    participant \
     --participant_label ${SUBJECTS} \
-    -w ${WORK_DIR} \
+    -w /work \
     --cifti \
     --smoothing 0 \
     --fd-thresh 0.5 \
@@ -81,4 +86,3 @@ for subject in $SUBJECTS; do
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
 done
-
