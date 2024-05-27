@@ -28,7 +28,7 @@ done
 echo "copying over the qsiprep metadata and qc images"
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/21.4.0
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/0.21.4
 
 rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
 
@@ -46,13 +46,13 @@ echo "running mriqc group and copying files"
 singularity run --cleanenv \
     -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
     -B ${PROJECT_DIR}/data/local/bids:/bids \
-    -B ${PROJECT_DIR}/data/local/mriqc:/derived \
-    ${PROJECT_DIR}/containers/mriqc-22.0.6.simg \
+    -B ${PROJECT_DIR}/data/local/mriqc/24.0.0:/derived \
+    ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group 
 
 mkdir ${PROJECT_DIR}/data/share/mriqc
-rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}/data/share/mriqc/
-rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
+rsync -a ${PROJECT_DIR}/data/local/mriqc/24.0.0/dataset_description.json ${PROJECT_DIR}/data/share/mriqc/
+rsync -a ${PROJECT_DIR}/data/local/mriqc/24.0.0/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
 
 
 echo "copying over the xcp_d folder"
