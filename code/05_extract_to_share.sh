@@ -6,8 +6,8 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
-FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/23.2.0
-FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.0
+FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/23.2.3
+FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3
 
 if [ -d "$FMRIPREP_LOCAL_DIR" ]; 
 then
@@ -38,7 +38,7 @@ fi
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/21.4.0
 
 if [ -d "$QSIPREP_LOCAL_DIR" ]; 
 then
@@ -62,8 +62,8 @@ fi
 
 
 ## run the mriqc group step and copy over all outputs
-MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/22.0.6
-MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/22.0.6
+MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
+MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/22.0.0
 
 if [ -d "$MRIQC_LOCAL_DIR" ]; 
 then
