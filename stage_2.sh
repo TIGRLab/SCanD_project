@@ -2,7 +2,7 @@
 
 #stage2: fmriprep_func, qsirecon_step1, amico_noddi
 # Ask the user whether to run only fmriprep_func
-read -p "Do you want to only run fmriprep_func? (yes/no): " RUN_FMRIPREP_FUNC_ONLY
+read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FMRIPREP_FUNC_ONLY
 
 if [ "$RUN_FMRIPREP_FUNC_ONLY" = "yes" ] || [ "$RUN_FMRIPREP_FUNC_ONLY" = "y" ]; then
     echo "Running only fmriprep_func"
