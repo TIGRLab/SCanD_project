@@ -40,8 +40,9 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4 # use if version of fmriprep <=20.1
 
-# export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-export WORK_DIR=${BBUFFER}/SCanD/qsiprep
+# adding random string (project_id) to BBUFFER folder to prevent conflicts betwwen projects
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
