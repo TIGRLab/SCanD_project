@@ -2,7 +2,7 @@
 
 ## stage 4 (parcellation_ciftify, enigma_dti)
 # Ask the user whether to run only parcellation_ciftify
-read -p "Do you want to only run functional codes? (yes/no): " RUN_PARCELLATION_ONLY
+read -p "Do you want to only run functional pipelines? (yes/no): " RUN_PARCELLATION_ONLY
 
 if [ "$RUN_PARCELLATION_ONLY" = "yes" ] || [ "$RUN_PARCELLATION_ONLY" = "y" ]; then
     echo "Running only parcellation_ciftify"
