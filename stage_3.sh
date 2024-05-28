@@ -2,7 +2,7 @@
 
 ## stage 3 (ciftify_anat, xcp-d, qsirecon_step2, tractography, enigma extract):
 # Ask the user whether to run only xcp_d, ciftify_anat, and enigma_extract
-read -p "Do you want to only functional codes? (yes/no): " RUN_SPECIFIC_ONLY
+read -p "Do you want to only run functional pipelines? (yes/no): " RUN_SPECIFIC_ONLY
 
 if [ "$RUN_SPECIFIC_ONLY" = "yes" ] || [ "$RUN_SPECIFIC_ONLY" = "y" ]; then
     echo "Running only xcp_d, ciftify_anat, and enigma_extract"
