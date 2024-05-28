@@ -4,6 +4,8 @@ In this project, we have devised a streamlined solution for managing multiple pi
 
 After setting up the scinet environment and organizing your bids folder and participants.csv file, you can run the codes for each stage.
 
+The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
+
 ## stage 1 (mriqc, fmriprep_anat, qsiprep):
 ```sh
 # note step one is to make sure you are on one of the login nodes
