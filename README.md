@@ -2,7 +2,7 @@
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
 
-General folder structure for the repo (when all is run)::
+General folder structure for the repo (when all is run)
 
 ```
 ${BASEDIR}
