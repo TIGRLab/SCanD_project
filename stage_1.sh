@@ -2,7 +2,7 @@
 
 #stage1: mriqc, fmriprep_anat, qsiprep
 # Ask the user whether to run only functional codes
-read -p "Do you want to only run functional codes? (yes/no): " RUN_FUNCTIONAL_ONLY
+read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FUNCTIONAL_ONLY
 
 if [ "$RUN_FUNCTIONAL_ONLY" = "yes" ] || [ "$RUN_FUNCTIONAL_ONLY" = "y" ]; then
     # Run only mriqc and fmriprep_anat
