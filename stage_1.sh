@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#stage1: mriqc, fmriprep_anat, qsiprep
+#stage1 (mriqc, fmriprep_anat, qsiprep):
 # Ask the user whether to run only functional codes
 read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FUNCTIONAL_ONLY
 
