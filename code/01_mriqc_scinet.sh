@@ -76,6 +76,7 @@ singularity run --cleanenv \
     --ants-nthreads 8 \
     --verbose-reports \
     --mem_gb 12 \
+    --no-datalad-get \
     --no-sub
 
 exitcode=$?
