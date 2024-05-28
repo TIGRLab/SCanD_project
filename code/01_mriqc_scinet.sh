@@ -75,7 +75,6 @@ singularity run --cleanenv \
     --nprocs 12 \
     --ants-nthreads 8 \
     --verbose-reports \
-    --ica \
     --mem_gb 12 \
     --no-sub
 
