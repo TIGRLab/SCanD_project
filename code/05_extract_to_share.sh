@@ -38,7 +38,7 @@ fi
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/0.21.4
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4
 
 if [ -d "$QSIPREP_LOCAL_DIR" ]; 
 then
@@ -63,7 +63,7 @@ fi
 
 ## run the mriqc group step and copy over all outputs
 MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
-MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/22.0.0
+MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
 
 if [ -d "$MRIQC_LOCAL_DIR" ]; 
 then
@@ -73,7 +73,7 @@ singularity run --cleanenv \
     -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
     -B ${PROJECT_DIR}/data/local/bids:/bids \
     -B ${$MRIQC_LOCAL_DIR}:/derived \
-    ${PROJECT_DIR}/containers/mriqc-22.0.6.simg \
+    ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group 
 
 mkdir -p ${MRIQC_SHARE_DIR}
