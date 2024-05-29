@@ -72,15 +72,33 @@ for session in $SESSIONS; do
     
     if [[ $filename =~ (acq-.+?)_space ]]; then
         acquisition="${BASH_REMATCH[1]}"
+    else
+        acquisition=""
+    fi
+
+    if [[ $filename =~ run-(\d+)_space ]]; then
+        run="run-${BASH_REMATCH[1]}"
+    else
+        run=""
     fi
 
     if [ -z "$acquisition" ]; then
-        QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
-        DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+        if [ -z "$run" ]; then
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+        else
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+        fi
     else
-        QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
-        DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
-   fi
+        if [ -z "$run" ]; then
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
+        else
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_${run}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_${run}_space-T1w_desc-preproc_fslstd
+        fi
+    fi
     
     DTIFIT_dir=$(dirname ${DTIFIT_OUT})
     DTIFIT_name=$(basename ${DTIFIT_OUT})
