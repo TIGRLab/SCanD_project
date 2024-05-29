@@ -94,7 +94,73 @@ for session in $SESSIONS; do
             QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
             DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd 
     fi
-   
+
+
+   # Check if there are any sessions for the subject
+if [ -z "$SESSIONS" ]; then
+
+ filename=$(ls -1 ${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/dwi/*.nii.gz | head -n 1)
+
+        if [[ $filename =~ (acq-.+?)_space ]]; then
+            acquisition="${BASH_REMATCH[1]}"
+        else
+            acquisition=""
+        fi
+
+        if [[ $filename =~ run-(\d+)_space ]]; then
+            run="run-${BASH_REMATCH[1]}"
+        else
+            run=""
+        fi
+
+    # Run the code without session
+    if [ -z "$acquisition" ]; then
+        if [ -z "$run" ]; then 
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_space-T1w_desc-preproc_fslstd
+        else
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_${run}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_${run}_space-T1w_desc-preproc_fslstd
+        fi
+    else
+            QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_${acquisition}_space-T1w_desc-preproc_fslstd
+            DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_${acquisition}_space-T1w_desc-preproc_fslstd
+    fi
+
+else
+    for session in $SESSIONS; do
+        session_name=$(basename $session)
+        filename=$(ls -1 ${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/*.nii.gz | head -n 1)
+
+        if [[ $filename =~ (acq-.+?)_space ]]; then
+            acquisition="${BASH_REMATCH[1]}"
+        else
+            acquisition=""
+        fi
+
+        if [[ $filename =~ run-(\d+)_space ]]; then
+            run="run-${BASH_REMATCH[1]}"
+        else
+            run=""
+        fi
+
+        if [ -z "$acquisition" ]; then
+            if [ -z "$run" ]; then
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+            else
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+            fi
+        else
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd    
+        fi
+
+    done
+fi
+
+
     DTIFIT_dir=$(dirname ${DTIFIT_OUT})
     DTIFIT_name=$(basename ${DTIFIT_OUT})
 
