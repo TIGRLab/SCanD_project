@@ -176,5 +176,3 @@ fi
                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
        fi
    done
-   
-done
