@@ -97,39 +97,6 @@ if [ -z "$SESSIONS" ]; then
             DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/dwi/sub-${SUBJECTS}_${acquisition}_space-T1w_desc-preproc_fslstd
     fi
 
-else
-    for session in $SESSIONS; do
-        session_name=$(basename $session)
-        filename=$(ls -1 ${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/*.nii.gz | head -n 1)
-
-        if [[ $filename =~ (acq-.+?)_space ]]; then
-            acquisition="${BASH_REMATCH[1]}"
-        else
-            acquisition=""
-        fi
-
-        if [[ $filename =~ run-(\d+)_space ]]; then
-            run="run-${BASH_REMATCH[1]}"
-        else
-            run=""
-        fi
-
-        if [ -z "$acquisition" ]; then
-            if [ -z "$run" ]; then
-                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
-                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
-            else
-                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
-                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
-            fi
-        else
-                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
-                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd    
-        fi
-
-    done
-fi
-
 
     DTIFIT_dir=$(dirname ${DTIFIT_OUT})
     DTIFIT_name=$(basename ${DTIFIT_OUT})
@@ -161,7 +128,7 @@ fi
       -B ${DTIFIT_dir}:/dtifit_dir \
       ${ENIGMA_CONTAINER} \
       --calc-all --debug \
-      /enigma_dir/sub-${SUBJECTS}_${session_name} \
+      /enigma_dir/sub-${SUBJECTS} \
       /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
     exitcode=$?
@@ -176,3 +143,87 @@ fi
                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
        fi
    done
+
+
+else
+
+    for session in $SESSIONS; do
+        session_name=$(basename $session)
+        filename=$(ls -1 ${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/*.nii.gz | head -n 1)
+
+        if [[ $filename =~ (acq-.+?)_space ]]; then
+            acquisition="${BASH_REMATCH[1]}"
+        else
+            acquisition=""
+        fi
+
+        if [[ $filename =~ run-(\d+)_space ]]; then
+            run="run-${BASH_REMATCH[1]}"
+        else
+            run=""
+        fi
+
+        if [ -z "$acquisition" ]; then
+            if [ -z "$run" ]; then
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_space-T1w_desc-preproc_fslstd
+            else
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${run}_space-T1w_desc-preproc_fslstd
+            fi
+        else
+                QSIRECON_OUT=${OUTPUT_DIR}/qsirecon/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc_fslstd    
+        fi
+
+    
+
+        DTIFIT_dir=$(dirname ${DTIFIT_OUT})
+        DTIFIT_name=$(basename ${DTIFIT_OUT})
+
+        mkdir -p $DTIFIT_dir
+
+        singularity exec \
+          -B ${QSIRECON_OUT}_dwi.nii.gz \
+          -B ${QSIRECON_OUT}_mask.nii.gz \
+          -B ${QSIRECON_OUT}_dwi.bvec \
+          -B ${QSIRECON_OUT}_dwi.bval \
+          -B ${DTIFIT_dir}:/out \
+          ${SING_CONTAINER} \
+          dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
+          -m ${QSIRECON_OUT}_mask.nii.gz \
+          -r ${QSIRECON_OUT}_dwi.bvec \
+          -b ${QSIRECON_OUT}_dwi.bval \
+          --save_tensor --sse \
+          -o ${DTIFIT_dir}/$DTIFIT_name
+
+        ENIGMA_DTI_OUT=${BASEDIR}/data/local/enigmaDTI
+
+        ENIGMA_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
+
+        mkdir -p ${ENIGMA_DTI_OUT}
+
+        singularity run \
+          -B ${ENIGMA_DTI_OUT}:/enigma_dir \
+          -B ${DTIFIT_dir}:/dtifit_dir \
+          ${ENIGMA_CONTAINER} \
+          --calc-all --debug \
+          /enigma_dir/sub-${SUBJECTS}_${session_name} \
+          /dtifit_dir/${DTIFIT_name}_FA.nii.gz
+
+        exitcode=$?
+
+        # Output results to a table
+       for subject in $SUBJECTS; do
+           if [ $exitcode -eq 0 ]; then
+               echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+                   >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+           else
+               echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
+                   >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+           fi
+       done
+
+   done
+   
+fi
