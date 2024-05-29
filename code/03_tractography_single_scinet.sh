@@ -38,7 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/qsiprep # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep # use if version of fmriprep <=20.1
 
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
 export FREESURFER_DIR=${BASEDIR}/data/local/freesurfer
