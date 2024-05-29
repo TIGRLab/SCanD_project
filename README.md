@@ -466,9 +466,9 @@ sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ```
 
 ## Running tractography
-If you are running the pipline on multishell data run the below code. Otherwise, use thesingleshell version of code:
-Multishell:
+For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
 
+Multishell:
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh nia-login07
