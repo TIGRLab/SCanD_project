@@ -27,12 +27,12 @@ ${BASEDIR}
 │   │   │   ├── qsiprep          # qsiprep derivatives
 │   │   │   └── xcp_d            # xcp
 │   │   │  
-│   │   ├── dtifit               #dtifit
-│   │   ├── enigmaDTI            #enigmadti
+│   │   ├── dtifit               # dtifit
+│   │   ├── enigmaDTI            # enigmadti
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
-│   │   ├── qsirecon             #qsirecon derivatives
-│   │   └── qsirecon-FSL             #step1 qsirecon
+│   │   ├── qsirecon             # qsirecon derivatives
+│   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── amico                # contains only qc images and metadata
