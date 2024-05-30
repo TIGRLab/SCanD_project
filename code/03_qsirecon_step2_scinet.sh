@@ -105,13 +105,13 @@ if [ -z "$SESSIONS" ]; then
 
     singularity exec \
       -B ${QSIRECON_OUT}_dwi.nii.gz \
-      -B ${QSIRECON_OUT}_mask.nii.gz \
+      -B ${QSIRECON_OUT}_dwimap.nii.gz \
       -B ${QSIRECON_OUT}_dwi.bvec \
       -B ${QSIRECON_OUT}_dwi.bval \
       -B ${DTIFIT_dir}:/out \
       ${ENIGMA_CONTAINER} \
       dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
-      -m ${QSIRECON_OUT}_mask.nii.gz \
+      -m ${QSIRECON_OUT}_dwimap.nii.gz \
       -r ${QSIRECON_OUT}_dwi.bvec \
       -b ${QSIRECON_OUT}_dwi.bval \
       --save_tensor --sse \
@@ -183,13 +183,13 @@ else
 
         singularity exec \
           -B ${QSIRECON_OUT}_dwi.nii.gz \
-          -B ${QSIRECON_OUT}_mask.nii.gz \
+          -B ${QSIRECON_OUT}_dwimap.nii.gz \
           -B ${QSIRECON_OUT}_dwi.bvec \
           -B ${QSIRECON_OUT}_dwi.bval \
           -B ${DTIFIT_dir}:/out \
           ${ENIGMA_CONTAINER} \
           dtifit -k ${QSIRECON_OUT}_dwi.nii.gz \
-          -m ${QSIRECON_OUT}_mask.nii.gz \
+          -m ${QSIRECON_OUT}_dwimap.nii.gz \
           -r ${QSIRECON_OUT}_dwi.bvec \
           -b ${QSIRECON_OUT}_dwi.bval \
           --save_tensor --sse \
