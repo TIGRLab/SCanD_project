@@ -69,6 +69,7 @@ ${SING_CONTAINER} \
     --participant_label ${SUBJECTS} \
     -w /work \
     --cifti \
+    --fs-license-file ${}\
     --smoothing 0 \
     --fd-thresh 0.5 \
     --dummy-scans 3 \
