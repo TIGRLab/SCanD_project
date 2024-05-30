@@ -1,5 +1,5 @@
-BASEDIR=$SCRATCH/SCanD_project
-#BASEDIR=$PROJECT/SCanD_project_GMANJ
+#BASEDIR=$SCRATCH/SCanD_project
+BASEDIR=$PROJECT/SCanD_project_GMANJ
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
@@ -15,7 +15,7 @@ PARTICIPANTS=$(tail -n +2 data/local/bids/participants.tsv | cut -f1)
 # Loop through each participant ID
 for SUBJECT in $PARTICIPANTS; do
   echo "Processing participant: $SUBJECT"
-   xvfb-run singularity run\
+   singularity run\
     -H ${TMP_DIR} \
     -B ${BIDS_DIR}:/bids \
     -B ${QSIPREP_DIR}:/qsiprep \
