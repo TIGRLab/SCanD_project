@@ -34,7 +34,8 @@ export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi/tmp
-export WORK_DIR=${BBUFFER}/SCanD/amico
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/amico
 export LOGS_DIR=${BASEDIR}/logs
 
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${TMP_DIR}

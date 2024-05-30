@@ -12,27 +12,30 @@ ${BASEDIR}
 │   ├── fmriprep-23.2.3.simg
 │   ├── mriqc-24.0.0.simg
 │   ├── qsiprep-0.21.4.sif
+│   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
-│   │   ├──amico_noddi           # amico_noddi derivatives
 │   │   ├── bids                 # the defaced BIDS dataset
-│   │   ├── mriqc                # mriqc derivatives
-│   │   ├── fmriprep             # fmriprep derivatives
-│   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
-│   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
-│   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
+│   │   ├── devivatives
+│   │   │   ├── fmriprep         # fmriprep derivatives
+│   │   │   ├── freesurfer       # freesurfer derivative
+│   │   │   ├── mriqc            # mriqc derivatives
+│   │   │   ├── qsiprep          # qsiprep derivatives
+│   │   │   └── xcp_d            # xcp
+│   │   │  
+│   │   ├── dtifit               # dtifit
+│   │   ├── enigmaDTI            # enigmadti
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
-│   │   ├── dtifit               #dtifit
-│   │   ├── enigmaDTI            #enigmadti
-│   │   ├── qsirecon             #qsirecon derivatives
-│   │   └── xcp_d                # xcp
+│   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
+│   │   ├── qsirecon             # qsirecon derivatives
+│   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
 │   └── share                    # folder with a smaller subset ready to share
-│       ├── amico                # contains only qc images and metadata
+│       ├── amico_noddi          # contains only qc images and metadata
 │       ├── mriqc                # contains only qc images and metadata
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
@@ -43,14 +46,14 @@ ${BASEDIR}
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
-|── work                         #work directory for xcp-d
 |── LICENSE
 |──stage_1.sh
 |──stage_2.sh
 |──stage_3.sh
 |──stage_4.sh
 |──stage_5.sh
-|── Workflow Automation_stages.md
+|── Quick start_workflow automation.md
+|── QC guide.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
