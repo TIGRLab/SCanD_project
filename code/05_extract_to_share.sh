@@ -72,7 +72,7 @@ echo "running mriqc group and copying files"
 singularity run --cleanenv \
     -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
     -B ${PROJECT_DIR}/data/local/bids:/bids \
-    -B ${$MRIQC_LOCAL_DIR}:/derived \
+    -B ${MRIQC_LOCAL_DIR}:/derived \
     ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group 
 
