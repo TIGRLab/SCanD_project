@@ -73,7 +73,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
-|^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|^|   01b	|  [Run fMRIprep fit](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
@@ -216,7 +216,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 ```
 
-## Running fmriprep-fit (includes freesurfer)
+## Running fmriprep anatomical (includes freesurfer)
 
 Note: this step uses and estimated **6hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
 
