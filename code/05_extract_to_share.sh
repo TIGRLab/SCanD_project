@@ -152,7 +152,7 @@ fi
 
 
 AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
-AMICO_SHARE_DIR=${PROJECT_DIR}/data/local/amico_noddi
+AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ]; 
 then
