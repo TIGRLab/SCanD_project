@@ -64,6 +64,7 @@ fi
 ## run the mriqc group step and copy over all outputs
 MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
 MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
+export WORK_DIR=${BBUFFER}/SCanD/mriqc
 
 if [ -d "$MRIQC_LOCAL_DIR" ]; 
 then
@@ -73,8 +74,10 @@ singularity run --cleanenv \
     -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
     -B ${PROJECT_DIR}/data/local/bids:/bids \
     -B ${MRIQC_LOCAL_DIR}:/derived \
+    -B ${WORK_DIR}:/work \
     ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
-    /bids /derived group 
+    /bids /derived group \
+    -w /work  
 
 mkdir -p ${MRIQC_SHARE_DIR}
 rsync -a ${MRIQC_LOCAL_DIR}/dataset_description.json ${MRIQC_SHARE_DIR}/
@@ -87,7 +90,7 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/xcp_d" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; 
 then
 
 echo "copying over the xcp_d folder"
@@ -97,7 +100,7 @@ rm -rf ${PROJECT_DIR}/data/share/xcp_d
 
 
 ## copy over the xcp  folder (all data)
-rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3  ${PROJECT_DIR}/data/share
+rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_d  ${PROJECT_DIR}/data/share
 
 else
     echo "No XCP_D outputs found."
@@ -148,15 +151,15 @@ fi
 
 
 
-AMICO_SHARE_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi/
-AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/amico_noddi
+AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
+AMICO_SHARE_DIR=${PROJECT_DIR}/data/local/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ]; 
 then
 echo "copying over the amico noddi metadata and qc images"
 
 ## copy over the amico noddi html files
-subjects=`cd ${AMICO_LOCAL_DIR}/qsirecon; ls -1d sub-* | grep -v html`
+subjects=`cd ${AMICO_LOCAL_DIR}/qsirecon-NODDI; ls -1d sub-* | grep -v html`
 mkdir ${AMICO_SHARE_DIR}
 cp ${AMICO_LOCAL_DIR}/qsirecon-NODDI/*html ${AMICO_SHARE_DIR}/
 for subject in ${subjects}; do
