@@ -18,19 +18,21 @@ ${BASEDIR}
 │   └── xcp_d-0.7.3.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
-│   │   ├──amico_noddi           # amico_noddi derivatives
 │   │   ├── bids                 # the defaced BIDS dataset
-│   │   ├── mriqc                # mriqc derivatives
-│   │   ├── fmriprep             # fmriprep derivatives
-│   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
-│   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
-│   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
-│   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
+│   │   ├── devivatives
+│   │   │   ├── fmriprep         # fmriprep derivatives
+│   │   │   ├── freesurfer       # freesurfer derivative
+│   │   │   ├── mriqc            # mriqc derivatives
+│   │   │   ├── qsiprep          # qsiprep derivatives
+│   │   │   └── xcp_d            # xcp
+│   │   │  
 │   │   ├── dtifit               #dtifit
 │   │   ├── enigmaDTI            #enigmadti
+│   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
+│   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
 │   │   ├── qsirecon             #qsirecon derivatives
-│   │   └── xcp_d                # xcp
+│   │   └── qsirecon-FSL             #step1 qsirecon
 │   |
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── amico                # contains only qc images and metadata
