@@ -77,8 +77,8 @@ singularity run --cleanenv \
     /bids /derived group 
 
 mkdir -p ${MRIQC_SHARE_DIR}
-rsync -a ${$MRIQC_LOCAL_DIR}/dataset_description.json ${MRIQC_SHARE_DIR}/
-rsync -a ${$MRIQC_LOCAL_DIR}/group*.tsv ${MRIQC_SHARE_DIR}/
+rsync -a ${MRIQC_LOCAL_DIR}/dataset_description.json ${MRIQC_SHARE_DIR}/
+rsync -a ${MRIQC_LOCAL_DIR}/group*.tsv ${MRIQC_SHARE_DIR}/
 
 else
 
