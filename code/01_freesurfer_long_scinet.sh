@@ -68,6 +68,7 @@ export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 #     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
 # done
 
+SUBJECTS="sub-${SUBJECTS}"
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
