@@ -13,6 +13,9 @@ mkdir -p templates
 mkdir -p templates/.cache
 mkdir -p logs
 
+# create a random project id in a file to use for separating the work spaces across projects and runs
+openssl rand -hex 6 -out project_id
+
 ## link the containers
 echo "linking singularity containers"
 CONTAINER_DIR=/scinet/course/ss2019/3/5_neuroimaging/containers
