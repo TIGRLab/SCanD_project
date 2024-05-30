@@ -6,7 +6,8 @@ export QSIPREP_DIR=${BASEDIR}/data/local/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/amico_noddi/tmp
-export WORK_DIR=${BBUFFER}/SCanD/amico
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/amico
 export LOGS_DIR=${BASEDIR}/logs
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 

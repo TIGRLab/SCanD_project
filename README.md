@@ -12,6 +12,7 @@ ${BASEDIR}
 │   ├── fmriprep-20.2.7.simg 
 │   ├── mriqc-22.0.6.simg simg
 │   ├── qsiprep_0.16.0RC3.simg
+│   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── tbss_2023-10-10.simg
 │   ├── pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
@@ -23,6 +24,7 @@ ${BASEDIR}
 │   │   ├── mriqc                # mriqc derivatives
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
+│   │   ├── freesurfer_long           # freesurfer longitudinal
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
 │   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
@@ -44,7 +46,6 @@ ${BASEDIR}
 │       └── xcp_d                # contains xcp results
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
-|── work                         #work directory for xcp-d
 |── LICENSE
 |── share folder.md
 |──stage_1.sh
@@ -53,6 +54,7 @@ ${BASEDIR}
 |──stage_4.sh
 |──stage_5.sh
 |── Quick start_workflow automation.md
+|── QC guide.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
@@ -75,8 +77,9 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
-|^|   01b	|  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |   01c	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   16 hours on slurm	|
+|^|   01c   |  [Run fMRIprep anat](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|^|   01d  |  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ |   02c	|  [Run amico noddi](#Running-amico-noddi) 	| 6 hours of slurm 	|
@@ -217,6 +220,27 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
+```
+
+## Running freesurfer
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+## calculate the length of the array-job given
+SUB_SIZE=1
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
 ```
 
 ## Running fmriprep-anatomical (includes freesurfer)

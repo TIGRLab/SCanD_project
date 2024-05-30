@@ -37,7 +37,8 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/
 export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
 
-export WORK_DIR=${BBUFFER}/work/xcp
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
