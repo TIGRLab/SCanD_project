@@ -35,7 +35,7 @@ ${BASEDIR}
 │   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
 │   └── share                    # folder with a smaller subset ready to share
-│       ├── amico                # contains only qc images and metadata
+│       ├── amico_noddi          # contains only qc images and metadata
 │       ├── mriqc                # contains only qc images and metadata
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
