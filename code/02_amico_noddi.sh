@@ -32,8 +32,8 @@ trap "cleanup_ramdisk" TERM
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi 
-export TMP_DIR=${BASEDIR}/data/local/amico_noddi/tmp
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
+export TMP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
 export WORK_DIR=${BBUFFER}/SCanD/amico
 export LOGS_DIR=${BASEDIR}/logs
 
