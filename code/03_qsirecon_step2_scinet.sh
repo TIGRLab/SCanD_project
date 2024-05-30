@@ -171,7 +171,7 @@ else
             fi
         else
                 QSIRECON_OUT=${OUTPUT_DIR}/qsirecon-FSL/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc
-                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc  
+                DTIFIT_OUT=${OUTPUT_DIR}/dtifit/sub-${SUBJECTS}/${session_name}/dwi/sub-${SUBJECTS}_${session_name}_${acquisition}_space-T1w_desc-preproc   
         fi
 
     
