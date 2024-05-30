@@ -63,7 +63,7 @@ singularity run --cleanenv \
 -B ${OUTPUT_DIR}:/out \
 -B ${FMRI_DIR}:/fmriprep \
 -B ${WORK_DIR}:/work \
--B ${ORIG_FS_LICENSE}:${SINGULARITYENV_FS_LICENSE} \
+-B ${ORIG_FS_LICENSE}:/li \
 ${SING_CONTAINER} \
     /fmriprep \
     /out \
@@ -71,7 +71,7 @@ ${SING_CONTAINER} \
     --participant_label ${SUBJECTS} \
     -w /work \
     --cifti \
-    --fs-license-file ${SINGULARITYENV_FS_LICENSE} \
+    --fs-license-file /li \
     --smoothing 0 \
     --fd-thresh 0.5 \
     --dummy-scans 3 \
