@@ -41,6 +41,8 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/
 export LOGS_DIR=${BASEDIR}/logs
+project_id=$(cat ${BASEDIR}/project_id)
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/ciftify
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
