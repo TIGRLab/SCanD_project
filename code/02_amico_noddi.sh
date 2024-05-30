@@ -30,7 +30,7 @@ trap "cleanup_ramdisk" TERM
 
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
+export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi/tmp
