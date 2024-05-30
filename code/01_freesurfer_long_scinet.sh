@@ -33,11 +33,11 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
+export SING_CONTAINER=${BASEDIR}/containers/freesurfer-6.0.1.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/6.0.1  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
@@ -68,15 +68,18 @@ export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 #     find ${LOCAL_FREESURFER_DIR}/sub-$subject/ -name "*IsRunning*" -type f -delete
 # done
 
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
+    -B ${ORIG_FS_LICENSE}:/li \
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
     --skip_bids_validator \
+    --license_file /li \
     --n_cpus 80  
 
 # tip: add this line to the above command if skull stripping has already been done
