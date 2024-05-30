@@ -97,7 +97,7 @@ rm -rf ${PROJECT_DIR}/data/share/xcp_d
 
 
 ## copy over the xcp  folder (all data)
-rsync -a ${PROJECT_DIR}/data/local/xcp_d  ${PROJECT_DIR}/data/share
+rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3  ${PROJECT_DIR}/data/share
 
 else
     echo "No XCP_D outputs found."
@@ -148,7 +148,7 @@ fi
 
 
 
-AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico
+AMICO_SHARE_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi/
 AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ]; 
@@ -158,10 +158,10 @@ echo "copying over the amico noddi metadata and qc images"
 ## copy over the amico noddi html files
 subjects=`cd ${AMICO_LOCAL_DIR}/qsirecon; ls -1d sub-* | grep -v html`
 mkdir ${AMICO_SHARE_DIR}
-cp ${AMICO_LOCAL_DIR}/qsirecon/*html ${AMICO_SHARE_DIR}/
+cp ${AMICO_LOCAL_DIR}/qsirecon-NODDI/*html ${AMICO_SHARE_DIR}/
 for subject in ${subjects}; do
  mkdir -p ${AMICO_SHARE_DIR}/${subject}/figures
- rsync -a ${AMICO_LOCAL_DIR}/qsirecon/${subject}/figures ${AMICO_SHARE_DIR}/${subject}/
+ rsync -a ${AMICO_LOCAL_DIR}/qsirecon-NODDI/${subject}/figures ${AMICO_SHARE_DIR}/${subject}/
 done
 
 else
