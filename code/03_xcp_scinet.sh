@@ -56,12 +56,14 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity run --cleanenv \
 -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
 -B ${OUTPUT_DIR}:/out \
 -B ${FMRI_DIR}:/fmriprep \
 -B ${WORK_DIR}:/work \
+-B ${ORIG_FS_LICENSE}:${SINGULARITYENV_FS_LICENSE} \
 ${SING_CONTAINER} \
     /fmriprep \
     /out \
@@ -69,7 +71,7 @@ ${SING_CONTAINER} \
     --participant_label ${SUBJECTS} \
     -w /work \
     --cifti \
-    --fs-license-file ${}\
+    --fs-license-file ${SINGULARITYENV_FS_LICENSE} \
     --smoothing 0 \
     --fd-thresh 0.5 \
     --dummy-scans 3 \
