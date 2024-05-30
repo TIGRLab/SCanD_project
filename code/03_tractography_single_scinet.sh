@@ -41,7 +41,7 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep # use if version of fmriprep <=20.1
 
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4
-export FREESURFER_DIR=${BASEDIR}/data/local/freesurfer
+export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 project_id=$(cat ${BASEDIR}/project_id)
