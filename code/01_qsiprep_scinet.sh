@@ -84,7 +84,7 @@ singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
-    -B ${RESOLUTION}:res \
+    -B ${RESOLUTION}:/res \
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
