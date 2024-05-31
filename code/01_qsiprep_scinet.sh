@@ -84,7 +84,6 @@ singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
-    -B ${RESOLUTION}:/res \
     ${SING_CONTAINER} \
     /bids /derived participant \
     --participant_label ${SUBJECTS} \
@@ -97,7 +96,7 @@ singularity run --cleanenv \
     --unringing-method mrdegibbs \
     --separate_all_dwis \
     --hmc_model eddy \
-    --output-resolution /res\
+    --output-resolution ${RESOLUTION}\
     --use-syn-sdc \
     --force-syn
 
