@@ -107,14 +107,14 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/ciftify" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/ciftify" ]; 
 then
 
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
 
 ## copy over the ciftify QC outputs
-rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
+rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
 
 else
 
