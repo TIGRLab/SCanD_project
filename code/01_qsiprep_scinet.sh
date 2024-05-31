@@ -59,7 +59,12 @@ else
 fi
 
 # Extract voxel sizes using 3dinfo
-voxel_sizes=$(3dinfo -d3 ${BIDS_DIR}/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
+if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
+    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz")
+else
+    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/dwi/*.nii.gz")
+fi
+
 # Read the voxel sizes into variables
 read -r vox1 vox2 vox3 <<< "$voxel_sizes"
 # Make all numbers positive and round to one decimal place
