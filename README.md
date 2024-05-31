@@ -39,7 +39,6 @@ ${BASEDIR}
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
-│       ├── parcellated_ciftify  # contains only qc images and metadata
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
 │       └── xcp_d                # contains xcp results

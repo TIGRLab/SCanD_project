@@ -132,10 +132,10 @@ rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
 fi
 
 ## copy over the parcellated_ciftify files
-if [ -d "${PROJECT_DIR}/data/local/parcellated_ciftify" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/parcellated_ciftify" ]; 
 then
 echo "copying over the parcellated_ciftify files"
-rsync -a ${PROJECT_DIR}/data/local/parcellated_ciftify ${PROJECT_DIR}/data/share/
+rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/parcellated_ciftify ${PROJECT_DIR}/data/share/
 fi
 
 ## copy over the enigmaDTI files
