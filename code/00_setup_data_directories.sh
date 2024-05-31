@@ -16,6 +16,12 @@ mkdir -p logs
 # create a random project id in a file to use for separating the work spaces across projects and runs
 openssl rand -hex 6 -out project_id
 
+#install afni
+curl -O https://afni.nimh.nih.gov/pub/dist/bin/linux_ubuntu_16_64/@update.afni.binaries
+tcsh @update.afni.binaries -defaults
+
+source ~/.bashrc
+
 ## link the containers
 echo "linking singularity containers"
 CONTAINER_DIR=/scinet/course/ss2019/3/5_neuroimaging/containers
