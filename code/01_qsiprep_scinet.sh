@@ -58,6 +58,28 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
+# Extract voxel sizes using 3dinfo
+if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
+    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz")
+else
+    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/dwi/*.nii.gz")
+fi
+
+# Read the voxel sizes into variables
+read -r vox1 vox2 vox3 <<< "$voxel_sizes"
+# Make all numbers positive and round to one decimal place
+vox1=$(printf "%.1f" ${vox1#-})
+vox2=$(printf "%.1f" ${vox2#-})
+vox3=$(printf "%.1f" ${vox3#-})
+# Calculate the sum of voxel sizes
+sum=$(bc <<< "$vox1 + $vox2 + $vox3")
+# Calculate the average
+average=$(bc -l <<< "$sum / 3")
+# Round the average to one decimal place
+RESOLUTION=$(printf "%.1f" $average)
+
+
+
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
@@ -79,7 +101,7 @@ singularity run --cleanenv \
     --unringing-method mrdegibbs \
     --separate_all_dwis \
     --hmc_model eddy \
-    --output-resolution 2.0 \
+    --output-resolution ${RESOLUTION}\
     --use-syn-sdc \
     --force-syn
 
