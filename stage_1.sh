@@ -6,7 +6,7 @@ read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FUNCTIONA
 
 if [ "$RUN_FUNCTIONAL_ONLY" = "yes" ] || [ "$RUN_FUNCTIONAL_ONLY" = "y" ]; then
     # Run only mriqc and fmriprep_anat
-    echo "Running only functional codes: mriqc and fmriprep_anat"
+    echo "Running only functional codes: mriqc, fmriprep_anat and freesurfer"
 
     ## mriqc
     ## calculate the length of the array-job given
@@ -40,7 +40,7 @@ if [ "$RUN_FUNCTIONAL_ONLY" = "yes" ] || [ "$RUN_FUNCTIONAL_ONLY" = "y" ]; then
     sbatch --array=0-${array_job_length} code/01_freesurfer_long_scinet.sh
 else
     # Run all three codes: mriqc, fmriprep_anat, and qsiprep
-    echo "Running all codes: mriqc, fmriprep_anat, and qsiprep"
+    echo "Running all codes: mriqc, fmriprep_anat, qsiprep and freesurfer"
 
     ## mriqc
     ## calculate the length of the array-job given
