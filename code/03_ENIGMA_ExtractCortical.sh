@@ -5,7 +5,7 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
-SUBJECTS_DIR=${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/
+SUBJECTS_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
 PREFIX=sub-
 
 mkdir ${PROJECT_DIR}/data/local/ENIGMA_extract
