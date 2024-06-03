@@ -78,7 +78,7 @@ run_parcellation() {
       -B ${parcellation_dir}:/parcellations \
       ${SING_CONTAINER} \
       wb_command -cifti-parcellate \
-      /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
+      /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
       /parcellations/tpl-fsLR_res-91k_${atlas}_dseg.dlabel.nii \
       COLUMN \
       /parcellated/${atlas}/ptseries/${sub}/anat/${sub}_${atlas}_thickness.pscalar.nii \
@@ -97,7 +97,7 @@ run_parcellation() {
     -B ${parcellated}:/parcellated \
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
-    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
+    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
     /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
     /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_thickness.pscalar.nii \
