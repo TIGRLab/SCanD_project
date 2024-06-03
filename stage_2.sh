@@ -48,7 +48,7 @@ else
     sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 
     ## Stage 3: enigma_extract
-    source ./code/03_ENIGMA_ExtractCortical.sh
+    source ./code/02_ENIGMA_ExtractCortical.sh
 
 
     if [ "$DATA_SHELL_TYPE" = "multi" ]; then
@@ -72,7 +72,7 @@ else
         echo "Number of array is: ${array_job_length}"
 
         # Submit the array job to the queue for multi-shell data
-        sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
+        sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
 
     else
         echo "Running fmriprep_func, qsirecon_step1, enigma_extract and tractography"
@@ -85,7 +85,7 @@ else
         echo "Number of array is: ${array_job_length}"
     
         # Submit the array job to the queue for single-shell data
-        sbatch --array=0-${array_job_length} ./code/03_tractography_single_scinet.sh
+        sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
     fi
 
 fi
