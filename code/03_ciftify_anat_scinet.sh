@@ -80,6 +80,7 @@ parallel -j 8 "singularity run --cleanenv \
       --read-from-derivatives /derived \
       --fs-license ${SINGULARITYENV_FS_LICENSE} \
       --anat_only \
+      --resample-to-T1w32k \
       --surf-reg FS \
       --n_cpus 10" \
       ::: ${SUBJECTS}
