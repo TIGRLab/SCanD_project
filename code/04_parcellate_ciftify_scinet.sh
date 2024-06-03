@@ -78,7 +78,7 @@ run_parcellation() {
       -B ${parcellation_dir}:/parcellations \
       ${SING_CONTAINER} \
       wb_command -cifti-parcellate \
-      /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
+      /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
       /parcellations/tpl-fsLR_res-91k_${atlas}_dseg.dlabel.nii \
       COLUMN \
       /parcellated/${atlas}/ptseries/${sub}/anat/${sub}_${atlas}_thickness.pscalar.nii \
@@ -97,8 +97,8 @@ run_parcellation() {
     -B ${parcellated}:/parcellated \
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
+    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
     /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_thickness.pscalar.nii \
     -include-empty 
@@ -115,7 +115,7 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
           wb_command -surface-vertex-areas \
-          /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.midthickness.32k_fs_LR.surf.gii \
+          /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.midthickness.32k_fs_LR.surf.gii \
           /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_surfacearea.shape.gii
           
       ## calculate wedge volume from white and pial surface
@@ -126,8 +126,8 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
         wb_command -surface-wedge-volume \
-           /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.white.32k_fs_LR.surf.gii \
-           /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
+           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.white.32k_fs_LR.surf.gii \
+           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
            /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_volume.shape.gii
     done
     
@@ -147,9 +147,9 @@ run_parcellation() {
            wb_command -cifti-create-dense-scalar \
            /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
           -left-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-L_${metric}.shape.gii \
-          -roi-left /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.L.atlasroi.32k_fs_LR.shape.gii \
+          -roi-left /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.L.atlasroi.32k_fs_LR.shape.gii \
           -right-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-R_${metric}.shape.gii \
-          -roi-right /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.R.atlasroi.32k_fs_LR.shape.gii
+          -roi-right /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.R.atlasroi.32k_fs_LR.shape.gii
         
       for atlas in ${atlases}; do
       
@@ -184,7 +184,7 @@ run_parcellation() {
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
     /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
-    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
     /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_${metric}.pscalar.nii \
     -include-empty \
