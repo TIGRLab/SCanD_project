@@ -52,7 +52,7 @@ else
 
 
     if [ "$DATA_SHELL_TYPE" = "multi" ]; then
-        echo "Running all codes: fmriprep_func, qsirecon_step1, and amico_noddi"
+        echo "Running all codes: fmriprep_func, qsirecon_step1, and amico_noddi, enigma_extract and tractography"
        
         # Stage 2: amico_noddi (only for multi-shell data)
         # Figuring out appropriate array-job size
@@ -75,6 +75,8 @@ else
         sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
 
     else
+        echo "Running fmriprep_func, qsirecon_step1, enigma_extract and tractography"
+    
        ## Stage 3: tractography
        ## Figuring out appropriate array-job size
         SUB_SIZE=1
