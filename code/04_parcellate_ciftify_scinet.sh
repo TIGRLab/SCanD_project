@@ -147,9 +147,9 @@ run_parcellation() {
            wb_command -cifti-create-dense-scalar \
            /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
           -left-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-L_${metric}.shape.gii \
-          -roi-left /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.L.atlasroi.32k_fs_LR.shape.gii \
+          -roi-left /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.L.atlasroi.32k_fs_LR.shape.gii \
           -right-metric /hemi_anat/${sub}_space-fsLR_den-91k_hemi-R_${metric}.shape.gii \
-          -roi-right /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.R.atlasroi.32k_fs_LR.shape.gii
+          -roi-right /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.R.atlasroi.32k_fs_LR.shape.gii
         
       for atlas in ${atlases}; do
       
