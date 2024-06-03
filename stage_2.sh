@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi):
+# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract):
 
 # Ask the user whether to run only fmriprep_func
 read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FMRIPREP_FUNC_ONLY
@@ -47,6 +47,10 @@ else
     # Submit the array job to the queue
     sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 
+    ## Stage 3: enigma_extract
+    source ./code/03_ENIGMA_ExtractCortical.sh
+
+
     if [ "$DATA_SHELL_TYPE" = "multi" ]; then
         echo "Running all codes: fmriprep_func, qsirecon_step1, and amico_noddi"
        
@@ -59,7 +63,27 @@ else
 
         # Submit the array job to the queue
         sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
+
+       ## Stage 3: tractography
+       ## Figuring out appropriate array-job size
+        SUB_SIZE=1
+        N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
+        array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+        echo "Number of array is: ${array_job_length}"
+
+        # Submit the array job to the queue for multi-shell data
+        sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
+
     else
-        echo "Skipping amico_noddi as the data is single-shell."
+       ## Stage 3: tractography
+       ## Figuring out appropriate array-job size
+        SUB_SIZE=1
+        N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
+        array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+        echo "Number of array is: ${array_job_length}"
+    
+        # Submit the array job to the queue for single-shell data
+        sbatch --array=0-${array_job_length} ./code/03_tractography_single_scinet.sh
     fi
+
 fi
