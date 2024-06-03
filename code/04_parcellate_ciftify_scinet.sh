@@ -184,7 +184,7 @@ run_parcellation() {
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
     /cifti_dense_anat/${sub}/anat/${sub}_space-fsLR_den-91k_${metric}.dscalar.nii \
-    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
     /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_${metric}.pscalar.nii \
     -include-empty \
