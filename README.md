@@ -466,7 +466,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/03_ENIGMA_ExtractCortical.sh
+source ./code/02_ENIGMA_ExtractCortical.sh
 ```
 
 ## Running qsirecon step2
@@ -508,7 +508,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
 
 ```
 Singleshell:
@@ -527,7 +527,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_tractography_single_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
 
 ```
 
