@@ -27,8 +27,6 @@ if [ "$RUN_SPECIFIC_ONLY" = "yes" ] || [ "$RUN_SPECIFIC_ONLY" = "y" ]; then
     ## Submit the array job to the queue
     sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
-    ## Stage 3: enigma_extract
-    source ./code/03_ENIGMA_ExtractCortical.sh
 
 else
     
