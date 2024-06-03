@@ -98,7 +98,7 @@ run_parcellation() {
     ${SING_CONTAINER} \
     wb_command -cifti-parcellate \
     /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.thickness.32k_fs_LR.dscalar.nii \
-    /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
+    /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.aparc.32k_fs_LR.dlabel.nii \
     COLUMN \
     /parcellated/atlas-aparc/ptseries/${sub}/anat/${sub}_atlas-aparc_thickness.pscalar.nii \
     -include-empty 
