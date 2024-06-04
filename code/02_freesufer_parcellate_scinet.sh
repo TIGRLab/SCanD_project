@@ -54,7 +54,7 @@ import subprocess
 for subject in $SUBJECTS:
     subprocess.run([
         'singularity', 'run', '--cleanenv',
-        '-B', f'{BASEDIR}/templates:/home/freesurfer', '--home', '/home/freesurfer',
+        '-B', '{}/templates:/home/freesurfer'.format(BASEDIR), '--home', '/home/freesurfer',
         '-B', f'{BIDS_DIR}:/bids',
         '-B', f'{OUTPUT_DIR}:/derived',
         '-B', f'{ORIG_FS_LICENSE}:/li',
