@@ -55,9 +55,10 @@ singularity run --cleanenv \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
-    /bin/bash -c "
-      export SUBJECTS_DIR=/subjects_dir
-      export SUBJECTS=/subjects
+    /bin/bash << 'EOF'
+    
+      SUBJECTS_DIR=/subjects_dir
+      SUBJECTS=/subjects
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
@@ -80,17 +81,4 @@ singularity run --cleanenv \
      done
      
     "
-    
-# Capture the exit code of the Python script
-exitcode=$?
 
-# Log results to a table
-for subject in ${SUBJECTS}; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    freesurfer failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
-done
