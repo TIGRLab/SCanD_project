@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=freesurfer
+#SBATCH --job-name=freesurfer_parcellate
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
