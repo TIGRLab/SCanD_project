@@ -52,34 +52,34 @@ singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
-    -B ${SUBJECTS_DIR}:/subjects \
+    -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
+    -B ${SUBJECTS}:/subjects \
     ${SING_CONTAINER} \
     /bin/bash -c "
-      export SUBJECTS_DIR=/subjects
+      export SUBJECTS_DIR=/subjects_dir
+      export SUBJECTS=/subjects
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
       RH_GCS_FILES=(/gcs_files/rh.*.gcs)
 
-      for subject in ${SUBJECTS}; do
-        for lh_gcs_file in \${LH_GCS_FILES[@]}; do
-          base_name=\$(basename \$lh_gcs_file .gcs)
-          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/lh.cortex.label \
-            \$subject lh \$SUBJECTS_DIR/\$subject/surf/lh.sphere.reg \
-            \$lh_gcs_file \
-            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
-        done
-
-        for rh_gcs_file in \${RH_GCS_FILES[@]}; do
-          base_name=\$(basename \$rh_gcs_file .gcs)
-          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/rh.cortex.label \
-            \$subject rh \$SUBJECTS_DIR/\$subject/surf/rh.sphere.reg \
-            \$rh_gcs_file \
-            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
-        done
-        
+      for lh_gcs_file in \${LH_GCS_FILES[@]}; do
+        base_name=\$(basename \$lh_gcs_file .gcs)
+        mris_ca_label -l \$SUBJECTS_DIR/\$SUBJECTS/label/lh.cortex.label \
+        \$SUBJECTS lh \$SUBJECTS_DIR/\$SUBJECTS/surf/lh.sphere.reg \
+        \$lh_gcs_file \
+        \$SUBJECTS_DIR/\$SUBJECTS/label/\${base_name}_order.annot
       done
+
+     for rh_gcs_file in \${RH_GCS_FILES[@]}; do
+        base_name=\$(basename \$rh_gcs_file .gcs)
+        mris_ca_label -l \$SUBJECTS_DIR/\$SUBJECTS/label/rh.cortex.label \
+        \$subject rh \$SUBJECTS_DIR/\$SUBJECTS/surf/rh.sphere.reg \
+        \$rh_gcs_file \
+        \$SUBJECTS_DIR/\$SUBJECTS/label/\${base_name}_order.annot
+     done
+     
     "
     
 # Capture the exit code of the Python script
