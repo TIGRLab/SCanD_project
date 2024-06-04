@@ -1,5 +1,7 @@
 # Set environment variables
 export BASEDIR=${PROJECT}/SCanD_project_GMANJ
+#export BASEDIR=${SCRATCH}/SCanD_project
+
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export FMRIPREP_HOME=${BASEDIR}/templates
