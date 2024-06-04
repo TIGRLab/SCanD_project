@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=16:00:00
+#SBATCH --time=3:00:00
 
 
 SUB_SIZE=1 ## number of subjects to run
@@ -33,10 +33,6 @@ SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 for subject in $SUBJECTS; do
     echo "$subject       0" >> ${BASEDIR}/logs/freesurfer_parcellate.tsv
 done
-
-# Set environment variables
-export BASEDIR=${PROJECT}/SCanD_project_GMANJ
-#export BASEDIR=${SCRATCH}/SCanD_project
 
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
