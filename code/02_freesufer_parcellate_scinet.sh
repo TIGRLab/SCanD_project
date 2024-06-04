@@ -1,9 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=freesurfer_parcellate
+#SBATCH --job-name=freesurfer
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
 #SBATCH --time=1:00:00
+
 
 SUB_SIZE=1  # Number of subjects to run per job
 
@@ -29,26 +30,23 @@ export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_parcellate
 export LOGS_DIR=${BASEDIR}/logs
 export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer
+export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
 # Create necessary directories
 mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR}
 
 # Calculate subject list for this job array
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-
-
-N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
+N_SUBJECTS=$(( $(wc -l < ${BIDS_DIR}/participants.tsv) - 1 ))
+bigger_bit=$(( (SLURM_ARRAY_TASK_ID + 1) * SUB_SIZE ))
+array_job_length=$(( N_SUBJECTS / SUB_SIZE ))
+Tail=$(( N_SUBJECTS - (array_job_length * SUB_SIZE) ))
 
 if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
+    SUBJECTS=$(sed -n -E 's/sub-(\S*)\>.*/\1/gp' ${BIDS_DIR}/participants.tsv | head -n ${N_SUBJECTS} | tail -n ${Tail})
 else
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+    SUBJECTS=$(sed -n -E 's/sub-(\S*)\>.*/\1/gp' ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
-
 
 # Run Singularity and FreeSurfer commands
 singularity run --cleanenv \
@@ -56,11 +54,11 @@ singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
-    -B ${SUBJECTS_DIR}:/subjects_dir \
+    -B ${SUBJECTS_DIR}:/subjects \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
     /bin/bash -c "
-      export SUBJECTS_DIR=/subjects_dir
+      export SUBJECTS_DIR=/subjects
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
