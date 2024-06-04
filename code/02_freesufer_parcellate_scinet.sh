@@ -58,7 +58,6 @@ singularity exec \
     << 'EOF'
     
       SUBJECTS_DIR=/subjects_dir
-      SUBJECTS=/subjects
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
