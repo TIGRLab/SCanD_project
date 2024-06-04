@@ -5,7 +5,6 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=1:00:00
 
-
 SUB_SIZE=1  # Number of subjects to run per job
 
 # Set BASEDIR to the submission directory
@@ -48,42 +47,49 @@ else
     SUBJECTS=$(sed -n -E 's/sub-(\S*)\>.*/\1/gp' ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-# Run Singularity and FreeSurfer commands
-singularity run --cleanenv \
-    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
-    -B ${BIDS_DIR}:/bids \
-    -B ${OUTPUT_DIR}:/derived \
-    -B ${ORIG_FS_LICENSE}:/li \
-    -B ${SUBJECTS_DIR}:/subjects \
-    -B ${GCS_FILE_DIR}:/gcs_files \
-    ${SING_CONTAINER} \
-    /bin/bash -c "
-      export SUBJECTS_DIR=/subjects
+# Run Python script passing SUBJECTS as arguments
+python -c "
+import subprocess
 
-      # List all lh and rh GCS files in the directory
-      LH_GCS_FILES=(/gcs_files/lh.*.gcs)
-      RH_GCS_FILES=(/gcs_files/rh.*.gcs)
+for subject in ['$SUBJECTS']; do
+    subprocess.run([
+        'singularity', 'run', '--cleanenv',
+        '-B', f'{BASEDIR}/templates:/home/freesurfer', '--home', '/home/freesurfer',
+        '-B', f'{BIDS_DIR}:/bids',
+        '-B', f'{OUTPUT_DIR}:/derived',
+        '-B', f'{ORIG_FS_LICENSE}:/li',
+        '-B', f'{SUBJECTS_DIR}:/subjects',
+        '-B', f'{GCS_FILE_DIR}:/gcs_files',
+        SING_CONTAINER,
+        '/bin/bash', '-c',
+        f'''
+        export SUBJECTS_DIR=/subjects
 
-      for subject in ${SUBJECTS}; do
-        for lh_gcs_file in \${LH_GCS_FILES[@]}; do
-          base_name=\$(basename \$lh_gcs_file .gcs)
-          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/lh.cortex.label \
-            \$subject lh \$SUBJECTS_DIR/\$subject/surf/lh.sphere.reg \
-            \$lh_gcs_file \
-            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
+        # List all lh and rh GCS files in the directory
+        LH_GCS_FILES=(/gcs_files/lh.*.gcs)
+        RH_GCS_FILES=(/gcs_files/rh.*.gcs)
+
+        for subject in {SUBJECTS[@]}; do
+            for lh_gcs_file in ${{LH_GCS_FILES[@]}}; do
+                base_name=\$(basename \$lh_gcs_file .gcs)
+                mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/lh.cortex.label \
+                    \$subject lh \$SUBJECTS_DIR/\$subject/surf/lh.sphere.reg \
+                    \$lh_gcs_file \
+                    \$SUBJECTS_DIR/\$subject/label/\${{base_name}}_order.annot
+            done
+
+            for rh_gcs_file in ${{RH_GCS_FILES[@]}}; do
+                base_name=\$(basename \$rh_gcs_file .gcs)
+                mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/rh.cortex.label \
+                    \$subject rh \$SUBJECTS_DIR/\$subject/surf/rh.sphere.reg \
+                    \$rh_gcs_file \
+                    \$SUBJECTS_DIR/\$subject/label/\${{base_name}}_order.annot
+            done
         done
-
-        for rh_gcs_file in \${RH_GCS_FILES[@]}; do
-          base_name=\$(basename \$rh_gcs_file .gcs)
-          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/rh.cortex.label \
-            \$subject rh \$SUBJECTS_DIR/\$subject/surf/rh.sphere.reg \
-            \$rh_gcs_file \
-            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
-        done
-      done
-    "
-
-# Capture the exit code of the Singularity command
+        '''
+    ])
+"
+# Capture the exit code of the Python script
 exitcode=$?
 
 # Log results to a table
