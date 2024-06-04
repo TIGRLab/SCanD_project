@@ -1,10 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name=freesurfer
+#SBATCH --job-name=freesurfer_parcellate
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=16:00:00
-#SBATCH --array=0-<max_array_id>  # Replace <max_array_id> with the maximum array job index
+#SBATCH --time=1:00:00
 
 SUB_SIZE=1  # Number of subjects to run per job
 
@@ -57,11 +56,11 @@ singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
-    -B ${SUBJECTS_DIR}:/subjects \
+    -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
     /bin/bash -c "
-      export SUBJECTS_DIR=/subjects
+      export SUBJECTS_DIR=/subjects_dir
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
