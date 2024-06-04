@@ -51,7 +51,7 @@ fi
 python -c "
 import subprocess
 
-for subject in $SUBJECTS:
+for subject in "${SUBJECTS[@]}":
     subprocess.run([
         'singularity', 'run', '--cleanenv',
          '-B', '{}/templates:/home/freesurfer'.format(BASEDIR), '--home', '/home/freesurfer',
