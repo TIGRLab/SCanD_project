@@ -83,9 +83,7 @@ RH_GCS_FILES=(/gcs_files/rh.*.gcs)
             "$subject" rh "$SUBJECTS_DIR/sub-$subject/surf/rh.sphere.reg" \
             "$rh_gcs_file" \
             "$SUBJECTS_DIR/sub-$subject/label/${base_name}_order.annot"
-    done
-    
- done   
+    done 
     
 '''
     ])
