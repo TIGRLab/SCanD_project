@@ -47,47 +47,41 @@ else
     SUBJECTS=$(sed -n -E 's/sub-(\S*)\>.*/\1/gp' ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-# Run Python script passing SUBJECTS as arguments
-python -c "
-import subprocess
+singularity run --cleanenv \
+    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BIDS_DIR}:/bids \
+    -B ${OUTPUT_DIR}:/derived \
+    -B ${ORIG_FS_LICENSE}:/li \
+    -B ${SUBJECTS_DIR}:/subjects \
+    -B ${GCS_FILE_DIR}:/gcs_files \
+    ${SING_CONTAINER} \
+    /bin/bash -c "
+      export SUBJECTS_DIR=/subjects
 
-for subject in "${SUBJECTS[@]}":
-    subprocess.run([
-        'singularity', 'run', '--cleanenv',
-         '-B', '{}/templates:/home/freesurfer'.format(BASEDIR), '--home', '/home/freesurfer',
-         '-B', '{}/bids:/bids'.format(BIDS_DIR),
-         '-B', '{}/derived:/derived'.format(OUTPUT_DIR),
-         '-B', '{}/.freesurfer.txt:/li'.format(ORIG_FS_LICENSE),
-         '-B', '{}/freesurfer:/subjects'.format(SUBJECTS_DIR),
-         '-B', '{}/freesurfer_parcellate:/gcs_files'.format(GCS_FILE_DIR),
-         SING_CONTAINER,
-         '/bin/bash', '-c',
-         '''
-export SUBJECTS_DIR=/subjects
+      # List all lh and rh GCS files in the directory
+      LH_GCS_FILES=(/gcs_files/lh.*.gcs)
+      RH_GCS_FILES=(/gcs_files/rh.*.gcs)
 
-# List all lh and rh GCS files in the directory
-LH_GCS_FILES=(/gcs_files/lh.*.gcs)
-RH_GCS_FILES=(/gcs_files/rh.*.gcs)
+      for subject in ${SUBJECTS}; do
+        for lh_gcs_file in \${LH_GCS_FILES[@]}; do
+          base_name=\$(basename \$lh_gcs_file .gcs)
+          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/lh.cortex.label \
+            \$subject lh \$SUBJECTS_DIR/\$subject/surf/lh.sphere.reg \
+            \$lh_gcs_file \
+            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
+        done
 
-    for lh_gcs_file in $LH_GCS_FILES; do
-        base_name=$(basename "$lh_gcs_file" .gcs)
-        mris_ca_label -l "$SUBJECTS_DIR/sub-$subject/label/lh.cortex.label" \
-            "$subject" lh "$SUBJECTS_DIR/sub-$subject/surf/lh.sphere.reg" \
-            "$lh_gcs_file" \
-            "$SUBJECTS_DIR/sub-$subject/label/${base_name}_order.annot"
-    done
-
-    for rh_gcs_file in $RH_GCS_FILES; do
-        base_name=$(basename "$rh_gcs_file" .gcs)
-        mris_ca_label -l "$SUBJECTS_DIR/sub-$subject/label/rh.cortex.label" \
-            "$subject" rh "$SUBJECTS_DIR/sub-$subject/surf/rh.sphere.reg" \
-            "$rh_gcs_file" \
-            "$SUBJECTS_DIR/sub-$subject/label/${base_name}_order.annot"
-    done 
+        for rh_gcs_file in \${RH_GCS_FILES[@]}; do
+          base_name=\$(basename \$rh_gcs_file .gcs)
+          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/rh.cortex.label \
+            \$subject rh \$SUBJECTS_DIR/\$subject/surf/rh.sphere.reg \
+            \$rh_gcs_file \
+            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
+        done
+        
+      done
+    "
     
-'''
-    ])
-"
 # Capture the exit code of the Python script
 exitcode=$?
 
