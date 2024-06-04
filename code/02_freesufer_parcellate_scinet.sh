@@ -1,3 +1,32 @@
+#!/bin/bash
+#SBATCH --job-name=freesurfer_parcellate
+#SBATCH --output=logs/%x_%j.out 
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=40
+#SBATCH --time=16:00:00
+
+
+SUB_SIZE=1 ## number of subjects to run
+
+
+####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
+
+## set the second environment variable to get the base directory
+BASEDIR=${SLURM_SUBMIT_DIR}
+
+## set up a trap that will clear the ramdisk if it is not cleared
+function cleanup_ramdisk {
+    echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
+    date
+    rm -rf /$SLURM_TMPDIR
+    echo -n "done at "
+    date
+}
+
+#trap the termination signal, and call the function 'trap_term' when
+# that happens, so results may be saved.
+trap "cleanup_ramdisk" TERM
+
 # Set environment variables
 export BASEDIR=${PROJECT}/SCanD_project_GMANJ
 #export BASEDIR=${SCRATCH}/SCanD_project
