@@ -6,8 +6,6 @@
 #SBATCH --time=3:00:00
 
 
-SUB_SIZE=1 ## number of subjects to run
-
 
 ####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
