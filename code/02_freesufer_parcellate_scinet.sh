@@ -69,8 +69,8 @@ export SUBJECTS_DIR=/subjects
 LH_GCS_FILES=(/gcs_files/lh.*.gcs)
 RH_GCS_FILES=(/gcs_files/rh.*.gcs)
 
-for subject in "${SUBJECTS[@]}"; do
-    for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
+for subject in $SUBJECTS; do
+    for lh_gcs_file in $LH_GCS_FILES; do
         base_name=$(basename "$lh_gcs_file" .gcs)
         mris_ca_label -l "$SUBJECTS_DIR/sub-$subject/label/lh.cortex.label" \
             "$subject" lh "$SUBJECTS_DIR/sub-$subject/surf/lh.sphere.reg" \
@@ -78,7 +78,7 @@ for subject in "${SUBJECTS[@]}"; do
             "$SUBJECTS_DIR/sub-$subject/label/${base_name}_order.annot"
     done
 
-    for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
+    for rh_gcs_file in $RH_GCS_FILES; do
         base_name=$(basename "$rh_gcs_file" .gcs)
         mris_ca_label -l "$SUBJECTS_DIR/sub-$subject/label/rh.cortex.label" \
             "$subject" rh "$SUBJECTS_DIR/sub-$subject/surf/rh.sphere.reg" \
