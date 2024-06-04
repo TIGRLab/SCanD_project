@@ -54,7 +54,6 @@ singularity run --cleanenv \
     -B ${ORIG_FS_LICENSE}:/li \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    -B ${SUBJECTS}:/subjects \
     ${SING_CONTAINER} \
     /bin/bash -c "
       export SUBJECTS_DIR=/subjects_dir
