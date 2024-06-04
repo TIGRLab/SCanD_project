@@ -65,18 +65,18 @@ singularity exec \
 
       for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
         base_name=$(basename $lh_gcs_file.gcs)
-        mris_ca_label -l $SUBJECTS_DIR/$SUBJECTS/label/lh.cortex.label \
-        $SUBJECTS lh $SUBJECTS_DIR/$SUBJECTS/surf/lh.sphere.reg \
+        mris_ca_label -l $SUBJECTS_DIR/sub-$SUBJECTS/label/lh.cortex.label \
+        sub-$SUBJECTS lh $SUBJECTS_DIR/sub-$SUBJECTS/surf/lh.sphere.reg \
         $lh_gcs_file \
-        $SUBJECTS_DIR/$SUBJECTS/label/${base_name}_order.annot
+        $SUBJECTS_DIR/sub-$SUBJECTS/label/${base_name}_order.annot
       done 
 
      for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
         base_name=$(basename $rh_gcs_file.gcs)
-        mris_ca_label -l $SUBJECTS_DIR/$SUBJECTS/label/rh.cortex.label \
-        $SUBJECTS rh $SUBJECTS_DIR/$SUBJECTS/surf/rh.sphere.reg \
+        mris_ca_label -l $SUBJECTS_DIR/sub-$SUBJECTS/label/rh.cortex.label \
+        sub-$SUBJECTS rh $SUBJECTS_DIR/sub-$SUBJECTS/surf/rh.sphere.reg \
         $rh_gcs_file \
-        $SUBJECTS_DIR/$SUBJECTS/label/${base_name}_order.annot
+        $SUBJECTS_DIR/sub-$SUBJECTS/label/${base_name}_order.annot
      done
      
 EOF
