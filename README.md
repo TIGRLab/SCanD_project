@@ -24,7 +24,7 @@ ${BASEDIR}
 │   │   ├── mriqc                # mriqc derivatives
 │   │   ├── fmriprep             # fmriprep derivatives
 │   │   ├── freesurfer           # freesurfer derivative - generated during fmriprep
-│   │   ├── freesurfer_long           # freesurfer longitudinal
+│   │   ├── freesurfer_long      # freesurfer longitudinal
 │   │   ├── qsiprep              # full qsiprep derivatives
 │   │   ├── ciftify              # ciftify derivatives
 │   │   ├── parcellated_ciftify  # parcellation-ciftify derivatives
@@ -85,6 +85,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02c	|  [Run amico noddi](#Running-amico-noddi) 	| 6 hours of slurm 	|
 |^ |   02d	|  [Run ENIGMA extract](#Running-enigma-extract) 	|  5 min in terminal	|
 |^ |   02e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
+|^ |   02f	|  [Run freesurfer parcellation](#Running-freesurfer-parcellation) 	|  3 hour of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
@@ -372,6 +373,20 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./code/03_amico_VNC.sh
+```
+
+## Running freesurfer parcellation
+
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+sbatch  ./code/02_freesurfer_parcellate_scinet.sh
 ```
 
 ## Running ciftify-anat

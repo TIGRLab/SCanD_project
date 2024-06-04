@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract):
+# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract, freesurfer_parcellate):
 
 # Ask the user whether to run only fmriprep_func
 read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FMRIPREP_FUNC_ONLY
 
 if [ "$RUN_FMRIPREP_FUNC_ONLY" = "yes" ] || [ "$RUN_FMRIPREP_FUNC_ONLY" = "y" ]; then
-    echo "Running only fmriprep_func"
+    echo "Running only fmriprep_func and freesurfer parcellation"
 
     # Stage 2: fmriprep_func
     # Figuring out appropriate array-job size
@@ -17,6 +17,9 @@ if [ "$RUN_FMRIPREP_FUNC_ONLY" = "yes" ] || [ "$RUN_FMRIPREP_FUNC_ONLY" = "y" ];
 
     # Submit the array job to the queue
     sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
+
+    # Stage 2: freesurfer_parcellate
+    sbatch  ./code/02_freesurfer_parcellate_scinet.sh
 
 else
     # Ask the user whether the data is single-shell or multi-shell
