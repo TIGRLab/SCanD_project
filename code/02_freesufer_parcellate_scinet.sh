@@ -4,16 +4,14 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
 #SBATCH --time=16:00:00
+#SBATCH --array=0-<max_array_id>  # Replace <max_array_id> with the maximum array job index
 
+SUB_SIZE=1  # Number of subjects to run per job
 
-SUB_SIZE=1 ## number of subjects to run
-
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
-
-## set the second environment variable to get the base directory
+# Set BASEDIR to the submission directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
+# Cleanup function to clear the ramdisk
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -22,25 +20,23 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
-# input is BIDS_DIR this is where the data downloaded from openneuro went
+# Set environment variables
 export BIDS_DIR=${BASEDIR}/data/local/bids
-
-## these folders envs need to be set up for this script to run properly 
-## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
-
-
-## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_parcellate  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_parcellate
 export LOGS_DIR=${BASEDIR}/logs
-mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
+export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
+export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
+export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk 
+# Create necessary directories
+mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR}
+
+# Calculate subject list for this job array
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 
@@ -55,13 +51,7 @@ else
 fi
 
 
-export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
-export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-
-export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
-export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
-
-
+# Run Singularity and FreeSurfer commands
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
@@ -71,29 +61,36 @@ singularity run --cleanenv \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
     /bin/bash -c "
-    GCS_FILES=(/gcs_files/*.gcs)
-    
-    for gcs_file in ${GCS_FILES[@]}; do
-     base_name=\$(basename \$gcs_file .gcs)
-    
-      mris_ca_label -l \$SUBJECTS_DIR/${SUBJECTS}/label/lh.cortex.label \
-        ${SUBJECTS} lh \$SUBJECTS_DIR/${SUBJECTS}/surf/lh.sphere.reg \
-        /$gcs_file \
-        \$SUBJECTS_DIR/${SUBJECTS}/label/${base_name}_order.annot
- 
-      mris_ca_label -l \$SUBJECTS_DIR/${SUBJECTS}/label/rh.cortex.label \
-        ${SUBJECTS} rh \$SUBJECTS_DIR/${SUBJECTS}/surf/rh.sphere.reg \
-        /$gcs_file \
-       \$SUBJECTS_DIR/${SUBJECTS}/label/${base_name}_order.annot
-       
-    done
+      export SUBJECTS_DIR=/subjects
+
+      # List all lh and rh GCS files in the directory
+      LH_GCS_FILES=(/gcs_files/lh.*.gcs)
+      RH_GCS_FILES=(/gcs_files/rh.*.gcs)
+
+      for subject in ${SUBJECTS}; do
+        for lh_gcs_file in \${LH_GCS_FILES[@]}; do
+          base_name=\$(basename \$lh_gcs_file .gcs)
+          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/lh.cortex.label \
+            \$subject lh \$SUBJECTS_DIR/\$subject/surf/lh.sphere.reg \
+            \$lh_gcs_file \
+            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
+        done
+
+        for rh_gcs_file in \${RH_GCS_FILES[@]}; do
+          base_name=\$(basename \$rh_gcs_file .gcs)
+          mris_ca_label -l \$SUBJECTS_DIR/\$subject/label/rh.cortex.label \
+            \$subject rh \$SUBJECTS_DIR/\$subject/surf/rh.sphere.reg \
+            \$rh_gcs_file \
+            \$SUBJECTS_DIR/\$subject/label/\${base_name}_order.annot
+        done
+      done
     "
 
+# Capture the exit code of the Singularity command
 exitcode=$?
 
-
-# Output results to a table
-for subject in $SUBJECTS; do
+# Log results to a table
+for subject in ${SUBJECTS}; do
     if [ $exitcode -eq 0 ]; then
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
