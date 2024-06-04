@@ -54,8 +54,7 @@ singularity run --cleanenv \
     -B ${ORIG_FS_LICENSE}:/li \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    ${SING_CONTAINER} \
-    /bids /derived participant \
+    ${SING_CONTAINER} 
     << 'EOF'
     
       SUBJECTS_DIR=/subjects_dir
