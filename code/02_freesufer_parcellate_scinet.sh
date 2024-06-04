@@ -80,5 +80,5 @@ singularity run --cleanenv \
         \$SUBJECTS_DIR/\$SUBJECTS/label/\${base_name}_order.annot
      done
      
-    "
+   EOF
 
