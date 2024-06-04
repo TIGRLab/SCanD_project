@@ -55,7 +55,7 @@ singularity exec \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} /bin/bash
-    << 'EOF'
+    << "EOF"
     
       SUBJECTS_DIR=/subjects_dir
 
