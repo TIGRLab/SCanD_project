@@ -27,6 +27,13 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
+
+# Iterate over each subject in SUBJECTS
+for subject in $SUBJECTS; do
+    echo "$subject       0" >> ${BASEDIR}/logs/freesurfer_parcellate.tsv
+done
+
 # Set environment variables
 export BASEDIR=${PROJECT}/SCanD_project_GMANJ
 #export BASEDIR=${SCRATCH}/SCanD_project
