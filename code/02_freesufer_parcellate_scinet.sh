@@ -56,7 +56,7 @@ singularity run --cleanenv \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
     /bids /derived participant \
-    /bin/bash << 'EOF'
+    << 'EOF'
     
       SUBJECTS_DIR=/subjects_dir
       SUBJECTS=/subjects
