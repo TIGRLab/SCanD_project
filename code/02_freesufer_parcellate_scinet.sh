@@ -36,7 +36,6 @@ done
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
-export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_parcellate
 export LOGS_DIR=${BASEDIR}/logs
 export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
@@ -49,7 +48,6 @@ mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR}
 singularity exec \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
-    -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
