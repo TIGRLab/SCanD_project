@@ -69,7 +69,6 @@ singularity exec \
         $SUBJECTS lh $SUBJECTS_DIR/$SUBJECTS/surf/lh.sphere.reg \
         $lh_gcs_file \
         $SUBJECTS_DIR/$SUBJECTS/label/${base_name}_order.annot
-      done
 
      for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
         base_name=$(basename $rh_gcs_file .gcs)
@@ -77,7 +76,6 @@ singularity exec \
         $SUBJECTS rh $SUBJECTS_DIR/$SUBJECTS/surf/rh.sphere.reg \
         $rh_gcs_file \
         $SUBJECTS_DIR/$SUBJECTS/label/${base_name}_order.annot
-     done
      
 EOF
 
