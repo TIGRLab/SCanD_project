@@ -51,7 +51,7 @@ fi
 python -c "
 import subprocess
 
-for subject in $SUBJECTS; do
+for subject in $SUBJECTS:
     subprocess.run([
         'singularity', 'run', '--cleanenv',
         '-B', f'{BASEDIR}/templates:/home/freesurfer', '--home', '/home/freesurfer',
@@ -85,8 +85,9 @@ RH_GCS_FILES=(/gcs_files/rh.*.gcs)
             "$SUBJECTS_DIR/sub-$subject/label/${base_name}_order.annot"
     done
     
+ done   
+    
 '''
-
     ])
 "
 # Capture the exit code of the Python script
