@@ -47,7 +47,7 @@ else
     SUBJECTS=$(sed -n -E 's/sub-(\S*)\>.*/\1/gp' ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-singularity run --cleanenv \
+singularity exec \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
