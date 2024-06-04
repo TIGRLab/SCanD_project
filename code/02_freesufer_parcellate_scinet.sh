@@ -71,8 +71,10 @@ singularity run --cleanenv \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} \
     /bin/bash -c "
-      export SUBJECTS_DIR=/subjects
-
+    GCS_FILES=(/gcs_files/*.gcs)
+    
+    for gcs_file in ${GCS_FILES[@]}; do
+    
       mris_ca_label -l \$SUBJECTS_DIR/${SUBJECTS}/label/lh.cortex.label \
         ${SUBJECTS} lh \$SUBJECTS_DIR/${SUBJECTS}/surf/lh.sphere.reg \
         /gcs_files/lh.Schaefer2018_400Parcels_17Networks.gcs \
@@ -82,8 +84,9 @@ singularity run --cleanenv \
         ${SUBJECTS} rh \$SUBJECTS_DIR/${SUBJECTS}/surf/rh.sphere.reg \
         /gcs_files/rh.Schaefer2018_400Parcels_17Networks.gcs \
        \$SUBJECTS_DIR/${SUBJECTS}/label/rh.Schaefer2018_400Parcels_17Networks_order.annot
+       
+    done
     "
-
 
 exitcode=$?
 
