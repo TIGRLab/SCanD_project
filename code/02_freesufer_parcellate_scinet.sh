@@ -74,16 +74,17 @@ singularity run --cleanenv \
     GCS_FILES=(/gcs_files/*.gcs)
     
     for gcs_file in ${GCS_FILES[@]}; do
+     base_name=\$(basename \$gcs_file .gcs)
     
       mris_ca_label -l \$SUBJECTS_DIR/${SUBJECTS}/label/lh.cortex.label \
         ${SUBJECTS} lh \$SUBJECTS_DIR/${SUBJECTS}/surf/lh.sphere.reg \
-        /gcs_files/lh.Schaefer2018_400Parcels_17Networks.gcs \
-        \$SUBJECTS_DIR/${SUBJECTS}/label/lh.Schaefer2018_400Parcels_17Networks_order.annot
+        /$gcs_file \
+        \$SUBJECTS_DIR/${SUBJECTS}/label/${base_name}_order.annot
  
       mris_ca_label -l \$SUBJECTS_DIR/${SUBJECTS}/label/rh.cortex.label \
         ${SUBJECTS} rh \$SUBJECTS_DIR/${SUBJECTS}/surf/rh.sphere.reg \
-        /gcs_files/rh.Schaefer2018_400Parcels_17Networks.gcs \
-       \$SUBJECTS_DIR/${SUBJECTS}/label/rh.Schaefer2018_400Parcels_17Networks_order.annot
+        /$gcs_file \
+       \$SUBJECTS_DIR/${SUBJECTS}/label/${base_name}_order.annot
        
     done
     "
