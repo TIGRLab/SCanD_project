@@ -54,15 +54,15 @@ import subprocess
 for subject in $SUBJECTS:
     subprocess.run([
         'singularity', 'run', '--cleanenv',
-        '-B', '{}/templates:/home/freesurfer'.format(BASEDIR), '--home', '/home/freesurfer',
-        '-B', f'{BIDS_DIR}:/bids',
-        '-B', f'{OUTPUT_DIR}:/derived',
-        '-B', f'{ORIG_FS_LICENSE}:/li',
-        '-B', f'{SUBJECTS_DIR}:/subjects',
-        '-B', f'{GCS_FILE_DIR}:/gcs_files',
-        SING_CONTAINER,
-        '/bin/bash', '-c',
-        '''
+         '-B', '{}/templates:/home/freesurfer'.format(BASEDIR), '--home', '/home/freesurfer',
+         '-B', '{}/bids:/bids'.format(BIDS_DIR),
+         '-B', '{}/derived:/derived'.format(OUTPUT_DIR),
+         '-B', '{}/.freesurfer.txt:/li'.format(ORIG_FS_LICENSE),
+         '-B', '{}/freesurfer:/subjects'.format(SUBJECTS_DIR),
+         '-B', '{}/freesurfer_parcellate:/gcs_files'.format(GCS_FILE_DIR),
+         SING_CONTAINER,
+         '/bin/bash', '-c',
+         '''
 export SUBJECTS_DIR=/subjects
 
 # List all lh and rh GCS files in the directory
