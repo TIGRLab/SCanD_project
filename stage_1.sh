@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#stage1 (mriqc, fmriprep_fit, freesurfer, qsiprep):
+#stage1 (mriqc, fmriprep_anat, freesurfer, qsiprep):
 # Ask the user whether to run only functional codes
 read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FUNCTIONAL_ONLY
 
@@ -18,7 +18,7 @@ if [ "$RUN_FUNCTIONAL_ONLY" = "yes" ] || [ "$RUN_FUNCTIONAL_ONLY" = "y" ]; then
     ## submit the array job to the queue
     sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 
-    ## fmriprep_fit
+    ## fmriprep_anat
     ## figuring out appropriate array-job size
 
     SUB_SIZE=1
@@ -27,7 +27,7 @@ if [ "$RUN_FUNCTIONAL_ONLY" = "yes" ] || [ "$RUN_FUNCTIONAL_ONLY" = "y" ]; then
     echo "number of array is: ${array_job_length}"
 
     ## submit the array job to the queue
-    sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
+    sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 
 
     ## submitting freesurfer longitudinal
@@ -52,7 +52,7 @@ else
     ## submit the array job to the queue
     sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 
-    ## fmriprep_fit
+    ## fmriprep_anat
     ## figuring out appropriate array-job size
     SUB_SIZE=1
     N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -60,7 +60,7 @@ else
     echo "number of array is: ${array_job_length}"
 
     ## submit the array job to the queue
-    sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
+    sbatch --array=0-${array_job_length} code/01_fmriprep_anat_scinet.sh
 
     ## submitting freesurfer longitudinal
     SUB_SIZE=1
