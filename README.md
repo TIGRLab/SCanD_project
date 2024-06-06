@@ -615,8 +615,7 @@ To get an openneuro dataset for testing - we will use datalad
 ```sh
 ## loading Erin's datalad environment on the SciNet system
 module load git-annex/8.20200618 # git annex is needed by datalad
-module use /project/a/arisvoin/edickie/modules #this let's you read modules from Erin's folder
-module load datalad/0.15.5 # this is the datalad module in Erin's folder
+source /project/a/arisvoin/edickie/modules/datalad/0.15.5/build/bin/activate
 ```
 
 ##### Using datalad to install a download a dataset
