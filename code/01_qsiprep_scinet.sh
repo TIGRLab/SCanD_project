@@ -58,6 +58,10 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
+## set singularity environment variables that will point to the freesurfer license and the templateflow bits
+# Make sure FS_LICENSE is defined in the container.
+export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
+
 # Extract voxel sizes using fslinfo
 if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
 voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep_0.16.0RC3.simg fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
