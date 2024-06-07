@@ -58,25 +58,26 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
-## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-# Make sure FS_LICENSE is defined in the container.
-export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
-# Extract voxel sizes using 3dinfo
+# Extract voxel sizes using fslinfo
 if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
-    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz")
+voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.21.4.sif fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
 else
-    voxel_sizes=$(3dinfo -d3 "${BIDS_DIR}/sub-${SUBJECTS}/dwi/*.nii.gz")
+voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.21.4.sif fslinfo /bids/sub-${SUBJECTS}/dwi/*.nii.gz)
 fi
 
-# Read the voxel sizes into variables
-read -r vox1 vox2 vox3 <<< "$voxel_sizes"
+# Extract voxel dimensions
+voxdim1=$(echo "$voxel_info" | grep -oP 'pixdim1\s+\K\S+')
+voxdim2=$(echo "$voxel_info" | grep -oP 'pixdim2\s+\K\S+')
+voxdim3=$(echo "$voxel_info" | grep -oP 'pixdim3\s+\K\S+')
+
 # Make all numbers positive and round to one decimal place
-vox1=$(printf "%.1f" ${vox1#-})
-vox2=$(printf "%.1f" ${vox2#-})
-vox3=$(printf "%.1f" ${vox3#-})
-# Calculate the sum of voxel sizes
-sum=$(bc <<< "$vox1 + $vox2 + $vox3")
+voxdim1=$(printf "%.1f" $voxdim1)
+voxdim2=$(printf "%.1f" $voxdim2)
+voxdim3=$(printf "%.1f" $voxdim3)
+
+# Calculate the sum of voxel dimensions
+sum=$(bc <<< "$voxdim1 + $voxdim2 + $voxdim3")
 # Calculate the average
 average=$(bc -l <<< "$sum / 3")
 # Round the average to one decimal place
