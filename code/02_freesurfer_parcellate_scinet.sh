@@ -39,7 +39,7 @@ export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export LOGS_DIR=${BASEDIR}/logs
 export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer
+export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
 # Create necessary directories
