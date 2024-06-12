@@ -80,6 +80,10 @@ singularity exec \
           $rh_gcs_file \
           $SUBJECTS_DIR/$SUBJECT/label/${base_name}_order.annot
         done
+
+        #for N
+        # mri_aparc2aseg --s $SUBJECT--o output.mgz --annot Schaefer2018_${N}Parcels_7Networks_order
+        #done
         
       done
 
