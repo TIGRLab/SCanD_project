@@ -82,7 +82,7 @@ singularity exec \
         done
 
         for N in {1,2,3,4,5,6,7,8,9,10};do 
-         mri_aparc2aseg --s $SUBJECT--o output.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
+         mri_aparc2aseg --s $SUBJECT --o $SUBJECTS_DIR/$SUBJECT/label/output.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
         done
         
       done
