@@ -92,8 +92,9 @@ singularity exec \
          aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/lh.Schaefer2018_${N}00Parcels_table.stats
          aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_table.stats
         done
-        done
         
-      done
+     done
+        
+done
 
 EOF
