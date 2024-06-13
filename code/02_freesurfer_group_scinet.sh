@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=freesurfer
+#SBATCH --job-name=freesurfer_group
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -37,7 +37,7 @@ export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  # use if version of fmriprep >=20.2
+export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_test  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
@@ -76,8 +76,9 @@ singularity run --cleanenv \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
     ${SING_CONTAINER} \
-    /bids /derived participant \
+    /bids /derived group2 \
     --participant_label ${SUBJECTS} \
+    --parcellations {aparc,aparc.a2009s}\
     --skip_bids_validator \
     --license_file /li \
     --n_cpus 80  
