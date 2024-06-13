@@ -94,7 +94,5 @@ singularity exec \
         done
         
      done
-        
-done
 
 EOF
