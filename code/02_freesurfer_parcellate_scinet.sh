@@ -84,6 +84,14 @@ singularity exec \
         for N in {1,2,3,4,5,6,7,8,9,10};do 
          mri_aparc2aseg --s $SUBJECT --o $SUBJECTS_DIR/$SUBJECT/label/output.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
         done
+
+        # Generate anatomical stats
+        mris_anatomical_stats -a $SUBJECTS_DIR/$SUBJECT/label/lh.Schaefer2018_100Parcels_7Networks_order.annot -f $SUBJECTS_DIR/$SUBJECT/stats/lh.Schaefer2018.stats $SUBJECT lh
+        mris_anatomical_stats -a $SUBJECTS_DIR/$SUBJECT/label/rh.Schaefer2018_100Parcels_7Networks_order.annot -f $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018.stats $SUBJECT rh
+
+        # Extract stats to table format
+        aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_100Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/lh.Schaefer2018_table.stats
+        aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_100Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018_table.stats
         
       done
 
