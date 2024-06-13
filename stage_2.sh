@@ -2,92 +2,55 @@
 
 # Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract, freesurfer_parcellate):
 
-# Ask the user whether to run only fmriprep_func
-read -p "Do you want to only run functional pipelines? (yes/no): " RUN_FMRIPREP_FUNC_ONLY
+#!/bin/bash
 
-if [ "$RUN_FMRIPREP_FUNC_ONLY" = "yes" ] || [ "$RUN_FMRIPREP_FUNC_ONLY" = "y" ]; then
-    echo "Running only fmriprep_func and freesurfer parcellation"
+# Function to calculate and submit array jobs
+submit_array_job() {
+    local script=$1
+    local sub_size=$2
+    local n_subjects=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
+    local array_job_length=$(( n_subjects / sub_size ))
+    echo "Submitting job for $script with array size: ${array_job_length}"
+    sbatch --array=0-${array_job_length} $script
+}
 
-    # Stage 2: fmriprep_func
-    # Figuring out appropriate array-job size
-    SUB_SIZE=1 # For func the sub size is moving to 1 participant because there are two runs and 8 tasks per run
-    N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-    array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-    echo "Number of array is: ${array_job_length}"
-
-    # Submit the array job to the queue
-    sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
-
-    # Stage 2: freesurfer_parcellate
-    sbatch  ./code/02_freesurfer_parcellate_scinet.sh
-
-else
-    # Ask the user whether the data is single-shell or multi-shell
-    read -p "Is the data single-shell or multi-shell? (single/multi): " DATA_SHELL_TYPE
-
-    if [ "$DATA_SHELL_TYPE" != "single" ] && [ "$DATA_SHELL_TYPE" != "multi" ]; then
-        echo "Invalid input. Please specify either 'single' or 'multi' for the data shell type."
-        exit 1
-    fi
-
-    # Stage 2: fmriprep_func
-    # Figuring out appropriate array-job size
-    SUB_SIZE=1 # For func the sub size is moving to 1 participant because there are two runs and 8 tasks per run
-    N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-    array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-    echo "Number of array is: ${array_job_length}"
-
-    # Submit the array job to the queue
-    sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
-
-    # Stage 2: qsirecon step1
-    # Figuring out appropriate array-job size
-    SUB_SIZE=1
-    N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-    array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-    echo "Number of array is: ${array_job_length}"
-
-    # Submit the array job to the queue
-    sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
-
-    ## Stage 3: enigma_extract
-    source ./code/02_ENIGMA_ExtractCortical.sh
-
-
-    if [ "$DATA_SHELL_TYPE" = "multi" ]; then
-        echo "Running all codes: fmriprep_func, qsirecon_step1, amico_noddi, enigma_extract and tractography"
-       
-        # Stage 2: amico_noddi (only for multi-shell data)
-        # Figuring out appropriate array-job size
-        SUB_SIZE=1
-        N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-        array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-        echo "Number of array is: ${array_job_length}"
-
-        # Submit the array job to the queue
-        sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
-
-       ## Stage 3: tractography
-       ## Figuring out appropriate array-job size
-        SUB_SIZE=1
-        N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-        array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-        echo "Number of array is: ${array_job_length}"
-
-        # Submit the array job to the queue for multi-shell data
-        sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
-
-    else
-       echo "Running fmriprep_func, qsirecon_step1, enigma_extract and tractography"
-       ## Stage 3: tractography
-       ## Figuring out appropriate array-job size
-        SUB_SIZE=1
-        N_SUBJECTS=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-        array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-        echo "Number of array is: ${array_job_length}"
+# Function to prompt user and run selected pipeline
+run_pipeline() {
+    local pipeline_name=$1
+    local script_path=$2
+    local sub_size=$3
+    read -p "Do you want to run the $pipeline_name pipeline? (yes/no): " run_pipeline
     
-        # Submit the array job to the queue for single-shell data
-        sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+    if [[ "$run_pipeline" =~ ^(yes|y)$ ]]; then
+        echo "Running $pipeline_name..."
+        submit_array_job $script_path $sub_size
+    else
+        echo "Skipping $pipeline_name."
     fi
+}
 
+# Prompt user for each pipeline in stage 2
+run_pipeline "fmriprep_func" "./code/02_fmriprep_func_scinet.sh" 1
+run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
+
+# Run freesurfer_parcellate without an array job
+read -p "Do you want to run the freesurfer_parcellate pipeline? (yes/no): " run_freesurfer_parcellate
+if [[ "$run_freesurfer_parcellate" =~ ^(yes|y)$ ]]; then
+    echo "Running freesurfer_parcellate..."
+    sbatch ./code/02_freesurfer_parcellate_scinet.sh
+else
+    echo "Skipping freesurfer_parcellate."
 fi
+
+# Source enigma extract script without an array job
+read -p "Do you want to run the enigma_extract pipeline? (yes/no): " run_enigma_extract
+if [[ "$run_enigma_extract" =~ ^(yes|y)$ ]]; then
+    echo "Running enigma_extract..."
+    source ./code/02_ENIGMA_ExtractCortical.sh
+else
+    echo "Skipping enigma_extract."
+fi
+
+run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
+run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
+run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
