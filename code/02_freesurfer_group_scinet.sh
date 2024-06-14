@@ -42,9 +42,6 @@ export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  # use if version of fmr
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk 
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
