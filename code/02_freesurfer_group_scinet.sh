@@ -117,6 +117,7 @@ singularity exec \
       for SUBJECT in $SUBJECTS; do
       
         SUBJECT_LONG_DIR=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+        SUBJECT=$(basename $SUBJECT_LONG_DIR)
       
         for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
           base_name=$(basename $lh_gcs_file .gcs)
