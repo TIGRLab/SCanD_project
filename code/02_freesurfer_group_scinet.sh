@@ -115,32 +115,35 @@ singularity exec \
 
       # Loop over each subject
       for SUBJECT in $SUBJECTS; do
+      
+        SUBJECT_LONG_DIR=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+      
         for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
           base_name=$(basename $lh_gcs_file .gcs)
-          mris_ca_label -l $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/lh.cortex.label \
-          $SUBJECT lh $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/surf/lh.sphere.reg \
+          mris_ca_label -l $SUBJECT_LONG_DIR/label/lh.cortex.label \
+          $SUBJECT lh $SUBJECT_LONG_DIR/surf/lh.sphere.reg \
           $lh_gcs_file \
-          $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/${base_name}_order.annot
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
         done 
 
         for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
           base_name=$(basename $rh_gcs_file .gcs)
-          mris_ca_label -l $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/rh.cortex.label \
-          $SUBJECT rh $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/surf/rh.sphere.reg \
+          mris_ca_label -l $SUBJECT_LONG_DIR/label/rh.cortex.label \
+          $SUBJECT rh $SUBJECT_LONG_DIR/surf/rh.sphere.reg \
           $rh_gcs_file \
-          $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/${base_name}_order.annot
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
         done
 
         for N in {1,2,3,4,5,6,7,8,9,10};do 
-         mri_aparc2aseg --s $SUBJECT --o $SUBJECTS_DIR/$SUBJECT*long*/label/output_${N}00Parcels.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
+         mri_aparc2aseg --s $SUBJECT --o $SUBJECT_LONG_DIR/label/output_${N}00Parcels.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
 
          # Generate anatomical stats
-         mris_anatomical_stats -a $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/lh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/stats/lh.Schaefer2018_${N}00Parcels_7Networks_order.stats $SUBJECT lh
-         mris_anatomical_stats -a $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/label/rh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_7Networks_order.stats $SUBJECT rh
+         mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/lh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_7Networks_order.stats $SUBJECT lh
+         mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/rh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_7Networks_order.stats $SUBJECT rh
 
          # Extract stats to table format
-         aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/stats/lh.Schaefer2018_${N}00Parcels_table.tsv
-         aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECTS_DIR/$SUBJECT*.long.$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_table.tsv
+         aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table.tsv
+         aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table.tsv
         done
         
      done
