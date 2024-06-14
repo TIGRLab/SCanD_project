@@ -33,7 +33,8 @@ export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  # use if version of fmr
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
-SUBJECTS=sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv 
+SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
+
     
 export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
