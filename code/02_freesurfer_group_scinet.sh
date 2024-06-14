@@ -118,7 +118,9 @@ singularity exec \
       
         SUBJECT_LONG_DIR=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
         SUBJECT=$(basename $SUBJECT_LONG_DIR)
-      
+        
+    for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
+    
         for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
           base_name=$(basename $lh_gcs_file .gcs)
           mris_ca_label -l $SUBJECT_LONG_DIR/label/lh.cortex.label \
@@ -148,5 +150,7 @@ singularity exec \
         done
         
      done
+     
+  done   
 
 EOF
