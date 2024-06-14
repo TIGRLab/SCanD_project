@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract, freesurfer_group):
+# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, freesurfer_group):
 
 #!/bin/bash
 
@@ -42,14 +42,6 @@ else
     echo "Skipping freesurfer_group."
 fi
 
-# Source enigma extract script without an array job
-read -p "Do you want to run the enigma_extract pipeline? (yes/no): " run_enigma_extract
-if [[ "$run_enigma_extract" =~ ^(yes|y)$ ]]; then
-    echo "Running enigma_extract..."
-    source ./code/02_ENIGMA_ExtractCortical.sh
-else
-    echo "Skipping enigma_extract."
-fi
 
 run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
 run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
