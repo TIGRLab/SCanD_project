@@ -103,3 +103,6 @@ for subject in ${subjects}; do
  mkdir -p ${AMICO_SHARE_DIR}/${subject}/figures
  rsync -a ${AMICO_LOCAL_DIR}/qsirecon/${subject}/figures ${AMICO_SHARE_DIR}/${subject}/
 done
+
+#running Enigma_extract
+source ./code/ENIGMA_ExtractCortical.sh
