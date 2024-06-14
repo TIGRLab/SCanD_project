@@ -116,7 +116,7 @@ singularity exec \
       # Loop over each subject
       for SUBJECT in $SUBJECTS; do
       
-        SUBJECT_LONG_DIR=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+        SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
         SUBJECT=$(basename $SUBJECT_LONG_DIR)
         
         for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
