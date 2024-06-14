@@ -89,8 +89,8 @@ singularity exec \
          mris_anatomical_stats -a $SUBJECTS_DIR/$SUBJECT/label/rh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_7Networks_order.stats $SUBJECT rh
 
          # Extract stats to table format
-         aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/lh.Schaefer2018_${N}00Parcels_table.tsv
-         aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --tablefile $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_table.tsv
+         aparcstats2table --subjects $SUBJECT --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECTS_DIR/$SUBJECT/stats/lh.Schaefer2018_${N}00Parcels_table.tsv
+         aparcstats2table --subjects $SUBJECT --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECTS_DIR/$SUBJECT/stats/rh.Schaefer2018_${N}00Parcels_table.tsv
         done
         
      done
