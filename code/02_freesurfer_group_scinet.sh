@@ -131,6 +131,10 @@ EOF
 OUTPUT_MERGE_DIR=${SUBJECTS_DIR}/00_group2_stats_tables
 mkdir -p ${OUTPUT_MERGE_DIR}
 
+SUBJECTS_FILE=${BIDS_DIR}/participants.tsv
+SUBJECTS=$(tail -n +2 $SUBJECTS_FILE | cut -f1)
+
+
 for N in {1,2,3,4,5,6,7,8,9,10}; do
   for hemi in lh rh; do
     OUTPUT_FILE=${OUTPUT_MERGE_DIR}/${hemi}.Schaefer2018_${N}00Parcels.thickness.tsv
