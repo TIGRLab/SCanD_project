@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract, freesurfer_parcellate):
+# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, enigma extract, freesurfer_group):
 
 #!/bin/bash
 
@@ -33,13 +33,13 @@ run_pipeline() {
 run_pipeline "fmriprep_func" "./code/02_fmriprep_func_scinet.sh" 1
 run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
 
-# Run freesurfer_parcellate without an array job
-read -p "Do you want to run the freesurfer_parcellate pipeline? (yes/no): " run_freesurfer_parcellate
-if [[ "$run_freesurfer_parcellate" =~ ^(yes|y)$ ]]; then
-    echo "Running freesurfer_parcellate..."
-    sbatch ./code/02_freesurfer_parcellate_scinet.sh
+# Run freesurfer_group without an array job
+read -p "Do you want to run the freesurfer_group pipeline? (yes/no): " run_freesurfer_group
+if [[ "$run_freesurfer_group" =~ ^(yes|y)$ ]]; then
+    echo "Running freesurfer_group..."
+    sbatch ./code/02_freesurfer_group_scinet.sh
 else
-    echo "Skipping freesurfer_parcellate."
+    echo "Skipping freesurfer_group."
 fi
 
 # Source enigma extract script without an array job
