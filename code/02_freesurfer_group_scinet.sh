@@ -142,15 +142,17 @@ for N in {1,2,3,4,5,6,7,8,9,10}; do
       for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
         FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table.tsv
 
-        if [ "$HEADER_ADDED" = false ]; then
-          head -n 1 $FILE > $OUTPUT_FILE
-          HEADER_ADDED=true
-        fi
+        if [ -f "$FILE" ]; then
+          if [ "$HEADER_ADDED" = false ]; then
+            head -n 1 $FILE > $OUTPUT_FILE
+            HEADER_ADDED=true
+          fi
 
-        tail -n +2 $FILE >> $OUTPUT_FILE
+          tail -n +2 $FILE >> $OUTPUT_FILE
+        else
+          echo "File $FILE not found, skipping..."
+        fi
       done
     done
   done
 done
-
-
