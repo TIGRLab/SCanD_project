@@ -19,7 +19,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (fmriprep_func, qsirecon1, amico_noddi, tractography, enigma extract, freesurfer_group):
+## stage 2 (fmriprep_func, qsirecon1, amico_noddi, tractography, freesurfer_group):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
