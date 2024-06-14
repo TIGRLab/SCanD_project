@@ -1,15 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=freesurfer_group
+#SBATCH --job-name=freesurfer_parcellation
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=3:00:00
+#SBATCH --time=5:00:00
 
-SUB_SIZE=1 ## number of subjects to run
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
 ## set up a trap that will clear the ramdisk if it is not cleared
@@ -33,26 +30,10 @@ export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  # use if version of fmr
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
-SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
-
-    
 export APPTAINERENV_FS_LICENSE=/home/freesurfer/.freesurfer.txt
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
- singularity run --cleanenv \
-    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
-    -B ${BIDS_DIR}:/bids \
-    -B ${OUTPUT_DIR}:/derived \
-    -B ${ORIG_FS_LICENSE}:/li \
-    ${SING_CONTAINER} \
-    /bids /derived group2 \
-    --participant_label ${SUBJECTS} \
-    --parcellations {aparc,aparc.a2009s}\
-    --skip_bids_validator \
-    --license_file /li \
-    --n_cpus 80
-
-
+ 
 
 SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 
