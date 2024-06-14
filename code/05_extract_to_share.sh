@@ -172,3 +172,7 @@ else
 echo "No NODDI outputs found."
 
 fi
+
+
+#running Enigma_extract
+source ./code/ENIGMA_ExtractCortical.sh
