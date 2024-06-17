@@ -175,4 +175,10 @@ fi
 
 
 #running Enigma_extract
+echo "Running Enigma Extract"
 source ./code/ENIGMA_ExtractCortical.sh
+
+## copy over freesurfer group tsv files
+echo "copying over freesurfer group files"
+mkdir ${PROJECT_DIR}/data/share/freesurfer_group
+rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
