@@ -19,7 +19,7 @@ ${BASEDIR}
 ├── data
 │   ├── local                    # folder for the "local" dataset
 │   │   ├── bids                 # the defaced BIDS dataset
-│   │   ├── devivatives
+│   │   ├── derivatives
 │   │   │   ├── fmriprep         # fmriprep derivatives
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
