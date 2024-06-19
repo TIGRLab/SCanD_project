@@ -169,7 +169,7 @@ source ~/.virtualenvs/myenv/bin/activate
 
 python3 -m pip install bids
 
-cd $SCRATCH/SCandD_project
+cd $SCRATCH/SCanD_project
 
 python3 fmap_intended_for.py
 ```
