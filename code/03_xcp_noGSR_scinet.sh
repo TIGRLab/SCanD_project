@@ -42,6 +42,20 @@ export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
+
+
+SUBJECT=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
+for subject in $SUBJECT; do
+  # Find the confounds_timeseries.tsv files for the current subject
+  FILES=$(find $FMRI_DIR -type f -path "*/${subject}/*confounds_timeseries.tsv*")
+  # Copy each found file to the destination directory
+  for file in $FILES; do
+    cp -r $file $CONFOUND_DIR
+  done
+done
+
+
+
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
