@@ -44,8 +44,8 @@ mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
 
 
-SUBJECT=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
-for subject in $SUBJECT; do
+SUBJECTS=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
+for subject in $SUBJECTS; do
   # Find the confounds_timeseries.tsv files for the current subject
   FILES=$(find $FMRI_DIR -type f -path "*/${subject}/*confounds_timeseries.tsv*")
   # Copy each found file to the destination directory
@@ -57,7 +57,7 @@ for subject in $SUBJECT; do
     cols_to_keep=$(echo "$header" | awk -F'\t' '
       {
         for (i=1; i<=NF; i++) {
-          if ($i ~ /^rot/ || $i ~ /^trans/ || $i ~ /^white-matter/ || $i ~ /^csf/ ) {
+          if ($i ~ /^rot/ || $i ~ /^trans/ || $i ~ /^white-matter/ || $i ~ /^csf/) {
             if ($i != "csf-wm") {
               printf "%s%s", (cols ? OFS : ""), i;
               cols++;
@@ -75,10 +75,18 @@ for subject in $SUBJECT; do
           col_idx[col_arr[i]] = i;
         }
       }
+      NR==1 {
+        for (i=1; i<=NF; i++) {
+          header_idx[$i] = i;
+        }
+        for (col in col_idx) {
+          idx[header_idx[col]] = 1;
+        }
+      }
       {
         out = "";
         for (i=1; i<=NF; i++) {
-          if ($i in col_idx) {
+          if (i in idx) {
             out = (out ? out OFS : "") $i;
           }
         }
@@ -87,6 +95,7 @@ for subject in $SUBJECT; do
     ' $file > $output_file
   done
 done
+
 ￼
 
 
