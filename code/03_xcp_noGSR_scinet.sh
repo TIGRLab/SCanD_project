@@ -35,7 +35,7 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/
 export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
-export CONFOUND_DIR=${BASEDIR}/data/local/fmriprep/custom_confounds
+export CONFOUND_DIR=${BASEDIR}/data/local/fmriprep/custom_confounds/
 
 project_id=$(cat ${BASEDIR}/project_id)
 export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
@@ -122,7 +122,7 @@ singularity run --cleanenv \
 -B ${OUTPUT_DIR}:/out \
 -B ${FMRI_DIR}:/fmriprep \
 -B ${WORK_DIR}:/work \
--B ${CONFOUND_DIR}:confounds \
+-B ${CONFOUND_DIR}:/confounds \
 ${SING_CONTAINER} \
     /fmriprep \
     /out \
