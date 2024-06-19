@@ -171,7 +171,7 @@ python3 -m pip install bids
 
 cd $SCRATCH/SCanD_project
 
-python3 fmap_intended_for.py
+python3 code/fmap_intended_for.py
 ```
 
 In case you want to backup your json files before editting them:
