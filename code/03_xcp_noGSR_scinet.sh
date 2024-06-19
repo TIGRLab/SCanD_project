@@ -43,12 +43,10 @@ export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
 
-
 SUBJECTS=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
 for subject in $SUBJECTS; do
   # Find the confounds_timeseries.tsv files for the current subject
   FILES=$(find $FMRI_DIR -type f -path "*/${subject}/*confounds_timeseries.tsv*")
-  # Copy each found file to the destination directory
   for file in $FILES; do
     output_file="${CONFOUND_DIR}/$(basename ${file})"
     # Extract the header
@@ -57,37 +55,45 @@ for subject in $SUBJECTS; do
     cols_to_keep=$(echo "$header" | awk -F'\t' '
       {
         for (i=1; i<=NF; i++) {
-          if ($i ~ /^rot/ || $i ~ /^trans/ || $i ~ /^white-matter/ || $i ~ /^csf/) {
-            if ($i != "csf-wm") {
-              printf "%s%s", (cols ? OFS : ""), i;
-              cols++;
+          if ($i ~ /^rot/ || $i ~ /^trans/ || $i ~ /^csf/ || $i ~ /^white_matter/) {
+            if ($i != "csf_wm") {
+              if (cols != "") cols = cols "\t";
+              cols = cols $i;
             }
           }
         }
       }
-      END { print "" }
-    ' OFS="\t")
+      END { print cols }
+    ')
     # Filter the file to keep only the selected columns
     awk -F'\t' -v OFS='\t' -v cols="$cols_to_keep" '
       BEGIN {
         split(cols, col_arr, OFS);
         for (i in col_arr) {
-          col_idx[col_arr[i]] = i;
+          col_idx[col_arr[i]] = 1;
         }
       }
-      NR==1 {
-        for (i=1; i<=NF; i++) {
-          header_idx[$i] = i;
+      NR == 1 {
+        for (i = 1; i <= NF; i++) {
+          if ($i in col_idx) {
+            header_idx[i] = $i;
+          }
         }
-        for (col in col_idx) {
-          idx[header_idx[col]] = 1;
-        }
-      }
-      {
         out = "";
-        for (i=1; i<=NF; i++) {
-          if (i in idx) {
-            out = (out ? out OFS : "") $i;
+        for (i = 1; i <= NF; i++) {
+          if (header_idx[i]) {
+            if (out != "") out = out OFS;
+            out = out header_idx[i];
+          }
+        }
+        print out;
+      }
+      NR > 1 {
+        out = "";
+        for (i = 1; i <= NF; i++) {
+          if (header_idx[i]) {
+            if (out != "") out = out OFS;
+            out = out $i;
           }
         }
         print out;
@@ -95,8 +101,6 @@ for subject in $SUBJECTS; do
     ' $file > $output_file
   done
 done
-
-￼
 
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
