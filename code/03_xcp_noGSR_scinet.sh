@@ -33,7 +33,7 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/
+export OUTPUT_DIR=${BASEDIR}/data/local/xcp_noGSR
 export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
 export CONFOUND_DIR=${BASEDIR}/data/local/fmriprep/custom_confounds/
 
