@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=xcp
+#SBATCH --job-name=xcp_noGSR
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -29,18 +29,18 @@ function cleanup_ramdisk {
 trap "cleanup_ramdisk" TERM
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
-
 export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
 
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/
 export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
+export CONFOUND_DIR=${BASEDIR}/data/local/fmriprep/custom_confounds
 
 project_id=$(cat ${BASEDIR}/project_id)
 export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
 export LOGS_DIR=${BASEDIR}/logs
-mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
+mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
@@ -61,6 +61,7 @@ singularity run --cleanenv \
 -B ${OUTPUT_DIR}:/out \
 -B ${FMRI_DIR}:/fmriprep \
 -B ${WORK_DIR}:/work \
+-B ${CONFOUND_DIR}:confounds \
 ${SING_CONTAINER} \
     /fmriprep \
     /out \
@@ -71,6 +72,8 @@ ${SING_CONTAINER} \
     --smoothing 0 \
     --fd-thresh 0.5 \
     --dummy-scans 3 \
+    --nuisance-regressors custom \
+    --custom_confounds /confounds \
     --notrack
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
