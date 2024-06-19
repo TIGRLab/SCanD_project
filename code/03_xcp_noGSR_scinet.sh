@@ -50,10 +50,44 @@ for subject in $SUBJECT; do
   FILES=$(find $FMRI_DIR -type f -path "*/${subject}/*confounds_timeseries.tsv*")
   # Copy each found file to the destination directory
   for file in $FILES; do
-    cp -r $file $CONFOUND_DIR
+    output_file="${CONFOUND_DIR}/$(basename ${file})"
+    # Extract the header
+    header=$(head -n 1 $file)
+    # Determine the columns to keep
+    cols_to_keep=$(echo "$header" | awk -F'\t' '
+      {
+        for (i=1; i<=NF; i++) {
+          if ($i ~ /^rot/ || $i ~ /^trans/ || $i ~ /^white-matter/ || $i ~ /^csf/ ) {
+            if ($i != "csf-wm") {
+              printf "%s%s", (cols ? OFS : ""), i;
+              cols++;
+            }
+          }
+        }
+      }
+      END { print "" }
+    ' OFS="\t")
+    # Filter the file to keep only the selected columns
+    awk -F'\t' -v OFS='\t' -v cols="$cols_to_keep" '
+      BEGIN {
+        split(cols, col_arr, OFS);
+        for (i in col_arr) {
+          col_idx[col_arr[i]] = i;
+        }
+      }
+      {
+        out = "";
+        for (i=1; i<=NF; i++) {
+          if ($i in col_idx) {
+            out = (out ? out OFS : "") $i;
+          }
+        }
+        print out;
+      }
+    ' $file > $output_file
   done
 done
-
+￼
 
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
