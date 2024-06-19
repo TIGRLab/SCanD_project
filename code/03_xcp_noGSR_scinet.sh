@@ -38,7 +38,7 @@ export FMRI_DIR=${BASEDIR}/data/local/fmriprep/
 export CONFOUND_DIR=${BASEDIR}/data/local/fmriprep/custom_confounds/
 
 project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp_noGSR
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
