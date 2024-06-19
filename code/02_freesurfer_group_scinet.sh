@@ -143,85 +143,34 @@ mkdir -p ${OUTPUT_MERGE_DIR}
 SUBJECTS_FILE=${BIDS_DIR}/participants.tsv
 SUBJECTS=$(tail -n +2 $SUBJECTS_FILE | cut -f1)
 
+#!/bin/bash
 
-for N in {1,2,3,4,5,6,7,8,9,10}; do
+types=("thickness" "grayvol" "surfacearea")
+
+for N in {1..10}; do
   for hemi in lh rh; do
-    OUTPUT_FILE=${OUTPUT_MERGE_DIR}/${hemi}.Schaefer2018_${N}00Parcels.thickness.tsv
-    HEADER_ADDED=false
+    for type in "${types[@]}"; do
+      OUTPUT_FILE=${OUTPUT_MERGE_DIR}/${hemi}.Schaefer2018_${N}00Parcels.${type}.tsv
+      HEADER_ADDED=false
 
-    for subject in $SUBJECTS; do
-      SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*.long.${subject}" -type d)
-      
-      for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
-        FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table_thickness.tsv
+      for subject in $SUBJECTS; do
+        SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*.long.${subject}" -type d)
+        
+        for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
+          FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table_${type}.tsv
 
-        if [ -f "$FILE" ]; then
-          if [ "$HEADER_ADDED" = false ]; then
-            head -n 1 $FILE > $OUTPUT_FILE
-            HEADER_ADDED=true
+          if [ -f "$FILE" ]; then
+            if [ "$HEADER_ADDED" = false ]; then
+              head -n 1 $FILE > $OUTPUT_FILE
+              HEADER_ADDED=true
+            fi
+
+            tail -n +2 $FILE >> $OUTPUT_FILE
+          else
+            echo "File $FILE not found, skipping..."
           fi
-
-          tail -n +2 $FILE >> $OUTPUT_FILE
-        else
-          echo "File $FILE not found, skipping..."
-        fi
+        done
       done
     done
   done
 done
-
-
-for N in {1,2,3,4,5,6,7,8,9,10}; do
-  for hemi in lh rh; do
-    OUTPUT_FILE=${OUTPUT_MERGE_DIR}/${hemi}.Schaefer2018_${N}00Parcels.grayvol.tsv
-    HEADER_ADDED=false
-
-    for subject in $SUBJECTS; do
-      SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*.long.${subject}" -type d)
-      
-      for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
-        FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table_grayvol.tsv
-
-        if [ -f "$FILE" ]; then
-          if [ "$HEADER_ADDED" = false ]; then
-            head -n 1 $FILE > $OUTPUT_FILE
-            HEADER_ADDED=true
-          fi
-
-          tail -n +2 $FILE >> $OUTPUT_FILE
-        else
-          echo "File $FILE not found, skipping..."
-        fi
-      done
-    done
-  done
-done
-
-
-for N in {1,2,3,4,5,6,7,8,9,10}; do
-  for hemi in lh rh; do
-    OUTPUT_FILE=${OUTPUT_MERGE_DIR}/${hemi}.Schaefer2018_${N}00Parcels.surfacearea.tsv
-    HEADER_ADDED=false
-
-    for subject in $SUBJECTS; do
-      SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*.long.${subject}" -type d)
-      
-      for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
-        FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table_surfacearea.tsv
-
-        if [ -f "$FILE" ]; then
-          if [ "$HEADER_ADDED" = false ]; then
-            head -n 1 $FILE > $OUTPUT_FILE
-            HEADER_ADDED=true
-          fi
-
-          tail -n +2 $FILE >> $OUTPUT_FILE
-        else
-          echo "File $FILE not found, skipping..."
-        fi
-      done
-    done
-  done
-done
-
-
