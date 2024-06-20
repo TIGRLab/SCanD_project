@@ -52,6 +52,8 @@ ${BASEDIR}/data/share
 │   ├── cifti_dense_anat
 ├── qsiprep
 │   └── qc images and meta data for each scan
-└── xcp-d
+├── xcp-d
+│   └── qc images and meta data for each scan
+└── xcp-noGSR
     └── qc images and meta data for each scan
 

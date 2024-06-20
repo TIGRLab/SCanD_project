@@ -24,7 +24,8 @@ ${BASEDIR}
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── qsiprep          # qsiprep derivatives
-│   │   │   └── xcp_d            # xcp
+│   │   │   ├── xcp_d            # xcp with GSR
+│   │   │   └── xcp_noGSR        # xcp with GSR removed
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
@@ -41,7 +42,8 @@ ${BASEDIR}
 │       ├── ciftify              # contains only qc images and metadata
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
-│       └── xcp_d                # contains xcp results
+│       ├── xcp-d                # contains xcp results with GSR
+│       └── xcp_noGSR            # contains xcp results with GSR 
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
 |── LICENSE
@@ -83,8 +85,9 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
-|^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
+|^ |   03c  |  [Run xcp-d](#Running-xcp-noGSR) 	|  10 hours on slurm  |
+|^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -166,9 +169,9 @@ source ~/.virtualenvs/myenv/bin/activate
 
 python3 -m pip install bids
 
-cd $SCRATCH/SCandD_project
+cd $SCRATCH/SCanD_project
 
-python3 fmap_intended_for.py
+python3 code/fmap_intended_for.py
 ```
 
 In case you want to backup your json files before editting them:
@@ -195,7 +198,10 @@ If BBUFFER space is unavailable or you choose not to use it, you need to navigat
 
 ## Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your bids folder and participants.csv file, instead of running each pipeline seperately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the 'quick_start_workflow_automation.md' document and proceed accordingly otherwise run pipelines seperately.
+After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
+
+* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
+
 
 ## Running mriqc
 
@@ -466,6 +472,26 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
+```
+
+## Running xcp-noGSR
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 ```
 
 
