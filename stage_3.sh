@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (ciftify_anat, xcp-d, qsirecon_step2):
+## stage 3 (ciftify_anat, xcp-d, xcp_noGSR, qsirecon_step2):
 
 submit_array_job() {
     local script=$1
@@ -28,4 +28,5 @@ run_pipeline() {
 # Prompt user for each pipeline
 run_pipeline "ciftify_anat" "./code/03_ciftify_anat_scinet.sh" 8
 run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
+run_pipeline "xcp-d" "code/03_xcp_noGSR_scinet.sh" 1
 run_pipeline "qsirecon_step2" "code/03_qsirecon_step2_scinet.sh" 1
