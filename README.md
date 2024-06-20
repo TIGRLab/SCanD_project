@@ -198,7 +198,7 @@ If BBUFFER space is unavailable or you choose not to use it, you need to navigat
 
 ## Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](SCanD_project_GMANJ/Quick-start_workflow-automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
+After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](SCanD_project_GMANJ/Quick start_workflow automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
 
 
 ## Running mriqc
