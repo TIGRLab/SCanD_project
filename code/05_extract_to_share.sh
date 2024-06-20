@@ -107,6 +107,23 @@ else
 fi
 
 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/xcp_d/0.7.3" ]; 
+then
+
+echo "copying over the xcp_d folder"
+
+## copy over the xcp json files 
+rm -rf ${PROJECT_DIR}/data/share/xcp_noGSR
+
+
+## copy over the xcp  folder (all data)
+rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR  ${PROJECT_DIR}/data/share
+
+else
+    echo "No XCP_NO_GSR outputs found."
+fi
+
+
 if [ -d "${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/ciftify" ]; 
 then
 
