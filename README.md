@@ -24,7 +24,8 @@ ${BASEDIR}
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── qsiprep          # qsiprep derivatives
-│   │   │   └── xcp_d            # xcp
+│   │   │   ├── xcp_d            # xcp with GSR
+│   │   │   └── xcp_noGSR        # xcp with GSR removed
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
@@ -41,7 +42,8 @@ ${BASEDIR}
 │       ├── ciftify              # contains only qc images and metadata
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
-│       └── xcp_d                # contains xcp results
+│       ├── xcp-d                # contains xcp results with GSR
+│       └── xcp_noGSR            # contains xcp results with GSR 
 ├── logs                         # logs from jobs run on cluster                 
 |── README.md
 |── LICENSE
@@ -83,8 +85,9 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |	
-|^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
+|^ |   03c  |  [Run xcp-d](#Running-xcp-noGSR) 	|  10 hours on slurm  |
+|^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -466,6 +469,26 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
+```
+
+## Running xcp-noGSR
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 ```
 
 
