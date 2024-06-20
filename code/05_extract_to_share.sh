@@ -93,7 +93,7 @@ fi
 if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; 
 then
 
-echo "copying over the xcp_d folder"
+echo "copying over the xcp_d and xcp_noGSR folder"
 
 ## copy over the xcp json files 
 rm -rf ${PROJECT_DIR}/data/share/xcp_d
