@@ -55,7 +55,7 @@ rsync -a ${PROJECT_DIR}/data/local/mriqc/dataset_description.json ${PROJECT_DIR}
 rsync -a ${PROJECT_DIR}/data/local/mriqc/group*.tsv ${PROJECT_DIR}/data/share/mriqc/
 
 
-echo "copying over the xcp_d folder"
+echo "copying over the xcp_d and xcp-noGSR folders"
 
 ## copy over the xcp json files 
 rm -rf ${PROJECT_DIR}/data/share/xcp_d
@@ -63,6 +63,9 @@ rm -rf ${PROJECT_DIR}/data/share/xcp_d
 
 ## copy over the xcp  folder (all data)
 rsync -a ${PROJECT_DIR}/data/local/xcp_d  ${PROJECT_DIR}/data/share
+
+## copy over the xcp-noGSR  folder (all data)
+rsync -a ${PROJECT_DIR}/data/local/xcp_noGSR  ${PROJECT_DIR}/data/share
 
 
 ## also run ciftify group step
