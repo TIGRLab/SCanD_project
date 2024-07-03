@@ -629,6 +629,17 @@ git pull
 source ./code/05_extract_to_share.sh
 ```
 
+Copy your folder into the shared spaced:
+
+You need to change the "your_group_name" and put your group name there and then run the code!
+
+```sh
+cd ${SCRATCH}/SCanD_project
+
+mkdir /scratch/a/arisvoin/arisvoin/mlepage/your_group_name
+cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/your_group_name/
+```
+
 # Appendix - Adding a test dataset from openneuro
 
 #### (To test this repo - using an openneuro dataset)
