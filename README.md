@@ -630,6 +630,7 @@ source ./code/05_extract_to_share.sh
 ```
 
 Copy your folder into the shared spaced:
+
 You need to change the "your_group_name" and put your group name there and then run the code!
 
 ```sh
