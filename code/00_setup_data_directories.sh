@@ -19,7 +19,7 @@ openssl rand -hex 6 -out project_id
 
 ## link the containers
 echo "linking singularity containers"
-CONTAINER_DIR=/scinet/course/ss2019/3/5_neuroimaging/containers
+CONTAINER_DIR=/scratch/a/arisvoin/arisvoin/mlepage/containers
 ln -s ${CONTAINER_DIR}/fmriprep-20.2.7.simg containers/fmriprep-20.2.7.simg
 ln -s ${CONTAINER_DIR}/freesurfer-7.4.1.simg containers/freesurfer-7.4.1.simg
 ln -s ${CONTAINER_DIR}/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg 
@@ -30,11 +30,11 @@ ln -s ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 ln -s ${CONTAINER_DIR}/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg  containers/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 
 ## copy in Erin's freesurfer licence
-cp /scinet/course/ss2019/3/5_neuroimaging/fs_license/license.txt templates/.freesurfer.txt
+cp /scratch/a/arisvoin/arisvoin/mlepage/fs_license/license.txt templates/.freesurfer.txt
 
 
 ## copy in Erin's templates
 echo "copying templates..this might take a bit"
-scp -r /scinet/course/ss2019/3/5_neuroimaging/templateflow templates/.cache/
+scp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow templates/.cache/
 
 cd ${CURRENT_DIR}
