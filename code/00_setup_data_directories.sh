@@ -26,7 +26,7 @@ ln -s ${CONTAINER_DIR}/mriqc-22.0.6.simg containers/mriqc-22.0.6.simg
 ln -s ${CONTAINER_DIR}/qsiprep_0.16.0RC3.simg containers/qsiprep_0.16.0RC3.simg 
 ln -s ${CONTAINER_DIR}/xcp_d-0.6.0.simg containers/xcp_d-0.6.0.simg
 ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg 
-ln -s ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
+cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 ln -s ${CONTAINER_DIR}/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg  containers/pennbbl_qsiprep_0.14.3-2021-09-16-e97e6c169493.simg
 
 ## copy in Erin's freesurfer licence
