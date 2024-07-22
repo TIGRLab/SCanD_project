@@ -34,8 +34,7 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-20.2.7.simg
-
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
