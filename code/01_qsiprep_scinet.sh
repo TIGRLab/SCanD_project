@@ -34,11 +34,11 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.21.4.sif
+export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.21.4 # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0 # use if version of fmriprep <=20.1
 
 # adding random string (project_id) to BBUFFER folder to prevent conflicts betwwen projects
 project_id=$(cat ${BASEDIR}/project_id)
@@ -61,9 +61,9 @@ fi
 
 # Extract voxel sizes using fslinfo
 if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
-voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.21.4.sif fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
+voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.22.0.sif fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
 else
-voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.21.4.sif fslinfo /bids/sub-${SUBJECTS}/dwi/*.nii.gz)
+voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep-0.22.0.sif fslinfo /bids/sub-${SUBJECTS}/dwi/*.nii.gz)
 fi
 
 # Extract voxel dimensions
