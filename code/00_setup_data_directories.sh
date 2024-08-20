@@ -24,7 +24,7 @@ ln -s ${CONTAINER_DIR}/fmriprep-23.2.3.simg containers/fmriprep-23.2.3.simg
 
 ln -s ${CONTAINER_DIR}/mriqc-24.0.0.simg containers/mriqc-24.0.0.simg
 
-ln -s ${CONTAINER_DIR}/qsiprep-0.22.4.sif containers/qsiprep-0.22.4.sif
+ln -s ${CONTAINER_DIR}/qsiprep-0.22.0.sif containers/qsiprep-0.22.0.sif
 
 ln -s ${CONTAINER_DIR}/freesurfer-7.4.1.simg containers/freesurfer-7.4.1.simg
 
