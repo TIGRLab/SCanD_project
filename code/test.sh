@@ -38,7 +38,7 @@ singularity exec \
     -B ${ORIG_FS_LICENSE}:/opt/freesurfer/.license \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    -B $SUBJECTS:/subjects \
+    -B ${SUBJECTS}:/subjects \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
 
