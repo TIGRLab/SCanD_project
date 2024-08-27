@@ -91,6 +91,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
 |^ |   03c  |  [Run xcp no GSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
 |^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   03e	|  [Run freesurfer group merge](#Running-freesurfer-group-merge) 	|  5 min in terminal 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -400,6 +401,49 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
 ```
 
+## Running tractography
+For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
+
+Multishell:
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
+
+```
+Singleshell:
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+
+```
+
+
 ## Running ciftify-anat
 
 ```sh
@@ -534,10 +578,8 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ```
 
-## Running tractography
-For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
+## Running freesurfer group merge
 
-Multishell:
 ```sh
 ## note step one is to make sure you are on one of the login nodes
 ssh nia-login07
@@ -546,35 +588,10 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
-
+source ./code/03_freesurfer_group_merge_scinet.sh
 ```
-Singleshell:
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
 
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
-
-```
 
 ## Running enigma-dti
 
@@ -589,6 +606,7 @@ git pull
 ## submit the array job to the queue
 sbatch  ./code/04_enigma_dti_scinet.sh
 ```
+
 
 ## Running the parcellation-ciftify step
 
