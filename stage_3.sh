@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (ciftify_anat, xcp-d, xcp_noGSR, qsirecon_step2):
+## stage 3 (ciftify_anat, xcp-d, xcp_noGSR, qsirecon_step2, freesurfer group merge):
 
 submit_array_job() {
     local script=$1
