@@ -24,8 +24,7 @@ SUBJECTS=$(tail -n +2 $SUBJECTS_FILE | cut -f1)
 BATCH_SIZE=10
 START_INDEX=$((SLURM_ARRAY_TASK_ID * BATCH_SIZE))
 END_INDEX=$((START_INDEX + BATCH_SIZE - 1))
-SUBJECT_BATCH=$(echo $SUBJECTS | awk -v start=$START_INDEX -v end=$END_INDEX '{for(i=start; i<=end; i++) print $i}')
-
+SUBJECT_BATCH=$(echo "$SUBJECTS" | awk -v start=$START_INDEX -v end=$END_INDEX 'NR >= start && NR <= end')
 
 
 singularity exec \
