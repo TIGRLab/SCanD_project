@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export BIDS_DIR=$SCRATCH/SCanD_project/data/local/bids
 
 SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
