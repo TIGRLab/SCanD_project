@@ -38,11 +38,12 @@ singularity exec \
     -B ${ORIG_FS_LICENSE}:/opt/freesurfer/.license \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    --env SUBJECT_BATCH="$SUBJECTS" \
+    -B $SUBJECTS:/subjects \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
 
       export SUBJECTS_DIR=/subjects_dir
+      export SUBJECTS_BATCH=/subjects
 
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
