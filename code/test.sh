@@ -16,6 +16,8 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
+SUB_SIZE=10
+
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -36,7 +38,7 @@ singularity exec \
     -B ${ORIG_FS_LICENSE}:/opt/freesurfer/.license \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    --env SUBJECT_BATCH="$SUBJECT_BATCH" \
+    --env SUBJECT_BATCH="$SUBJECTS" \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
 
