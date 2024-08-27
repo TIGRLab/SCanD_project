@@ -16,7 +16,7 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
-SUB_SIZE=10
+SUB_SIZE=5
 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
