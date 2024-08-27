@@ -31,7 +31,7 @@ SUBJECT_BATCH=$(echo $SUBJECTS | awk -v start=$START_INDEX -v end=$END_INDEX '{f
 singularity exec \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
-    -B ${ORIG_FS_LICENSE}:/li \
+    -B ${ORIG_FS_LICENSE}:/opt/freesurfer/.license \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
     --env SUBJECT_BATCH="$SUBJECT_BATCH" \
