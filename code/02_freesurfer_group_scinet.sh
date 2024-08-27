@@ -109,3 +109,18 @@ singularity exec \
       done   
 
 EOF
+
+# Capture the exit code of the above singularity execution
+exitcode=$?
+
+# Output results to a table
+for subject in $SUBJECTS_BATCH; do
+    if [ $exitcode -eq 0 ]; then
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    freesurfer_group failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
+
