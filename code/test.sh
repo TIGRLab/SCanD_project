@@ -16,15 +16,18 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
-# Assign subjects in batches of 10 (adjust the batch size if needed)
-SUBJECTS_FILE=$BIDS_DIR/participants.tsv
-SUBJECTS=$(tail -n +2 $SUBJECTS_FILE | cut -f1)
+bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
-# Get the current subject batch based on SLURM_ARRAY_TASK_ID
-BATCH_SIZE=10
-START_INDEX=$((SLURM_ARRAY_TASK_ID * BATCH_SIZE))
-END_INDEX=$((START_INDEX + BATCH_SIZE - 1))
-SUBJECT_BATCH=$(echo "$SUBJECTS" | awk -v start=$START_INDEX -v end=$END_INDEX 'NR >= start && NR <= end')
+N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
+
+if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
+else
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+fi
+
 
 
 singularity exec \
