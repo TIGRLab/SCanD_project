@@ -385,11 +385,19 @@ source ./code/03_amico_VNC.sh
 ## note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
+# module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull
+git pull         #in case you need to pull new code
 
-sbatch  ./code/02_freesurfer_group_scinet.sh
+## calculate the length of the array-job given
+SUB_SIZE=5
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
 ```
 
 ## Running ciftify-anat
