@@ -555,7 +555,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/02_ENIGMA_ExtractCortical.sh
+source ./code/ENIGMA_ExtractCortical.sh
 ```
 
 ## Running qsirecon step2
