@@ -39,15 +39,13 @@ singularity exec \
     -B ${GCS_FILE_DIR}:/gcs_files \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
-
-      export SUBJECTS_DIR=/subjects_dir
       
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
       RH_GCS_FILES=(/gcs_files/rh.*.gcs)
 
       # Loop over each subject
-      for SUBJECT in $SUBJECT_BATCH; do
+      for SUBJECT in $SUBJECTS_BATCH; do
       
         SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*" -type d)
         
