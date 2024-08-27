@@ -25,25 +25,23 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
 
 if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
-    SUBJECTS=$(sed -n -E "s/(sub-\S*)/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${N_SUBJECTS} | tail -n ${Tail})
+    SUBJECTS_BATCH=$(sed -n -E "s/(sub-\S*)/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${N_SUBJECTS} | tail -n ${Tail})
 else
-    SUBJECTS=$(sed -n -E "s/(sub-\S*)/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
+    SUBJECTS_BATCH=$(sed -n -E "s/(sub-\S*)/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
 
 singularity exec \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
-    -B ${ORIG_FS_LICENSE}:/opt/freesurfer/.license \
+    -B ${ORIG_FS_LICENSE}:/li \
     -B ${SUBJECTS_DIR}:/subjects_dir \
     -B ${GCS_FILE_DIR}:/gcs_files \
-    -B ${SUBJECTS}:/subjects \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
 
       export SUBJECTS_DIR=/subjects_dir
-      export SUBJECTS_BATCH=/subjects
-
+      
       # List all lh and rh GCS files in the directory
       LH_GCS_FILES=(/gcs_files/lh.*.gcs)
       RH_GCS_FILES=(/gcs_files/rh.*.gcs)
