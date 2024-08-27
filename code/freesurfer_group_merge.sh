@@ -1,8 +1,26 @@
 #!/bin/bash
 
+export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
+export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export BIDS_DIR=$SCRATCH/SCanD_project/data/local/bids
 
 SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
+
+
+singularity run --cleanenv \
+    -B ${SCRATCH}/SCanD_project/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BIDS_DIR}:/bids \
+    -B ${OUTPUT_DIR}:/derived \
+    -B ${ORIG_FS_LICENSE}:/li \
+    ${SING_CONTAINER} \
+    /bids /derived group2 \
+    --participant_label ${SUBJECTS} \
+    --parcellations {aparc,aparc.a2009s}\
+    --skip_bids_validator \
+    --license_file /li \
+    --n_cpus 80
+
 
 export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
 
