@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=00:10:00
+#SBATCH --time=00:15:00
 #SBATCH --array=0-9
 
 
