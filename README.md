@@ -588,7 +588,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-source ./code/03_freesurfer_group_merge_scinet.sh
+source ./code/freesurfer_group_merge_scinet.sh
 ```
 
 
