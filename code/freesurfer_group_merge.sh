@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export BASEDIR=${PROJECT}/SCanD_project_GMANJ
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
