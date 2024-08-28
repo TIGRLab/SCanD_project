@@ -400,6 +400,19 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
 ```
 
+If you do not plan to run stage 5 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+source ./code/freesurfer_group_merge_scinet.sh
+```
+
 ## Running tractography
 For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
 
