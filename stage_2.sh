@@ -32,17 +32,7 @@ run_pipeline() {
 # Prompt user for each pipeline in stage 2
 run_pipeline "fmriprep_func" "./code/02_fmriprep_func_scinet.sh" 1
 run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
-
-# Run freesurfer_group without an array job
-read -p "Do you want to run the freesurfer_group pipeline? (yes/no): " run_freesurfer_group
-if [[ "$run_freesurfer_group" =~ ^(yes|y)$ ]]; then
-    echo "Running freesurfer_group..."
-    sbatch ./code/02_freesurfer_group_scinet.sh
-else
-    echo "Skipping freesurfer_group."
-fi
-
-
 run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
+run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 5
 run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
 run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1

@@ -387,12 +387,76 @@ source ./code/03_amico_VNC.sh
 ## note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
+# module load singularity/3.8.0 - singularity already on most nodes
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+## calculate the length of the array-job given
+SUB_SIZE=5
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
+```
+
+If you do not plan to run stage 5 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
 
-sbatch  ./code/02_freesurfer_group_scinet.sh
+source ./code/freesurfer_group_merge_scinet.sh
 ```
+
+## Running tractography
+For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
+
+Multishell:
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
+
+```
+Singleshell:
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+
+```
+
 
 ## Running ciftify-anat
 
@@ -506,7 +570,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/02_ENIGMA_ExtractCortical.sh
+source ./code/ENIGMA_ExtractCortical.sh
 ```
 
 ## Running qsirecon step2
@@ -527,48 +591,6 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
-```
-
-## Running tractography
-For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
-
-Multishell:
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
-
-```
-Singleshell:
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
-
 ```
 
 ## Running enigma-dti
