@@ -110,6 +110,9 @@ done
 #running Enigma_extract
 source ./code/ENIGMA_ExtractCortical.sh
 
+#running freesurfer group merge
+source ./code/freesurfer_group_merge_scinet.sh
+
 ## copy over freesurfer group tsv files
 echo "copying over freesurfer group files"
 mkdir ${PROJECT_DIR}/data/share/freesurfer_group
