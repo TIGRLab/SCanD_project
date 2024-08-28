@@ -1,15 +1,15 @@
 #!/bin/bash
-
+export BASEDIR=${SCRATCH}/SCanD_project
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long  
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export BIDS_DIR=$SCRATCH/SCanD_project/data/local/bids
+export BIDS_DIR=${BASEDIR}/data/local/bids
 
 SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
 
 
 singularity run --cleanenv \
-    -B ${SCRATCH}/SCanD_project/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
