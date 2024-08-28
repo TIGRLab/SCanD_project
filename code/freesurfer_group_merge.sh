@@ -9,7 +9,7 @@ SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
 
 
 singularity run --cleanenv \
-    -B ${SCRATCH}/SCanD_project/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
