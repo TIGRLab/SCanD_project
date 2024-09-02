@@ -86,7 +86,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
 |stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
 |^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
-|^ |   03c  |  [Run xcp-d](#Running-xcp-noGSR) 	|  10 hours on slurm  |
+|^ |   03c  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
 |^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
