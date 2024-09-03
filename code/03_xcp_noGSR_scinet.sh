@@ -29,7 +29,7 @@ function cleanup_ramdisk {
 trap "cleanup_ramdisk" TERM
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.6.0.simg
+export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 
 
 ## setting up the output folders
