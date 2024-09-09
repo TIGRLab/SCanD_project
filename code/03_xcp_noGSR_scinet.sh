@@ -40,6 +40,8 @@ export CONFOUND_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/custom_con
 project_id=$(cat ${BASEDIR}/project_id)
 export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp_noGSR
 export LOGS_DIR=${BASEDIR}/logs
+export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
+
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
 
@@ -117,12 +119,14 @@ else
 fi
 
 
+
 singularity run --cleanenv \
 -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
 -B ${OUTPUT_DIR}:/out \
 -B ${FMRI_DIR}:/fmriprep \
 -B ${WORK_DIR}:/work \
 -B ${CONFOUND_DIR}:/confounds \
+-B ${FS_LICENSE}:/li \
 ${SING_CONTAINER} \
     /fmriprep \
     /out \
@@ -135,6 +139,7 @@ ${SING_CONTAINER} \
     --dummy-scans 3 \
     --nuisance-regressors custom \
     --custom_confounds /confounds \
+    --fs-license-file /li \
     --notrack
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
