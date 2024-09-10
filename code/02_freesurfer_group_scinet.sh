@@ -26,7 +26,7 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg 
 export LOGS_DIR=${BASEDIR}/logs
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
+export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
 SUB_SIZE=5
@@ -62,7 +62,7 @@ singularity exec \
       # Loop over each subject
       for SUBJECT in $SUBJECT_BATCH; do
       
-        SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT" -type d)
+        SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*" -type d)
         
         for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
           sub=$(basename $SUBJECT_LONG_DIR)
