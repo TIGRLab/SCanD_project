@@ -30,7 +30,7 @@ trap "cleanup_ramdisk" TERM
 
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
+export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long 
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/ciftify
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} 
