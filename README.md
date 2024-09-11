@@ -87,10 +87,10 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02c	|  [Run amico noddi](#Running-amico-noddi) 	| 6 hours of slurm 	|
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
-|stage 3 |   03a	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  10 hours on slurm 	|
-|^ |   03b	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
-|^ |   03c  |  [Run xcp no GSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
-|^ |   03d	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  12 hours on slurm 	|
+|stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
+|^ |   03b  |  [Run xcp no GSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
+|^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
 |^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -473,7 +473,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_ciftify_anat_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
 ```
 
 
