@@ -19,7 +19,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (fmriprep_func, qsirecon1, amico_noddi, tractography, freesurfer_group):
+## stage 2 (ciftify_anat, fmriprep_func, qsirecon1, amico_noddi, tractography, freesurfer_group):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -32,7 +32,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (ciftify_anat, xcp_d, xcp_noGSR, qsirecon2):
+## stage 3 (xcp_d, xcp_noGSR, qsirecon2):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
