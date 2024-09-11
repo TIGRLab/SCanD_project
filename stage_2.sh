@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (fmriprep_func, qsirecon_step1, amico_noddi, tractography, freesurfer_group):
+# Stage 2 (ciftify_anat, fmriprep_func, qsirecon_step1, amico_noddi, tractography, freesurfer_group):
 
 #!/bin/bash
 
@@ -30,6 +30,7 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 2
+run_pipeline "ciftify_anat" "./code/02_ciftify_anat_scinet.sh" 8
 run_pipeline "fmriprep_func" "./code/02_fmriprep_func_scinet.sh" 1
 run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
 run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
