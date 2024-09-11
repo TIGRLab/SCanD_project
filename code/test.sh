@@ -30,7 +30,7 @@ trap "cleanup_ramdisk" TERM
 
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer_long
+export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/ciftify
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} 
@@ -60,7 +60,7 @@ singularity exec --cleanenv \
 
 singularity exec --cleanenv \
     ${SING_CONTAINER} \
-    cifti_vis_recon_all snaps ${SUBJECTS} 
+    cifti_vis_recon_all snaps ${SUBJECTS} --ciftify-work-dir ${OUTPUT_DIR}
 
 
 
