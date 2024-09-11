@@ -393,7 +393,7 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## calculate the length of the array-job given
-SUB_SIZE=5
+SUB_SIZE=3
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
