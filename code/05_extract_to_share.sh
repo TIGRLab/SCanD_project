@@ -71,6 +71,8 @@ rsync -a ${PROJECT_DIR}/data/local/xcp_noGSR  ${PROJECT_DIR}/data/share
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
 
+mkdir ${PROJECT_DIR}/data/share/ciftify
+
 ## copy over the ciftify QC outputs
 rsync -a ${PROJECT_DIR}/data/local/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
 
