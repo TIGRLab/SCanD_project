@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=10:00:00
+#SBATCH --time=03:00:00
 
 
 SUB_SIZE=1 ## number of subjects to run
@@ -59,8 +59,10 @@ singularity exec --cleanenv \
 
 
 singularity exec --cleanenv \
+    -B ${OUTPUT_DIR}:/out \
     ${SING_CONTAINER} \
-    cifti_vis_recon_all snaps ${SUBJECTS} --ciftify-work-dir ${OUTPUT_DIR}
+    cifti_vis_recon_all subject ${SUBJECTS} --ciftify-work-dir /out
+
 
 
 
