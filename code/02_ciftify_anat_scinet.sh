@@ -59,14 +59,20 @@ singularity exec --cleanenv \
     ciftify_recon_all --fs-subjects-dir /freesurfer sub-${SUBJECTS} --ciftify-work-dir /out --fs-license /li
 
 
-singularity exec --cleanenv \
-    -B ${OUTPUT_DIR}:/out \
-    ${SING_CONTAINER} \
-    cifti_vis_recon_all subject sub-${SUBJECTS} --ciftify-work-dir /out
+# Capture the exit status of the first command
+exitcode=$?
 
+# If the first command succeeds (exit code 0), run the second command
+if [ $exitcode -eq 0 ]; then
+    singularity exec --cleanenv \
+        -B ${OUTPUT_DIR}:/out \
+        ${SING_CONTAINER} \
+        cifti_vis_recon_all subject sub-${SUBJECTS} --ciftify-work-dir /out
+else
+    echo "ciftify_recon_all failed with exit code $exitcode for sub-${SUBJECTS}"
+fi
 
-
-
+# Log results
 for subject in $SUBJECTS; do
     if [ $exitcode -eq 0 ]; then
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
@@ -75,5 +81,4 @@ for subject in $SUBJECTS; do
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    ciftify failed" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
-done 
-
+done
