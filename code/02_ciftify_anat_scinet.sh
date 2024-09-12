@@ -59,8 +59,10 @@ singularity exec --cleanenv \
 
 
 singularity exec --cleanenv \
+    -B ${OUTPUT_DIR}:/out \
     ${SING_CONTAINER} \
-    cifti_vis_recon_all snaps ${SUBJECTS} --ciftify-work-dir ${OUTPUT_DIR}
+    cifti_vis_recon_all subject ${SUBJECTS} --ciftify-work-dir /out
+
 
 
 
