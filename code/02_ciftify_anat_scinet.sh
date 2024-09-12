@@ -56,13 +56,13 @@ singularity exec --cleanenv \
     -B ${OUTPUT_DIR}:/out \
     -B ${ORIG_FS_LICENSE}:/li \
     ${SING_CONTAINER} \
-    ciftify_recon_all --fs-subjects-dir /freesurfer ${SUBJECTS} --ciftify-work-dir /out --fs-license /li
+    ciftify_recon_all --fs-subjects-dir /freesurfer sub-${SUBJECTS} --ciftify-work-dir /out --fs-license /li
 
 
 singularity exec --cleanenv \
     -B ${OUTPUT_DIR}:/out \
     ${SING_CONTAINER} \
-    cifti_vis_recon_all subject ${SUBJECTS} --ciftify-work-dir /out
+    cifti_vis_recon_all subject sub-${SUBJECTS} --ciftify-work-dir /out
 
 
 
