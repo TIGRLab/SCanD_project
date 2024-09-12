@@ -20,6 +20,7 @@ ${BASEDIR}
 │   ├── local                    # folder for the "local" dataset
 │   │   ├── bids                 # the defaced BIDS dataset
 │   │   ├── derivatives
+│   │   │   ├── ciftify          # ciftify derivatives
 │   │   │   ├── fmriprep         # fmriprep derivatives
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
@@ -84,7 +85,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ | 02c | [Run amico noddi](#Running-amico-noddi) | 6 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
-|^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  12 hours on slurm 	|
+|^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
