@@ -43,7 +43,7 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
     scan_dict["subject_id"] = subject
     scan_dict["session"] = session
     
-    for indice in ["ICVF", "ISOVF", "OD"]:
+    for indice in ["icvf", "isovf", "od"]:
         for mask in ["CSF", "GM", "WM"]:
 
             #load the anatomical segmentation
