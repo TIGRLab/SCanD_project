@@ -61,9 +61,9 @@ fi
 
 # Extract voxel sizes using fslinfo
 if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
-voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep_0.16.0RC3.simg fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
+voxel_info=$(singularity exec -B ${BASEDIR}/data/local/bids:/bids containers/qsiprep_0.16.0RC3.simg fslinfo /bids/sub-${SUBJECTS}/ses-01/dwi/*.nii.gz)
 else
-voxel_info=$(singularity exec -B ${SCRATCH}/SCanD_project/data/local/bids:/bids containers/qsiprep_0.16.0RC3.simg fslinfo /bids/sub-${SUBJECTS}/dwi/*.nii.gz)
+voxel_info=$(singularity exec -B ${BASEDIR}/data/local/bids:/bids containers/qsiprep_0.16.0RC3.simg fslinfo /bids/sub-${SUBJECTS}/dwi/*.nii.gz)
 fi
 
 # Extract voxel dimensions
