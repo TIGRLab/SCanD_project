@@ -136,4 +136,4 @@ cd ${PROJECT_DIR}
 python3 code/gen_qsiprep_motion_metrics.py
 
 python3 -m pip install nilearn
-python3 code/extract_NODDI_indices.py data/local/derivatives/qsiprep/0.21.4/qsiprep/  data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI data/local/derivatives/qsiprep/0.22.0/amico_noddi
+python3 code/extract_NODDI_indices.py data/local/qsiprep  data/local/amico_noddi/qsirecon  data/local/amico_noddi
