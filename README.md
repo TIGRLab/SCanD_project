@@ -590,22 +590,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ```
 
-
-## Running enigma-dti
-
-```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## submit the array job to the queue
-sbatch  ./code/04_enigma_dti_scinet.sh
-```
-
-
 ## Running the parcellation-ciftify step
 
 ```sh
@@ -623,8 +607,23 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/04_parcellate_ciftify_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_parcellate_ciftify_scinet.sh
 ```
+
+## Running enigma-dti
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/04_enigma_dti_scinet.sh
+```
+
 
 ## Check tsv files
 
