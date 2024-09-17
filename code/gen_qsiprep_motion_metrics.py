@@ -2,8 +2,14 @@ import pandas as pd
 import os
 import glob
 
+# Get the SCRATCH directory
+scratch_dir = os.getenv('SCRATCH')
+
+# Expand the path with the SCRATCH directory
+search_pattern = f"{scratch_dir}/SCanD_project_test/data/local/qsiprep/*/*/dwi/*desc-ImageQC_dwi.csv"
+
 # Get list of all relevant CSV files
-tay_dwi_metrics_files = glob.glob("/archive/data/TAY/pipelines/in_progress/baseline/qsiprep/**/*desc-ImageQC_dwi.csv", recursive=True)
+tay_dwi_metrics_files = glob.glob(search_pattern, recursive=True)
 
 # Function to read each CSV and add the filename (without .csv extension)
 def read_and_add_filename(filepath):
@@ -11,11 +17,17 @@ def read_and_add_filename(filepath):
     df['filename'] = os.path.basename(filepath).replace('.csv', '')
     return df
 
-# Read all CSV files into a single dataframe
+# Read all CSV files into a single DataFrame
 tay_dwi_metrics = pd.concat([read_and_add_filename(f) for f in tay_dwi_metrics_files], ignore_index=True)
 
 # Separate 'filename' column into 'subject' and 'session'
-tay_dwi_metrics[['subject', 'session']] = tay_dwi_metrics['filename'].str.split('_', expand=True)
+# Extract subject and session from the filename
+tay_dwi_metrics['subject'] = tay_dwi_metrics['filename'].str.split('_').str[0].replace('sub-', '')
+tay_dwi_metrics['session'] = tay_dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
 
-# Write the combined dataframe to a new CSV file
-tay_dwi_metrics.to_csv("../data/qsiprep_metrics.csv", index=False)
+
+output_dir = f"{scratch_dir}/SCanD_project_test/data/local/qsiprep"
+
+# Write the combined DataFrame to a new CSV file
+output_file = os.path.join(output_dir, "qsiprep_metrics.csv")
+tay_dwi_metrics.to_csv(output_file, index=False)
