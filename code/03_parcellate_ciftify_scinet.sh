@@ -115,7 +115,7 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
           wb_command -surface-vertex-areas \
-          /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.midthickness.32k_fs_LR.surf.gii \
+          /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.midthickness.164k_fs_LR.surf.gii \
           /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_surfacearea.shape.gii
           
       ## calculate wedge volume from white and pial surface
@@ -126,8 +126,8 @@ run_parcellation() {
         -B ${hemi_anat}:/hemi_anat \
         ${SING_CONTAINER} \
         wb_command -surface-wedge-volume \
-           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.white.32k_fs_LR.surf.gii \
-           /ciftify/${sub}/T1w/fsaverage_LR32k/${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
+           /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.white.32k_fs_LR.surf.gii \
+           /ciftify/${sub}/MNINonLinear/fsaverage_LR32k/${sub}.${hemi}.pial.32k_fs_LR.surf.gii \
            /hemi_anat/${sub}_space-fsLR_den-91k_hemi-${hemi}_volume.shape.gii
     done
     
