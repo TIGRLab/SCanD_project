@@ -37,8 +37,8 @@ fi
 
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
-QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.21.4
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/qsiprep
+QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 
 if [ -d "$QSIPREP_LOCAL_DIR" ]; 
 then
@@ -170,7 +170,7 @@ fi
 
 
 
-AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
+AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
 AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ]; 
@@ -204,3 +204,27 @@ source ./code/freesurfer_group_merge.sh
 echo "copying over freesurfer group files"
 mkdir ${PROJECT_DIR}/data/share/freesurfer_group
 rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
+
+
+
+## Generate qsiprep motion metrics and extract NODDI indices
+module load NiaEnv/2019b python/3.6.8
+
+# Create a directory for virtual environments if it doesn't exist
+mkdir ~/.virtualenvs
+cd ~/.virtualenvs
+virtualenv --system-site-packages ~/.virtualenvs/myenv
+
+# Activate the virtual environment
+source ~/.virtualenvs/myenv/bin/activate 
+
+cd ${PROJECT_DIR}
+python3 code/gen_qsiprep_motion_metrics.py
+
+python3 -m pip install nilearn
+python3 code/extract_NODDI_indices.py data/local/derivatives/qsiprep/0.21.4/qsiprep/  data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI data/local/derivatives/qsiprep/0.22.0/amico_noddi
+
+rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
+rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qc ${PROJECT_DIR}/data/share/amico_noddi
+rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/group_noddi_byprobseg.csv ${PROJECT_DIR}/data/share/amico_noddi
+
