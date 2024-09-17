@@ -43,7 +43,7 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
     scan_dict["subject_id"] = subject
     scan_dict["session"] = session
     
-    for indice in ["icvf", "isovf", "od"]:
+    for indice in ["ICVF", "ISOVF", "OD"]:
         for mask in ["CSF", "GM", "WM"]:
 
             #load the anatomical segmentation
@@ -54,7 +54,7 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
             noddi_img = nib.load(str(noddi_nii))
             
             #make some QC images
-            if indice not in ["isovf"]:
+            if indice not in ["ISOVF"]:
                 if mask not in ["CSF"]:
                   for dsmode in ["x", "z"]:
                     plotting.plot_img(label_img, 
@@ -99,7 +99,7 @@ def main():
     ### Create Output directory
     Path(f"{out_dir}/qc").mkdir(parents=True, exist_ok=True)
 
-    for indice in ["icvf", "od"]:
+    for indice in ["ICVF", "OD"]:
         for mask in ["GM", "WM"]:
             for dsmode in ["x", "z"]:
                 Path(f"{out_dir}/qc/{indice}_{mask}_{dsmode}").mkdir(exist_ok = True)
