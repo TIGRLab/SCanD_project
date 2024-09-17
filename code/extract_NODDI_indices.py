@@ -99,7 +99,7 @@ def main():
     ### Create Output directory
     Path(f"{out_dir}/qc").mkdir(parents=True, exist_ok=True)
 
-    for indice in ["ICVF", "OD"]:
+    for indice in ["icvf", "od"]:
         for mask in ["GM", "WM"]:
             for dsmode in ["x", "z"]:
                 Path(f"{out_dir}/qc/{indice}_{mask}_{dsmode}").mkdir(exist_ok = True)
