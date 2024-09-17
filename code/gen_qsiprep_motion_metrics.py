@@ -22,8 +22,8 @@ dwi_metrics = pd.concat([read_and_add_filename(f) for f in dwi_metrics_files], i
 
 # Separate 'filename' column into 'subject' and 'session'
 # Extract subject and session from the filename
-dwi_metrics['subject'] = tay_dwi_metrics['filename'].str.split('_').str[0].replace('sub-', '')
-dwi_metrics['session'] = tay_dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
+dwi_metrics['subject'] = dwi_metrics['filename'].str.split('_').str[0].replace('sub-', '')
+dwi_metrics['session'] = dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
 
 
 output_dir = f"{scratch_dir}/SCanD_project/data/local/qsiprep"
