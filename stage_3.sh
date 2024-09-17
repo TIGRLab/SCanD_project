@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (xcp-d, xcp_noGSR, qsirecon_step2):
+## stage 3 (xcp-d, xcp_noGSR, qsirecon_step2, parcellation_ciftify,):
 
 submit_array_job() {
     local script=$1
