@@ -51,7 +51,7 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
             label_img = nib.load(str(label_nii))
             
             # load the NODDI image
-            pattern = f"{subject}_{session}_*-{indice}_NODDI.nii.gz"
+            pattern = f"{subject}_{session}_*-{indice}_dwimap.nii.gz"
             search_path = Path(qsiprep_amico_dir).joinpath(f"{subject}/{session}/dwi")
             matching_files = list(search_path.glob(pattern))
             noddi_nii = matching_files[0]
