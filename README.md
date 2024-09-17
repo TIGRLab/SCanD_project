@@ -91,9 +91,9 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
 |^ |   03b  |  [Run xcp no GSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
-|stage 4 |   04a	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
-|^ |   04b	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
-|^ |   04c	|  [Check tsv files](#Check-tsv-files) 	|    	|
+|^ |   03d	|  [Running the parcellation-ciftify step](#Running-the-parcellation-ciftify-step) 	|   20 mins on slurm	|
+|stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
+|^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 5 |   05a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
