@@ -3,7 +3,7 @@ import os
 import glob
 
 # Get list of all relevant CSV files
-tay_dwi_metrics_files = glob.glob("/archive/data/TAY/pipelines/in_progress/baseline/qsiprep/**/*desc-ImageQC_dwi.csv", recursive=True)
+tay_dwi_metrics_files = glob.glob("$SCRATCH/SCanD_project_test/data/local/derivatives/qsiprep/0.22.0/**/*desc-ImageQC_dwi.csv", recursive=True)
 
 # Function to read each CSV and add the filename (without .csv extension)
 def read_and_add_filename(filepath):
