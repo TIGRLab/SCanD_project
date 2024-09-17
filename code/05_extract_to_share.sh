@@ -37,8 +37,8 @@ fi
 
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
-QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.21.4
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/qsiprep
+QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
+QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 
 if [ -d "$QSIPREP_LOCAL_DIR" ]; 
 then
@@ -170,7 +170,7 @@ fi
 
 
 
-AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.21.4/amico_noddi
+AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
 AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ]; 
@@ -223,3 +223,5 @@ python3 code/gen_qsiprep_motion_metrics.py
 
 python3 -m pip install nilearn
 python3 code/extract_NODDI_indices.py data/local/derivatives/qsiprep/0.21.4/qsiprep/  data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI data/local/derivatives/qsiprep/0.22.0/amico_noddi
+
+rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
