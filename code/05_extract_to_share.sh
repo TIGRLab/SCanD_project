@@ -84,7 +84,7 @@ rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
 
 ## copy over the parcellated_ciftify files
 echo "copying over the parcellated_ciftify files"
-rsync -a ${PROJECT_DIR}/data/local/parcellated_ciftify ${PROJECT_DIR}/data/share/
+rsync -a ${PROJECT_DIR}/data/local/ciftify/parcellated_ciftify ${PROJECT_DIR}/data/share/
 
 
 ## copy over the enigmaDTI files
