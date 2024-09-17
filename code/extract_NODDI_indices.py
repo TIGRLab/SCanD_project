@@ -54,7 +54,7 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
             noddi_img = nib.load(str(noddi_nii))
             
             #make some QC images
-            if indice not in ["ISOVF"]:
+            if indice not in ["isovf"]:
                 if mask not in ["CSF"]:
                   for dsmode in ["x", "z"]:
                     plotting.plot_img(label_img, 
