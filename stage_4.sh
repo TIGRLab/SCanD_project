@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 4 (parcellation_ciftify, enigma_dti)
+## stage 4 (enigma_dti)
 #!/bin/bash
 
 # Function to calculate and submit array jobs
@@ -32,5 +32,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 4
-run_pipeline "parcellation_ciftify" "./code/04_parcellate_ciftify_scinet.sh" 10
 run_pipeline "enigma_dti" "./code/04_enigma_dti_scinet.sh" 1
