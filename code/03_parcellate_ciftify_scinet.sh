@@ -43,7 +43,7 @@ export fmriprep_folder="${BASEDIR}/data/local/derivatives/fmriprep/23.2.3"
 export ciftify_folder="${BASEDIR}/data/local/derivatives/ciftify"
 
 
-export parcellated="${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/parcellated_ciftify/"
+export parcellated="${BASEDIR}/data/local/derivatives/ciftify/parcellated_ciftify/"
 export cifti_dense_anat="${parcellated}/cifti_dense_anat/"
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
