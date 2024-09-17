@@ -3,6 +3,7 @@ import os
 import glob
 
 # Get list of all relevant CSV files
+scratch_dir = os.getenv('SCRATCH')
 tay_dwi_metrics_files = glob.glob("$SCRATCH/SCanD_project_test/data/local/derivatives/qsiprep/0.22.0/qsiprep/*/*/dwi/*desc-ImageQC_dwi.csv", recursive=True)
 
 # Function to read each CSV and add the filename (without .csv extension)
@@ -18,4 +19,4 @@ tay_dwi_metrics = pd.concat([read_and_add_filename(f) for f in tay_dwi_metrics_f
 tay_dwi_metrics[['subject', 'session']] = tay_dwi_metrics['filename'].str.split('_', expand=True)
 
 # Write the combined dataframe to a new CSV file
-tay_dwi_metrics.to_csv("../data/qsiprep_metrics.csv", index=False)
+tay_dwi_metrics.to_csv("$SCRATCH/SCanD_project_test/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv", index=False)
