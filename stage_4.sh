@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 4 (parcellation_ciftify, enigma_dti)
+## stage 4 (enigma_dti)
 #!/bin/bash
 
 # Function to calculate and submit array jobs
