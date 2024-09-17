@@ -49,11 +49,14 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
             #load the anatomical segmentation
             label_nii = Path(qsiprep_output_dir).joinpath(f"{subject}/anat/{subject}_label-{mask}_probseg.nii.gz")
             label_img = nib.load(str(label_nii))
-            # load the NODDI image
-            pattern = str(Path(qsiprep_amico_dir).joinpath(f"{subject}/{session}/dwi/{subject}_{session}_*-{indice}_NODDI.nii.gz"))
-            noddi_nii  = glob.glob(pattern)
             
+            # load the NODDI image
+            pattern = f"{subject}_{session}_*-{indice}_NODDI.nii.gz"
+            search_path = Path(qsiprep_amico_dir).joinpath(f"{subject}/{session}/dwi")
+            matching_files = list(search_path.glob(pattern))
+            noddi_nii = matching_files[0]
             noddi_img = nib.load(str(noddi_nii))
+
             
             #make some QC images
             if indice not in ["isovf"]:
