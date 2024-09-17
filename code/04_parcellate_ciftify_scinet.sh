@@ -40,7 +40,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 # mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${LOGS_DIR} # ${LOCAL_FREESURFER_DIR}
 
 export fmriprep_folder="${BASEDIR}/data/local/derivatives/fmriprep/23.2.3"
-export ciftify_folder="${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/ciftify"
+export ciftify_folder="${BASEDIR}/data/local/derivatives/ciftify"
 
 
 export parcellated="${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/parcellated_ciftify/"
