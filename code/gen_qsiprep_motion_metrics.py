@@ -26,7 +26,7 @@ tay_dwi_metrics['subject'] = tay_dwi_metrics['filename'].str.split('_').str[0].r
 tay_dwi_metrics['session'] = tay_dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
 
 
-output_dir = f"{scratch_dir}/SCanD_project/data/local/qsiprep/0.22.0/qsiprep"
+output_dir = f"{scratch_dir}/SCanD_project/data/local/derivatives/qsiprep/0.22.0/qsiprep"
 
 # Write the combined DataFrame to a new CSV file
 output_file = os.path.join(output_dir, "qsiprep_metrics.csv")
