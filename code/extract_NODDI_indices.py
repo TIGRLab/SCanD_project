@@ -50,7 +50,9 @@ def noddi_probseg_vals(subject, session, qsiprep_output_dir, qsiprep_amico_dir, 
             label_nii = Path(qsiprep_output_dir).joinpath(f"{subject}/anat/{subject}_label-{mask}_probseg.nii.gz")
             label_img = nib.load(str(label_nii))
             # load the NODDI image
-            noddi_nii = Path(qsiprep_amico_dir).joinpath(f"{subject}/{session}/dwi/{subject}_{session}_space-T1w_desc-preproc_space-T1w_desc-{indice}_NODDI.nii.gz")
+            pattern = str(Path(qsiprep_amico_dir).joinpath(f"{subject}/{session}/dwi/{subject}_{session}_*-{indice}_NODDI.nii.gz"))
+            noddi_nii  = glob.glob(pattern)
+            
             noddi_img = nib.load(str(noddi_nii))
             
             #make some QC images
