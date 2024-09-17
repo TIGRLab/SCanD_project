@@ -137,3 +137,5 @@ python3 code/gen_qsiprep_motion_metrics.py
 
 python3 -m pip install nilearn
 python3 code/extract_NODDI_indices.py data/local/qsiprep  data/local/amico_noddi/qsirecon  data/local/amico_noddi
+
+rsync -a ${PROJECT_DIR}/data/local/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep
