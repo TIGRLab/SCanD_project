@@ -6,7 +6,7 @@ import glob
 scratch_dir = os.getenv('SCRATCH')
 
 # Expand the path with the SCRATCH directory
-search_pattern = f"{scratch_dir}/SCanD_project_test/data/local/qsiprep/*/*/dwi/*desc-ImageQC_dwi.csv"
+search_pattern = f"{scratch_dir}/SCanD_project/data/local/derivatives/qsiprep/0.22.0/qsiprep/*/*/dwi/*desc-ImageQC_dwi.csv"
 
 # Get list of all relevant CSV files
 tay_dwi_metrics_files = glob.glob(search_pattern, recursive=True)
@@ -26,7 +26,7 @@ tay_dwi_metrics['subject'] = tay_dwi_metrics['filename'].str.split('_').str[0].r
 tay_dwi_metrics['session'] = tay_dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
 
 
-output_dir = f"{scratch_dir}/SCanD_project_test/data/local/qsiprep"
+output_dir = f"{scratch_dir}/SCanD_project/data/local/qsiprep/0.22.0/qsiprep"
 
 # Write the combined DataFrame to a new CSV file
 output_file = os.path.join(output_dir, "qsiprep_metrics.csv")
