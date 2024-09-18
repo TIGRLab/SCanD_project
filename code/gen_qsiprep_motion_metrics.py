@@ -2,7 +2,7 @@ import json
 import csv
 
 # Path to the JSON file
-json_file_path = '/scratch/a/arisvoin/ghazalm/SCanD_project_test/data/local/derivatives/qsiprep/0.22.0/qsiprep/dwiqc.json'
+json_file_path = 'data/local/derivatives/qsiprep/0.22.0/qsiprep/dwiqc.json'
 
 # Load JSON data from the file
 with open(json_file_path, 'r') as json_file:
