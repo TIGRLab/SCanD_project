@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (xcp-d, xcp_noGSR, qsirecon_step2, parcellation_ciftify):
+## stage 3 (xcp-d, xcp_noGSR, qsirecon_step2):
 
 submit_array_job() {
     local script=$1
@@ -29,4 +29,3 @@ run_pipeline() {
 run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
 run_pipeline "xcp-d" "code/03_xcp_noGSR_scinet.sh" 1
 run_pipeline "qsirecon_step2" "code/03_qsirecon_step2_scinet.sh" 1
-run_pipeline "parcellation_ciftify" "./code/03_parcellate_ciftify_scinet.sh" 10
