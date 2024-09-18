@@ -4,7 +4,7 @@ import os
 
 # Define the path to the JSON file and the output CSV file
 json_file_path = 'data/local/derivatives/qsiprep/0.22.0/qsiprep/dwiqc.json'
-csv_file_path = 'data/local/qsiprep/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv'
+csv_file_path = 'data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv'
 
 # Create the directory for the CSV file if it doesn't exist
 os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
