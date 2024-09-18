@@ -3,7 +3,7 @@ import csv
 import os
 
 # Define the path to the JSON file and the output CSV file
-json_file_path = 'data/local/derivatives/qsiprep/0.22.0/qsiprep/dwiqc.json'
+json_file_path = 'data/local/qsiprep/dwiqc.json'
 csv_file_path = 'data/local/qsiprep/qsiprep_metrics.csv'
 
 # Create the directory for the CSV file if it doesn't exist
