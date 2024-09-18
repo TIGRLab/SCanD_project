@@ -1,33 +1,30 @@
-import pandas as pd
-import os
-import glob
+import json
+import csv
 
-# Get the SCRATCH directory
-scratch_dir = os.getenv('SCRATCH')
+# Path to the JSON file
+json_file_path = '/scratch/a/arisvoin/ghazalm/SCanD_project_test/data/local/derivatives/qsiprep/0.22.0/qsiprep/dwiqc.json'
 
-# Expand the path with the SCRATCH directory
-search_pattern = f"{scratch_dir}/SCanD_project/data/local/qsiprep/*/*/dwi/*desc-ImageQC_dwi.csv"
+# Load JSON data from the file
+with open(json_file_path, 'r') as json_file:
+    data = json.load(json_file)
 
-# Get list of all relevant CSV files
-dwi_metrics_files = glob.glob(search_pattern, recursive=True)
+# Extract the list of subjects from the JSON data
+subjects = data.get('subjects', [])
 
-# Function to read each CSV and add the filename (without .csv extension)
-def read_and_add_filename(filepath):
-    df = pd.read_csv(filepath)
-    df['filename'] = os.path.basename(filepath).replace('.csv', '')
-    return df
+# Check if there are subjects in the data
+if subjects:
+    # Open a CSV file to write the data
+    with open('output.csv', 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
 
-# Read all CSV files into a single DataFrame
-dwi_metrics = pd.concat([read_and_add_filename(f) for f in dwi_metrics_files], ignore_index=True)
+        # Extract headers (keys) from the first subject dictionary
+        headers = list(subjects[0].keys())
+        writer.writerow(headers)  # Write header row
 
-# Separate 'filename' column into 'subject' and 'session'
-# Extract subject and session from the filename
-dwi_metrics['subject'] = dwi_metrics['filename'].str.split('_').str[0].replace('sub-', '')
-dwi_metrics['session'] = dwi_metrics['filename'].str.split('_').str[1].replace('ses-', '')
+        # Iterate through each subject and write its values to the CSV
+        for subject in subjects:
+            writer.writerow([subject.get(header, '') for header in headers])  # Write row values for each subject
 
-
-output_dir = f"{scratch_dir}/SCanD_project/data/local/qsiprep"
-
-# Write the combined DataFrame to a new CSV file
-output_file = os.path.join(output_dir, "qsiprep_metrics.csv")
-dwi_metrics.to_csv(output_file, index=False)
+    print("Data has been written to output.csv")
+else:
+    print("No subjects found in the JSON data.")
