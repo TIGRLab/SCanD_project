@@ -1,18 +1,3 @@
-# ---
-# jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.13.8
-#   kernelspec:
-#     display_name: Python 3
-#     language: python
-#     name: python3
-# ---
-
-# +
 from glob import glob
 import os
 import collections
@@ -24,12 +9,20 @@ bids_dir = "data/local/bids"
 layout = BIDSLayout(bids_dir, validate=False)
 
 subject_list = layout.get_subjects()
-sessions = ["01", "02", "03", "04", "05", "06"]
+sessions = layout.get_sessions()  # Dynamically get sessions
+
+# Handle session-less data
+if not sessions:
+    sessions = [None]  
 
 for session in sessions:
     for subject in subject_list:
-        dwi_fmaps = layout.get(subject=subject, session=session, acquisition="dwi", suffix="epi", extension=".json", return_type="file")
-        dwi_files = layout.get(subject=subject, session=session, suffix="dwi", extension=".nii.gz", return_type="file")
+        # Check if session exists and create session arguments
+        session_kwargs = {"session": session} if session else {}
+        
+        dwi_fmaps = layout.get(subject=subject, acquisition="dwi", suffix="epi", extension=".json", return_type="file", **session_kwargs)
+        dwi_files = layout.get(subject=subject, suffix="dwi", extension=".nii.gz", return_type="file", **session_kwargs)
+        
         intended_files = ['/'.join((i.split('/')[-3:])) for i in dwi_files]
         if not intended_files:
             continue
@@ -45,8 +38,8 @@ for session in sessions:
             print(dwi_fmaps)
 
     for subject in subject_list:
-        nback_fmaps = layout.get(subject=subject, session=session, acquisition="nback", suffix="epi", extension=".json", return_type="file")
-        nback_files = layout.get(subject=subject, session=session, task="nback", suffix="bold", extension=".nii.gz", return_type="file")
+        nback_fmaps = layout.get(subject=subject, acquisition="nback", suffix="epi", extension=".json", return_type="file", **session_kwargs)
+        nback_files = layout.get(subject=subject, task="nback", suffix="bold", extension=".nii.gz", return_type="file", **session_kwargs)
         intended_files = ['/'.join((i.split('/')[-3:])) for i in nback_files]
         if not intended_files:
             continue
@@ -60,8 +53,8 @@ for session in sessions:
                 j.truncate()
 
     for subject in subject_list:
-        rest_fmaps = layout.get(subject=subject, session=session, acquisition="rest", suffix="epi", extension=".json", return_type="file")
-        rest_files = layout.get(subject=subject, session=session, task="rest", suffix="bold", extension=".nii.gz", return_type="file")
+        rest_fmaps = layout.get(subject=subject, acquisition="rest", suffix="epi", extension=".json", return_type="file", **session_kwargs)
+        rest_files = layout.get(subject=subject, task="rest", suffix="bold", extension=".nii.gz", return_type="file", **session_kwargs)
         intended_files = ['/'.join((i.split('/')[-3:])) for i in rest_files]
         if not intended_files:
             continue
@@ -75,8 +68,8 @@ for session in sessions:
                 j.truncate()
 
     for subject in subject_list:
-        dwi_fmaps = layout.get(subject=subject, session=session, acquisition="dwitopup", suffix="epi", extension=".json", return_type="file")
-        dwi_files = layout.get(subject=subject, session=session, suffix="dwi", extension=".nii.gz", return_type="file")
+        dwi_fmaps = layout.get(subject=subject,  acquisition="dwitopup", suffix="epi", extension=".json", return_type="file", **session_kwargs)
+        dwi_files = layout.get(subject=subject,  suffix="dwi", extension=".nii.gz", return_type="file", **session_kwargs)
         intended_files = ['/'.join((i.split('/')[-3:])) for i in dwi_files]
         if not intended_files:
             continue
@@ -92,8 +85,8 @@ for session in sessions:
             print(dwi_fmaps)
 
     for subject in subject_list:
-        nback_fmaps = layout.get(subject=subject, session=session, acquisition="functopup", suffix="epi", extension=".json", return_type="file")
-        nback_files = layout.get(subject=subject, session=session, task="rest", suffix="bold", extension=".nii.gz", return_type="file")
+        nback_fmaps = layout.get(subject=subject, acquisition="functopup", suffix="epi", extension=".json", return_type="file", **session_kwargs)
+        nback_files = layout.get(subject=subject, task="rest", suffix="bold", extension=".nii.gz", return_type="file", **session_kwargs)
         intended_files = ['/'.join((i.split('/')[-3:])) for i in nback_files]
         if not intended_files:
             continue
@@ -107,8 +100,8 @@ for session in sessions:
                 j.truncate()
 
     for subject in subject_list:
-        m0_files = layout.get(subject=subject, session=session, suffix="m0scan", extension=".json", return_type="file")
-        asl_files = layout.get(subject=subject, session=session, suffix="asl", extension=".nii.gz", return_type="file")
+        m0_files = layout.get(subject=subject, suffix="m0scan", extension=".json", return_type="file", **session_kwargs)
+        asl_files = layout.get(subject=subject, suffix="asl", extension=".nii.gz", return_type="file", **session_kwargs)
         intended_files = ['/'.join((i.split('/')[-3:])) for i in asl_files]
         if not intended_files:
             continue
