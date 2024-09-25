@@ -52,6 +52,7 @@ ${BASEDIR}
 |──stage_3.sh
 |──stage_4.sh
 |──stage_5.sh
+|──stage_6.sh
 |── Quick start_workflow automation.md
 |── QC guide.md
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
