@@ -18,7 +18,6 @@ for subject in $SUBJECTS; do
 done
 
 # Set environment variables
-export BASEDIR=${SCRATCH}/SCanD_project
 export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 # Make Python scripts executable
