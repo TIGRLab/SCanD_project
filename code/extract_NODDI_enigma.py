@@ -3,7 +3,7 @@
 Take BIDS amico NODDI output and extracts from enigma DTI skeleton.
 
 Usage:
-  run_participant_noddi_enigma_extract.py [options] [arguments]
+  extract_NODDI_enigma.py [options] [arguments]
 
 Arguments:
     --noddi_outputdir <dir>   Path to noddi outputs from qsiprep recon
@@ -46,7 +46,7 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
 	
     if session:
         image_i = os.path.join(noddi_dir, subject, session,"dwi", 
-							   subject + "_" + session + "_space-T1w_desc-preproc_space-T1w_desc-"+ NODDItag + "_NODDI.nii.gz")
+							   subject + "_" + session + "_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
         image_o = os.path.join(outputdir, subject + "_" + session, NODDItag, 'origdata', 
                                subject + "_" + session + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
         docmd(['mkdir', '-p',os.path.join(outputdir, 
@@ -56,7 +56,7 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
     else:
 
         image_i = os.path.join(noddi_dir, subject, "dwi", 
-                                subject + "_space-T1w_desc-preproc_space-T1w_desc-"+ NODDItag + "_NODDI.nii.gz")
+                                subject + "_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
         image_o = os.path.join(outputdir, subject, NODDItag, 'origdata', subject + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
 
         docmd(['mkdir', '-p', os.path.join(outputdir, 
@@ -220,7 +220,7 @@ def main():
         ROIoutdir = os.path.join(outputdir, subject, 'ROI')
     docmd(["mkdir", "-p", ROIoutdir])
 		
-    for nodditag in ["OD", "ISOVF", "ICVF"]:
+    for nodditag in ["od", "isvof", "icvf"]:
         fsl2std_noddi_output(NODDItag = nodditag, 
                              noddi_dir = noddi_outputdir, 
                              outputdir = outputdir, 
