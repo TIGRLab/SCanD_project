@@ -90,7 +90,8 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
-|stage 5 |   05a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
+|stage 5 |   05a	|  [Run noddi-extract](#Running-noddi-extract) 	|  1 hours on slurm	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
 
@@ -604,6 +605,20 @@ git pull
 
 ## submit the array job to the queue
 sbatch  ./code/04_enigma_dti_scinet.sh
+```
+
+## Running noddi-extract
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/05_extract_noddi_scinet.sh
 ```
 
 
