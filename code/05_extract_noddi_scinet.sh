@@ -25,7 +25,7 @@ chmod +x ${BASEDIR}/code/extract_NODDI_enigma.py
 
 # Execute Singularity container
 singularity exec \
-  -B ${SCRATCH}/SCanD_project \
+  -B ${BASEDIR}:/base \
   -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
   -B ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/:/noddi_dir \
   ${BASEDIR}/containers/tbss_2023-10-10.simg \
@@ -36,7 +36,7 @@ NODDI_DIR=/noddi_dir
 ENIGMA_DIR=/enigma_dir
 
 # Modify this to the location you cloned the repo to
-ENIGMA_DTI_CODES=${SCRATCH}/SCanD_project/code
+ENIGMA_DTI_CODES=/base/code
 
 # Run Python scripts
 ${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir
