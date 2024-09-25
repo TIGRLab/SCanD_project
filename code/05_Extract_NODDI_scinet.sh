@@ -40,6 +40,6 @@ ENIGMA_DIR=/enigma_dir
 ENIGMA_DTI_CODES=${SCRATCH}/SCanD_project/code
 
 # Run Python scripts
-${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir --subject --session
+${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir
 
 EOF
