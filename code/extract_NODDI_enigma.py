@@ -122,14 +122,14 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
            '-a', to_target])
 
     ## ROI extract
-    docmd([os.path.join(ENIGMAROI,'singleSubjROI_exe'),
-              os.path.join(ENIGMAROI,'ENIGMA_look_up_table.txt'), \
+    docmd([os.path.join(ENIGMAHOME,'singleSubjROI_exe'),
+              os.path.join(ENIGMAHOME,'ENIGMA_look_up_table.txt'), \
               os.path.join(ENIGMAHOME, 'ENIGMA_DTI_FA_skeleton.nii.gz'), \
-              os.path.join(ENIGMAROI, 'JHU-WhiteMatter-labels-1mm.nii.gz'), \
+              os.path.join(ENIGMAHOME, 'JHU-WhiteMatter-labels-1mm.nii.gz'), \
               csvout1, skel])
 
     ## ROI average
-    docmd([os.path.join(ENIGMAROI, 'averageSubjectTracts_exe'), csvout1 + '.csv', csvout2 + '.csv'])
+    docmd([os.path.join(ENIGMAHOME, 'averageSubjectTracts_exe'), csvout1 + '.csv', csvout2 + '.csv'])
 
     if not DRYRUN:
          overlay_skel(skel_nii = skel, 
@@ -167,8 +167,6 @@ def main():
 
     global ENIGMAHOME
     global FSLDIR
-    global ENIGMAREPO
-    global ENIGMAROI
 
     global skel_thresh
     global distancemap
