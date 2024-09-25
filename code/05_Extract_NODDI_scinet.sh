@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=enigma_dti
+#SBATCH --job-name=extract_noddi
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
@@ -19,40 +19,27 @@ done
 
 # Set environment variables
 export BASEDIR=${SCRATCH}/SCanD_project
-export DTIFIT_DIR=${BASEDIR}/data/local/dtifit
-export ENIGMA_DIR=${BASEDIR}/data/local/enigmaDTI
 export TBSS_CONTAINER=${BASEDIR}/containers/tbss_2023-10-10.simg
 
 # Make Python scripts executable
-chmod +x ${BASEDIR}/code/run_group_dtifit_qc.py
-chmod +x ${BASEDIR}/code/run_group_enigma_concat.py
-chmod +x ${BASEDIR}/code/run_group_qc_index.py
+chmod +x ${BASEDIR}/code/extract_NODDI_enigma.py
 
 # Execute Singularity container
 singularity exec \
   -B ${SCRATCH}/SCanD_project \
   -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
-  -B ${BASEDIR}/data/local/dtifit:/dtifit_dir \
+  -B ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/:/noddi_dir \
   ${BASEDIR}/containers/tbss_2023-10-10.simg \
   /bin/bash << 'EOF'
 
 # Inside the Singularity container
-DTIFIT_DIR=/dtifit_dir
-OUT_DIR=/enigma_dir
+NODDI_DIR=/noddi_dir
+ENIGMA_DIR=/enigma_dir
 
 # Modify this to the location you cloned the repo to
-ENIGMA_DTI_BIDS=${SCRATCH}/SCanD_project/code
+ENIGMA_DTI_CODES=${SCRATCH}/SCanD_project/code
 
 # Run Python scripts
-for metric in FA MD RD AD; do
-  ${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py \
-    ${OUT_DIR} ${metric} ${OUT_DIR}/group_enigmaDTI_${metric}.csv
-  ${ENIGMA_DTI_BIDS}/run_group_qc_index.py ${OUT_DIR} ${metric}skel
-done
-
-${ENIGMA_DTI_BIDS}/run_group_enigma_concat.py --output-nVox \
-  ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
-
-${ENIGMA_DTI_BIDS}/run_group_dtifit_qc.py --debug /dtifit_dir
+${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir --subject --session
 
 EOF
