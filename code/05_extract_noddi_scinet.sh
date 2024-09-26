@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=01:00:00
+#SBATCH --time=03:00:00
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
@@ -26,9 +26,9 @@ for subject in $SUBJECTS; do
 
         # Check if the execution was successful
         if [ $? -eq 0 ]; then
-            echo "$subject Done !!" >> ${BASEDIR}/logs/enigma_dti.tsv
+            echo "$subject 0" >> ${BASEDIR}/logs/extract_noddi.tsv
         else
-            echo "$subject extract_noddi failed" >> ${BASEDIR}/logs/enigma_dti.tsv
+            echo "$subject extract_noddi failed" >> ${BASEDIR}/logs/extract_noddi.tsv
         fi
 
     else
@@ -42,9 +42,9 @@ for subject in $SUBJECTS; do
 
             # Check if the execution was successful
             if [ $? -eq 0 ]; then
-                echo "$subject $session Done !!" >> ${BASEDIR}/logs/enigma_dti.tsv
+                echo "$subject $session 0" >> ${BASEDIR}/logs/extract_noddi.tsv
             else
-                echo "$subject $session extract_noddi failed" >> ${BASEDIR}/logs/enigma_dti.tsv
+                echo "$subject $session extract_noddi failed" >> ${BASEDIR}/logs/extract_noddi.tsv
             fi
         done
     fi
