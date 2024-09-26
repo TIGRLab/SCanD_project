@@ -57,7 +57,8 @@ git pull         #in case you need to pull new code
 
 source ./stage_4.sh
 ```
-## stage 5 (extract data to share folder):
+
+## stage 5 (noddi_extract):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -68,4 +69,17 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_5.sh
+```
+
+## stage 6 (extract data to share folder):
+
+```sh
+# note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+source ./stage_6.sh
 ```
