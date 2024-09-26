@@ -40,43 +40,44 @@ def docmd(cmdlist):
     if not DRYRUN: subprocess.call(cmdlist)
 		
 ##############################################################################
-
 def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
-    'convert the noddi output to enigma input with fslreorient2std'
-	
+    """Convert the noddi output to enigma input with fslreorient2std."""
+    
     if session:
-        image_i = os.path.join(noddi_dir, subject, session,"dwi", 
-							   subject + "_" + session + "_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
+        image_i = os.path.join(noddi_dir, subject, session, "dwi", 
+                                subject + "_" + session + "_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
         
-	if not os.path.isfile(image_i):
+        # Check if the first image path is empty or the file does not exist
+        if not os.path.isfile(image_i):
             # Fallback to the second image path
-            image_i = os.path.join(noddi_dir, subject, session,"dwi", 
-				    subject + "_" + session + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
+            image_i = os.path.join(noddi_dir, subject, session, "dwi", 
+                                    subject + "_" + session + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
         image_o = os.path.join(outputdir, subject + "_" + session, NODDItag, 'origdata', 
-                               subject + "_" + session + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
-        docmd(['mkdir', '-p',os.path.join(outputdir, 
-                                    subject + "_" + session, NODDItag,
-                                    'origdata')])
-	
+                                subject + "_" + session + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
+        docmd(['mkdir', '-p', os.path.join(outputdir, 
+                                             subject + "_" + session, NODDItag,
+                                             'origdata')])
+    
     else:
-
         image_i = os.path.join(noddi_dir, subject, "dwi", 
-                                subject + "_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
+                                subject + "_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
-	if not os.path.isfile(image_i):
+        # Check if the first image path is empty or the file does not exist
+        if not os.path.isfile(image_i):
             # Fallback to the second image path
-            image_i = os.path.join(noddi_dir, subject,"dwi", 
-				    subject + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-"+ NODDItag + "_dwimap.nii.gz")
+            image_i = os.path.join(noddi_dir, subject, "dwi", 
+                                    subject + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
-        image_o = os.path.join(outputdir, subject, NODDItag, 'origdata', subject + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
+        image_o = os.path.join(outputdir, subject, NODDItag, 'origdata', 
+                                subject + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
 
         docmd(['mkdir', '-p', os.path.join(outputdir, 
-                                    subject, NODDItag, 
-                                    'origdata')])
-		
-	# actually run the fslreoiient2std bit
-    docmd(['fslreorient2std',image_i,image_o])
+                                             subject, NODDItag, 
+                                             'origdata')])
+    
+    # Actually run the fslreorient2std bit
+    docmd(['fslreorient2std', image_i, image_o])
 	
 ## Now process the MD if that option was asked for
 ## if processing MD also set up for MD-ness
