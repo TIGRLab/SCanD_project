@@ -92,14 +92,16 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
         FA_dir = os.path.join(enigmadir, 
 							 '{}_{}'.format(subject,session), 
                              "FA")
-        FA_stem = "{}_{}_space-T1w_desc-preproc_fslstd_FA".format(subject, session)
+        #FA_stem = "{}_{}_space-T1w_desc-preproc_fslstd_FA".format(subject, session)
+	FA_stem = "{}_{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd_FA".format(subject, session)    
     else:
         O_dir = os.path.join(outputdir, subject)
         noddi_stem = "{}_space-T1w_desc-noddi_".format(subject)
         FA_dir = os.path.join(enigmadir, 
 							 subject, "FA")
-        FA_stem = "{}_space-T1w_desc-preproc_fslstd_FA".format(subject)
-
+        #FA_stem = "{}_space-T1w_desc-preproc_fslstd_FA".format(subject)
+	FA_stem = "{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_fslstd_FA".format(subject)
+	    
     masked =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '.nii.gz')
     to_target = os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '_to_target.nii.gz')
     skel =      os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag +'skel.nii.gz')
