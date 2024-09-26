@@ -20,7 +20,7 @@ for subject in $SUBJECTS; do
         # No session directories found, run the script without the --session option
         singularity exec -B ${BASEDIR}:/base \
             -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
-            -B ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/:/noddi_dir \
+            -B ${BASEDIR}/data/local/amico_noddi/qsirecon/:/noddi_dir \
             ${BASEDIR}/containers/tbss_2023-10-10.simg \
             /bin/bash -c "/base/code/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject $subject"
 
@@ -36,7 +36,7 @@ for subject in $SUBJECTS; do
         for session in $SESSIONS; do
             singularity exec -B ${BASEDIR}:/base \
                 -B ${BASEDIR}/data/local/enigmaDTI:/enigma_dir \
-                -B ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/:/noddi_dir \
+                -B ${BASEDIR}/data/local/amico_noddi/qsirecon/:/noddi_dir \
                 ${BASEDIR}/containers/tbss_2023-10-10.simg \
                 /bin/bash -c "/base/code/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject $subject --session $session"
 
