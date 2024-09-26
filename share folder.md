@@ -35,6 +35,7 @@ ${BASEDIR}/data/share
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
 ├── qsiprep
+│   ├── qsiprep_metrics.csv
 │   └── qc images and meta data for each scan
 ├── xcp-d
 │   └── qc images and meta data for each scan
