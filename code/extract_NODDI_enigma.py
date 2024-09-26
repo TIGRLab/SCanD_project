@@ -88,10 +88,10 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
 							 subject, "FA")
         FA_stem = "{}_space-T1w_desc-preproc_FA".format(subject)
 
-    masked =    os.path.join(O_dir, NODDItag, noddi_stem + NODDItag + '.nii.gz')
-    to_target = os.path.join(O_dir, NODDItag, noddi_stem + NODDItag + '_to_target.nii.gz')
-    skel =      os.path.join(O_dir, NODDItag, noddi_stem + NODDItag +'skel.nii.gz')
-    skelqa =      os.path.join(O_dir, NODDItag, noddi_stem + NODDItag +'skel.png')
+    masked =    os.path.join(O_dir, origdata, NODDItag, noddi_stem + NODDItag + '.nii.gz')
+    to_target = os.path.join(O_dir, origdata, NODDItag, noddi_stem + NODDItag + '_to_target.nii.gz')
+    skel =      os.path.join(O_dir, origdata, NODDItag, noddi_stem + NODDItag +'skel.nii.gz')
+    skelqa =      os.path.join(O_dir, origdata, NODDItag, noddi_stem + NODDItag +'skel.png')
     csvout1 =   os.path.join(O_dir, 'ROI', noddi_stem  + NODDItag + 'skel_ROIout')
     csvout2 =   os.path.join(O_dir, 'ROI', noddi_stem + NODDItag + 'skel_ROIout_avg')
 
