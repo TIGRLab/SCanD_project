@@ -87,27 +87,24 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
     """
      
     if session:
-        O_dir = os.path.join(outputdir, 
-                             '{}_{}'.format(subject, session))
+        O_dir = os.path.join(outputdir, '{}_{}'.format(subject, session))
         noddi_stem = subject + "_" + session + "_space-T1w_desc-noddi_"
-        FA_dir = os.path.join(enigmadir, 
-                              '{}_{}'.format(subject, session), 
-                              "FA")
+        FA_dir = os.path.join(enigmadir, '{}_{}'.format(subject, session), "FA")
         FA_stem = "{}_{}_space-T1w_desc-preproc_FA".format(subject, session)
-	temp= os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
+        temp = os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
 
-	 if not os.path.isfile(temp):
-		 FA_stem = "{}_{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject, session)
-		 
+        if not os.path.isfile(temp):
+            FA_stem = "{}_{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject, session)
+         
     else:
         O_dir = os.path.join(outputdir, subject)
         noddi_stem = "{}_space-T1w_desc-noddi_".format(subject)
         FA_dir = os.path.join(enigmadir, subject, "FA")
         FA_stem = "{}_space-T1w_desc-preproc_FA".format(subject)
-	temp= os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
+        temp = os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
 
-	 if not os.path.isfile(temp):
-		 FA_stem = "{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject)
+        if not os.path.isfile(temp):
+            FA_stem = "{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject)
 	
     masked =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '.nii.gz')
     to_target = os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '_to_target.nii.gz')
