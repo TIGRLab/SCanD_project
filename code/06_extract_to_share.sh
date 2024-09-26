@@ -222,10 +222,5 @@ source ~/.virtualenvs/myenv/bin/activate
 cd ${PROJECT_DIR}
 python3 code/gen_qsiprep_motion_metrics.py
 
-python3 -m pip install nilearn
-python3 code/extract_NODDI_indices.py data/local/derivatives/qsiprep/0.21.4/qsiprep/  data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI data/local/derivatives/qsiprep/0.22.0/amico_noddi
-
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
-rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qc ${PROJECT_DIR}/data/share/amico_noddi
-rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/group_noddi_byprobseg.csv ${PROJECT_DIR}/data/share/amico_noddi
-
+rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/noddi_roi ${PROJECT_DIR}/data/share/amico_noddi
