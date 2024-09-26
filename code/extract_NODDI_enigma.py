@@ -80,18 +80,18 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
         FA_dir = os.path.join(enigmadir, 
 							 '{}_{}'.format(subject,session), 
                              "FA")
-        FA_stem = "{}_{}_space-T1w_desc-dtifit_FA".format(subject, session)
+        FA_stem = "{}_{}_space-T1w_desc-preproc_FA".format(subject, session)
     else:
         O_dir = os.path.join(outputdir, subject)
         noddi_stem = "{}_space-T1w_desc-noddi_".format(subject)
         FA_dir = os.path.join(enigmadir, 
 							 subject, "FA")
-        FA_stem = "{}_space-T1w_desc-dtifit_FA".format(subject)
+        FA_stem = "{}_space-T1w_desc-preproc_FA".format(subject)
 
-    masked =    os.path.join(O_dir, NODDItag, noddi_stem + NODDItag + '.nii.gz')
-    to_target = os.path.join(O_dir, NODDItag, noddi_stem + NODDItag + '_to_target.nii.gz')
-    skel =      os.path.join(O_dir, NODDItag, noddi_stem + NODDItag +'skel.nii.gz')
-    skelqa =      os.path.join(O_dir, NODDItag, noddi_stem + NODDItag +'skel.png')
+    masked =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '.nii.gz')
+    to_target = os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '_to_target.nii.gz')
+    skel =      os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag +'skel.nii.gz')
+    skelqa =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag +'skel.png')
     csvout1 =   os.path.join(O_dir, 'ROI', noddi_stem  + NODDItag + 'skel_ROIout')
     csvout2 =   os.path.join(O_dir, 'ROI', noddi_stem + NODDItag + 'skel_ROIout_avg')
 
@@ -122,14 +122,14 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
            '-a', to_target])
 
     ## ROI extract
-    docmd([os.path.join(ENIGMAROI,'singleSubjROI_exe'),
-              os.path.join(ENIGMAROI,'ENIGMA_look_up_table.txt'), \
+    docmd([os.path.join(ENIGMAHOME,'singleSubjROI_exe'),
+              os.path.join(ENIGMAHOME,'ENIGMA_look_up_table.txt'), \
               os.path.join(ENIGMAHOME, 'ENIGMA_DTI_FA_skeleton.nii.gz'), \
-              os.path.join(ENIGMAROI, 'JHU-WhiteMatter-labels-1mm.nii.gz'), \
+              os.path.join(ENIGMAHOME, 'JHU-WhiteMatter-labels-1mm.nii.gz'), \
               csvout1, skel])
 
     ## ROI average
-    docmd([os.path.join(ENIGMAROI, 'averageSubjectTracts_exe'), csvout1 + '.csv', csvout2 + '.csv'])
+    docmd([os.path.join(ENIGMAHOME, 'averageSubjectTracts_exe'), csvout1 + '.csv', csvout2 + '.csv'])
 
     if not DRYRUN:
          overlay_skel(skel_nii = skel, 
@@ -167,8 +167,6 @@ def main():
 
     global ENIGMAHOME
     global FSLDIR
-    global ENIGMAREPO
-    global ENIGMAROI
 
     global skel_thresh
     global distancemap
@@ -220,7 +218,7 @@ def main():
         ROIoutdir = os.path.join(outputdir, subject, 'ROI')
     docmd(["mkdir", "-p", ROIoutdir])
 		
-    for nodditag in ["od", "isvof", "icvf"]:
+    for nodditag in ["od", "isovf", "icvf"]:
         fsl2std_noddi_output(NODDItag = nodditag, 
                              noddi_dir = noddi_outputdir, 
                              outputdir = outputdir, 
