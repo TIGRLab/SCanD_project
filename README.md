@@ -90,8 +90,8 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
-|^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
-|stage 5 |   05a	|  [Run noddi-extract](#Running-noddi-extract) 	|  3 hours on slurm	|
+|stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
+|^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 ## Organize your data into BIDS
@@ -608,7 +608,7 @@ git pull
 sbatch  ./code/04_enigma_dti_scinet.sh
 ```
 
-## Running noddi-extract
+## Running extract-noddi
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
