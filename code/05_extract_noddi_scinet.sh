@@ -31,7 +31,7 @@ for subject in $SUBJECTS; do
         ENIGMA_DTI_CODES=/base/code
 
         # Run the Python script without the --session option
-        ${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir --subject ${subject}
+        ${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject ${subject}
 
 EOF
 
@@ -58,7 +58,7 @@ EOF
             ENIGMA_DTI_CODES=/base/code
 
             # Run the Python script with the --session option
-            ${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir --subject ${subject} --session ${session}
+            ${ENIGMA_DTI_CODES}/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject ${subject} --session ${session}
 
 EOF
 
