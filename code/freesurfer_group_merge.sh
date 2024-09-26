@@ -1,7 +1,7 @@
 #!/bin/bash
 export BASEDIR=${SCRATCH}/SCanD_project
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/  
+export OUTPUT_DIR=${BASEDIR}/data/local/freesurfer_long
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
@@ -22,7 +22,7 @@ singularity run --cleanenv \
     --n_cpus 80
 
 
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/
+export SUBJECTS_DIR=${BASEDIR}/data/local/freesurfer_long
 
 # Merging TSV files
 OUTPUT_MERGE_DIR=${SUBJECTS_DIR}/00_group2_stats_tables
