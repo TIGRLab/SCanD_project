@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=01:00:00
 
-# Load necessary modules if needed
-# module load python
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
