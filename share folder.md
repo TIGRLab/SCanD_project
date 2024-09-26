@@ -5,7 +5,8 @@ Here is a checklist for the share folder results.
 
 ```
 ${BASEDIR}/data/share
-├── amico                        
+├── amico
+│   ├── noddi_roi                      
 │   └── a figure and html file for each scan
 ├── ciftify                        
 │   └── qc_recon_all
@@ -24,19 +25,20 @@ ${BASEDIR}/data/share
 │   ├── CorticalMeasuresENIGMA_SurfAvg.csv
 │   ├── CorticalMeasuresENIGMA_ThickAvg.csv
 │   └── LandRvolumes.csv
-├── fmriprep
+├── fmriprep/23.2.3
 │   └── qc images and meta data for each scan
 ├── freesurfer_group
 │   └── freesurfer group analysis tsv files, including thickness, euler and aseg
-├── mriqc
+├── mriqc/24.0.0
 │   ├── dataset_description.json
 │   ├── group_bold.tsv
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
-├── qsiprep
+├── qsiprep/0.22.0
+│   ├── qsiprep_metrics.csv
 │   └── qc images and meta data for each scan
-├── xcp-d
+├── xcp-d/0.7.3
 │   └── qc images and meta data for each scan
-└── xcp-noGSR
+└── xcp-noGSR/0.7.3
     └── qc images and meta data for each scan
 
