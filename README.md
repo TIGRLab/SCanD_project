@@ -1,6 +1,6 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be folked/cloned for every SCanD dataset
+This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset
 
 General folder structure for the repo (when all is run):
 
@@ -8,7 +8,7 @@ General folder structure for the repo (when all is run):
 ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
-├── containers                   # the singularity image are copied or linked to here
+├── containers                   # the singularity images are copied or linked to here
 │   ├── fmriprep-23.2.3.simg
 │   ├── mriqc-24.0.0.simg
 │   ├── qsiprep-0.22.0.sif
@@ -96,7 +96,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 ## Organize your data into BIDS
 
-This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people the consortium (as well as the software) to understand what your data is (what scan types, how many participants, how many sessions..ect). Converting to BIDS may require renaming and/or reorganizing your current data. No coding is required, but there now a lot of different software projects out there to help out with the process.
+This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
 
 For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
 
@@ -105,7 +105,7 @@ For amazing tools and tutorials for learning how to BIDS convert your data, chec
 
 A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
-## Setting your SciNet enviroment/code/and data
+## Setting your SciNet environment/code/and data
 
 ### Cloning this Repo
 
@@ -121,7 +121,7 @@ cd ${SCRATCH}/SCanD_project
 source code/00_setup_data_directories.sh
 ```
 
-### Put your bids data into the data/local folder and add lables to participants.tsv file
+### Put your bids data into the data/local folder and add labels to participants.tsv file
 
 We want to put your data into:
 
@@ -138,9 +138,9 @@ For a test run of this available code you can work with a test dataset from open
 
 You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
 
-To copy the data from another computer/server you should be on the datamover node:
+**If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!**
 
-
+To switch into the dm node: 
 ```sh
 ssh <cc_username>@niagara.scinet.utoronto.ca
 ssh nia-dm1
@@ -154,7 +154,7 @@ ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 ## Edit fmap files
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these file we need to run a python code.
+In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
 
 ```sh
 ## First load a python module
@@ -175,7 +175,7 @@ cd $SCRATCH/SCanD_project
 python3 code/fmap_intended_for.py
 ```
 
-In case you want to backup your json files before editting them:
+In case you want to backup your json files before editing them:
 
 ```sh
 mkdir bidsbackup_json
@@ -252,13 +252,13 @@ Note: this step uses and estimated **6hrs for processing time** per participant!
 
 #### Potential changes to script for your data
  
-Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happenned. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_fit_scinet.sh`
+Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happened. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_fit_scinet.sh`
 
 Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
 
-Note -  the script enclosed uses some interesting extra opions:
+Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -304,9 +304,9 @@ sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 
 Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
 
-Note -  the script enclosed uses some interesting extra opions:
+Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available feildmaps - because feildmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -625,14 +625,14 @@ sbatch  ./code/05_extract_noddi_scinet.sh
 
 ## Check tsv files
 
-At any stages, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the data/local/logs folder and review the .tsv files for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the .tsv files for both the fmriprep func and qsirecon pipelines. If no participants have encountered failures, you may proceed with running the next stage.
+At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the data/local/logs folder and review the .tsv files for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the .tsv files for both the fmriprep func and qsirecon pipelines. If no participants have encountered failures, you may proceed with running the next stage.
 
 However, if any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
-## Syncing the data with to the share directory
+## Syncing the data with the "share" directory
 
-This step does calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
+This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
 
 It takes about 10 minutes to run (depending on how much data you are synching). It could also be submitted.
 
@@ -664,7 +664,7 @@ cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/your_group_name/
 
 To get an openneuro dataset for testing - we will use datalad
 
-##### Loading datalad on SciNet niagara
+##### Loading datalad on SciNet Niagara
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
@@ -672,14 +672,14 @@ module load git-annex/8.20200618 # git annex is needed by datalad
 source /project/a/arisvoin/edickie/modules/datalad/0.15.5/build/bin/activate
 ```
 
-##### Using datalad to install a download a dataset
+##### Downloading OpenNeuro dataset through datalad
 
 ```
 cd ${SCRATCH}/SCanD_project/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
-Before running fmriprep anat get need to download/"get" the anat derivatives
+Before running fmriprep anat, we need to fetch the anatomical T1W scans 
 
 ```
 cd bids
