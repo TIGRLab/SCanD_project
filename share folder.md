@@ -37,6 +37,8 @@ ${BASEDIR}/data/share
 ├── qsiprep
 │   ├── qsiprep_metrics.csv
 │   └── qc images and meta data for each scan
+├── tractify
+│   └── connectivity.mat file    
 ├── xcp-d
 │   └── qc images and meta data for each scan
 └── xcp-noGSR
