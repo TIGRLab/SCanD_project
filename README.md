@@ -129,7 +129,8 @@ We want to put your data into:
 ```
 ./data/local/bids
 ```
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file.
+After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participany id" and then you have all the subject ids in the other rows.
+
 Also, make sure dataset_description.json exists inside your bids folder.
 
 #### For a test run of the code
