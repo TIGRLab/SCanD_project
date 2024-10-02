@@ -111,7 +111,7 @@ for subject in ${subjects}; do
 done
 
 
-TRACTIFY_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_LOCAL_DIR=${PROJECT_DIR}/data/local/qsiprep/qsirecon
 TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_LOCAL_DIR}" ]; 
