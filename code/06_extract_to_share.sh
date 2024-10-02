@@ -207,7 +207,7 @@ subjects=`cd ${TRACTIFY_LOCAL_DIR}; ls -1d sub-*`
 mkdir ${TRACTIFY_SHARE_DIR}
 for subject in ${subjects}; do
  mkdir -p ${TRACTIFY_SHARE_DIR}/${subject}
- rsync -a ${TRACTIFY_LOCAL_DIR}/${subject}/*/*/*connectivity.mat ${TRACTIFY_SHARE_DIR}/${subject}/
+ rsync -a ${TRACTIFY_LOCAL_DIR}/${subject}/*/dwi/*connectivity.mat ${TRACTIFY_SHARE_DIR}/${subject}/
 done
 
 else
