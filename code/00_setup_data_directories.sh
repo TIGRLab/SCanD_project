@@ -8,6 +8,7 @@ echo "making directories"
 mkdir -p containers
 mkdir -p data
 mkdir -p data/local
+mkdir -p data/local/bids
 mkdir -p data/share
 mkdir -p templates
 mkdir -p templates/.cache
