@@ -42,6 +42,7 @@ ${BASEDIR}
 │       ├── ciftify              # contains only qc images and metadata
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
+│       ├── tractify             # contains connectivity.mat file
 │       ├── xcp-d                # contains xcp results with GSR
 │       └── xcp_noGSR            # contains xcp results with GSR removed
 ├── logs                         # logs from jobs run on cluster                 
