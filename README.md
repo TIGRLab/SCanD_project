@@ -77,7 +77,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
-|stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  18 hours on slurm 	|
+|stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   16 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
