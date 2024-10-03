@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=mriqc
-#SBATCH --output=logs/mriqc%x_%j.out 
+#SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=80
 #SBATCH --time=18:00:00
