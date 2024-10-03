@@ -32,4 +32,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 4
-run_pipeline "enigma_dti" "./code/05_extract_noddi_scinet.sh" 1
+run_pipeline "noddi_extract" "./code/05_extract_noddi_scinet.sh" 1
