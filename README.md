@@ -78,14 +78,14 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
-|^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   16 hours on slurm	|
+|^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  23 hours of slurm 	|
+|stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
-|^ | 02c | [Run amico noddi](#Running-amico-noddi) | 6 hours of slurm |
+|^ | 02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
-|^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  3 hour of slurm 	|
+|^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  10 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  10 hours on slurm  |
