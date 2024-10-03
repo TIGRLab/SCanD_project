@@ -27,5 +27,5 @@ run_pipeline() {
 
 # Prompt user for each pipeline
 run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
-run_pipeline "xcp-d" "code/03_xcp_noGSR_scinet.sh" 1
+run_pipeline "xcp-noGSR" "code/03_xcp_noGSR_scinet.sh" 1
 run_pipeline "qsirecon_step2" "code/03_qsirecon_step2_scinet.sh" 1
