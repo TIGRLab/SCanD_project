@@ -27,7 +27,7 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline
-run_pipeline "mriqc" "./code/01_mriqc_scinet.sh" 4
+run_pipeline "mriqc" "./code/01_mriqc_scinet.sh" 1
 run_pipeline "fmriprep_anat" "code/01_fmriprep_fit_scinet.sh" 1
 run_pipeline "freesurfer" "code/01_freesurfer_long_scinet.sh" 1
 run_pipeline "qsiprep" "./code/01_qsiprep_scinet.sh" 1
