@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=23:00:00
+#SBATCH --time=12:00:00
 
 
 SUB_SIZE=1 ## number of subjects to run
