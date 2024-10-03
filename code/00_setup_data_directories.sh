@@ -14,6 +14,8 @@ mkdir -p templates
 mkdir -p templates/.cache
 mkdir -p logs
 
+chmod +x code/*.py
+
 # create a random project id in a file to use for separating the work spaces across projects and runs
 openssl rand -hex 6 -out project_id
 
