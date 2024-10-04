@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (ciftify_anat, fmriprep_func, qsirecon_step1, amico_noddi, tractography, freesurfer_group):
+# Stage 2 (ciftify_anat, fmriprep_apply, qsirecon_step1, amico_noddi, tractography, freesurfer_group):
 
 #!/bin/bash
 
