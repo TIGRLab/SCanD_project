@@ -107,7 +107,7 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/xcp_d/0.7.3" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR" ]; 
 then
 
 echo "copying over the xcp_noGSR folder"
