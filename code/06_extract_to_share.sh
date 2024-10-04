@@ -44,7 +44,7 @@ if [ -d "$QSIPREP_LOCAL_DIR" ];
 then
 
 echo "copying over the qsiprep metadata and qc images"
-mkdir ${PROJECT_DIR}/data/share/qsiprep/0.22.0
+mkdir ${QSIPREP_SHARE_DIR}
 rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
 
 ## copy over the qsiprep html files
