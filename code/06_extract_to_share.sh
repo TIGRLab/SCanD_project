@@ -49,7 +49,8 @@ rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${
 
 ## copy over the qsiprep html files
 subjects=`cd ${QSIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
-cp ${QSIPREP_LOCAL_DIR}/*html ${QSIPREP_SHARE_DIR}/
+find ${QSIPREP_LOCAL_DIR} -name "*.html" -exec cp {} ${QSIPREP_SHARE_DIR}/ \;
+
 for subject in ${subjects}; do
  mkdir -p ${QSIPREP_SHARE_DIR}/${subject}/figures
  rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
