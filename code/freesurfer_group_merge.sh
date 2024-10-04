@@ -15,7 +15,7 @@ singularity run --cleanenv \
     -B ${ORIG_FS_LICENSE}:/li \
     ${SING_CONTAINER} \
     /bids /derived group2 \
-    --participant_label ${SUBJECTS} \
+    --participant_label sub-${SUBJECTS} \
     --parcellations {aparc,aparc.a2009s}\
     --skip_bids_validator \
     --license_file /li \
