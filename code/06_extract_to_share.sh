@@ -44,11 +44,13 @@ if [ -d "$QSIPREP_LOCAL_DIR" ];
 then
 
 echo "copying over the qsiprep metadata and qc images"
+mkdir -p ${QSIPREP_SHARE_DIR}
 rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
 
 ## copy over the qsiprep html files
 subjects=`cd ${QSIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
-cp ${QSIPREP_LOCAL_DIR}/*html ${QSIPREP_SHARE_DIR}/
+find ${QSIPREP_LOCAL_DIR} -name "*.html" -exec cp {} ${QSIPREP_SHARE_DIR}/ \;
+
 for subject in ${subjects}; do
  mkdir -p ${QSIPREP_SHARE_DIR}/${subject}/figures
  rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
@@ -93,11 +95,10 @@ fi
 if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; 
 then
 
-echo "copying over the xcp_d and xcp_noGSR folder"
+echo "copying over the xcp_d folder"
 
 ## copy over the xcp json files 
 rm -rf ${PROJECT_DIR}/data/share/xcp_d
-
 
 ## copy over the xcp  folder (all data)
 rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_d  ${PROJECT_DIR}/data/share
@@ -107,14 +108,13 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/xcp_d/0.7.3" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR" ]; 
 then
 
-echo "copying over the xcp_d folder"
+echo "copying over the xcp_noGSR folder"
 
 ## copy over the xcp json files 
 rm -rf ${PROJECT_DIR}/data/share/xcp_noGSR
-
 
 ## copy over the xcp  folder (all data)
 rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR  ${PROJECT_DIR}/data/share
@@ -148,14 +148,6 @@ else
 
 fi
 
-
-
-## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/ENIGMA_extract" ]; 
-then
-echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
-fi
 
 
 ## copy over the enigmaDTI files
@@ -220,6 +212,13 @@ fi
 #running Enigma_extract
 echo "Running Enigma Extract"
 source ./code/ENIGMA_ExtractCortical.sh
+
+## copy over the Enigma_extract outputs
+if [ -d "${PROJECT_DIR}/data/local/ENIGMA_extract" ]; 
+then
+echo "copying over the ENIGMA extracted cortical and subcortical files"
+rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
+fi
 
 #running freesurfer group merge
 source ./code/freesurfer_group_merge.sh
