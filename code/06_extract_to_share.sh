@@ -150,14 +150,6 @@ fi
 
 
 
-## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/ENIGMA_extract" ]; 
-then
-echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
-fi
-
-
 ## copy over the enigmaDTI files
 if [ -d "${PROJECT_DIR}/data/local/enigmaDTI" ]; 
 then
@@ -220,6 +212,13 @@ fi
 #running Enigma_extract
 echo "Running Enigma Extract"
 source ./code/ENIGMA_ExtractCortical.sh
+
+## copy over the Enigma_extract outputs
+if [ -d "${PROJECT_DIR}/data/local/ENIGMA_extract" ]; 
+then
+echo "copying over the ENIGMA extracted cortical and subcortical files"
+rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
+fi
 
 #running freesurfer group merge
 source ./code/freesurfer_group_merge.sh
