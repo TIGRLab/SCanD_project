@@ -31,5 +31,5 @@ run_pipeline() {
     fi
 }
 
-# Prompt user for each pipeline in stage 4
+# Prompt user for each pipeline 
 run_pipeline "noddi_extract" "./code/05_extract_noddi_scinet.sh" 1
