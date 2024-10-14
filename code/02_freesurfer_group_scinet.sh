@@ -30,7 +30,7 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
-SUB_SIZE=3
+SUB_SIZE=1
 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
@@ -54,73 +54,88 @@ singularity exec \
     --env SUBJECT_BATCH="$SUBJECTS_BATCH" \
     ${SING_CONTAINER} /bin/bash << "EOF"
 
-      export SUBJECTS_DIR=/subjects_dir
-      
-      # List all lh and rh GCS files in the directory
-      LH_GCS_FILES=(/gcs_files/lh.*.gcs)
-      RH_GCS_FILES=(/gcs_files/rh.*.gcs)
+    export SUBJECTS_DIR=/subjects_dir
 
-      # Loop over each subject
-      for SUBJECT in $SUBJECT_BATCH; do
-      
-        SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
-        
-        for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
-          sub=$(basename $SUBJECT_LONG_DIR)
-    
-          for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
-            base_name=$(basename $lh_gcs_file .gcs)
-            mris_ca_label -l $SUBJECT_LONG_DIR/label/lh.cortex.label \
-            $sub lh $SUBJECT_LONG_DIR/surf/lh.sphere.reg \
-            $lh_gcs_file \
-            $SUBJECT_LONG_DIR/label/${base_name}_order.annot
-          done 
+    # List all lh and rh GCS files in the directory
+    LH_GCS_FILES=(/gcs_files/lh.*.gcs)
+    RH_GCS_FILES=(/gcs_files/rh.*.gcs)
 
-          for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
-            base_name=$(basename $rh_gcs_file .gcs)
-            mris_ca_label -l $SUBJECT_LONG_DIR/label/rh.cortex.label \
-            $sub rh $SUBJECT_LONG_DIR/surf/rh.sphere.reg \
-            $rh_gcs_file \
-            $SUBJECT_LONG_DIR/label/${base_name}_order.annot
-          done
+    # Loop over each subject
+    for SUBJECT in $SUBJECT_BATCH; do
 
-          for N in {1,2,3,4,5,6,7,8,9,10};do 
-            mri_aparc2aseg --s $sub --o $SUBJECT_LONG_DIR/label/output_${N}00Parcels.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
+      SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
 
-            # Generate anatomical stats
-            mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/lh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_7Networks_order.stats $sub lh
-            mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/rh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_7Networks_order.stats $sub rh
+      subject_exitcode=0  # Initialize success for each subject
 
-            # Extract stats-thickness to table format
-            aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_thickness.tsv
-            aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_thickness.tsv
+      # Check if SUBJECT_LONG_DIRS is empty
+      if [ -z "$SUBJECT_LONG_DIRS" ]; then
+        echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    No longitudinal directories found" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+        subject_exitcode=1
+        continue  # Skip the rest of the loop for this subject
+      fi
 
-            # Extract stats-gray matter volume to table format
-            aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure volume --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_grayvol.tsv
-            aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure volume --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_grayvol.tsv
+      for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
+        sub=$(basename $SUBJECT_LONG_DIR)
 
-            # Extract stats-surface area to table format
-            aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure area --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_surfacearea.tsv
-            aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure area --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_surfacearea.tsv
+        for lh_gcs_file in "${LH_GCS_FILES[@]}"; do
+          base_name=$(basename $lh_gcs_file .gcs)
+          mris_ca_label -l $SUBJECT_LONG_DIR/label/lh.cortex.label \
+          $sub lh $SUBJECT_LONG_DIR/surf/lh.sphere.reg \
+          $lh_gcs_file \
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
 
-          done
-        
+          # Check if the command was successful
+          if [ $? -ne 0 ]; then
+            subject_exitcode=1
+            break
+          fi
         done
-     
-      done   
+
+        for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
+          base_name=$(basename $rh_gcs_file .gcs)
+          mris_ca_label -l $SUBJECT_LONG_DIR/label/rh.cortex.label \
+          $sub rh $SUBJECT_LONG_DIR/surf/rh.sphere.reg \
+          $rh_gcs_file \
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
+
+          # Check if the command was successful
+          if [ $? -ne 0 ]; then
+            subject_exitcode=1
+            break
+          fi
+        done
+
+        # Continue processing even if the commands above failed
+        for N in {1,2,3,4,5,6,7,8,9,10}; do
+          mri_aparc2aseg --s $sub --o $SUBJECT_LONG_DIR/label/output_${N}00Parcels.mgz --annot Schaefer2018_${N}00Parcels_7Networks_order
+
+          # Generate anatomical stats
+          mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/lh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_7Networks_order.stats $sub lh
+          mris_anatomical_stats -a $SUBJECT_LONG_DIR/label/rh.Schaefer2018_${N}00Parcels_7Networks_order.annot -f $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_7Networks_order.stats $sub rh
+
+          # Extract stats-thickness to table format
+          aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_thickness.tsv
+          aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure thickness --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_thickness.tsv
+
+          # Extract stats-gray matter volume to table format
+          aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure volume --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_grayvol.tsv
+          aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure volume --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_grayvol.tsv
+
+          # Extract stats-surface area to table format
+          aparcstats2table --subjects $sub --hemi lh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure area --tablefile $SUBJECT_LONG_DIR/stats/lh.Schaefer2018_${N}00Parcels_table_surfacearea.tsv
+          aparcstats2table --subjects $sub --hemi rh --parc Schaefer2018_${N}00Parcels_7Networks_order --measure area --tablefile $SUBJECT_LONG_DIR/stats/rh.Schaefer2018_${N}00Parcels_table_surfacearea.tsv
+
+        done
+
+      done
+
+      # Now log success or failure per subject
+      if [ $subject_exitcode -eq 0 ]; then
+          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    0" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+      else
+          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    freesurfer_group failed" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+      fi
+
+    done
 
 EOF
-
-# Capture the exit code of the above singularity execution
-exitcode=$?
-
-# Output results to a table
-for subject in $SUBJECTS_BATCH; do
-    if [ $exitcode -eq 0 ]; then
-        echo "$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "$subject   ${SLURM_ARRAY_TASK_ID}    freesurfer_group failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
-done
