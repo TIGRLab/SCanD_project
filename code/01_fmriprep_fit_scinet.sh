@@ -28,6 +28,8 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+echo '{ "Name": "ScanD", "TotalReadoutTime": 0.05, "BIDSVersion": "1.0.2" }' > ${BASEDIR}/data/local/bids/dataset_description.json
+
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
