@@ -40,9 +40,13 @@ cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 ## edit dataset_description and bold.json files in bids
 echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
 
-sed -i'' 's/}/    "TotalReadoutTime": 0.05\n}/' data/local/bids/*bold.json && \
-awk 'NR==FNR { count++; next } FNR==count-2 { print $0 ","; next }1' data/local/bids/*bold.json data/local/bids/*bold.json > temp.json && \
-mv -f temp.json data/local/bids/*bold.json
+if ls data/local/bids/*bold.json 1> /dev/null 2>&1; then
+    sed -i'' 's/}/    "TotalReadoutTime": 0.05\n}/' data/local/bids/*bold.json && \
+    awk 'NR==FNR { count++; next } FNR==count-2 { print $0 ","; next }1' data/local/bids/*bold.json data/local/bids/*bold.json > temp.json && \
+    mv -f temp.json data/local/bids/*bold.json
+else
+    echo "No *bold.json files found in data/local/bids/"
+fi
 
 
 ## copy in Erin's freesurfer licence
