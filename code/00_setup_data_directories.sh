@@ -39,6 +39,7 @@ cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 
 ## edit dataset_description and bold.json files in bids
 echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
+echo 'participant_id' > data/local/bids/participants.tsv
 
 if ls data/local/bids/*bold.json 1> /dev/null 2>&1; then
     sed -i'' 's/}/    "TotalReadoutTime": 0.05\n}/' data/local/bids/*bold.json && \
