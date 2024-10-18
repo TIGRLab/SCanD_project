@@ -73,7 +73,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |---    |---	|---	|---	|
 | stage 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviromentcodeand-data)	| 30 minutes in terminal 	|
+|^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-enviroment)	| 30 minutes in terminal 	|
 |^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
 |^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
@@ -106,7 +106,7 @@ For amazing tools and tutorials for learning how to BIDS convert your data, chec
 
 A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
-## Setting your SciNet environment/code/and data
+## Setting your SciNet environment
 
 ### Cloning this Repo
 
