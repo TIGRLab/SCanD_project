@@ -73,7 +73,7 @@ ${SING_CONTAINER} \
     --cifti \
     --fs-license-file /li \
     --smoothing 0 \
-    --fd-thresh 0.5 \
+    --fd-thresh 0 \
     --dummy-scans 3 \
     --notrack
 
