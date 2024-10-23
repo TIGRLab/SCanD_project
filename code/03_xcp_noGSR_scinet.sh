@@ -135,7 +135,7 @@ ${SING_CONTAINER} \
     -w /work \
     --cifti \
     --smoothing 0 \
-    --fd-thresh 0.5 \
+    --fd-thresh 0 \
     --dummy-scans 3 \
     --nuisance-regressors custom \
     --custom_confounds /confounds \
