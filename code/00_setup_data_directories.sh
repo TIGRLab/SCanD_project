@@ -48,12 +48,12 @@ if ls data/local/bids/*bold.json 1> /dev/null 2>&1; then
         # Check if "TotalReadoutTime" is not already in the file
         if ! grep -q "TotalReadoutTime" "$file"; then
             # Add the "TotalReadoutTime" before the last closing brace
-            sed -i'' '$ s/}/,    "TotalReadoutTime": 0.05\n}/' "$file"
+            sed -i'' '$ s/}/     "TotalReadoutTime": 0.05\n}/' "$file"
+            
+            # Add a comma to the second-to-last line if necessary
+            awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
+            mv -f temp.json "$file"
         fi
-        
-        # Add a comma to the second-to-last line if necessary
-        awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
-        mv -f temp.json "$file"
     done
 else
     echo "No *bold.json files found in data/local/bids/"
