@@ -406,7 +406,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
 ```
 
-If you do not plan to run stage 5 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
+If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
