@@ -80,6 +80,7 @@ singularity run --cleanenv \
     --skip-bids-validation \
     --cifti-output 91k \
     --use-syn-sdc \
+    --ignore slicetiming \
     --level full
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
