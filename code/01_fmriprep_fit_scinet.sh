@@ -89,6 +89,7 @@ singularity run --cleanenv \
     --cifti-output 91k\
     --use-syn-sdc \
     --notrack \
+    --ignore slicetiming \
     --level resampling
 
 # tip: add this line to the above command if skull stripping has already been done
