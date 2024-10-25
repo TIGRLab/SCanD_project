@@ -31,7 +31,7 @@ run_pipeline() {
 
 # Prompt user for each pipeline in stage 2
 run_pipeline "ciftify_anat" "./code/02_ciftify_anat_scinet.sh" 1
-run_pipeline "fmriprep_func" "./code/02_fmriprep_apply_scinet.sh" 1
+run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
 run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
 run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
 run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 1
