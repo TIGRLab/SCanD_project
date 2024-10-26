@@ -66,7 +66,7 @@ fi
 ## run the mriqc group step and copy over all outputs
 MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
 MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
-export WORK_DIR=${BBUFFER}/SCanD/mriqc
+export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
 
 if [ -d "$MRIQC_LOCAL_DIR" ]; 
 then
