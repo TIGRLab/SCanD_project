@@ -188,24 +188,47 @@ fi
 
 
 
-TRACTIFY_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
 TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
 
-if [ -d "${TRACTIFY_LOCAL_DIR}" ]; 
+if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ]; 
 then
-echo "copying over the tractify connectivity file"
+echo "copying over the tractify multi-shell connectivity file"
 
 ## copy over the tractify mat file
-subjects=`cd ${TRACTIFY_LOCAL_DIR}; ls -1d sub-*`
+subjects=`cd ${TRACTIFY_MULTI_LOCAL_DIR}; ls -1d sub-*`
 mkdir ${TRACTIFY_SHARE_DIR}
 for subject in ${subjects}; do
  mkdir -p ${TRACTIFY_SHARE_DIR}/${subject}
- find ${TRACTIFY_LOCAL_DIR}/${subject} -type f -name '*connectivity.mat' -exec rsync -a {} ${TRACTIFY_SHARE_DIR}/${subject}/ \;
+ find ${TRACTIFY_MULTI_LOCAL_DIR}/${subject} -type f -name '*connectivity.mat' -exec rsync -a {} ${TRACTIFY_SHARE_DIR}/${subject}/ \;
 done
 
 else
 
-echo "No TRACTIFY outputs found."
+echo "No TRACTIFY multi-shell outputs found."
+
+fi
+
+
+
+TRACTIFY_SINGLE_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
+TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+
+if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ]; 
+then
+echo "copying over the tractify single-shell connectivity file"
+
+## copy over the tractify mat file
+subjects=`cd ${TRACTIFY_SINGLE_LOCAL_DIR}; ls -1d sub-*`
+mkdir ${TRACTIFY_SHARE_DIR}
+for subject in ${subjects}; do
+ mkdir -p ${TRACTIFY_SHARE_DIR}/${subject}
+ find ${TRACTIFY_SINGLE_LOCAL_DIR}/${subject} -type f -name '*connectivity.mat' -exec rsync -a {} ${TRACTIFY_SHARE_DIR}/${subject}/ \;
+done
+
+else
+
+echo "No TRACTIFY single-shell outputs found."
 
 fi
 
