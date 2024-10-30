@@ -68,15 +68,7 @@ singularity exec --cleanenv \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
     ${SING_CONTAINER} \
-    smriprep
-    /bids /derived participant \
-    --participant_label ${SUBJECTS} \
-    -w /work \
-    --skip-bids-validation \
-    --omp-nthreads 8 \
-    --nthreads 40 \
-    --mem-mb 15000 \
-    --notrack 
+    smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40 --mem-mb 15000  --notrack 
 
 exitcode=$?
 
