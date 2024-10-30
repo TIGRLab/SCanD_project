@@ -30,7 +30,7 @@ trap "cleanup_ramdisk" TERM
 
 
 # input is BIDS_DIR this is where the data downloaded from openneuro went
-export BIDS_DIR=${BASEDIR}/data/local
+export BIDS_DIR=${BASEDIR}/data/local/bids
 
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
