@@ -6,7 +6,7 @@ After setting up the scinet environment and organizing your bids folder and part
 
 The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
 
-## stage 1 (mriqc, fmriprep_anat, qsiprep, freesurfer):
+## stage 1 (mriqc, fmriprep_anat, qsiprep, freesurfer, smriprep):
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
