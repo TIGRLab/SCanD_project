@@ -27,6 +27,8 @@ ${BASEDIR}/data/share
 │   └── LandRvolumes.csv
 ├── fmriprep/23.2.3
 │   └── qc images and meta data for each scan
+├── smriprep/23.2.3
+│   └── qc images and meta data for each scan
 ├── freesurfer_group
 │   └── freesurfer group analysis tsv files, including thickness, euler and aseg
 ├── mriqc/24.0.0
