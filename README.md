@@ -350,6 +350,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 ```
 ## Running amico noddi
+In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
