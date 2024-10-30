@@ -25,6 +25,7 @@ ${BASEDIR}
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── qsiprep          # qsiprep derivatives
+│   │   │   ├── smriprep          # smriprep derivatives
 │   │   │   ├── xcp_d            # xcp with GSR
 │   │   │   └── xcp_noGSR        # xcp with GSR removed
 │   │   │  
@@ -36,12 +37,14 @@ ${BASEDIR}
 │   |
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── amico_noddi          # contains only qc images and metadata
-│       ├── mriqc                # contains only qc images and metadata
-│       ├── fmriprep             # contains only qc images and metadata
-│       ├── qsiprep              # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
-│       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── enigmaDTI            # enigmaDTI
+│       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
+│       ├── fmriprep             # contains only qc images and metadata
+│       ├── freesurfer_group     # contains tsv files of group data
+│       ├── mriqc                # contains only qc images and metadata
+│       ├── qsiprep              # contains only qc images and metadata
+│       ├── smriprep             # contains only qc images and metadata
 │       ├── tractify             # contains connectivity.mat file
 │       ├── xcp-d                # contains xcp results with GSR
 │       └── xcp_noGSR            # contains xcp results with GSR 
@@ -81,6 +84,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^ |   01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ | 02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
@@ -300,6 +304,26 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
+```
+## Running smriprep
+If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
+
+```sh
+## note step one is to make sure you are on one of the login nodes
+ssh nia-login07
+
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 ```
 
 
