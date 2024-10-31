@@ -60,15 +60,16 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
-export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
+export FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 singularity exec --cleanenv \
     -B ${BASEDIR}/templates:/home --home /home \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
+    -B ${FS_LICENSE}:/li \
     ${SING_CONTAINER} \
-    smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40  --notrack 
+    smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40  --notrack -fs-license-file /li
 
 exitcode=$?
 
