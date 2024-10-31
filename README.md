@@ -118,8 +118,6 @@ cd ${SCRATCH}/SCanD_project
 source code/00_setup_data_directories.sh
 ```
 
-
-
 ## Organize your data into BIDS
 
 This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
@@ -140,8 +138,7 @@ We want to put your data into:
 ./data/local/bids
 ```
 You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
-
-**If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!**
+If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!
 
 To switch into the dm node: 
 ```sh
