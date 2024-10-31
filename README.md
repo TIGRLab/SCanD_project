@@ -100,7 +100,9 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 
-## Setting your SciNet environment
+# Setting your SciNet environment and prepare dataset
+
+## Setting Scinet Environment
 
 ### Cloning this Repo
 
@@ -116,16 +118,6 @@ cd ${SCRATCH}/SCanD_project
 source code/00_setup_data_directories.sh
 ```
 
-### Put your bids data into the data/local folder and add labels to participants.tsv file
-
-We want to put your data into:
-
-```
-./data/local/bids
-```
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participany id" and then you have all the subject ids in the other rows.
-
-Also, make sure dataset_description.json exists inside your bids folder.
 
 #### For a test run of the code
 
@@ -149,7 +141,31 @@ To link existing data from another location on SciNet Niagara to this folder:
 ```sh
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
-## Edit fmap files
+
+
+## Organize your data into BIDS
+
+This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
+
+For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
+
+
+### Deface the BIDS data (if not done during step 1)
+
+A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
+
+### Put your bids data into the data/local folder and add labels to participants.tsv file
+
+We want to put your data into:
+
+```
+./data/local/bids
+```
+After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participany id" and then you have all the subject ids in the other rows.
+
+Also, make sure dataset_description.json exists inside your bids folder.
+
+### Edit fmap files
 
 In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
 
@@ -178,6 +194,7 @@ In case you want to backup your json files before editing them:
 mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
+
 ## Final step before running the pipeline
 
 The working directory for pipelines is based on the $BBUFFER environment variable, which assumes access to the buffer space. This setup significantly enhances code execution speed and overall performance.
@@ -193,18 +210,6 @@ I'm [your name] working at [site name] as a [your role] and I would like to requ
 Let us know if you can get me access, any help would be greatly appreciated!
 ```
 If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
-
-
-## Organize your data into BIDS
-
-This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
-
-For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
-
-
-## Deface the BIDS data (if not done during step 1)
-
-A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
 
 ## Quick Start - Workflow Automation
