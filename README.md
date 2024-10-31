@@ -212,12 +212,14 @@ Let us know if you can get me access, any help would be greatly appreciated!
 If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
 
 
-## Quick Start - Workflow Automation
+# Quick Start - Workflow Automation
 
 After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
 
+
+# Running Pipelines and sharing results
 
 ## Running mriqc
 
@@ -263,9 +265,6 @@ sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
 
 ## Running fmriprep fit (includes freesurfer)
 
-
-#### Potential changes to script for your data
- 
 Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
@@ -328,7 +327,6 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 ```
-
 
 ## Running fmriprep apply 
 
@@ -486,7 +484,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
 
 ```
-
 
 ## Running ciftify-anat
 
@@ -689,11 +686,13 @@ cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/your_group_name/
 
 # Appendix - Adding a test dataset from openneuro
 
-#### (To test this repo - using an openneuro dataset)
+## For a test run of the code
+
+For a test run of this available code you can work with a test dataset from open neuro. 
 
 To get an openneuro dataset for testing - we will use datalad
 
-##### Loading datalad on SciNet Niagara
+### Loading datalad on SciNet Niagara
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
@@ -701,23 +700,19 @@ module load git-annex/8.20200618 # git annex is needed by datalad
 source /project/a/arisvoin/edickie/modules/datalad/0.15.5/build/bin/activate
 ```
 
-##### Downloading OpenNeuro dataset through datalad
+### Downloading OpenNeuro dataset through datalad
 
 ```
 cd ${SCRATCH}/SCanD_project/data/local/
 datalad clone https://github.com/OpenNeuroDatasets/ds000115.git bids
 ```
 
-Before running fmriprep anat, we need to fetch the anatomical T1W scans 
+### Before running fmriprep, we need to fetch the anatomical T1W scans and download the fmri scans:
+
 
 ```
 cd bids
 datalad get sub*/anat/*T1w.nii.gz
-```
-Before running fmriprep func - we need to download the fmri scans
-
-```
-cd bids
 datalad get sub*/func/*
 ```
 
