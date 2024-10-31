@@ -63,7 +63,7 @@ fi
 export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 
 singularity exec --cleanenv \
-    -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
+    -B ${BASEDIR}/templates:/home --home /home \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
