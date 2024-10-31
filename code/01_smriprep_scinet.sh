@@ -60,7 +60,7 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
-export FS_LICENSE=/home/fmriprep/.freesurfer.txt
+export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity exec --cleanenv \
     -B ${BASEDIR}/templates:/home --home /home \
