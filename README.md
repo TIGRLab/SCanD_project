@@ -70,16 +70,14 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 # The general overview of what to do
 
-
-
 | stage |  #	| Step	|   How Long Does it take to run? 	|
 |---    |---	|---	|---	|
-| stage 0|   0a	|  [Organize your data into BIDS..](#organize-your-data-into-bids) 	|   As long as it takes	|
-|^ |   0b	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |   0c	|   [Setting up the SciNet environment](#Setting-your-scinet-environment)	| 30 minutes in terminal 	|
-|^ |   0d	|   [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet  	|
-|^ |   0e	|   [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
-|^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
+| stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment)	| 30 minutes in terminal 	|
+|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
+|^ |   0d	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
+|^ |  0c	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 	
+|^ |   0e	|  [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
+|^ |   0f	|  [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
