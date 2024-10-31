@@ -63,7 +63,7 @@ fi
 export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
 singularity exec --cleanenv \
-    -B ${BASEDIR}/templates:/home --home /home \
+    -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${WORK_DIR}:/work \
