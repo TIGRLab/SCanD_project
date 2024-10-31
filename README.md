@@ -119,7 +119,7 @@ cd $SCRATCH
 git clone https://github.com/TIGRLab/SCanD_project.git
 ```
 
-## Run the software set-up script
+### Run the software set-up script
 
 ```sh
 cd ${SCRATCH}/SCanD_project
