@@ -82,10 +82,10 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0f	|   [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
-|^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-anatomical-includes-freesurfer) 	|   16 hours on slurm	|
+|^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |   01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |^ |   01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
-|stage 2|   02a	|  [Run fMRIprep func](#Submitting-the-fmriprep-func-step) 	|  3 hours of slurm 	|
+|stage 2|   02a	|  [Run fMRIprep apply](#Submitting-the-fmriprep-func-step) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ | 02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
@@ -253,7 +253,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
 ```
 
-## Running fmriprep anatomical (includes freesurfer)
+## Running fmriprep fit (includes freesurfer)
 
 Note: this step uses and estimated **6hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
 
@@ -327,9 +327,7 @@ sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 ```
 
 
-## Submitting the fmriprep func step 
-
-Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
+## Running fmriprep apply 
 
 Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
