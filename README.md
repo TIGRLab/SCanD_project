@@ -255,14 +255,9 @@ sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
 
 ## Running fmriprep fit (includes freesurfer)
 
-Note: this step uses and estimated **6hrs for processing time** per participant! So if all participants run at once (in our parallel cluster) it will still take a day to run.
 
 #### Potential changes to script for your data
  
-Most of the time the anatomical data includes the skull, but _sometimes_ people decide to share data where skull stripping has already happened. If you data is **already skull stripped** than you need to add another flag `--skull-strip-t1w force` to the script `./code/01_fmriprep_fit_scinet.sh`
-
-Running the functional step looks pretty similar to running the anat step. The time taken and resources needed will depend on how many functional tasks exists in the experiment - fMRIprep will try to run these in paralell if resources are available to do that.
-
 Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
