@@ -74,18 +74,18 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |---    |---	|---	|---	|
 | stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment)	| 30 minutes in terminal 	|
 |^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
-|^ |   0d	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0c	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 	
+|^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
+|^ |  0d	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 	
 |^ |   0e	|  [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0f	|  [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |   01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|^ |   01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
+|^ |  01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
-|^ | 02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
+|^ |   02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
