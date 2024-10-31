@@ -69,7 +69,7 @@ singularity exec --cleanenv \
     -B ${WORK_DIR}:/work \
     -B ${FS_LICENSE}:/li \
     ${SING_CONTAINER} \
-    smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40  --notrack -fs-license-file /li
+    smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40  --notrack --fs-license-file /li
 
 exitcode=$?
 
