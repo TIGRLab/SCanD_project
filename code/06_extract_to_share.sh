@@ -35,8 +35,8 @@ else
 fi
 
 
-SMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/smriprep/23.2.3/smriprep/
-SMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/smriprep/23.2.3
+SMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/smriprep/23.2.3/
+SMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/smriprep/23.2.3/smriprep
 
 if [ -d "$SMRIPREP_LOCAL_DIR" ]; 
 then
@@ -47,7 +47,6 @@ then
 mkdir -p ${SMRIPREP_SHARE_DIR}
 
 cp ${SMRIPREP_LOCAL_DIR}/dataset_description.json ${SMRIPREP_SHARE_DIR}/
-cp ${SMRIPREP_LOCAL_DIR}/*dseg.tsv ${SMRIPREP_SHARE_DIR}/ # also grab some anatomical derivatives
 
 subjects=`cd ${SMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${SMRIPREP_LOCAL_DIR}/*html ${SMRIPREP_SHARE_DIR}/
