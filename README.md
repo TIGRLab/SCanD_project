@@ -99,16 +99,6 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
-## Organize your data into BIDS
-
-This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
-
-For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
-
-
-## Deface the BIDS data (if not done during step 1)
-
-A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
 ## Setting your SciNet environment
 
@@ -203,6 +193,19 @@ I'm [your name] working at [site name] as a [your role] and I would like to requ
 Let us know if you can get me access, any help would be greatly appreciated!
 ```
 If BBUFFER space is unavailable or you choose not to use it, you need to navigate through each pipeline code and replace all instances of $BBUFFER with $SCRATCH/SCanD_project.
+
+
+## Organize your data into BIDS
+
+This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
+
+For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
+
+
+## Deface the BIDS data (if not done during step 1)
+
+A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
+
 
 ## Quick Start - Workflow Automation
 
