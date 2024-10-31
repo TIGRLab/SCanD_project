@@ -119,12 +119,26 @@ source code/00_setup_data_directories.sh
 ```
 
 
-#### For a test run of the code
 
-For a test run of this available code you can work with a test dataset from open neuro - [check out the appendix for add the code to download test data](#appendix---adding-a-test-dataset-from-openneuro) . 
+## Organize your data into BIDS
 
-#### Your own data - continue from here
+This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
 
+For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
+
+
+### Deface the BIDS data (if not done during step 1)
+
+A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
+
+
+### Put your bids data into the data/local folder and add labels to participants.tsv file
+
+We want to put your data into:
+
+```
+./data/local/bids
+```
 You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
 
 **If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!**
@@ -142,25 +156,6 @@ To link existing data from another location on SciNet Niagara to this folder:
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 
-
-## Organize your data into BIDS
-
-This is the longest - most human intensive - step. But it will make everything else possible! BIDS is really a naming convention for your MRI data that will make it easier for other people in the consortium (as well as the software/ pipeline that you are using) to understand what your data is (e.g. what scan types, how many participants, how many sessions). Converting your data into BIDS may require some renaming and reorganizing. No coding is required, but there are now a lot of different software projects out there to help with the process.
-
-For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
-
-
-### Deface the BIDS data (if not done during step 1)
-
-A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
-
-### Put your bids data into the data/local folder and add labels to participants.tsv file
-
-We want to put your data into:
-
-```
-./data/local/bids
-```
 After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participany id" and then you have all the subject ids in the other rows.
 
 Also, make sure dataset_description.json exists inside your bids folder.
