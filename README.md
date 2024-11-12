@@ -646,7 +646,7 @@ At any stage, before proceeding to the next stage and executing the codes for th
 However, if any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
-## Syncing the data to the share directory
+## Syncing the data to the "share" directory
 
 This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
 
