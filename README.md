@@ -95,7 +95,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-"-share-"-directory) 	|   30 min in terminal	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-with-to-the-share-directory) 	|   30 min in terminal	|
 
 
 # Setting your SciNet environment and prepare dataset
@@ -646,7 +646,7 @@ At any stage, before proceeding to the next stage and executing the codes for th
 However, if any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
-## Syncing the data to the "share" directory
+## Syncing the data to the share directory
 
 This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
 
