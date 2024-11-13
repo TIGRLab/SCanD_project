@@ -72,7 +72,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 | stage |  #	| Step	|   How Long Does it take to run? 	|
 |---    |---	|---	|---	|
-| stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment)	| 30 minutes in terminal 	|
+| stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment-and-prepare-dataset)	| 30 minutes in terminal 	|
 |^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |  0d	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 	
