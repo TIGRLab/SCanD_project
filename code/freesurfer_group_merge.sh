@@ -1,5 +1,5 @@
 #!/bin/bash
-export BASEDIR=${SCRATCH}/SCanD_project
+export BASEDIR=$(pwd)
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
