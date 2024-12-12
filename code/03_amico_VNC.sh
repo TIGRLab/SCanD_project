@@ -1,4 +1,4 @@
-BASEDIR=$SCRATCH/SCanD_project
+export BASEDIR=$(pwd)
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.4/qsiprep
