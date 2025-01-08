@@ -66,7 +66,7 @@ ${BASEDIR}
         └── ...  #and 13 other atlases
 ```
 
-Currently this repo is going to be set up for running things on SciNet Niagara cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
+Currently this repo is going to be set up for running things on SciNet Cedar cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
 # The general overview of what to do
 
@@ -140,12 +140,11 @@ If you are copying data from another computer or server, you should use the SciN
 
 To switch into the dm node: 
 ```sh
-ssh <cc_username>@niagara.scinet.utoronto.ca
-ssh nia-dm1
+ssh <cc_username>@cedar.computecanada.ca
 rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
-To link existing data from another location on SciNet Niagara to this folder:
+To link existing data from another location on SciNet Cedar to this folder:
 
 ```sh
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
@@ -161,7 +160,7 @@ In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files w
 
 ```sh
 ## First load a python module
-module load NiaEnv/2019b python/3.11.5
+module load python/3.11.5
 
 ## Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -214,9 +213,6 @@ After setting up the scinet environment and organizing your BIDS folder and `par
 ## Running mriqc
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -235,9 +231,6 @@ sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 ## Running freesurfer
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -260,10 +253,6 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-# module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -281,9 +270,6 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ## Running qsiprep
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -301,9 +287,6 @@ sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -325,9 +308,6 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -346,9 +326,6 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
 ## Running qsirecon step1
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -366,9 +343,6 @@ sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -389,8 +363,6 @@ To complete the final step for amico noddi, you need a graphical user interface 
 3. Run the following command:
    
 ```sh
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -402,9 +374,6 @@ source ./code/03_amico_VNC.sh
 
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -423,9 +392,6 @@ sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -438,9 +404,6 @@ For multi-shell data, run the following code. For single-shell data, use the sin
 
 Multishell:
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -457,9 +420,6 @@ sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
 ```
 Singleshell:
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -478,9 +438,6 @@ sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
 ## Running ciftify-anat
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -503,7 +460,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 ```sh
 #First load a python module
-module load NiaEnv/2019b python/3.6.8
+module load python/3.10
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -520,7 +477,7 @@ python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer34
 ```
 ```sh
 #First load a python module
-module load NiaEnv/2019b python/3.11.5
+module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -538,9 +495,6 @@ python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Li
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -558,9 +512,6 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 ## Running xcp-noGSR
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -580,9 +531,6 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -593,9 +541,6 @@ source ./code/ENIGMA_ExtractCortical.sh
 ## Running qsirecon step2
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -613,9 +558,6 @@ sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ## Running enigma-dti
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -627,9 +569,6 @@ sbatch  ./code/04_enigma_dti_scinet.sh
 ## Running extract-noddi
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -653,9 +592,6 @@ This step calls some "group" level bids apps to build summary sheets and html in
 It takes about 10 minutes to run (depending on how much data you are synching). It could also be submitted.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -682,7 +618,7 @@ For a test run of this available code you can work with a test dataset from open
 
 To get an openneuro dataset for testing - we will use datalad
 
-### Loading datalad on SciNet Niagara
+### Loading datalad on SciNet Cedar
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
