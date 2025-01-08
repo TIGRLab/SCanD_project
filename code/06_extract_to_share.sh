@@ -2,6 +2,7 @@
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata to 
+module load apptainer/1.3.5
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
@@ -91,10 +92,10 @@ fi
 
 
 ## run the mriqc group step and copy over all outputs
-project_id=$(cat ${PROJECT_DIR}/project_id)
 MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
 MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
+export WORK_DIR=${SCRATCH}/SCanD/mriqc
+mkdir -p ${WORK_DIR}
 
 if [ -d "$MRIQC_LOCAL_DIR" ]; 
 then
@@ -283,7 +284,7 @@ rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesu
 
 
 ## Generate qsiprep motion metrics and extract NODDI indices
-module load NiaEnv/2019b python/3.6.8
+module load  python/3.10
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs

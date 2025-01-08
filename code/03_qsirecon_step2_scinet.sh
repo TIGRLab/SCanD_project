@@ -2,9 +2,9 @@
 #SBATCH --job-name=qsirecon2
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
-
+#SBATCH --mem-per-cpu=1000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 CORES=40
@@ -28,6 +28,8 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+module load apptainer/1.3.5
+
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
@@ -41,8 +43,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local  # use if version of fmriprep >=20.2
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep # use if version of fmriprep <=20.1
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/qsiprep
+export WORK_DIR=${SCRATCH}/SCanD/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 

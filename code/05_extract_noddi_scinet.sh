@@ -2,13 +2,16 @@
 #SBATCH --job-name=extract_noddi
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=4
 #SBATCH --time=03:00:00
+#SBATCH --mem-per-cpu=1000
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
 # Extract subjects from the participants.tsv file
 SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
+
+module load apptainer/1.3.5
 
 # Iterate over each subject
 for subject in $SUBJECTS; do

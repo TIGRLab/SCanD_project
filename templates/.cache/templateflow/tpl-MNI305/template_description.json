@@ -1,0 +1,20 @@
+{
+  "Authors": [
+    "Collins DL",
+    "Neelin P",
+    "Peters TM",
+    "Evans AC"
+  ],
+  "Curators": [
+    "Esteban O"
+  ],
+  "Identifier": "MNI305",
+  "License": "See LICENSE file",
+  "Name": "MNI Average Brain (305 MRI) Stereotaxic Registration Model",
+  "ReferencesAndLinks": [
+    "https://doi.org/10.1097/00004728-199403000-00005",
+    "https://doi.org/10.1109/NSSMIC.1993.373602",
+    "https://www.mcgill.ca/bic/software/tools-data-analysis/anatomical-mri/atlases/mni-305"
+  ],
+  "Species": "Homo sapiens"
+}

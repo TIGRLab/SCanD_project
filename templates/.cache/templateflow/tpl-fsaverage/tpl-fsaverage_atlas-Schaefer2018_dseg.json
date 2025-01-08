@@ -1,0 +1,21 @@
+{
+  "Authors":
+  [
+    "Schaefer A",
+    "Yeo BT"
+  ],
+  "Curators":
+  [
+    "Aleman-Gomez Y",
+    "Esteban O"
+  ],
+  "Identifier": "Schaefer2018",
+  "License": "See LICENSE file",
+  "Name": "Local-Global Parcellation of the Human Cerebral Cortex from Intrinsic Functional Connectivity MRI",
+  "Description": "Multi-scale cortical parcellation — ten scales going from 100 to 1000 parcels that are matched with Yeo2011's networks.",
+  "IsDerivedFrom": "Yeo2011",
+  "ReferencesAndLinks":
+  [
+    "https://doi.org/10.1093/cercor/bhx179"
+  ]
+}

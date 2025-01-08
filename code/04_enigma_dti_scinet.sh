@@ -2,8 +2,9 @@
 #SBATCH --job-name=enigma_dti
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
+#SBATCH --mem-per-cpu=1000
 
 # Load necessary modules if needed
 # module load python
@@ -16,6 +17,8 @@ SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
 for subject in $SUBJECTS; do
     echo "$subject       0" >> ${BASEDIR}/logs/enigma_dti.tsv
 done
+
+module load apptainer/1.3.5
 
 # Set environment variables
 export DTIFIT_DIR=${BASEDIR}/data/local/dtifit

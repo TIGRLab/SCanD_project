@@ -2,9 +2,9 @@
 #SBATCH --job-name=smriprep
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=20
 #SBATCH --time=10:00:00
-
+#SBATCH --mem-per-cpu=75000
 
 SUB_SIZE=1 ## number of subjects to run
 CORES=40
@@ -24,6 +24,8 @@ function cleanup_ramdisk {
     date
 }
 
+module load apptainer/1.3.5
+
 #trap the termination signal, and call the function 'trap_term' when
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
@@ -42,8 +44,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/smriprep/23.2.3 
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/smriprep
+export WORK_DIR=${SCRATCH}/SCanD/smriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 

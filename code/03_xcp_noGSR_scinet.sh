@@ -2,9 +2,9 @@
 #SBATCH --job-name=xcp_noGSR
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=80
+#SBATCH --cpus-per-task=8
 #SBATCH --time=05:00:00
-
+#SBATCH --mem-per-cpu=12000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel
 CORES=40
@@ -28,6 +28,8 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+module load apptainer/1.3.5
+
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 
@@ -37,8 +39,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_noGSR
 export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/
 export CONFOUND_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/custom_confounds/
 
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp_noGSR
+export WORK_DIR=${SCRATCH}/SCanD/xcp_noGSR
 export LOGS_DIR=${BASEDIR}/logs
 export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 

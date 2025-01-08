@@ -2,9 +2,9 @@
 #SBATCH --job-name=freesurfer
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=20
 #SBATCH --time=23:00:00
-
+#SBATCH --mem-per-cpu=4000
 
 SUB_SIZE=1 ## number of subjects to run
 
@@ -27,6 +27,7 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+module load apptainer/1.3.5
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 

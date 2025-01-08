@@ -2,9 +2,9 @@
 #SBATCH --job-name=xcp
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=80
+#SBATCH --cpus-per-task=8
 #SBATCH --time=05:00:00
-
+#SBATCH --mem-per-cpu=12000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel
 CORES=40
@@ -27,6 +27,7 @@ function cleanup_ramdisk {
 #trap the termination signal, and call the function 'trap_term' when
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
+module load apptainer/1.3.5
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
@@ -37,9 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.7.3
 export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3
 
-
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp
+export WORK_DIR=${SCRATCH}/SCanD/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 

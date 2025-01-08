@@ -1,0 +1,106 @@
+{
+  "Authors": [
+    "Williams LZJ",
+    "Fitzgibbon S",
+    "Bozek J",
+    "Winkler AM",
+    "Dimitrova R",
+    "Poppe T",
+    "Schuh A",
+    "Makropoulos A",
+    "Cupitt J",
+    "O'Muircheartaigh J",
+    "Duff EP",
+    "Cordero-Grande L",
+    "Price AN",
+    "Hajnal JV",
+    "Rueckert D",
+    "Smith SM",
+    "Edwards AD",
+    "Robinson EC"
+  ],
+  "BIDSVersion": "1.8.0",
+  "Curators": [
+    "Markiewicz CJ"
+  ],
+  "Identifier": "dhcpSym",
+  "License": "CC BY 4.0",
+  "Name": "dhcpSym spatiotemporal cortical surface atlas",
+  "ReferencesAndLinks": [
+    "https://doi.org/10.1016/j.neuroimage.2018.06.018",
+    "https://doi.org/10.1038/s41562-023-01542-8",
+    "https://brain-development.org/brain-atlases/atlases-from-the-dhcp-project/cortical-surface-template/"
+  ],
+  "Species": "Homo sapiens",
+  "TemplateFlowVersion": "1.0.0",
+  "cohort": {
+    "28": {
+      "age": 28.0,
+      "units": "months"
+    },
+    "29": {
+      "age": 29.0,
+      "units": "months"
+    },
+    "30": {
+      "age": 30.0,
+      "units": "months"
+    },
+    "31": {
+      "age": 31.0,
+      "units": "months"
+    },
+    "32": {
+      "age": 32.0,
+      "units": "months"
+    },
+    "33": {
+      "age": 33.0,
+      "units": "months"
+    },
+    "34": {
+      "age": 34.0,
+      "units": "months"
+    },
+    "35": {
+      "age": 35.0,
+      "units": "months"
+    },
+    "36": {
+      "age": 36.0,
+      "units": "months"
+    },
+    "37": {
+      "age": 37.0,
+      "units": "months"
+    },
+    "38": {
+      "age": 38.0,
+      "units": "months"
+    },
+    "39": {
+      "age": 39.0,
+      "units": "months"
+    },
+    "40": {
+      "age": 40.0,
+      "units": "months"
+    },
+    "41": {
+      "age": 41.0,
+      "units": "months"
+    },
+    "42": {
+      "age": 42.0,
+      "units": "months"
+    },
+    "43": {
+      "age": 43.0,
+      "units": "months"
+    },
+    "44": {
+      "age": 44.0,
+      "units": "months"
+    }
+  }
+}

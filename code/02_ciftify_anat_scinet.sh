@@ -2,9 +2,9 @@
 #SBATCH --job-name=ciftify
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
-#SBATCH --time=03:00:00
-
+#SBATCH --cpus-per-task=16
+#SBATCH --time=08:00:00
+#SBATCH --mem-per-cpu=20000
 
 SUB_SIZE=1 ## number of subjects to run
 CORES=40
@@ -27,6 +27,7 @@ function cleanup_ramdisk {
 #trap the termination signal, and call the function 'trap_term' when
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
+module load apptainer/1.3.5
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg

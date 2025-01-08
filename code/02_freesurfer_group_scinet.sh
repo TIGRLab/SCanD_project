@@ -2,9 +2,9 @@
 #SBATCH --job-name=freesurfer_group
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=8
 #SBATCH --time=06:00:00
-
+#SBATCH --mem-per-cpu=8000
 
 ## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
@@ -22,6 +22,7 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
+module load apptainer/1.3.5
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg 
 export LOGS_DIR=${BASEDIR}/logs

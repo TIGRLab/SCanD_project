@@ -1,0 +1,90 @@
+{
+    "Authors": [
+        "Schuh A",
+        "Makropoulos A",
+        "Robinson EC",
+        "Cordero-Grande L",
+        "Hughes E",
+        "Hutter J",
+        "Price AN",
+        "Murgasova M",
+        "Teixeira RPA",
+        "Tusor N",
+        "Steinweg JK",
+        "Victor S",
+        "Rutherford MA",
+        "Hajnal JV",
+        "Edwards AD",
+        "Rueckert D"
+    ],
+    "BIDSVersion": "1.8.0",
+    "Curators": [
+        "Salo T"
+    ],
+    "Description": "Unbiased morphological atlas of neonatal brain development constructed using neonatal brain images acquired and processed as part of the Developing Human Connectome Project (dHCP).",
+    "Identifier": "dhcpVol",
+    "License": "CC-BY 4.0",
+    "Name": "Unbiased and temporally consistent morphological atlas of neonatal brain development",
+    "ReferencesAndLinks": [
+        "https://doi.org/10.1101/251512",
+        "https://doi.org/10.12751/g-node.d2b353"
+    ],
+    "Species": "Homo sapiens",
+    "TemplateFlowVersion": "1.0.0",
+    "cohort": {
+        "36": {
+            "age": [
+                36
+            ],
+            "units": "weeks"
+        },
+        "37": {
+            "age": [
+                37
+            ],
+            "units": "weeks"
+        },
+        "38": {
+            "age": [
+                38
+            ],
+            "units": "weeks"
+        },
+        "39": {
+            "age": [
+                39
+            ],
+            "units": "weeks"
+        },
+        "40": {
+            "age": [
+                40
+            ],
+            "units": "weeks"
+        },
+        "41": {
+            "age": [
+                41
+            ],
+            "units": "weeks"
+        },
+        "42": {
+            "age": [
+                42
+            ],
+            "units": "weeks"
+        },
+        "43": {
+            "age": [
+                43
+            ],
+            "units": "weeks"
+        },
+        "44": {
+            "age": [
+                44
+            ],
+            "units": "weeks"
+        }
+    }
+}

@@ -1,0 +1,92 @@
+future additions:
++ Add CIVET-NMT average surface
+----------------------------------------------------------------------
+directory version : 21 (Sarcastic Sardine)
+date uploaded     : 2020-09-27
+updates:
++ Updated segmentation using the Subcortical Atlas of the Rhesus Macaque (SARM)
++ Added the SARM v1.0
++ Fixed float datatype for a subset of files (converted to short/byte)
++ Removed hippocampal CHARM regions due to overlap with SARM
++ Modified CHARM boundaries to lower overlap with SARM
++ Modified atlas key tables to be tab delimited for easier manipulation
++ Added CHARM and SARM ROI surfaces
++ Changed supplemental_* directories to tables_* to prevent duplicate names
++ Fixed center of mass calculations in CHARM
+
+----------------------------------------------------------------------
+directory version : 20 (Inflated Iguana)
+date uploaded     : 2020-08-03
+updates:
++ Updated segmentation using contributions from Pierce Perkins
++ Updated segmentation using preliminary SARM atlas
++ NMT v2 uploaded to AFNI
++ NMT and CHARM pages generated on AFNI website
++ @Install_NMT script integrated into AFNI
++ Removed "_level" from all CHARM atlases for brevity
++ Added semi-inflated CIVET surfaces
++ Removed CIVET non-rsl surfaces
++ Removed CIVET blood vessel surface
++ Renamed remaining CIVET surfaces
++ Removed Paxinos atlas in preparation for the SARM
++ Added readme files
+----------------------------------------------------------------------
+directory version : 19 (Sassy Sasquatch)
+date uploaded     : 2020-06-18
+updates:
++ Filled in 0 values inside brainmask
++ Cropped D99 atlas using brain mask
++ Refined NMT segmentation using intermediate G12 atlas
++ CHARM: Renamed V3/V3A to V3d/V3A
+----------------------------------------------------------------------
+directory version : 18 (Wily Wombat)
+date uploaded     : 2020-06-09
+updates:
++ Updated the CustomAtlases.niml files for the symmetric and asymmetric templates
++ Separated symmetric and asymmetric NMT2 templates
++ Limited modal smoothing on certain delicate structures when generating low-res
++ Warped D99 to NMT using new skullstriped template
++ Warped Paxinos to NMT using new skullstriped template
++ Refined D99 and Paxinos atlases using new warps
+----------------------------------------------------------------------
+directory version : 17 (Mistaken Marmoset)
+date uploaded     : 2020-06-04
+updates:
++ Added CHARM label tables back in after they were somehow removed.
+----------------------------------------------------------------------
+directory version : 16 (Adventurous Alpaca)
+date uploaded     : 2020-06-02
+updates:
++ Updated ventricle mask based on Paxinos segmentation
++ Improved segmentation-based refinement of Paxinos atlas
++ Added fh cortical sheet mask (mistakenly left out)
++ Added supplemental_Paxinos directory
+----------------------------------------------------------------------
+directory version : 15 (Boisterous Baracuda)
+date uploaded     : 2020-06-01
+updates:
++ refined frontal surface of brain masks
++ limited other masks to new refined brain mask
++ created new skullstriped template using refined brain mask
++ Incorporated new segmentation from Pierce Perkins and Adam Messinger
++ regenerated the CHARM and D99 atlas using refined brain mask
++ removed duplicate surfaces
++ Added Calebrese/Paxinos Atlas by aligning the T2-like Calabrese atlas to the NMT v2
++ Refined Paxinos labels using segmentation
++ Added Paxinos cerebral white matter label to segmentation to improve scGM/WM
++ Added label tables to segmentation
+----------------------------------------------------------------------
+directory version : 14 (Sneaky Salmon)
+date uploaded     : 2020-05-29
+updates:
++ Added ventricle mask to supplemental_masks
++ Removed tmp segmentation files
+----------------------------------------------------------------------
+directory version : 13 (Unlucky Unicorn)
+date uploaded     : 2020-05-28
+updates:
++ Modified NMT v2 FOV from 250 x 310 x 200 -> 256 x 312 x 200
++ Modified NMT v2 low-res FOV from 125 x 155 x 100 -> 128 x 156 x 100
++ Added NMT_changelog.txt
++ Added label tables to D99 and CHARM
+----------------------------------------------------------------------

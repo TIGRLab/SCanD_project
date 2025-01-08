@@ -2,9 +2,9 @@
 #SBATCH --job-name=mriqc
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=8
 #SBATCH --time=08:00:00
-
+#SBATCH --mem-per-cpu=70000
 
 SUB_SIZE=1 ## number of subjects to run
 export THREADS_PER_COMMAND=2
@@ -22,6 +22,7 @@ function cleanup_ramdisk {
     echo -n "done at "
     date
 }
+module load apptainer/1.3.5
 
 #trap the termination signal, and call the function 'trap_term' when
 # that happens, so results may be saved.
@@ -40,9 +41,7 @@ export SING_CONTAINER=${BASEDIR}/containers/mriqc-24.0.0.simg
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0 # use if version of fmriprep <=20.1
 
-
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
+export WORK_DIR=${SCRATCH}/SCanD/mriqc
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 

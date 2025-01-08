@@ -1,0 +1,10 @@
+index	red	green	blue	opacity	thing	name
+1	249	255	248	1.0	1	CSF
+2	0	150	255	1.0	1	Cortical gray matter
+3	255	200	0	1.0	1	White matter
+4	0	239	255	1.0	1	Background
+5	255	147	0	1.0	1	Ventricles
+6	119	0	175	1.0	1	Cerebellum
+7	231	239	0	1.0	1	Deep Gray Matter
+8	208	0	255	0.36	1	Brainstem
+9	0	80	58	1.0	1	Hippocampi and Amygdala

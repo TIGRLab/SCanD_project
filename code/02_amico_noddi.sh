@@ -2,8 +2,9 @@
 #SBATCH --job-name=amico_noddi
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=8
 #SBATCH --time=02:00:00
+#SBATCH --mem-per-cpu=10000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 CORES=40
@@ -27,15 +28,14 @@ function cleanup_ramdisk {
 # that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
-
+module load apptainer/1.3.5
 # input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/tmp
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/amico
+export WORK_DIR=${SCRATCH}/SCanD/amico
 export LOGS_DIR=${BASEDIR}/logs
 
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${TMP_DIR}
