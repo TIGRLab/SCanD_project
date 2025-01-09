@@ -3,7 +3,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CURRENT_DIR=${PWD}
 
 cd ${SCRIPT_DIR}/..
-## i.e. makes folders and links to software in the arisvoin (CAMH) lab space
 echo "making directories"
 mkdir -p containers
 mkdir -p data
