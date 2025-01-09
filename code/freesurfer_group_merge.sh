@@ -9,17 +9,17 @@ SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
 
 module load apptainer/1.3.5
 
-singularity run --cleanenv \
-    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
-    -B ${BIDS_DIR}:/bids \
-    -B ${OUTPUT_DIR}:/derived \
-    -B ${ORIG_FS_LICENSE}:/li \
-    ${SING_CONTAINER} \
-    /bids /derived group2 \
-    --participant_label ${SUBJECTS} \
-    --parcellations {aparc,aparc.a2009s}\
-    --skip_bids_validator \
-    --license_file /li 
+#singularity run --cleanenv \
+#    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
+#    -B ${BIDS_DIR}:/bids \
+#    -B ${OUTPUT_DIR}:/derived \
+#    -B ${ORIG_FS_LICENSE}:/li \
+#    ${SING_CONTAINER} \
+#    /bids /derived group2 \
+#    --participant_label ${SUBJECTS} \
+#    --parcellations {aparc,aparc.a2009s}\
+#    --skip_bids_validator \
+#    --license_file /li 
 
 
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/  
