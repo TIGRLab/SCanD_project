@@ -319,3 +319,6 @@ singularity run --cleanenv \
     --skip_bids_validator \
     --license_file /li \
     --n_cpus 80
+
+rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
+
