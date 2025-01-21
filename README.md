@@ -660,7 +660,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/05_extract_to_share.sh
+source ./code/06_extract_to_share.sh
 ```
 
 Copy your folder into the shared spaced:
