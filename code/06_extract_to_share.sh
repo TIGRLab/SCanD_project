@@ -282,7 +282,6 @@ rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_
 ##rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
 
 
-
 ## Generate qsiprep motion metrics and extract NODDI indices
 module load  python/3.10
 
@@ -299,3 +298,24 @@ python3 code/gen_qsiprep_motion_metrics.py
 
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/noddi_roi ${PROJECT_DIR}/data/share/amico_noddi
+
+## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
+export SING_CONTAINER=${PROJECT_DIR}/containers/freesurfer-7.4.1.simg
+export OUTPUT_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
+export ORIG_FS_LICENSE=${PROJECT_DIR}/templates/.freesurfer.txt
+export BIDS_DIR=${PROJECT_DIR}/data/local/bids
+
+SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
+
+singularity run --cleanenv \
+    -B ${PROJECT_DIR}/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BIDS_DIR}:/bids \
+    -B ${OUTPUT_DIR}:/derived \
+    -B ${ORIG_FS_LICENSE}:/li \
+    ${SING_CONTAINER} \
+    /bids /derived group2 \
+    --participant_label ${SUBJECTS} \
+    --parcellations {aparc,aparc.a2009s}\
+    --skip_bids_validator \
+    --license_file /li \
+    --n_cpus 80
