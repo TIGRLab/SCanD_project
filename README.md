@@ -598,6 +598,10 @@ git pull
 
 source ./code/06_extract_to_share.sh
 ```
+If 06_extract_to_share.sh code does not complete automatically, manually terminate it and proceed by running the next line of code manually:
+```sh
+rsync -a $SCRATCH/SCanD_project/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  $SCRATCH/SCanD_project/data/share/freesurfer_group
+```
 
 Copy your folder into the shared spaced:
 
