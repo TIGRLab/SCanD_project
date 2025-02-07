@@ -106,7 +106,7 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 
 ```sh
 cd $SCRATCH
-git clone https://github.com/TIGRLab/SCanD_project.git
+git clone -b Cedar --single-branch https://github.com/TIGRLab/SCanD_project.git
 ```
 
 ### Run the software set-up script
