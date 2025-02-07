@@ -83,7 +83,7 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |  01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
-|stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
+|stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  6 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ |   02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
