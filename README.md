@@ -610,8 +610,8 @@ You need to change the "your_group_name" and put your group name there and then 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /home/ghazalm/scratch/shared_data/your_group_name
-cp -r data/share  /home/ghazalm/scratch/shared_data/your_group_name/
+mkdir /scratch/arisvoin/shared/your_group_name
+cp -r data/share  /scratch/arisvoin/shared/your_group_name/
 ```
 
 # Appendix - Adding a test dataset from openneuro
