@@ -103,7 +103,7 @@ for subject in $SUBJECTS; do
         echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    fmriprep_anat failed" \
+        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    fmriprep_fit failed" \
             >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
     fi
 done
