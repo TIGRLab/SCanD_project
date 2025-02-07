@@ -16,8 +16,7 @@ mkdir -p logs
 chmod +x code/*.py
 
 # create a random project id in a file to use for separating the work spaces across projects and runs
-openssl rand -hex 6 -out project_id
-
+openssl rand -hex 6 > project_id
 
 ## link the containers
 echo "linking singularity containers"
