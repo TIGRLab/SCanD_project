@@ -5,9 +5,6 @@ mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/subject
 mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains
 mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/templates
 mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/templates/brains
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/atlases
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/atlases/brains
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/atlases/labels
 
 
 export MAGetbrain_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
@@ -16,6 +13,7 @@ export FMRIPREP_DIR=$SCRATCH/SCanD_project/data/local/derivatives/fmriprep/23.2.
 
 cp -r $BIDS_DIR/$subject/*/anat/*T1w.nii.gz  $MAGetbrain_DIR/input/subjects/brains/
 cp -r $FMRIPREP_DIR/data/local/derivatives/fmriprep/23.2.3/$subject/ses-*/func/*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz  $MAGetbrain_DIR/input/templates/brains/
+cp -r /scratch/arisvoin/shared/temp/atlases $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/
 
 gunzip $MAGetbrain_DIR/input/subjects/brains/*.nii.gz
 gunzip $MAGetbrain_DIR/input/templates/brains/*.nii.gz
@@ -28,6 +26,6 @@ nii2mnc $MAGetbrain_DIR/input/templates/brains/*space-MNI152NLin2009cAsym_desc-p
         $MAGetbrain_DIR/input/templates/brains/*space-MNI152NLin2009cAsym_desc-preproc_bold.mnc
 
 # add subject selection
-#add atlases
+# add atlases: make sure all there,Erin
 #init code subjects if posiible
 #clean code
