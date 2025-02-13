@@ -63,4 +63,7 @@ done
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
+# Copy container
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif  $SCRATCH/SCanD_project/containers/
+
 echo "Processing complete!"
