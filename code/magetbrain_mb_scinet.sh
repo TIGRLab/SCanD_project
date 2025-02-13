@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=maget_brain_mb
+#SBATCH --job-name=magetbrain_mb
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
