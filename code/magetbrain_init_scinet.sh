@@ -9,7 +9,7 @@ PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif  $PROJECT_DIR/containers/
-CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
+SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
 
 # Define directories
 BIDS_DIR="$PROJECT_DIR/data/local/bids"
@@ -42,9 +42,12 @@ for subject in $subjects; do
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                singularity exec -B $INPUT_DIR:/input $CONTAINER \
-                    nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
+                singularity run \
+                -B ${INPUT_DIR}:/input \
+                ${SING_CONTAINER} \
+                nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
                             "/input/subjects/brains/${subject}_${ses_name}_T1w.mnc"
+
             else
                 echo "  No T1w file found for session $ses_name"
             fi
@@ -57,9 +60,11 @@ for subject in $subjects; do
                 gunzip -f "$new_func_name"
 
                 # Convert to MINC
-                singularity exec -B $INPUT_DIR:/input $CONTAINER \
-                    nii2mnc "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii" \
-                            "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.mnc"
+                singularity run \
+                -B ${INPUT_DIR}:/input \
+                ${SING_CONTAINER} \
+                nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
+                            "/input/subjects/brains/${subject}_${ses_name}_T1w.mnc"
             else
                 echo "  No MNI functional file found for session $ses_name"
             fi
