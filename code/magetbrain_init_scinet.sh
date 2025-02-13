@@ -70,4 +70,3 @@ cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
 # Copy container
 cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  $PROJECT_DIR/containers/
 
-echo "Processing complete!"
