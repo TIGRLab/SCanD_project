@@ -43,7 +43,9 @@ for subject in $subjects; do
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                singularity exec "$CONTAINER" nii2mnc "${new_t1w_name%.gz}" "${new_t1w_name%.nii.gz}.mnc"
+                singularity exec --B $INPUT_DIR/subjects/brains:/input $CONTAINER \
+                             nii2mnc "/input/${new_t1w_name%.gz}.nii" \
+                                      "/input/${{new_t1w_name%.nii.gz}.mnc"
             else
                 echo "  No T1w file found for session $ses_name"
             fi
@@ -56,7 +58,9 @@ for subject in $subjects; do
                 gunzip -f "$new_func_name"
 
                 # Convert to MINC
-                singularity exec "$CONTAINER" nii2mnc "${new_func_name%.gz}" "${new_func_name%.nii.gz}.mnc"
+                singularity exec --B $INPUT_DIR/subjects/brains:/input $CONTAINER \
+                             nii2mnc "/input/${new_func_name%.gz}.nii" \
+                                      "/input/${{new_func_name%.nii.gz}.mnc"
             else
                 echo "  No MNI functional file found for session $ses_name"
             fi
