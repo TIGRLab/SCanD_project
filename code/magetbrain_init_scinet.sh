@@ -63,8 +63,8 @@ for subject in $subjects; do
                 singularity run \
                 -B ${INPUT_DIR}:/input \
                 ${SING_CONTAINER} \
-                nii2mnc "/input/subjects/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii" \
-                            "/input/subjects/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.mnc"            
+                nii2mnc "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii" \
+                            "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.mnc"            
             else
                 echo "  No MNI functional file found for session $ses_name"
             fi
