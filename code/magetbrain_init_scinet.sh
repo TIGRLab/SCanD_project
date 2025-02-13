@@ -66,4 +66,7 @@ done
 # Copy atlas data
 cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
 
+# Copy container
+cp -r /scratch/arisvoin/shared/containers/ $SCRATCH/SCanD_project/containers/
+
 echo "Processing complete!"
