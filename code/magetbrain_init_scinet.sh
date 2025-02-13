@@ -1,31 +1,71 @@
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/subjects
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/templates
-mkdir $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/templates/brains
+#!/bin/bash
 
+# Load necessary module for nii2mnc
+module load minc-toolkit/1.9.18.3  # Adjust based on your system
 
-export MAGetbrain_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
-export BIDS_DIR=$SCRATCH/SCanD_project/data/local/bids
-export FMRIPREP_DIR=$SCRATCH/SCanD_project/data/local/derivatives/fmriprep/23.2.3/
+# Define directories
+SCRATCH="/scratch/ghazalm"
+PROJECT_DIR="$SCRATCH/SCanD_project/data/local"
+BIDS_DIR="$PROJECT_DIR/bids"
+FMRIPREP_DIR="$PROJECT_DIR/derivatives/fmriprep/23.2.3"
+MAGETBRAIN_DIR="$PROJECT_DIR/MAGeTbrain/magetbrain_data"
+INPUT_DIR="$MAGETBRAIN_DIR/input"
+LOG_DIR="$PROJECT_DIR/logs"
 
-cp -r $BIDS_DIR/$subject/*/anat/*T1w.nii.gz  $MAGetbrain_DIR/input/subjects/brains/
-cp -r $FMRIPREP_DIR/data/local/derivatives/fmriprep/23.2.3/$subject/ses-*/func/*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz  $MAGetbrain_DIR/input/templates/brains/
-cp -r /scratch/arisvoin/shared/temp/atlases $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/
+# Create necessary directories if they don't exist
+mkdir -p "$INPUT_DIR/subjects/brains"
+mkdir -p "$INPUT_DIR/templates/brains"
+mkdir -p "$LOG_DIR"
 
-gunzip $MAGetbrain_DIR/input/subjects/brains/*.nii.gz
-gunzip $MAGetbrain_DIR/input/templates/brains/*.nii.gz
+# Set the log file path for magetbrain_init.out
+LOG_FILE="$LOG_DIR/magetbrain_init.out"
 
+# Redirect stdout and stderr to the log file
+exec > "$LOG_FILE" 2>&1
 
-nii2mnc $MAGetbrain_DIR/input/subjects/brains/*T1w.nii \
-        $MAGetbrain_DIR/input/subjects/brains/*T1w.mnc
+# Read subjects from participants.tsv (excluding header)
+subjects=$(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1)
 
-nii2mnc $MAGetbrain_DIR/input/templates/brains/*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz \
-        $MAGetbrain_DIR/input/templates/brains/*space-MNI152NLin2009cAsym_desc-preproc_bold.mnc
+# Process each subject
+for subject in $subjects; do
+    echo "Processing subject: $subject"
 
-# add subject selection
-# add atlases: make sure all there,Erin
-#init code subjects if posiible
-#clean code
+    # Process each session for the subject
+    for session in "$BIDS_DIR/$subject"/ses-*; do
+        if [[ -d "$session" ]]; then
+            ses_name=$(basename "$session")
+            echo "  Processing session: $ses_name"
+
+            # Copy anatomical data (T1w)
+            t1w_file=$(find "$session/anat" -name "*T1w.nii.gz" | head -n 1)
+            if [[ -n "$t1w_file" ]]; then
+                new_t1w_name="$INPUT_DIR/subjects/brains/${subject}_${ses_name}_T1w.nii.gz"
+                cp "$t1w_file" "$new_t1w_name"
+                gunzip -f "$new_t1w_name"
+
+                # Convert to MINC
+                nii2mnc "${new_t1w_name%.gz}" "${new_t1w_name%.nii.gz}.mnc"
+            else
+                echo "  No T1w file found for session $ses_name"
+            fi
+
+            # Find and copy the first functional file for this session
+            first_func_file=$(find "$FMRIPREP_DIR/$subject/$ses_name/func" -name "*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz" | sort | head -n 1)
+            if [[ -n "$first_func_file" ]]; then
+                new_func_name="$INPUT_DIR/templates/brains/${subject}_${ses_name}_bold.nii.gz"
+                cp "$first_func_file" "$new_func_name"
+                gunzip -f "$new_func_name"
+
+                # Convert to MINC
+                nii2mnc "${new_func_name%.gz}" "${new_func_name%.nii.gz}.mnc"
+            else
+                echo "  No MNI functional file found for session $ses_name"
+            fi
+        fi
+    done
+done
+
+# Copy atlas data
+cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
+
+echo "Processing complete!"
