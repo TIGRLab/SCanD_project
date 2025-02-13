@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=02:00:00
-#SBATCH --mem-per-cpu=60000
+#SBATCH --mem-per-cpu=1000
 
 # Load necessary module for nii2mnc
 module load minc-toolkit/1.9.18.3  
