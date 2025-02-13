@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=maget_brain
-#SBATCH --output=log/%x_%j.out 
+#SBATCH --job-name=maget_brain_mb
+#SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=16:00:00
@@ -8,8 +8,7 @@
 
 module load apptainer/1.3.5
 
-LOG_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/log
-DATA_DIR=$SCRATCH/data/local/MAGeTbrain/magetbrain_data
+DATA_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$SCRATCH/SCanD_project/containers/magetbrain.sif
 
 mkdir -p $LOG_DIR
