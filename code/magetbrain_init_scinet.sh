@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=02:00:00
+#SBATCH --time=01:00:00
 #SBATCH --mem-per-cpu=1000
 
 # Load necessary module for nii2mnc
