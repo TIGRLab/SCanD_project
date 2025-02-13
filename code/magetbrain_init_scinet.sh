@@ -21,7 +21,6 @@ INPUT_DIR="$MAGETBRAIN_DIR/input"
 mkdir -p "$INPUT_DIR/subjects/brains"
 mkdir -p "$INPUT_DIR/templates/brains"
 
-
 # Read subjects from participants.tsv (excluding header)
 subjects=$(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1)
 
@@ -43,9 +42,9 @@ for subject in $subjects; do
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                singularity exec --B $INPUT_DIR/subjects/brains:/input $CONTAINER \
-                             nii2mnc "/input/${new_t1w_name%.gz}.nii" \
-                                      "/input/${{new_t1w_name%.nii.gz}.mnc"
+                singularity exec --bind $INPUT_DIR:/input $CONTAINER \
+                    nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
+                            "/input/subjects/brains/${subject}_${ses_name}_T1w.mnc"
             else
                 echo "  No T1w file found for session $ses_name"
             fi
@@ -58,9 +57,9 @@ for subject in $subjects; do
                 gunzip -f "$new_func_name"
 
                 # Convert to MINC
-                singularity exec --B $INPUT_DIR/subjects/brains:/input $CONTAINER \
-                             nii2mnc "/input/${new_func_name%.gz}.nii" \
-                                      "/input/${{new_func_name%.nii.gz}.mnc"
+                singularity exec --bind $INPUT_DIR:/input $CONTAINER \
+                    nii2mnc "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii" \
+                            "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.mnc"
             else
                 echo "  No MNI functional file found for session $ses_name"
             fi
