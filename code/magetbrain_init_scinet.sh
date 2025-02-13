@@ -67,6 +67,6 @@ done
 cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
 
 # Copy container
-cp -r /scratch/arisvoin/shared/containers/ $SCRATCH/SCanD_project/containers/
+cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  $SCRATCH/SCanD_project/containers/
 
 echo "Processing complete!"
