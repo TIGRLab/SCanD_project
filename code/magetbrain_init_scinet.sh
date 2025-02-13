@@ -61,6 +61,6 @@ for subject in $subjects; do
 done
 
 # Copy atlas data
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/magetbrain/atlases "$INPUT_DIR/"
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
 echo "Processing complete!"
