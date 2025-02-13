@@ -2,11 +2,9 @@
 #SBATCH --job-name=magetbrain_mb
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=40
 #SBATCH --time=16:00:00
-#SBATCH --mem-per-cpu=60000
 
-module load apptainer/1.3.5
 
 DATA_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$SCRATCH/SCanD_project/containers/magetbrain.sif
