@@ -8,7 +8,7 @@
 
 module load apptainer/1.3.5
 
-PROJECT_DIR
+PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
