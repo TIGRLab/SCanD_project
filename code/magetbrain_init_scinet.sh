@@ -7,6 +7,10 @@
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
+# Copy container
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif  $PROJECT_DIR/containers/
+CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
+
 # Define directories
 BIDS_DIR="$PROJECT_DIR/data/local/bids"
 FMRIPREP_DIR="$PROJECT_DIR/data/local/derivatives/fmriprep/23.2.3"
@@ -39,7 +43,7 @@ for subject in $subjects; do
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                nii2mnc "${new_t1w_name%.gz}" "${new_t1w_name%.nii.gz}.mnc"
+                singularity exec "$CONTAINER" nii2mnc "${new_t1w_name%.gz}" "${new_t1w_name%.nii.gz}.mnc"
             else
                 echo "  No T1w file found for session $ses_name"
             fi
@@ -52,7 +56,7 @@ for subject in $subjects; do
                 gunzip -f "$new_func_name"
 
                 # Convert to MINC
-                nii2mnc "${new_func_name%.gz}" "${new_func_name%.nii.gz}.mnc"
+                singularity exec "$CONTAINER" nii2mnc "${new_func_name%.gz}" "${new_func_name%.nii.gz}.mnc"
             else
                 echo "  No MNI functional file found for session $ses_name"
             fi
@@ -62,6 +66,3 @@ done
 
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
-
-# Copy container
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif  $PROJECT_DIR/containers/
