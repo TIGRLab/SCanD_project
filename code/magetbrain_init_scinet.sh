@@ -5,8 +5,6 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=01:00:00
 
-# Load necessary module for nii2mnc
-module load minc-toolkit/1.9.18.3  
 
 # Define directories
 SCRATCH="/scratch/ghazalm"
