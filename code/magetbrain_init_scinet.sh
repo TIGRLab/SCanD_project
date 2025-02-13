@@ -2,9 +2,8 @@
 #SBATCH --job-name=magetbrain_init
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=40
 #SBATCH --time=01:00:00
-#SBATCH --mem-per-cpu=1000
 
 # Load necessary module for nii2mnc
 module load minc-toolkit/1.9.18.3  
