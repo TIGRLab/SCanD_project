@@ -9,11 +9,12 @@
 # Load necessary module for nii2mnc
 module load minc-toolkit/1.9.18.3  
 
+PROJECT_DIR=${SLURM_SUBMIT_DIR}
+
 # Define directories
-PROJECT_DIR="$SCRATCH/SCanD_project/data/local"
-BIDS_DIR="$PROJECT_DIR/bids"
-FMRIPREP_DIR="$PROJECT_DIR/derivatives/fmriprep/23.2.3"
-MAGETBRAIN_DIR="$PROJECT_DIR/MAGeTbrain/magetbrain_data"
+BIDS_DIR="$PROJECT_DIR/data/local/bids"
+FMRIPREP_DIR="$PROJECT_DIR/data/local/derivatives/fmriprep/23.2.3"
+MAGETBRAIN_DIR="$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data"
 INPUT_DIR="$MAGETBRAIN_DIR/input"
 
 # Create necessary directories if they don't exist
@@ -67,6 +68,6 @@ done
 cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
 
 # Copy container
-cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  $SCRATCH/SCanD_project/containers/
+cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  $PROJECT_DIR/containers/
 
 echo "Processing complete!"
