@@ -7,7 +7,6 @@
 
 
 # Define directories
-SCRATCH="/scratch/ghazalm"
 PROJECT_DIR="$SCRATCH/SCanD_project/data/local"
 BIDS_DIR="$PROJECT_DIR/bids"
 FMRIPREP_DIR="$PROJECT_DIR/derivatives/fmriprep/23.2.3"
@@ -62,6 +61,6 @@ for subject in $subjects; do
 done
 
 # Copy atlas data
-cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/magetbrain/atlases "$INPUT_DIR/"
 
 echo "Processing complete!"
