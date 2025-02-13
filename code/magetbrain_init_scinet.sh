@@ -10,7 +10,6 @@
 module load minc-toolkit/1.9.18.3  
 
 # Define directories
-SCRATCH="/scratch/ghazalm"
 PROJECT_DIR="$SCRATCH/SCanD_project/data/local"
 BIDS_DIR="$PROJECT_DIR/bids"
 FMRIPREP_DIR="$PROJECT_DIR/derivatives/fmriprep/23.2.3"
