@@ -8,8 +8,10 @@
 
 module load apptainer/1.3.5
 
-DATA_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$SCRATCH/SCanD_project/containers/magetbrain.sif
+PROJECT_DIR
+
+DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
+SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
 
 mkdir -p $LOG_DIR
 
