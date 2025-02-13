@@ -47,7 +47,7 @@ for subject in $subjects; do
             # Find and copy the first functional file for this session
             first_func_file=$(find "$FMRIPREP_DIR/$subject/$ses_name/func" -name "*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz" | sort | head -n 1)
             if [[ -n "$first_func_file" ]]; then
-                new_func_name="$INPUT_DIR/templates/brains/${subject}_${ses_name}_bold.nii.gz"
+                new_func_name="$INPUT_DIR/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                 cp "$first_func_file" "$new_func_name"
                 gunzip -f "$new_func_name"
 
