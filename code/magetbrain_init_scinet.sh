@@ -65,5 +65,3 @@ cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
 # Copy container
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif  $PROJECT_DIR/containers/
-
-echo "Processing complete!"
