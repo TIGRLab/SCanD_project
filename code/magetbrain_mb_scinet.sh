@@ -5,9 +5,10 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=16:00:00
 
+PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
-DATA_DIR=$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$SCRATCH/SCanD_project/containers/magetbrain.sif
+DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
+SING_CONTAINER=$SPROJECT_DIR/containers/magetbrain.sif
 
 mkdir -p $LOG_DIR
 
