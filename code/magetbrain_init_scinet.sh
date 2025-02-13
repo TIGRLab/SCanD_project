@@ -42,7 +42,7 @@ for subject in $subjects; do
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                singularity exec --B $INPUT_DIR:/input $CONTAINER \
+                singularity exec -B $INPUT_DIR:/input $CONTAINER \
                     nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
                             "/input/subjects/brains/${subject}_${ses_name}_T1w.mnc"
             else
@@ -57,7 +57,7 @@ for subject in $subjects; do
                 gunzip -f "$new_func_name"
 
                 # Convert to MINC
-                singularity exec --B $INPUT_DIR:/input $CONTAINER \
+                singularity exec -B $INPUT_DIR:/input $CONTAINER \
                     nii2mnc "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii" \
                             "/input/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.mnc"
             else
