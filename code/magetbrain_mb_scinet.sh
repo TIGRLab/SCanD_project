@@ -8,9 +8,10 @@
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$SPROJECT_DIR/containers/magetbrain.sif
+SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
+LOGS_DIR="$PROJECT_DIR/logs"
 
-mkdir -p $LOG_DIR
+mkdir -p "$LOG_DIR"
 
 cd ~
 
@@ -27,8 +28,8 @@ exitcode=$?
 
 if [ $exitcode -eq 0 ]; then
    echo "${SLURM_ARRAY_TASK_ID}    0" 
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
 else
    echo "${SLURM_ARRAY_TASK_ID}    magetbrain failed" \
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
 fi
