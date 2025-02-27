@@ -37,4 +37,13 @@ run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
 run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 1
 run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
 run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
-run_pipeline "magetbrain_mb" "./code/02_magetbrain_mb_scinet.sh" 1
+
+
+# Prompt for magetbrain_mb
+read -p "Do you want to run the magetbrain_mb pipeline? (yes/no): " run_magetbrain
+if [[ "$run_magetbrain" =~ ^(yes|y)$ ]]; then
+    echo "Running magetbrain_mb..."
+    sbatch ./code/02_magetbrain_mb_scinet.sh
+else
+    echo "Skipping magetbrain_mb."
+fi
