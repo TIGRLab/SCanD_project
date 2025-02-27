@@ -125,7 +125,7 @@ done
 
 
 # Process template subjects (selected randomly)
-for template in "${selected_males_for_templates[@]}" "${selected_females_for_templates[@]}"; do
+for template in $selected_subjects; do
     # First, try to find the file in the ses-* subdirectories
     template_file="$BIDS_DIR/$template/ses-*/anat/*T1w.nii.gz"
     t1w_file=$(find $BIDS_DIR/$template/ses-*/anat/ -name "*T1w.nii.gz" | head -n 1)
