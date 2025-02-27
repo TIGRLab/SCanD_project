@@ -281,6 +281,13 @@ mkdir ${PROJECT_DIR}/data/share/freesurfer_group
 rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
 ##rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
 
+# sharing magetbrain outputs
+mkdir -p ${PROJECT_DIR}/data/share/magetbrain/input
+mkdir -p ${PROJECT_DIR}/data/share/magetbrain/output
+
+rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote/*labels.mnc ${PROJECT_DIR}/data/share/magetbrain/output
+rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc* ${PROJECT_DIR}/data/share/magetbrain/input
+
 
 ## Generate qsiprep motion metrics and extract NODDI indices
 module load  python/3.10
