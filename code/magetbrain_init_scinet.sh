@@ -6,67 +6,150 @@
 #SBATCH --time=01:00:00
 #SBATCH --mem-per-cpu=1000
 
-# Load necessary module for nii2mnc
-module load minc-toolkit/1.9.18.3  
-
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
+
+# Copy container
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif "$PROJECT_DIR/containers/"
+SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
 
 # Define directories
 BIDS_DIR="$PROJECT_DIR/data/local/bids"
-FMRIPREP_DIR="$PROJECT_DIR/data/local/derivatives/fmriprep/23.2.3"
 MAGETBRAIN_DIR="$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data"
 INPUT_DIR="$MAGETBRAIN_DIR/input"
 
-# Create necessary directories if they don't exist
+# Create necessary directories
 mkdir -p "$INPUT_DIR/subjects/brains"
 mkdir -p "$INPUT_DIR/templates/brains"
 
+# Define the path to the demographic TSV file
+DEMOGRAPHIC_FILE="$PROJECT_DIR/data/local/bids/participants_demographic.tsv"
 
-# Read subjects from participants.tsv (excluding header)
+# Function to select subjects randomly based on age and gender
+select_random_subjects() {
+    local num_subjects=$1
+    shift
+    local subjects=("$@")
+
+    # Sort subjects by age (second column) using a temporary file for sorting
+    sorted_subjects=($(for subject in "${subjects[@]}"; do
+        # Extract the subject ID and age from the demographic file
+        age=$(grep -P "^$subject\t" "$DEMOGRAPHIC_FILE" | cut -f2)
+        echo "$subject,$age"
+    done | sort -t, -k2,2n))
+
+    # Select the specified number of subjects randomly
+    selected_subjects=()
+    while [[ ${#selected_subjects[@]} -lt $num_subjects ]]; do
+        random_index=$((RANDOM % ${#sorted_subjects[@]}))
+        subject=$(echo "${sorted_subjects[$random_index]}" | cut -d, -f1)
+
+        # Avoid duplicates
+        if [[ ! " ${selected_subjects[@]} " =~ " ${subject} " ]]; then
+            selected_subjects+=("$subject")
+        fi
+    done
+    echo "${selected_subjects[@]}"
+}
+
+# Check if the demographic file exists
+if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
+    # Separate males and females based on the third column (Gender)
+    male_subjects=($(awk -F'\t' '$3 == "Male" {print $1}' "$DEMOGRAPHIC_FILE"))
+    female_subjects=($(awk -F'\t' '$3 == "Female" {print $1}' "$DEMOGRAPHIC_FILE"))
+
+    # Select 11 males and 10 females randomly based on age for templates
+    selected_males_for_templates=($(select_random_subjects 11 "${male_subjects[@]}"))
+    selected_females_for_templates=($(select_random_subjects 10 "${female_subjects[@]}"))
+
+    # Output selected subject IDs for templates
+    echo "Selected males for templates: ${selected_males_for_templates[@]}"
+    echo "Selected females for templates: ${selected_females_for_templates[@]}"
+else
+    echo "Demographic file not found at $DEMOGRAPHIC_FILE."
+fi
+
+# Process each subject in BIDS
 subjects=$(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1)
 
-# Process each subject
 for subject in $subjects; do
     echo "Processing subject: $subject"
 
-    # Process each session for the subject
-    for session in "$BIDS_DIR/$subject"/ses-*; do
-        if [[ -d "$session" ]]; then
-            ses_name=$(basename "$session")
-            echo "  Processing session: $ses_name"
+    # Check for session directories
+    session_dirs=("$BIDS_DIR/$subject/ses-"*)
+    if [[ -d "${session_dirs[0]}" ]]; then
+        # If session directories exist, process them
+        for session in "${session_dirs[@]}"; do
+            if [[ -d "$session" ]]; then
+                ses_name=$(basename "$session")
+                echo "  Processing session: $ses_name"
 
-            # Copy anatomical data (T1w)
-            t1w_file=$(find "$session/anat" -name "*T1w.nii.gz" | head -n 1)
+                # Copy anatomical data (T1w)
+                t1w_file=$(find "$session/anat" -name "*T1w.nii.gz" | head -n 1)
+                if [[ -n "$t1w_file" ]]; then
+                    new_t1w_name="$INPUT_DIR/subjects/brains/${subject}_${ses_name}_T1w.nii.gz"
+                    cp "$t1w_file" "$new_t1w_name"
+                    gunzip -f "$new_t1w_name"
+
+                    # Convert to MINC
+                    singularity run -B ${INPUT_DIR}:/input ${SING_CONTAINER} \
+                        nii2mnc "/input/subjects/brains/${subject}_${ses_name}_T1w.nii" \
+                                "/input/subjects/brains/${subject}_${ses_name}_T1w.mnc"
+                else
+                    echo "  No T1w file found for session $ses_name"
+                fi
+            fi
+        done
+    else
+
+        # If no session directories exist, process anatomical data directly
+        echo "  No sessions found for subject $subject, processing anatomical data"
+
+        anat_dir="$BIDS_DIR/$subject/anat"
+        if [[ -d "$anat_dir" ]]; then
+            t1w_file=$(find "$anat_dir" -name "*T1w.nii.gz" | head -n 1)
             if [[ -n "$t1w_file" ]]; then
-                new_t1w_name="$INPUT_DIR/subjects/brains/${subject}_${ses_name}_T1w.nii.gz"
+                new_t1w_name="$INPUT_DIR/subjects/brains/${subject}_T1w.nii.gz"
                 cp "$t1w_file" "$new_t1w_name"
                 gunzip -f "$new_t1w_name"
 
                 # Convert to MINC
-                nii2mnc "${new_t1w_name%.gz}" "${new_t1w_name%.nii.gz}.mnc"
+                singularity run -B ${INPUT_DIR}:/input ${SING_CONTAINER} \
+                    nii2mnc "/input/subjects/brains/${subject}_T1w.nii" \
+                            "/input/subjects/brains/${subject}_T1w.mnc"
             else
-                echo "  No T1w file found for session $ses_name"
+                echo "  No T1w file found for subject $subject"
             fi
-
-            # Find and copy the first functional file for this session
-            first_func_file=$(find "$FMRIPREP_DIR/$subject/$ses_name/func" -name "*space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz" | sort | head -n 1)
-            if [[ -n "$first_func_file" ]]; then
-                new_func_name="$INPUT_DIR/templates/brains/${subject}_${ses_name}_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
-                cp "$first_func_file" "$new_func_name"
-                gunzip -f "$new_func_name"
-
-                # Convert to MINC
-                nii2mnc "${new_func_name%.gz}" "${new_func_name%.nii.gz}.mnc"
-            else
-                echo "  No MNI functional file found for session $ses_name"
-            fi
+        else
+            echo "  No anatomical data found for subject $subject"
         fi
-    done
+    fi
+done
+
+
+# Process template subjects (selected randomly)
+for template in "${selected_males_for_templates[@]}" "${selected_females_for_templates[@]}"; do
+    # First, try to find the file in the ses-* subdirectories
+    template_file="$BIDS_DIR/$template/ses-*/anat/*T1w.nii.gz"
+    t1w_file=$(find $BIDS_DIR/$template/ses-*/anat/ -name "*T1w.nii.gz" | head -n 1)
+
+    # If no file is found in ses-* subdirectories, check in the main anat folder
+    if [[ -z "$t1w_file" ]]; then
+        t1w_file=$(find $BIDS_DIR/$template/anat/ -name "*T1w.nii.gz" | head -n 1)
+    fi
+
+    if [[ -n "$t1w_file" ]]; then
+        new_template_name="$INPUT_DIR/templates/brains/${template}_T1w.nii.gz"
+        cp "$t1w_file" "$new_template_name"
+        gunzip -f "$new_template_name"
+
+        # Convert to MINC
+        singularity run -B ${INPUT_DIR}:/input ${SING_CONTAINER} \
+            nii2mnc "/input/templates/brains/${template}_T1w.nii" \
+                    "/input/templates/brains/${template}_T1w.mnc"
+    else
+        echo "No T1w file found for template subject $template"
+    fi
 done
 
 # Copy atlas data
-cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
-
-# Copy container
-cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  $PROJECT_DIR/containers/
-
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
