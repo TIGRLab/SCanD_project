@@ -61,6 +61,9 @@ if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
     # Select 11 males and 10 females randomly based on age for templates
     selected_males_for_templates=($(select_random_subjects 11 "${male_subjects[@]}"))
     selected_females_for_templates=($(select_random_subjects 10 "${female_subjects[@]}"))
+
+    # Combine males and females into one array
+    selected_subjects=("${selected_males_for_templates[@]}" "${selected_females_for_templates[@]}")
     
 else
     selected_subjects=($(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1 | shuf -n 21))
