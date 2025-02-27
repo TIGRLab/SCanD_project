@@ -14,6 +14,7 @@ ${BASEDIR}
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
+│   ├── magetbrain.sif
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
 ├── data
@@ -32,6 +33,7 @@ ${BASEDIR}
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
 │   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
+│   │   ├── MAGeTbrain           # MAGETbrain input and output folder
 │   │   ├── qsirecon             # qsirecon derivatives
 │   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
@@ -42,6 +44,7 @@ ${BASEDIR}
 │       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── freesurfer_group     # contains tsv files of group data
+│       ├── magetbrain           # fusion folder
 │       ├── mriqc                # contains only qc images and metadata
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── smriprep             # contains only qc images and metadata
@@ -83,12 +86,14 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |  01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
+|^ |  01f	|  [Run magetbrain_init](#Running-magetbrain-init) 	|   1 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  6 hours of slurm 	|
 |^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ |   02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
+|^ |   02g	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  16 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
@@ -301,6 +306,17 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 ```
 
+## Running magetbrain init
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/01_magetbrain_init_scinet.sh
+```
+
 ## Running fmriprep apply 
 
 Note -  the script enclosed uses some interesting extra options:
@@ -450,6 +466,17 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
+```
+
+## Running magetbrain mb
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/02_magetbrain_mb_scinet.sh
 ```
 
 
