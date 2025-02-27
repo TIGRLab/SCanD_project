@@ -6,7 +6,7 @@ After setting up the scinet environment and organizing your bids folder and part
 
 The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
 
-## stage 1 (mriqc, fmriprep_anat, qsiprep, freesurfer, smriprep):
+## stage 1 (mriqc, fmriprep_anat, qsiprep, freesurfer, smriprep, magetbrain_init):
 ```sh
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -16,7 +16,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (ciftify_anat, fmriprep_func, qsirecon1, amico_noddi,tractography, freesurfer_group):
+## stage 2 (ciftify_anat, fmriprep_func, qsirecon1, amico_noddi,tractography, freesurfer_group, magetbrain_mb):
 
 ```sh
 ## go to the repo and pull new changes
