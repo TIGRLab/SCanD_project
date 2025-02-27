@@ -63,9 +63,7 @@ if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
     selected_females_for_templates=($(select_random_subjects 10 "${female_subjects[@]}"))
     
 else
-    echo "Demographic file not found at $DEMOGRAPHIC_FILE. Selecting 21 random subjects."
-    all_subjects=($(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1))
-    selected_subjects=($(select_random_subjects 21 "${all_subjects[@]}"))
+    selected_subjects=($(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1 | shuf -n 21))
 fi
 
 # Process each subject in BIDS
