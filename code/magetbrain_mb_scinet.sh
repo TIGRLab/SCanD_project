@@ -12,26 +12,33 @@ PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
+LOGS_DIR="$PROJECT_DIR/logs"
 
-mkdir -p $LOG_DIR
+mkdir -p "$LOG_DIR"
 
 cd ~
 
 singularity run \
    -B ${DATA_DIR}:/data \
    ${SING_CONTAINER} \
-    mb --input_dir /data/input \
+    mb \
+       --input_dir /data/input \
        --output_dir /data/output \
        --reg_dir /data/output/registration \
        --save \
-       run
+       run \
+       --stage-templatelib-walltime 24:00:00 \
+       --stage-templatelib-procs 2 \
+       --stage-voting-procs 1 \
+       --stage-voting-walltime 24:00:00
+
 
 exitcode=$?
 
 if [ $exitcode -eq 0 ]; then
-   echo "${SLURM_ARRAY_TASK_ID}    0" 
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+   echo "${SLURM_JOB_ID}    0" 
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
 else
-   echo "${SLURM_ARRAY_TASK_ID}    magetbrain failed" \
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+   echo "${SLURM_JOB_ID}    magetbrain failed" \
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
 fi
