@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#stage1 (mriqc, fmriprep_fit, freesurfer, qsiprep, smriprep):
+#stage1 (mriqc, fmriprep_fit, freesurfer, qsiprep, smriprep,magetbrain_init):
 
 # Function to calculate and submit array jobs
 submit_array_job() {
