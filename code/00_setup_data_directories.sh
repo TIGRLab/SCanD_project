@@ -35,6 +35,8 @@ ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ci
 
 cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 
+cp -r ${CONTAINER_DIR}/magetbrain.sif  containers/magetbrain.sif
+
 ## edit dataset_description and bold.json files in bids
 echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
 echo 'participant_id' > data/local/bids/participants.tsv
