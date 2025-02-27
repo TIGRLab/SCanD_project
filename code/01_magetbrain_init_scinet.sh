@@ -8,7 +8,6 @@
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif "$PROJECT_DIR/containers/"
 SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
 
 # Define directories
