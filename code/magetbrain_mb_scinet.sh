@@ -1,3 +1,6 @@
+magetbrain_mb_scinet.sh
+
+
 #!/bin/bash
 #SBATCH --job-name=magetbrain_mb
 #SBATCH --output=logs/%x_%j.out 
@@ -18,11 +21,17 @@ cd ~
 singularity run \
    -B ${DATA_DIR}:/data \
    ${SING_CONTAINER} \
-    mb --input_dir /data/input \
+    mb \
+       --input_dir /data/input \
        --output_dir /data/output \
        --reg_dir /data/output/registration \
        --save \
-       run
+       run \
+       --stage-templatelib-walltime 24:00:00 \
+       --stage-templatelib-procs 2 \
+       --stage-voting-procs 1 \
+       --stage-voting-walltime 24:00:00
+
 
 exitcode=$?
 
