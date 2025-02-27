@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#stage1 (mriqc, fmriprep_fit, freesurfer, qsiprep, smriprep):
+#stage1 (mriqc, fmriprep_fit, freesurfer, qsiprep, smriprep, magetbrain_init):
 
 # Function to calculate and submit array jobs
 submit_array_job() {
@@ -32,3 +32,13 @@ run_pipeline "fmriprep_fit" "code/01_fmriprep_fit_scinet.sh" 1
 run_pipeline "freesurfer" "code/01_freesurfer_long_scinet.sh" 1
 run_pipeline "qsiprep" "./code/01_qsiprep_scinet.sh" 1
 run_pipeline "smriprep" "./code/01_smriprep_scinet.sh" 1
+
+
+# Prompt for magetbrain_init
+read -p "Do you want to run the magetbrain_init pipeline? (yes/no): " run_magetbrain
+if [[ "$run_magetbrain" =~ ^(yes|y)$ ]]; then
+    echo "Running magetbrain_init..."
+    sbatch ./code/01_magetbrain_init_scinet.sh
+else
+    echo "Skipping magetbrain_init."
+fi
