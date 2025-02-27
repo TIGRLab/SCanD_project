@@ -11,7 +11,7 @@ module load apptainer/1.3.5
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/containers/magetbrain.sif "$PROJECT_DIR/containers/"
+cp -r /scratch/arisvoin/shared/containers/magetbrain.sif  "$PROJECT_DIR/containers/"
 SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
 
 # Define directories
