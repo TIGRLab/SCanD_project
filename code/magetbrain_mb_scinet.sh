@@ -1,6 +1,3 @@
-magetbrain_mb_scinet.sh
-
-
 #!/bin/bash
 #SBATCH --job-name=magetbrain_mb
 #SBATCH --output=logs/%x_%j.out 
