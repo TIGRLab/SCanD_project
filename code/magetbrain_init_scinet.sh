@@ -154,4 +154,4 @@ for template in "${selected_males_for_templates[@]}" "${selected_females_for_tem
 done
 
 # Copy atlas data
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
+cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
