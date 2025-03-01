@@ -18,8 +18,7 @@ cd ~
 singularity run \
    -B ${DATA_DIR}:/data \
    ${SING_CONTAINER} \
-    mb \
-       --input_dir /data/input \
+    mb --input_dir /data/input \
        --output_dir /data/output \
        --reg_dir /data/output/registration \
        --save \
