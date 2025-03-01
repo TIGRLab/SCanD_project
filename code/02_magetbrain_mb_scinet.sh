@@ -14,7 +14,7 @@ DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
 LOGS_DIR="$PROJECT_DIR/logs"
 
-mkdir -p "$LOG_DIR"
+mkdir -p "$LOGS_DIR"
 
 cd ~
 
