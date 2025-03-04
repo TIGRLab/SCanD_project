@@ -153,4 +153,4 @@ for template in "${selected_subjects[@]}"; do
 done
 
 # Copy atlas data
-cp -r /scratch/arisvoin/shared/temp/atlases "$INPUT_DIR/"
+cp -r /scratch/arisvoin/shared/templateflow/atlases  "$INPUT_DIR/"
