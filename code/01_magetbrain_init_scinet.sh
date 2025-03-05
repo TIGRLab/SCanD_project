@@ -126,29 +126,10 @@ done
 
 # Process template subjects (selected randomly)
 for template in "${selected_subjects[@]}"; do
-    
-    search_path="$BIDS_DIR/$template/ses-*/anat/*T1w.nii.gz"
-    t1w_file=$(find $BIDS_DIR/$template/ses-*/anat/ -name "*T1w.nii.gz" | head -n 1)
-    
-    if [[ -z "$t1w_file" ]]; then
-        t1w_file=$(find $BIDS_DIR/$template/anat/ -name "*T1w.nii.gz" | head -n 1)
-    fi
 
-    if [[ -n "$t1w_file" ]]; then 
-        new_template_name="$INPUT_DIR/templates/brains/${template}_T1w.nii.gz"
-        cp "$t1w_file" "$new_template_name"
-        gunzip -f "$new_template_name"
-
-        # Convert to MINC
-        echo "Converting to MINC format"
-        singularity run -B ${INPUT_DIR}:/input ${SING_CONTAINER} \
-            nii2mnc "/input/templates/brains/${template}_T1w.nii" \
-                    "/input/templates/brains/${template}_T1w.mnc"
-    else
-        echo "No T1w file found for template subject $template"
-    fi
+    cp -r $INPUT_DIR/subjects/brains/${template}* $INPUT_DIR/templates/brains/${template}_T1w.mnc
+    
 done
-
 
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
