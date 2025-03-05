@@ -66,6 +66,14 @@ if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
     selected_subjects=($(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1 | shuf -n 21))
 fi
 
+# check selected subjects
+for template in "${selected_subjects[@]}"; do
+
+    echo $temaple
+    
+done
+
+
 # Process each subject in BIDS
 subjects=$(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1)
 
