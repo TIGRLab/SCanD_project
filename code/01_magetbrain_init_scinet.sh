@@ -127,7 +127,7 @@ done
 # Process template subjects (selected randomly)
 for template in "${selected_subjects[@]}"; do
 
-    cp -r $INPUT_DIR/subjects/brains/${template}* $INPUT_DIR/templates/brains/${template}_T1w.mnc
+    cp -r $INPUT_DIR/subjects/brains/${template}*.mnc $INPUT_DIR/templates/brains/${template}_T1w.mnc
     
 done
 
