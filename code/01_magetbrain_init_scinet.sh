@@ -69,7 +69,7 @@ fi
 # check selected subjects
 for template in "${selected_subjects[@]}"; do
 
-    echo $temaple
+    echo $template
     
 done
 
