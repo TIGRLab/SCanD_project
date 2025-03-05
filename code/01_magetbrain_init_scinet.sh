@@ -128,6 +128,11 @@ done
 
 
 # Process template subjects (selected randomly)
+for template in "${selected_subjects[@]}"; do
+
+    cp -r $INPUT_DIR/subjects/brains/${template}*.mnc $INPUT_DIR/templates/brains/
+    
+done
 
 
 # Copy atlas data
