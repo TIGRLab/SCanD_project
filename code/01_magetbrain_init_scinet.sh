@@ -139,5 +139,37 @@ for template in "${selected_subjects[@]}"; do
     
 done
 
+
+## Fix header issue with mnc files
+
+singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
+    # Inside the Singularity container
+    for input_file in /data/input/templates/brains/*.mnc; do
+        # Generate output filename by appending '_fixed' to the original filename
+        output_file="\${input_file%.mnc}_fixed.mnc"
+
+        # Perform mincconvert conversion
+        mincconvert -2 "\$input_file" "\$output_file"
+    done
+EOF
+
+
+singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
+    # Inside the Singularity container
+    for input_file in /data/input/subjects/brains/*.mnc; do
+        # Generate output filename by appending '_fixed' to the original filename
+        output_file="\${input_file%.mnc}_fixed.mnc"
+
+        # Perform mincconvert conversion
+        mincconvert -2 "\$input_file" "\$output_file"
+    done
+EOF
+
+rm -rf ${DATA_DIR}/input/subjects/brains/*T1w.mnc
+rm -rf ${DATA_DIR}/input/subjects/brains/*nii*
+
+rm -rf ${DATA_DIR}/input/templates/brains/*T1w.mnc
+
+
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
