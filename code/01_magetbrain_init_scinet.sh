@@ -21,6 +21,9 @@ mkdir -p "$INPUT_DIR/templates/brains"
 mkdir ~/.qbatch
 chmod -R 777 ~/.qbatch
 
+mkdir ~/logs
+chmod -R 777 ~/logs
+
 # Define the path to the demographic TSV file
 DEMOGRAPHIC_FILE="$PROJECT_DIR/data/local/bids/participants_demographic.tsv"
 
