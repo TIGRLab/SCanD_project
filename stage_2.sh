@@ -30,6 +30,7 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 2
+run_pipeline "qsiprep" "./code/02_qsiprep_scinet.sh" 1
 run_pipeline "ciftify_anat" "./code/02_ciftify_anat_scinet.sh" 1
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
 run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
