@@ -30,7 +30,7 @@ run_pipeline() {
 run_pipeline "mriqc" "./code/01_mriqc_scinet.sh" 1
 run_pipeline "fmriprep_fit" "code/01_fmriprep_fit_scinet.sh" 1
 run_pipeline "freesurfer" "code/01_freesurfer_long_scinet.sh" 1
-run_pipeline "qsiprep" "./code/01_qsiprep_scinet.sh" 1
+run_pipeline "synthstrip" "./code/01_synthstrip.sh" 1
 run_pipeline "smriprep" "./code/01_smriprep_scinet.sh" 1
 
 # Prompt for magetbrain_init
