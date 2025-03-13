@@ -18,11 +18,6 @@ INPUT_DIR="$MAGETBRAIN_DIR/input"
 # Create necessary directories
 mkdir -p "$INPUT_DIR/subjects/brains"
 mkdir -p "$INPUT_DIR/templates/brains"
-mkdir ~/.qbatch
-chmod -R 777 ~/.qbatch
-
-mkdir ~/logs
-chmod -R 777 ~/logs
 
 # Define the path to the demographic TSV file
 DEMOGRAPHIC_FILE="$PROJECT_DIR/data/local/bids/participants_demographic.tsv"
