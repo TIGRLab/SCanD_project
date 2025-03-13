@@ -31,7 +31,7 @@ trap "cleanup_ramdisk" TERM
 
 # input BIDS directory
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export SING_CONTAINER=${BASEDIR}/containers/freesurfer_synthstrip-2023-04-07-13544feabd91.simg
+export SING_CONTAINER=${BASEDIR}/containers/freesurfer_synthstrip-2023-04-07.simg
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 
