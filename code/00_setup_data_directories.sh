@@ -33,6 +33,8 @@ ln -s ${CONTAINER_DIR}/xcp_d-0.7.3.simg containers/xcp_d-0.7.3.simg
 
 ln -s ${CONTAINER_DIR}/fmriprep_ciftity-v1.3.2-2.3.3.simg containers/fmriprep_ciftity-v1.3.2-2.3.3.simg 
 
+ln -s ${CONTAINER_DIR}/freesurfer_synthstrip-2023-04-07-13544feabd91.simg  containers/freesurfer_synthstrip-2023-04-07-13544feabd91.simg
+
 cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 
 cp -r ${CONTAINER_DIR}/magetbrain.sif  containers/magetbrain.sif
