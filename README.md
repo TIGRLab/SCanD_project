@@ -14,6 +14,7 @@ ${BASEDIR}
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
+│   ├── freesurfer_synthstrip-2023-04-07.simg
 │   ├── magetbrain.sif
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
@@ -84,16 +85,17 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
 |^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |  01d	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^ |  01d	|  [Run synthstrip](#Running-freesurfer-synthstrip-to-skullstrip-before-qsiprep) 	|   8 hours on slurm	|
 |^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
 |^ |  01f	|  [Run magetbrain_init](#Running-magetbrain-init) 	|   1 hours on slurm	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  6 hours of slurm 	|
-|^ |   02b	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
-|^ |   02c | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
-|^ |   02d	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
-|^ |   02e	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
-|^ |   02f	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02g	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  16 hours on slurm 	|
+|^ |  02b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^ |   02c	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
+|^ |   02d | [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
+|^ |   02e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
+|^ |   02f	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
+|^ |   02g	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
+|^ |   02h	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  16 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
@@ -271,7 +273,7 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ```
-## Running freesurfer-synthstrip to skullstrip before qsiprep
+## Running freesurfer synthstrip to skullstrip before qsiprep
 ### Outputs of freesurfer-synthstrip
 
 1. **The brain masks** (quality assessment) of the skullstrip images in `sourcedata/freesurfer-synthstrip/masks`.
