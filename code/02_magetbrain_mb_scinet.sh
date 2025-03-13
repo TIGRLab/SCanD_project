@@ -13,7 +13,7 @@ LOGS_DIR="$PROJECT_DIR/logs"
 
 mkdir -p "$LOGS_DIR"
 
-cd ~
+cd PROJECT_DIR/..
 
 singularity run \
    -B ${DATA_DIR}:/data \
