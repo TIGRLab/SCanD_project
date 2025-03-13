@@ -30,7 +30,7 @@ module load apptainer/1.3.5
 trap "cleanup_ramdisk" TERM
 
 # input BIDS directory
-export BIDS_DIR=${BASEDIR}/data/local/bids2
+export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer_synthstrip-2023-04-07-13544feabd91.simg
 
 ## get the subject list from a combo of the array id, the participants.tsv and the chunk size
@@ -68,20 +68,20 @@ for session in ${sessions};do
         b="${f%.nii.gz}"  # Extract base name without extension
 
         # Rsync to source data while preserving structure
-	echo "Copying ${SUBJECTS} dwi data to sourcedata directory..."
+	    echo "Copying ${SUBJECTS} dwi data to sourcedata directory..."
         rsync -avR "${BIDS_DIR}/./${SUBJECTS}/${session}/dwi/${f}" "${SOURCE_DATA}/"
 
         # Rename the copied file
-	mv -v "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${f}" "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${new_name}"
+	    mv -v "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${f}" "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${new_name}"
 
         # Run Singularity
-	echo "Running skullstrip for ${SUBJECTS}..."
-	echo ${f}
+	    echo "Running skullstrip for ${SUBJECTS}..."
+	    echo ${f}
         singularity run --cleanenv \
-	-B ${BASEDIR}/templates:/home/freesurfer_synthstrip --home /home/freesurfer_synthstrip \
+	    -B ${BASEDIR}/templates:/home/freesurfer_synthstrip --home /home/freesurfer_synthstrip \
         -B ${BIDS_DIR}/${SUBJECTS}/${session}/dwi:/dwi \
         -B ${masks_dir}:/masks \
-	-B ${WORK_DIR}:/work \
+	    -B ${WORK_DIR}:/work \
         ${SING_CONTAINER} \
         -i /dwi/${f} \
         -o /dwi/${f} \
