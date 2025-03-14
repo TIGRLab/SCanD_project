@@ -36,9 +36,9 @@ singularity run \
 exitcode=$?
 
 if [ $exitcode -eq 0 ]; then
-   echo "${SLURM_JOB_ID}    0" 
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
+   echo "0" 
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.tsv
 else
-   echo "${SLURM_JOB_ID}    magetbrain failed" \
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_JOB_ID}.tsv
+   echo "magetbrain failed" \
+       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.tsv
 fi
