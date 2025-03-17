@@ -298,7 +298,10 @@ cd ${PROJECT_DIR}
 python3 code/gen_qsiprep_motion_metrics.py
 
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
-rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/noddi_roi ${PROJECT_DIR}/data/share/amico_noddi
+
+rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/**/*.png' --include='noddi_roi/**/*.csv' --exclude='noddi_roi/**' \
+    ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
+    ${PROJECT_DIR}/data/share/amico_noddi
 
 # sharing magetbrain outputs
 mkdir -p ${PROJECT_DIR}/data/share/magetbrain/input
