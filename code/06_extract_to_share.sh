@@ -260,16 +260,6 @@ echo "No TRACTIFY single-shell outputs found."
 fi
 
 
-#running Enigma_extract
-echo "Running Enigma Extract"
-source ./code/ENIGMA_ExtractCortical.sh
-
-## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/ENIGMA_extract" ]; 
-then
-echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/ENIGMA_extract ${PROJECT_DIR}/data/share/
-fi
 
 #running freesurfer group merge
 source ./code/freesurfer_group_merge.sh
@@ -280,6 +270,17 @@ mkdir ${PROJECT_DIR}/data/share/freesurfer_group
 rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
 rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
 
+
+#running Enigma_extract
+echo "Running Enigma Extract"
+source ./code/ENIGMA_ExtractCortical.sh
+
+## copy over the Enigma_extract outputs
+if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ]; 
+then
+echo "copying over the ENIGMA extracted cortical and subcortical files"
+rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group
+fi
 
 
 ## Generate qsiprep motion metrics and extract NODDI indices
