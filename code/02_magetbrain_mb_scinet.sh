@@ -27,10 +27,11 @@ singularity run \
        --reg_dir /data/output/registration \
        --save \
        run \
+       --subject ${SUBJECTS} \
        --stage-templatelib-walltime 24:00:00 \
        --stage-templatelib-procs 2 \
        --stage-voting-procs 1 \
-       --stage-voting-walltime 24:00:00
+       --stage-voting-walltime 24:00:00 
 
 
 exitcode=$?
