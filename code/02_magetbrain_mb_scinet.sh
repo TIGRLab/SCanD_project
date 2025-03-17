@@ -13,6 +13,22 @@ LOGS_DIR="$PROJECT_DIR/logs"
 
 mkdir -p "$LOGS_DIR"
 
+SUB_SIZE=1
+
+bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+SUBJECTS_LIST=($(ls $PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
+
+N_SUBJECTS=${#SUBJECTS_LIST[@]}
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS - (array_job_length * SUB_SIZE)))
+
+if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
+    SUBJECTS=("${SUBJECTS_LIST[@]: -$Tail}")
+else
+    SUBJECTS=("${SUBJECTS_LIST[@]:bigger_bit-SUB_SIZE:SUB_SIZE}")
+fi
+
+
 cd $PROJECT_DIR/..
 
 singularity run \
