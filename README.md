@@ -33,7 +33,6 @@ ${BASEDIR}
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
-│   │   ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │   │   ├── MAGeTbrain           # MAGETbrain input and output folder
 │   │   ├── qsirecon             # qsirecon derivatives
 │   │   └── qsirecon-FSL         # step1 qsirecon
@@ -42,7 +41,6 @@ ${BASEDIR}
 │       ├── amico_noddi          # contains only qc images and metadata
 │       ├── ciftify              # contains only qc images and metadata
 │       ├── enigmaDTI            # enigmaDTI
-│       ├── ENIGMA_extract       # extracted cortical and subcortical csv files
 │       ├── fmriprep             # contains only qc images and metadata
 │       ├── freesurfer_group     # contains tsv files of group data
 │       ├── magetbrain           # fusion folder
