@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
-#SBATCH --time=23:00:00
+#SBATCH --time=16:00:00
 #SBATCH --mem-per-cpu=10000
 
 module load apptainer/1.3.5
@@ -15,6 +15,21 @@ SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
 LOGS_DIR="$PROJECT_DIR/logs"
 
 mkdir -p "$LOGS_DIR"
+
+SUB_SIZE=1
+
+bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+SUBJECTS_LIST=($(ls $PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
+
+N_SUBJECTS=${#SUBJECTS_LIST[@]}
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS - (array_job_length * SUB_SIZE)))
+
+if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
+    SUBJECTS=("${SUBJECTS_LIST[@]: -$Tail}")
+else
+    SUBJECTS=("${SUBJECTS_LIST[@]:bigger_bit-SUB_SIZE:SUB_SIZE}")
+fi
 
 cd $PROJECT_DIR/..
 
