@@ -306,8 +306,12 @@ cd ${PROJECT_DIR}
 python3 code/gen_qsiprep_motion_metrics.py
 
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
-rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/noddi_roi ${PROJECT_DIR}/data/share/amico_noddi
 
+rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/**/*.png' --include='noddi_roi/**/*.csv' --exclude='noddi_roi/**' \
+    ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
+    ${PROJECT_DIR}/data/share/amico_noddi
+
+    
 ## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
 export SING_CONTAINER=${PROJECT_DIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
