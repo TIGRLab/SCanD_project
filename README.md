@@ -93,7 +93,7 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |^ |   02e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02f	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02g	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02h	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  16 hours on slurm 	|
+|^ |   02h	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  23 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
