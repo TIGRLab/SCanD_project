@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --time=16:00:00
+#SBATCH --time=23:00:00
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
