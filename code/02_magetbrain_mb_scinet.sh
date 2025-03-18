@@ -48,10 +48,13 @@ singularity run \
 
 exitcode=$?
 
-if [ $exitcode -eq 0 ]; then
-   echo "0" 
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.tsv
-else
-   echo "magetbrain failed" \
-       >> ${LOGS_DIR}/${SLURM_JOB_NAME}.tsv
-fi
+# Output results to a table
+for subject in $SUBJECTS; do
+    if [ $exitcode -eq 0 ]; then
+        echo "$subject   ${SLURM_ARRAY_TASK_ID}    0" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    else
+        echo "$subject   ${SLURM_ARRAY_TASK_ID}    magetbrain failed" \
+            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+    fi
+done
