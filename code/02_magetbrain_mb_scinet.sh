@@ -22,11 +22,8 @@ N_SUBJECTS=${#SUBJECTS_LIST[@]}
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 Tail=$((N_SUBJECTS - (array_job_length * SUB_SIZE)))
 
-if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
-    SUBJECTS=("${SUBJECTS_LIST[@]: -$Tail}")
-else
-    SUBJECTS=("${SUBJECTS_LIST[@]:bigger_bit-SUB_SIZE:SUB_SIZE}")
-fi
+
+SUBJECTS=("${SUBJECTS_LIST[@]:bigger_bit-SUB_SIZE:SUB_SIZE}")
 
 
 cd $PROJECT_DIR/..
