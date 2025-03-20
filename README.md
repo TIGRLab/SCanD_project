@@ -348,7 +348,7 @@ To change the segmentation to **cerebellum, hippocampus, or another region**:
    rm data/local/MAGeTbrain/magetbrain_data/input/atlases/label/*
 2. Copy the desired labels from the shared directory:
    ```bash
-cp /scratch/arisvoin/shared/templateflow/atlases_all4/labels/* data/local/MAGeTbrain/magetbrain_data/input/atlases/label/
+   cp /scratch/arisvoin/shared/templateflow/atlases_all4/labels/* data/local/MAGeTbrain/magetbrain_data/input/atlases/label/
 
 ### Run the pipeline:
 ```sh
