@@ -31,7 +31,7 @@ submit_magetbrain_job() {
     local n_subjects=${#subjects_list[@]}
     local array_job_length=$(echo "$n_subjects / ${sub_size}" | bc)
     echo "Submitting MAGeTbrain Vote job with array size: ${array_job_length}"
-    sbatch --array=0-${array_job_length} code/3_magetbrain_vote_scinet.sh
+    sbatch --array=0-${array_job_length} code/03_magetbrain_vote_scinet.sh
 }
 
 # Prompt user for each pipeline
