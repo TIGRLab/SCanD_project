@@ -16,7 +16,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (qsiprep, ciftify_anat, fmriprep_func, qsirecon1, amico_noddi,tractography, freesurfer_group, magetbrain_mb):
+## stage 2 (qsiprep, ciftify_anat, fmriprep_func, qsirecon1, amico_noddi,tractography, freesurfer_group, magetbrain_register):
 
 ```sh
 ## go to the repo and pull new changes
@@ -26,7 +26,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, qsirecon2):
+## stage 3 (xcp_d, xcp_noGSR, qsirecon2, magetbrain_vote):
 
 ```sh
 ## go to the repo and pull new changes
