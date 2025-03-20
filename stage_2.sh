@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, qsirecon_step1, amico_noddi, tractography, freesurfer_group, magetbrain_mb):
+# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, qsirecon_step1, amico_noddi, tractography, freesurfer_group, magetbrain_register):
 
 #!/bin/bash
 
@@ -40,11 +40,11 @@ run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh"
 run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
 
 
-# Prompt for magetbrain_mb
-read -p "Do you want to run the magetbrain_mb pipeline? (yes/no): " run_magetbrain
+# Prompt for magetbrain_register
+read -p "Do you want to run the magetbrain_register pipeline? (yes/no): " run_magetbrain
 if [[ "$run_magetbrain" =~ ^(yes|y)$ ]]; then
-    echo "Running magetbrain_mb..."
-    sbatch ./code/02_magetbrain_mb_scinet.sh
+    echo "Running magetbrain_register..."
+    sbatch ./code/02_magetbrain_register_scinet.sh
 else
-    echo "Skipping magetbrain_mb."
+    echo "Skipping magetbrain_register."
 fi
