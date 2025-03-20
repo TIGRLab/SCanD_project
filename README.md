@@ -537,7 +537,7 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
 ```
 
-## Running magetbrain mb
+## Running magetbrain register
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -548,7 +548,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/02_magetbrain_mb_scinet.sh
+sbatch  ./code/02_magetbrain_register_scinet.sh
 ```
 
 ## Running xcp-d
