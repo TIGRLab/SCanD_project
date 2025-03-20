@@ -329,6 +329,27 @@ sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 
 ## Running magetbrain init
 
+### MAGeTbrain Initialization on SciNet
+
+The `01_magetbrain_init_scinet.sh` script selects **20 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
+
+To customize the selection, create a new TSV file named `participants_demographic.tsv`, which is a copy of `participants.tsv` but with two additional columns:  
+- **Column 2:** Age  
+- **Column 3:** Gender  
+
+If `participants_demographic.tsv` is not provided, the script will randomly select 20 subjects.  
+
+#### Changing Atlas Labels  
+By default, the labels in `data/local/MAGeTbrain/magetbrain_data/input/atlases/label` are based on **amygdala** segmentation.  
+
+To change the segmentation to **cerebellum, hippocampus, or another region**:  
+1. Remove existing labels:  
+   ```bash
+   rm data/local/MAGeTbrain/magetbrain_data/input/atlases/label/*
+2. Copy the desired labels from the shared directory:
+cp /scratch/arisvoin/shared/templateflow/atlases_all4/labels/* data/local/MAGeTbrain/magetbrain_data/input/atlases/label/
+
+### Run pipeline:
 ```sh
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
