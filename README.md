@@ -93,10 +93,11 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02f	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02g	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02h	|  [Run magetbrain-mb](#Running-magetbrain-mb) 	|  23 hours on slurm 	|
+|^ |   02h	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   03d	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
@@ -629,6 +630,16 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 ```
 
+## Running magetbrain vote
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## submit the array job to the queue
+sbatch  ./code/03_magetbrain_vote_scinet.sh
+```
 
 ## Running enigma extract
 
