@@ -582,7 +582,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/02_magetbrain_vote_scinet.sh
+sbatch  ./code/03_magetbrain_vote_scinet.sh
 ```
 
 
