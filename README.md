@@ -329,7 +329,7 @@ sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
 
 ## Running magetbrain init
 
-### MAGeTbrain Initialization on SciNet
+#### Adding Age and Gender for Template Selection
 
 The `01_magetbrain_init_scinet.sh` script selects **20 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
 
@@ -347,9 +347,10 @@ To change the segmentation to **cerebellum, hippocampus, or another region**:
    ```bash
    rm data/local/MAGeTbrain/magetbrain_data/input/atlases/label/*
 2. Copy the desired labels from the shared directory:
+   ```bash
 cp /scratch/arisvoin/shared/templateflow/atlases_all4/labels/* data/local/MAGeTbrain/magetbrain_data/input/atlases/label/
 
-### Run pipeline:
+### Run the pipeline:
 ```sh
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
