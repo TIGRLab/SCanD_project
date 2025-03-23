@@ -308,9 +308,9 @@ mkdir -p ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC
 singularity exec --cleanenv -B ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data:/data ${PROJECT_DIR}/containers/magetbrain.sif /bin/bash -c "export LANG=C.UTF-8 && export LC_ALL=C.UTF-8 && export LD_LIBRARY_PATH=/opt/minc/1.9.18/lib:\$LD_LIBRARY_PATH && collect_volumes.sh /data/output/fusion/majority_vote/*.mnc > /data/QC/volumes.csv"
 
 mkdir -p ${PROJECT_DIR}/data/share/magetbrain/input
-mkdir -p ${PROJECT_DIR}/data/share/magetbrain/output
+mkdir -p ${PROJECT_DIR}/data/share/magetbrain/fusion
 
-rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote/*labels.mnc ${PROJECT_DIR}/data/share/magetbrain/output
+rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote/*labels.mnc ${PROJECT_DIR}/data/share/magetbrain/fusion
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc* ${PROJECT_DIR}/data/share/magetbrain/input
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC ${PROJECT_DIR}/data/share/magetbrain/
 
