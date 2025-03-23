@@ -311,6 +311,6 @@ mkdir -p ${PROJECT_DIR}/data/share/magetbrain/input
 mkdir -p ${PROJECT_DIR}/data/share/magetbrain/output
 
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote/*labels.mnc ${PROJECT_DIR}/data/share/magetbrain/output
-rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc* ${PROJECT_DIR}/data/share/magetbrain/input
-rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/QC ${PROJECT_DIR}/data/share/magetbrain/
+rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc* ${PROJECT_DIR}/data/share/magetbrain/input
+rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC ${PROJECT_DIR}/data/share/magetbrain/
 
