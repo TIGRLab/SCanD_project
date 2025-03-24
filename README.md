@@ -680,10 +680,6 @@ git pull
 sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
-Proceed by running the next line of code on terminal:
-```sh
-rsync -a $SCRATCH/SCanD_project/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  $SCRATCH/SCanD_project/data/share/freesurfer_group
-```
 
 Copy your folder into the shared spaced:
 
