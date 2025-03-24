@@ -4,6 +4,7 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
 
+module load apptainer/1.3.5
 
 # sharing magetbrain outputs
 mkdir -p ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC
