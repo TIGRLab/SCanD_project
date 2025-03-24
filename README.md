@@ -677,9 +677,9 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/06_extract_to_share.sh
+sbatch ./code/06_extract_to_share.sh
 ```
-If 06_extract_to_share.sh code does not complete automatically, manually terminate it and proceed by running the next line of code manually:
+Proceed by running the next line of code on terminal:
 ```sh
 rsync -a $SCRATCH/SCanD_project/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  $SCRATCH/SCanD_project/data/share/freesurfer_group
 ```
