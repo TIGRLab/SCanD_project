@@ -315,8 +315,7 @@ virtualenv --system-site-packages ${PROJECT_DIR}/../.virtualenvs/myenv
 # Activate the virtual environment
 source ${PROJECT_DIR}/../.virtualenvs/myenv/bin/activate
 
-cd ${PROJECT_DIR}
-python3 code/gen_qsiprep_motion_metrics.py
+python3 ${PROJECT_DIR}/code/gen_qsiprep_motion_metrics.py
 
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
 
