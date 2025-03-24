@@ -1,17 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=extract_to_share
+#SBATCH --output=logs/%x_%j.out
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=40
+#SBATCH --time=03:00:00
+
+
 # A script to extract the bits that we want to share back with the corsotium
 # meant to just be run one time after the other pipelines are run
 
-## copying the fmriprep QA files and figures plus logs and metadata to 
+## copying the fmriprep QA files and figures plus logs and metadata to
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
+PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/23.2.3
 FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3
 
-if [ -d "$FMRIPREP_LOCAL_DIR" ]; 
+if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
-  
+
   echo "Copying FMRIPREP metatdata and QC images"
 
 
@@ -38,9 +45,9 @@ fi
 SMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/smriprep/23.2.3/
 SMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/smriprep/23.2.3/smriprep
 
-if [ -d "$SMRIPREP_LOCAL_DIR" ]; 
+if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
-  
+
   echo "Copying SMRIPREP metatdata and QC images"
 
 
@@ -67,7 +74,7 @@ fi
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
 QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 
-if [ -d "$QSIPREP_LOCAL_DIR" ]; 
+if [ -d "$QSIPREP_LOCAL_DIR" ];
 then
 
 echo "copying over the qsiprep metadata and qc images"
@@ -96,7 +103,7 @@ MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
 MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
 export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
 
-if [ -d "$MRIQC_LOCAL_DIR" ]; 
+if [ -d "$MRIQC_LOCAL_DIR" ];
 then
 
 echo "running mriqc group and copying files"
@@ -107,7 +114,7 @@ singularity run --cleanenv \
     -B ${WORK_DIR}:/work \
     ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group \
-    -w /work  
+    -w /work
 
 mkdir -p ${MRIQC_SHARE_DIR}
 rsync -a ${MRIQC_LOCAL_DIR}/dataset_description.json ${MRIQC_SHARE_DIR}/
@@ -120,12 +127,12 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ];
 then
 
 echo "copying over the xcp_d folder"
 
-## copy over the xcp json files 
+## copy over the xcp json files
 rm -rf ${PROJECT_DIR}/data/share/xcp_d
 
 ## copy over the xcp  folder (all data)
@@ -136,12 +143,12 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR" ];
 then
 
 echo "copying over the xcp_noGSR folder"
 
-## copy over the xcp json files 
+## copy over the xcp json files
 rm -rf ${PROJECT_DIR}/data/share/xcp_noGSR
 
 ## copy over the xcp  folder (all data)
@@ -152,7 +159,7 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/ciftify" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/ciftify" ];
 then
 
 ## also run ciftify group step
@@ -179,7 +186,7 @@ fi
 
 
 ## copy over the enigmaDTI files
-if [ -d "${PROJECT_DIR}/data/local/enigmaDTI" ]; 
+if [ -d "${PROJECT_DIR}/data/local/enigmaDTI" ];
 then
 echo "copying over the enigmaDTI files"
 mkdir ${PROJECT_DIR}/data/share/enigmaDTI
@@ -194,7 +201,7 @@ fi
 AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
 AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
 
-if [ -d "${AMICO_LOCAL_DIR}" ]; 
+if [ -d "${AMICO_LOCAL_DIR}" ];
 then
 echo "copying over the amico noddi metadata and qc images"
 
@@ -218,7 +225,7 @@ fi
 TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
 TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
 
-if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ]; 
+if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ];
 then
 echo "copying over the tractify multi-shell connectivity file"
 
@@ -241,7 +248,7 @@ fi
 TRACTIFY_SINGLE_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
 TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
 
-if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ]; 
+if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ];
 then
 echo "copying over the tractify single-shell connectivity file"
 
@@ -262,7 +269,7 @@ fi
 
 
 #running freesurfer group merge
-source ./code/freesurfer_group_merge.sh
+source ${PROJECT_DIR}/code/freesurfer_group_merge.sh
 
 ## copy over freesurfer group tsv files
 echo "copying over freesurfer group files"
@@ -273,10 +280,10 @@ rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesu
 
 #running Enigma_extract
 echo "Running Enigma Extract"
-source ./code/ENIGMA_ExtractCortical.sh
+source ${PROJECT_DIR}/code/ENIGMA_ExtractCortical.sh
 
 ## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ]; 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
 then
 echo "copying over the ENIGMA extracted cortical and subcortical files"
 rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group
@@ -287,12 +294,12 @@ fi
 module load NiaEnv/2019b python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
-mkdir ~/.virtualenvs
-cd ~/.virtualenvs
-virtualenv --system-site-packages ~/.virtualenvs/myenv
+mkdir ${PROJECT_DIR}/../.virtualenvs
+cd ${PROJECT_DIR}/../.virtualenvs
+virtualenv --system-site-packages ${PROJECT_DIR}/../.virtualenvs/myenv
 
 # Activate the virtual environment
-source ~/.virtualenvs/myenv/bin/activate 
+source ${PROJECT_DIR}/../.virtualenvs/myenv/bin/activate
 
 cd ${PROJECT_DIR}
 python3 code/gen_qsiprep_motion_metrics.py
@@ -306,7 +313,7 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
 # sharing magetbrain outputs
 mkdir -p ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC
 singularity exec --cleanenv -B ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data:/data ${PROJECT_DIR}/containers/magetbrain.sif /bin/bash -c "export LANG=C.UTF-8 && export LC_ALL=C.UTF-8 && export LD_LIBRARY_PATH=/opt/minc/1.9.18/lib:\$LD_LIBRARY_PATH && collect_volumes.sh /data/output/fusion/majority_vote/*.mnc > /data/QC/volumes.csv"
-source ./code/magetbrain_QC.sh
+source ${PROJECT_DIR}/code/magetbrain_QC.sh
 
 mkdir -p ${PROJECT_DIR}/data/share/magetbrain/input
 mkdir -p ${PROJECT_DIR}/data/share/magetbrain/fusion
@@ -314,4 +321,3 @@ mkdir -p ${PROJECT_DIR}/data/share/magetbrain/fusion
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote/*labels.mnc ${PROJECT_DIR}/data/share/magetbrain/fusion
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc* ${PROJECT_DIR}/data/share/magetbrain/input
 rsync -a ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC ${PROJECT_DIR}/data/share/magetbrain/
-
