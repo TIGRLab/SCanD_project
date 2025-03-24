@@ -2,9 +2,9 @@
 #SBATCH --job-name=extract_to_share
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --time=03:00:00
-#SBATCH --mem-per-cpu=1000
+#SBATCH --mem-per-cpu=10000
 
 # A script to extract the bits that we want to share back with the corsotium
 # meant to just be run one time after the other pipelines are run
