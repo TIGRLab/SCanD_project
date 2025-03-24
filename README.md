@@ -101,7 +101,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
 |stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   2 hours in terminal	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   2 hours ion slurm	|
 
 
 # Setting your SciNet environment and prepare dataset
@@ -748,7 +748,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/06_extract_to_share.sh
+sbatch ./code/06_extract_to_share.sh
 ```
 
 Copy your folder into the shared spaced:
