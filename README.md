@@ -677,7 +677,8 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 cd ${SCRATCH}/SCanD_project
 git pull
 
-sbatch ./code/06_extract_to_share.sh
+sbatch ./code/06_extract_to_share_slurm.sh
+source ./code/06_extract_to_share_terminal.sh
 ```
 Proceed by running the next line of code on terminal:
 ```sh
