@@ -748,7 +748,8 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-sbatch ./code/06_extract_to_share.sh
+sbatch ./code/06_extract_to_share_slurm.sh
+source ./code/06_extract_to_share_terminal.sh
 ```
 
 Copy your folder into the shared spaced:
