@@ -5,7 +5,7 @@ Here is a checklist for the share folder results.
 
 ```
 ${BASEDIR}/data/share
-├── amico
+├── amico_noddi
 │   ├── noddi_roi                      
 │   └── a figure and html file for each scan
 ├── ciftify                        
@@ -21,16 +21,14 @@ ${BASEDIR}/data/share
 │   ├── MDskel_qc_index.html
 │   ├── RDskel_qc_index.html
 │   └── each subject files
-├── ENIGMA_extract
-│   ├── CorticalMeasuresENIGMA_SurfAvg.csv
-│   ├── CorticalMeasuresENIGMA_ThickAvg.csv
-│   └── LandRvolumes.csv
 ├── fmriprep/23.2.3
 │   └── qc images and meta data for each scan
-├── smriprep/23.2.3
-│   └── qc images and meta data for each scan
 ├── freesurfer_group
-│   └── freesurfer group analysis tsv files, including thickness, euler and aseg
+│   └── freesurfer group analysis tsv files, including thickness, euler and aseg. Also includes ENIGMA_extract csv files.
+├── magetbrain
+│   ├── fusion, output labels
+│   ├── input, all subject/brains files
+│   └── QC, qc images and vollum.csv files 
 ├── mriqc/24.0.0
 │   ├── dataset_description.json
 │   ├── group_bold.tsv
@@ -38,6 +36,8 @@ ${BASEDIR}/data/share
 │   └── group_T2w.tsv
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
+│   └── qc images and meta data for each scan
+├── smriprep/23.2.3
 │   └── qc images and meta data for each scan
 ├── tractify
 │   └── connectivity.mat file           
