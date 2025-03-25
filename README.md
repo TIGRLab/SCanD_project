@@ -86,6 +86,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |  01d	|  [Run synthstrip](#Running-freesurfer-synthstrip-to-skullstrip-before-qsiprep) 	|   8 hours on slurm	|
 |^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
 |^ |  01f	|  [Run magetbrain-init](#Running-magetbrain-init) 	|   1 hours on slurm	|
+|^ |  01g	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
 |^ |  02b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |^ |   02c	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
@@ -94,11 +95,14 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   02f	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02g	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
 |^ |   02h	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
+|^ |   02i	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 3 |   03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |^ |   03d	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
+|^ |   03e	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 4 |   04a	|  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	|
+|^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   2 hours ion slurm	|
