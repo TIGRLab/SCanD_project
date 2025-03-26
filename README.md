@@ -105,7 +105,7 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   04b	|  [Check tsv files](#Check-tsv-files) 	|    	|
 |stage 5 |   05a	|  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv files](#Check-tsv-files) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   2 hours ion slurm	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
 
 
 # Setting your SciNet environment and prepare dataset
