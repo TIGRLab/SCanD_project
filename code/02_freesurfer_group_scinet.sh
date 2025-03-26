@@ -82,7 +82,13 @@ singularity exec \
           mris_ca_label -l $SUBJECT_LONG_DIR/label/lh.cortex.label \
           $sub lh $SUBJECT_LONG_DIR/surf/lh.sphere.reg \
           $lh_gcs_file \
-          $SUBJECT_LONG_DIR/label/${base_name}_order.annot || subject_exitcode=1
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
+
+          # Check if the command was successful
+          if [ $? -ne 0 ]; then
+            subject_exitcode=1
+            break
+          fi
         done
 
         for rh_gcs_file in "${RH_GCS_FILES[@]}"; do
@@ -90,7 +96,13 @@ singularity exec \
           mris_ca_label -l $SUBJECT_LONG_DIR/label/rh.cortex.label \
           $sub rh $SUBJECT_LONG_DIR/surf/rh.sphere.reg \
           $rh_gcs_file \
-          $SUBJECT_LONG_DIR/label/${base_name}_order.annot || subject_exitcode=1
+          $SUBJECT_LONG_DIR/label/${base_name}_order.annot
+
+          # Check if the command was successful
+          if [ $? -ne 0 ]; then
+            subject_exitcode=1
+            break
+          fi
         done
 
         # Continue processing even if the commands above failed
