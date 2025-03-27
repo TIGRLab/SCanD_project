@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, qsirecon_step1, amico_noddi, tractography, freesurfer_group, magetbrain_register):
+# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
 
 #!/bin/bash
 
@@ -33,12 +33,7 @@ run_pipeline() {
 run_pipeline "qsiprep" "./code/02_qsiprep_scinet.sh" 1
 run_pipeline "ciftify_anat" "./code/02_ciftify_anat_scinet.sh" 1
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
-run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
-run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
 run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 1
-run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
-run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
-
 
 # Prompt for magetbrain_register
 read -p "Do you want to run the magetbrain_register pipeline? (yes/no): " run_magetbrain
