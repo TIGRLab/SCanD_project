@@ -430,7 +430,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_qsirecon_step1_scinet.sh
 ```
 ## Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
@@ -450,7 +450,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
+sbatch --array=0-${array_job_length} ./code/03_amico_noddi.sh
 ```
 
 To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
@@ -465,7 +465,7 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/03_amico_VNC.sh
+source ./code/04_amico_VNC.sh
 ```
 
 ## Running freesurfer group analysis
@@ -525,7 +525,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
 
 ```
 Singleshell:
@@ -544,7 +544,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_tractography_single_scinet.sh
 
 ```
 
@@ -703,7 +703,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
+sbatch --array=0-${array_job_length} ./code/04_qsirecon_step2_scinet.sh
 ```
 
 ## Running enigma-dti
