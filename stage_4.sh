@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 4 (enigma_dti)
+## stage 4 (qsirecon_step2)
 #!/bin/bash
 
 # Function to calculate and submit array jobs
@@ -32,4 +32,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 4
-run_pipeline "enigma_dti" "./code/04_enigma_dti_scinet.sh" 1
+run_pipeline "qsirecon_step2" "code/04_qsirecon_step2_scinet.sh" 1
