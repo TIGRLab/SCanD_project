@@ -731,7 +731,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/05_extract_noddi_scinet.sh
+sbatch  ./code/06_extract_noddi_scinet.sh
 ```
 
 
@@ -756,8 +756,8 @@ ssh nia-login07
 cd ${SCRATCH}/SCanD_project
 git pull
 
-sbatch ./code/06_extract_to_share_slurm.sh
-source ./code/06_extract_to_share_terminal.sh
+sbatch ./code/07_extract_to_share_slurm.sh
+source ./code/07_extract_to_share_terminal.sh
 ```
 
 Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
