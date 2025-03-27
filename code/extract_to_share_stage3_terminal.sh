@@ -1,5 +1,5 @@
 # A script to extract the bits that we want to share back with the corsotium
-
+## magetbrain, gen_qsiprep_motion_metrics.py
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
