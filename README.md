@@ -465,6 +465,10 @@ source ./code/freesurfer_group_merge_scinet.sh
 ## Running tractography
 For multi-shell data, run the following code. For single-shell data, use the single-shell version of the code.
 
+### tractography output (.mat file)
+The final output for the tractography pipeline will be a **.mat** file containing various brain connectivity matrices and associated metadata for different parcellation schemes. The variables include region IDs (e.g., aal116_region_ids), region labels (aal116_region_labels), and multiple connectivity matrices such as aal116_radius2_count_connectivity and aal116_sift_radius2_count_connectivity. These matrices represent connectivity values between brain regions, measured using different methods or preprocessing steps. Similar sets of variables exist for other parcellations, including AAL116, AICHA384, Brainnetome246, Gordon333, and Schaefer100/200/400. If you want to inspect the contents further, you can use the scipy.io library in Python to load and analyze the data, or you can load the file directly in MATLAB.
+
+
 Multishell:
 ```sh
 ## go to the repo and pull new changes
