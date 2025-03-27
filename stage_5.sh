@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 5 (noddi_extract)
+## stage 5 (enigma_dti)
 #!/bin/bash
 
 # Function to calculate and submit array jobs
@@ -31,5 +31,5 @@ run_pipeline() {
     fi
 }
 
-# Prompt user for each pipeline 
-run_pipeline "noddi_extract" "./code/05_extract_noddi_scinet.sh" 1
+# Prompt user for each pipeline in stage 4
+run_pipeline "enigma_dti" "./code/05_enigma_dti_scinet.sh" 1
