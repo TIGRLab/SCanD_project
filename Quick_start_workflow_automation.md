@@ -20,7 +20,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (qsiprep, ciftify_anat, fmriprep_func, qsirecon1, amico_noddi,tractography, freesurfer_group, magetbrain_register):
+## stage 2 (qsiprep, ciftify_anat, fmriprep_func, freesurfer_group, magetbrain_register):
 
 ```sh
 ## go to the repo and pull new changes
@@ -30,7 +30,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, qsirecon2, magetbrain_vote):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon1, amico_noddi,tractography):
 
 ```sh
 ## go to the repo and pull new changes
@@ -40,7 +40,7 @@ git pull         #in case you need to pull new code
 source ./stage_3.sh
 ```
 
-## stage 4 (enigma dti):
+## stage 4 (qsirecon2):
 
 ```sh
 ## go to the repo and pull new changes
@@ -50,7 +50,7 @@ git pull         #in case you need to pull new code
 source ./stage_4.sh
 ```
 
-## stage 5 (noddi_extract):
+## stage 5 (enigma_dti):
 
 ```sh
 ## go to the repo and pull new changes
@@ -60,7 +60,7 @@ git pull         #in case you need to pull new code
 source ./stage_5.sh
 ```
 
-## stage 6 (extract data to share folder):
+## stage 6 (noddi_extract):
 
 ```sh
 ## go to the repo and pull new changes
@@ -70,7 +70,18 @@ git pull         #in case you need to pull new code
 source ./stage_6.sh
 ```
 
-After you are done with stage 6, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/Cedar/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+## stage 7 (extract data to share folder):
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+source ./stage_7.sh
+```
+
+
+After you are done with stage 7, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/Cedar/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "your_group_name" and put your group name there and then run the code!
 
