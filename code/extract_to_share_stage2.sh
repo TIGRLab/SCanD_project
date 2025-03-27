@@ -49,8 +49,6 @@ else
 fi
 
 
-
-
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
 QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
 QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
