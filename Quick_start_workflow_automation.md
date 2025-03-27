@@ -61,7 +61,7 @@ git pull         #in case you need to pull new code
 
 source ./stage_4.sh
 ```
-## stage 5 (noddi_extract):
+## stage 5 (enigma_dti):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
