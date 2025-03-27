@@ -717,7 +717,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/04_enigma_dti_scinet.sh
+sbatch  ./code/05_enigma_dti_scinet.sh
 ```
 
 ## Running extract-noddi
