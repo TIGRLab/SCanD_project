@@ -11,7 +11,7 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
 
-## magetbrain, xcp, xcp-noGSR, qsirecon, tractography, amico-noddi
+## xcp, xcp-noGSR, qsirecon, tractography, amico-noddi
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
