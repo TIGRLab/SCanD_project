@@ -10,7 +10,7 @@ The script will prompt you at each stage to ask if you want to run only the func
 
 After setting up the SciNet environment and organizing your BIDS folder and participants.csv file, you can run the codes for each stage.
 
-## stage 1 (mriqc, fmriprep_anat, synthstrip, freesurfer, smriprep, magetbrain_init):
+## stage 1 (mriqc, fmriprep_fit, synthstrip, freesurfer, smriprep, magetbrain_init):
 ```sh
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -20,7 +20,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (qsiprep, ciftify_anat, fmriprep_func, freesurfer_group, magetbrain_register):
+## stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
 
 ```sh
 ## go to the repo and pull new changes
