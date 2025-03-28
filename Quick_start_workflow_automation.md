@@ -10,7 +10,7 @@ The script will prompt you at each stage to ask if you want to run only the func
 
 After setting up the SciNet environment and organizing your BIDS folder and participants.csv file, you can run the codes for each stage.
 
-## stage 1 (mriqc, fmriprep_anat, synthstrip, freesurfer, smriprep, magetbrain_init):
+## stage 1 (mriqc, fmriprep_fit, synthstrip, freesurfer, smriprep, magetbrain_init):
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
