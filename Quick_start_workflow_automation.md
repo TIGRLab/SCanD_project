@@ -23,7 +23,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (qsiprep, ciftify_anat, fmriprep_func, freesurfer_group, magetbrain_register):
+## stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
