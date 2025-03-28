@@ -30,7 +30,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon1, amico_noddi,tractography):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon1, amico_noddi, tractography):
 
 ```sh
 ## go to the repo and pull new changes
