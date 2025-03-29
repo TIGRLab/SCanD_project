@@ -17,37 +17,103 @@ module load apptainer/1.3.5
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
+    echo "Copying over the xcp_d folder"
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ];
-then
+    rsync -a \
+        --exclude '*/sub-*/ses-*/anat/' \
+        --exclude '*/sub-*/ses-*/func/*pearsoncorrelation*' \
+        --exclude '*/sub-*/anat/' \
+        --exclude '*/sub-*/log/' \
+        --exclude '*/sub-*/func/*pearsoncorrelation*' \
+        --exclude '*/atlases/' \
+        --exclude '*/logs/' \
+        ${PROJECT_DIR}/data/local/derivatives/xcp_d ${PROJECT_DIR}/data/share
 
-echo "copying over the xcp_d folder"
+    mkdir -p ${PROJECT_DIR}/data/share/xcp_d/0.7.3/dtseries
 
-## copy over the xcp json files
-rm -rf ${PROJECT_DIR}/data/share/xcp_d
+    BASE="${PROJECT_DIR}/data/share/xcp_d/0.7.3"
 
-## copy over the xcp  folder (all data)
-rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_d  ${PROJECT_DIR}/data/share
+    for sub_dir in ${BASE_DIR}/sub-*; do
+        if [ -d "$sub_dir" ]; then
+            subject_id=$(basename "$sub_dir")
+            
+            mkdir -p "${BASE_DIR}/dtseries/${subject_id}"
+            ses_dirs=$(find "$sub_dir" -type d -name "ses-*")
+            
+            if [ -z "$ses_dirs" ]; then
+                # If no ses-* directories, move dtseries.nii files directly from func/
+                for dtfile in ${sub_dir}/func/*dtseries.nii; do
+                    if [ -f "$dtfile" ]; then
+                        mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                    fi
+                done
+            else
+                # If ses-* directories exist, loop over them and move dtseries.nii files
+                for ses_dir in ${sub_dir}/ses-*; do
+                    for dtfile in ${ses_dir}/func/*dtseries.nii; do
+                        if [ -f "$dtfile" ]; then
+                            mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                        fi
+                    done
+                done
+            fi
+        fi
+    done
 
 else
     echo "No XCP_D outputs found."
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR" ];
-then
+if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
+    echo "Copying over the xcp_noGSR folder"
 
-echo "copying over the xcp_noGSR folder"
+    rsync -a \
+        --exclude '*/sub-*/ses-*/anat/' \
+        --exclude '*/sub-*/ses-*/func/*pearsoncorrelation*' \
+        --exclude '*/sub-*/anat/' \
+        --exclude '*/sub-*/log/' \
+        --exclude '*/sub-*/func/*pearsoncorrelation*' \
+        --exclude '*/atlases/' \
+        --exclude '*/logs/' \
+        ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR ${PROJECT_DIR}/data/share
 
-## copy over the xcp json files
-rm -rf ${PROJECT_DIR}/data/share/xcp_noGSR
+    mkdir -p ${PROJECT_DIR}/data/share/xcp_noGSR/dtseries
 
-## copy over the xcp  folder (all data)
-rsync -a ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR  ${PROJECT_DIR}/data/share
+    BASE="${PROJECT_DIR}/data/share/xcp_noGSR"
+
+    for sub_dir in ${BASE_DIR}/sub-*; do
+        if [ -d "$sub_dir" ]; then
+            subject_id=$(basename "$sub_dir")
+            
+            mkdir -p "${BASE_DIR}/dtseries/${subject_id}"
+            ses_dirs=$(find "$sub_dir" -type d -name "ses-*")
+            
+            if [ -z "$ses_dirs" ]; then
+                # If no ses-* directories, move dtseries.nii files directly from func/
+                for dtfile in ${sub_dir}/func/*dtseries.nii; do
+                    if [ -f "$dtfile" ]; then
+                        mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                    fi
+                done
+            else
+                # If ses-* directories exist, loop over them and move dtseries.nii files
+                for ses_dir in ${sub_dir}/ses-*; do
+                    for dtfile in ${ses_dir}/func/*dtseries.nii; do
+                        if [ -f "$dtfile" ]; then
+                            mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                        fi
+                    done
+                done
+            fi
+        fi
+    done
 
 else
-    echo "No XCP_NO_GSR outputs found."
+    echo "No XCP_noGSR outputs found."
 fi
+
 
 
 TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
