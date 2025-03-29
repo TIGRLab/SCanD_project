@@ -32,18 +32,18 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
 
     BASE="${PROJECT_DIR}/data/share/xcp_d/0.7.3"
 
-    for sub_dir in ${BASE_DIR}/sub-*; do
+    for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
             subject_id=$(basename "$sub_dir")
             
-            mkdir -p "${BASE_DIR}/dtseries/${subject_id}"
+            mkdir -p "${BASE}/dtseries/${subject_id}"
             ses_dirs=$(find "$sub_dir" -type d -name "ses-*")
             
             if [ -z "$ses_dirs" ]; then
                 # If no ses-* directories, move dtseries.nii files directly from func/
                 for dtfile in ${sub_dir}/func/*dtseries.nii; do
                     if [ -f "$dtfile" ]; then
-                        mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                        mv "$dtfile" "${BASE}/dtseries/${subject_id}/"
                     fi
                 done
             else
@@ -51,7 +51,7 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
                 for ses_dir in ${sub_dir}/ses-*; do
                     for dtfile in ${ses_dir}/func/*dtseries.nii; do
                         if [ -f "$dtfile" ]; then
-                            mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                            mv "$dtfile" "${BASE}/dtseries/${subject_id}/"
                         fi
                     done
                 done
@@ -82,18 +82,18 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
 
     BASE="${PROJECT_DIR}/data/share/xcp_noGSR"
 
-    for sub_dir in ${BASE_DIR}/sub-*; do
+    for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
             subject_id=$(basename "$sub_dir")
             
-            mkdir -p "${BASE_DIR}/dtseries/${subject_id}"
+            mkdir -p "${BASE}/dtseries/${subject_id}"
             ses_dirs=$(find "$sub_dir" -type d -name "ses-*")
             
             if [ -z "$ses_dirs" ]; then
                 # If no ses-* directories, move dtseries.nii files directly from func/
                 for dtfile in ${sub_dir}/func/*dtseries.nii; do
                     if [ -f "$dtfile" ]; then
-                        mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                        mv "$dtfile" "${BASE}/dtseries/${subject_id}/"
                     fi
                 done
             else
@@ -101,7 +101,7 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
                 for ses_dir in ${sub_dir}/ses-*; do
                     for dtfile in ${ses_dir}/func/*dtseries.nii; do
                         if [ -f "$dtfile" ]; then
-                            mv "$dtfile" "${BASE_DIR}/dtseries/${subject_id}/"
+                            mv "$dtfile" "${BASE}/dtseries/${subject_id}/"
                         fi
                     done
                 done
