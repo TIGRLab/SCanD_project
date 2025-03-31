@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=20
 #SBATCH --time=23:00:00
-#SBATCH --mem-per-cpu=10000
+#SBATCH --mem-per-cpu=30000
 
 SUB_SIZE=1 ## number of subjects to run
 
