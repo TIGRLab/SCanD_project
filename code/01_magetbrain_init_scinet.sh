@@ -138,7 +138,7 @@ done
 
 singularity shell -B ${INPUT_DIR}:/data ${SING_CONTAINER} <<EOF
     # Inside the Singularity container
-    for input_file in /data/input/templates/brains/*.mnc; do
+    for input_file in /data/templates/brains/*.mnc; do
         # Generate output filename by appending '_fixed' to the original filename
         output_file="\${input_file%.mnc}_fixed.mnc"
 
@@ -150,7 +150,7 @@ EOF
 
 singularity shell -B ${INPUT_DIR}:/data ${SING_CONTAINER} <<EOF
     # Inside the Singularity container
-    for input_file in /data/input/subjects/brains/*.mnc; do
+    for input_file in /data/subjects/brains/*.mnc; do
         # Generate output filename by appending '_fixed' to the original filename
         output_file="\${input_file%.mnc}_fixed.mnc"
 
@@ -159,10 +159,10 @@ singularity shell -B ${INPUT_DIR}:/data ${SING_CONTAINER} <<EOF
     done
 EOF
 
-rm -rf ${INPUT_DIR}/input/subjects/brains/*T1w.mnc
-rm -rf ${INPUT_DIR}/input/subjects/brains/*nii*
+rm -rf ${INPUT_DIR}/subjects/brains/*T1w.mnc
+rm -rf ${INPUT_DIR}/subjects/brains/*nii*
 
-rm -rf ${INPUT_DIR}/input/templates/brains/*T1w.mnc
+rm -rf ${INPUT_DIR}/templates/brains/*T1w.mnc
 
 
 # Copy atlas data
