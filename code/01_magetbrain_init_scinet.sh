@@ -136,7 +136,7 @@ done
 
 ## Fix header issue with mnc files
 
-singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
+singularity shell -B ${INPUT_DIR}:/data ${SING_CONTAINER} <<EOF
     # Inside the Singularity container
     for input_file in /data/input/templates/brains/*.mnc; do
         # Generate output filename by appending '_fixed' to the original filename
@@ -148,7 +148,7 @@ singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
 EOF
 
 
-singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
+singularity shell -B ${INPUT_DIR}:/data ${SING_CONTAINER} <<EOF
     # Inside the Singularity container
     for input_file in /data/input/subjects/brains/*.mnc; do
         # Generate output filename by appending '_fixed' to the original filename
@@ -159,10 +159,10 @@ singularity shell -B ${DATA_DIR}:/data ${SING_CONTAINER} <<EOF
     done
 EOF
 
-rm -rf ${DATA_DIR}/input/subjects/brains/*T1w.mnc
-rm -rf ${DATA_DIR}/input/subjects/brains/*nii*
+rm -rf ${INPUT_DIR}/input/subjects/brains/*T1w.mnc
+rm -rf ${INPUT_DIR}/input/subjects/brains/*nii*
 
-rm -rf ${DATA_DIR}/input/templates/brains/*T1w.mnc
+rm -rf ${INPUT_DIR}/input/templates/brains/*T1w.mnc
 
 
 # Copy atlas data
