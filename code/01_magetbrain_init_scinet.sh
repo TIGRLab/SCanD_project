@@ -131,7 +131,7 @@ for subject in $subjects; do
     fi
 done
 
-
+# Process template subjects (selected randomly)
 for template in "${selected_subjects[@]}"; do
     first_file=$(ls $INPUT_DIR/subjects/brains/${template}*.mnc 2>/dev/null | head -n 1)
     if [[ -n "$first_file" ]]; then
