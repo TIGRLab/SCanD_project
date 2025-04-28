@@ -132,11 +132,13 @@ for subject in $subjects; do
 done
 
 
-# Process template subjects (selected randomly)
 for template in "${selected_subjects[@]}"; do
-
-    cp -r $INPUT_DIR/subjects/brains/${template}*.mnc $INPUT_DIR/templates/brains/
-    
+    first_file=$(ls $INPUT_DIR/subjects/brains/${template}*.mnc 2>/dev/null | head -n 1)
+    if [[ -n "$first_file" ]]; then
+        cp "$first_file" "$INPUT_DIR/templates/brains/"
+    else
+        echo "No .mnc file found for $template"
+    fi
 done
 
 
