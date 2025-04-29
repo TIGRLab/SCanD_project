@@ -1,0 +1,6 @@
+{
+    "hrf_model": "gamma + derivative",
+    "high_pass": 0.02,
+    "drift_model": "polynomial",
+    "drift_order": 5
+}
