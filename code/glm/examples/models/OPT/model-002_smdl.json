@@ -1,0 +1,46 @@
+{
+  "Name": "OPT_model001",
+  "BIDSModelVersion": "1.0.0",
+  "Description": "OPT first BIDS model: a simple 2-conditions contrast.",
+  "Input": {
+    "task": "faces",
+    "session": [
+      "01"
+    ],
+    "space": "fsLR",
+    "dense": "91k"
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Model": {
+        "X": [
+          "Shapes",
+          "Faces",
+          "csf",
+          "white_matter"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "FacesminusShapes",
+          "ConditionList": [
+            "Faces",
+            "Shapes"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
+      ]
+    }
+  ]
+}

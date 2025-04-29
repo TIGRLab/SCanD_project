@@ -1,0 +1,68 @@
+{
+  "Name": "RTMSWM_model001",
+  "BIDSModelVersion": "1.0.0",
+  "Description": "RTMSWM first BIDS model: a simple 2-condition block contrast.",
+  "Input": {
+    "task": [
+      "nbk"
+    ],
+    "session": [
+      "01"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Model": {
+        "X": [
+          "threebackblock",
+          "onebackblock",
+          "oneback_hit",
+          "threeback_hit",
+          "oneback_false",
+          "threeback_false"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "threebackblockkminusonebackblock",
+          "ConditionList": [
+            "threebackblock",
+            "onebackblock"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "onebackblock",
+          "ConditionList": [
+            "onebackblock"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "threebackblock",
+          "ConditionList": [
+            "threebackblock"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        }
+      ]
+    }
+  ]
+}
