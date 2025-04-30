@@ -612,8 +612,14 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 cd ${SCRATCH}/SCanD_project
 git pull
 
+## calculate the length of the array-job given
+SUB_SIZE=1
+N_SUBJECTS=$(ls ./data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
 ## submit the array job to the queue
-sbatch  ./code/03_magetbrain_vote_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_magetbrain_vote_scinet.sh
 ```
 
 
