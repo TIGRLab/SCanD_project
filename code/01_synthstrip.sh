@@ -85,19 +85,19 @@ for session in ${sessions};do
         # Ensure destination directory exists
         mkdir -p "${DESTINATION}"
         # Rsync to source data while preserving structure
-	    echo "Copying ${SUBJECTS} dwi data to sourcedata directory..."
+        echo "Copying ${SUBJECTS} dwi data to sourcedata directory..."
         rsync -av "${SUB_PATH}/dwi/${f}" "${DESTINATION}"
         # Rename the copied file
-	    mv -v "${DESTINATION}/${f}" "${DESTINATION}/${new_name}"
+        mv -v "${DESTINATION}/${f}" "${DESTINATION}/${new_name}"
 
         # Run Singularity
-	    echo "Running skullstrip for ${SUBJECTS}..."
-	    echo ${f}
+        echo "Running skullstrip for ${SUBJECTS}..."
+        echo ${f}
         singularity run --cleanenv \
-	    -B ${BASEDIR}/templates:/home/freesurfer_synthstrip --home /home/freesurfer_synthstrip \
+        -B ${BASEDIR}/templates:/home/freesurfer_synthstrip --home /home/freesurfer_synthstrip \
         -B ${SUB_PATH}/dwi:/dwi \
         -B ${masks_dir}:/masks \
-	    -B ${WORK_DIR}:/work \
+        -B ${WORK_DIR}:/work \
         ${SING_CONTAINER} \
         -i /dwi/${f} \
         -o /dwi/${f} \
