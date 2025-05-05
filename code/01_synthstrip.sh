@@ -55,20 +55,36 @@ mkdir -vp ${masks_dir} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
 # Find all session directories for the subject
 export sessions=$(find ${BIDS_DIR}/${SUBJECTS} -type d -name "ses-*" -exec basename {} \;)
-for session in ${sessions};do
+if [ -z "$sessions" ]; then
+    sessions="NOSESSION"
+fi
 
-    dwi_files=$(find ${BIDS_DIR}/${SUBJECTS}/${session}/dwi -type f -name "*dwi.nii.gz" -exec basename {} \;)
+for session in ${sessions};do
+    if [ "$session" = "NOSESSION" ]; then
+        SUB_PATH="${BIDS_DIR}/${SUBJECTS}"
+        dwi_files=$(find ${SUB_PATH}/dwi -type f -name "*dwi.nii.gz" -exec basename {} \;)
+        DESTINATION="${SOURCE_DATA}/${SUBJECTS}/dwi/"
+        echo "No session, processing DWI files for ${SUBJECTS}..."
+
+    else
+        SUB_PATH="${BIDS_DIR}/${SUBJECTS}/${session}"
+        dwi_files=$(find ${SUB_PATH}/dwi -type f -name "*dwi.nii.gz" -exec basename {} \;)
+        DESTINATION="${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/"
+        echo "Session ${session}, processing DWI files for ${SUBJECTS}/${session}..."
+    fi
+    dwi_files=$(find ${SUB_PATH}/dwi -type f -name "*dwi.nii.gz" -exec basename {} \;)
     for f in ${dwi_files};do
         # Create new filename with "_nostrip"
         new_name="${f%.nii.gz}_nostrip.nii.gz"
         b="${f%.nii.gz}"  # Extract base name without extension
 
+        # Ensure destination directory exists
+        mkdir -p "${DESTINATION}"
         # Rsync to source data while preserving structure
         echo "Copying ${SUBJECTS} dwi data to sourcedata directory..."
-        rsync -avR "${BIDS_DIR}/./${SUBJECTS}/${session}/dwi/${f}" "${SOURCE_DATA}/"
-
+        rsync -av "${SUB_PATH}/dwi/${f}" "${DESTINATION}"
         # Rename the copied file
-        mv -v "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${f}" "${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/${new_name}"
+        mv -v "${DESTINATION}/${f}" "${DESTINATION}/${new_name}"
 
         # Run Singularity
         echo "Running skullstrip for ${SUBJECTS}..."

@@ -45,10 +45,24 @@ export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} ${CONFOUND_DIR}
 
 
-SUBJECTS=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
+# SUBJECTS=$(awk -F'\t' 'NR>1 {print $1}' ${BIDS_DIR}/participants.tsv)
+
+## get the subject list from a combo of the array id, the participants.tsv and the chunk size
+bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
+
+N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
+
+if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
+else
+    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
+fi
+
 for subject in $SUBJECTS; do
   # Find the confounds_timeseries.tsv files for the current subject
-  FILES=$(find $FMRI_DIR -type f -path "*/${subject}/*confounds_timeseries.tsv*")
+  FILES=$(find $FMRI_DIR -type f -path "*/sub-${subject}/*confounds_timeseries.tsv*")
   for file in $FILES; do
     output_file="${CONFOUND_DIR}/$(basename ${file})"
     # Extract the header
@@ -101,23 +115,9 @@ for subject in $SUBJECTS; do
         print out;
       }
     ' $file > $output_file
+    echo "Saving $file to $output_file"
   done
 done
-
-
-## get the subject list from a combo of the array id, the participants.tsv and the chunk size
-bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-
-N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
-
-if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv  | head -n ${N_SUBJECTS} | tail -n ${Tail}`
-else
-    SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
-fi
-
 
 
 singularity run --cleanenv \
