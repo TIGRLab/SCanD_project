@@ -15,7 +15,7 @@ SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
 
 # Define directories
 BIDS_DIR="$PROJECT_DIR/data/local/bids"
-MAGETBRAIN_DIR="$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data"
+MAGETBRAIN_DIR="$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data"
 INPUT_DIR="$MAGETBRAIN_DIR/input"
 
 # Create necessary directories
