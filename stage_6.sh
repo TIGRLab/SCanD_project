@@ -21,11 +21,7 @@ run_pipeline() {
     read -p "Do you want to run the $pipeline_name pipeline? (yes/no): " run_pipeline
     if [[ "$run_pipeline" =~ ^(yes|y)$ ]]; then
         echo "Running $pipeline_name..."
-        if [ "$sub_size" -eq 1 ]; then
-            sbatch $script_path
-        else
-            submit_array_job $script_path $sub_size
-        fi
+        submit_array_job $script_path $sub_size
     else
         echo "Skipping $pipeline_name."
     fi
