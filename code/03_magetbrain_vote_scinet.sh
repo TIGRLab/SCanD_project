@@ -7,7 +7,7 @@
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
-DATA_DIR=$PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data
+DATA_DIR=$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data
 SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
 LOGS_DIR="$PROJECT_DIR/logs"
 
@@ -16,7 +16,7 @@ mkdir -p "$LOGS_DIR"
 SUB_SIZE=1
 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-SUBJECTS_LIST=($(ls $PROJECT_DIR/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
+SUBJECTS_LIST=($(ls $PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
 
 N_SUBJECTS=${#SUBJECTS_LIST[@]}
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
