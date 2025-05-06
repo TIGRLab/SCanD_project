@@ -32,4 +32,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 4
-run_pipeline "qsirecon_step2" "code/04_qsirecon_step2_scinet.sh" 1
+run_pipeline "qsirecon_step2" "./code/04_qsirecon_step2_scinet.sh" 1
