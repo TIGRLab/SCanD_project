@@ -11,7 +11,7 @@ import logging
 import os
 from warnings import warn
 
-from bids import BIDSLayout
+from bids import BIDSLayout, BIDSLayoutIndexer
 
 # Setup logging configuration
 logging.basicConfig(
@@ -24,6 +24,7 @@ class LoadBidsModel:
 
     def __init__(self, model_spec):
         self.model_spec = model_spec
+        self.specs = self._ensure_model()
 
     def _ensure_model(self):
         model = getattr(self.model_spec, "filename", self.model_spec)
@@ -32,9 +33,21 @@ class LoadBidsModel:
             if os.path.exists(model):
                 with open(model) as fobj:
                     model = json.load(fobj)
+                    self._validate_input_field(model)
             else:
                 model = json.loads(model)
+                self._validate_input_field(model)
+
         return model
+
+    def _validate_input_field(self, model):
+        required_fields = ["task", "session", "space", "dense"]
+        input_field = model.get("Input", {})
+        missing = [field for field in required_fields if field not in input_field]
+        if missing:
+            raise ValueError(f"Missing required Input fields: {missing}")
+        else:
+            print("All required Input fields are present")
 
 
 class BIDSSelect:
@@ -56,6 +69,7 @@ class BIDSSelect:
         self.session = session
         self.space_label = space_label
         self.dense = dense
+        # self.indexer = BIDSLayoutIndexer(ignore=[f'sub-(?!{self.participant_label}).*'])
         self.layout = BIDSLayout(
             self.bids_dir, derivatives=self.derivatives_dir, validate=False
         )

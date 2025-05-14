@@ -6,9 +6,9 @@
     "task": [
       "nbk"
     ],
-    "session": [
-      "01"
-    ]
+    "session": [],
+    "space": "fsLR",
+    "dense": "91k"
   },
   "Nodes": [
     {
