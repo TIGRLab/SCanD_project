@@ -31,6 +31,71 @@ def _path_exists(path, parser):
     return Path(path).absolute()
 
 
+def _has_session(input_sessions, layout, participant_label):
+    """
+    Check sessions for participant.
+    - If input_sessions is provided (string or list), return as a list
+    - If input_sessions is None or empty:
+        - Check BIDS layout for sessions.
+        - If no sessions found, return None.
+        - If sessions found, return the list.
+    """
+
+    if input_sessions not in(None, "", []):
+        if isinstance(input_sessions, str):
+            return [input_sessions]
+        elif isinstance(input_sessions, list):
+            return input_sessions
+        else:
+            raise TypeError(f"'session' field must be string, list, or None, got: {type(input_sessions)}")
+
+    else:
+        bids_sessions = layout.get_sessions(subject=participant_label)
+        if bids_sessions:
+            return bids_sessions
+        else:
+            return None
+    
+def get_single_value(field, field_name):
+    """
+    Ensures the field from BIDS stat model has only one value
+    """
+    if isinstance(field, list):
+        if len(field) != 1:
+            raise ValueError(f"The {field_name} field must contain one value". Found: {len(field) values})
+        return field[0]
+    elif isinstance(field, str):
+        return field
+    else:
+        raise TypeError(f"The '{field_name}' field must be a string or list, but got: {type(field)}")   
+
+def model_fit(bids_dir, fmriprep_dir, sub, task_label, session, space_label, dense, specs):
+    model_instance = FirstLevelModelFit(
+        bids_dir,
+        fmriprep_dir,
+        sub,
+        task_label,
+        session,
+        space_label,
+        dense,
+        specs,
+    )
+
+    matched_runs = model_instance.match_runs
+    logger.info(f"Found matched runs: {matched_runs} for subject: {sub}, session: {session or 'N/A'}")
+
+    beta_maps = model_instance.process_and_fit_valid_run()
+    if beta_maps:
+        logger.info(f"Plotting beta maps...")
+        for map in beta_maps:
+            outname = map.replace("dscalar.nii", "png")
+            data = load_data(map)
+            if isinstance(data, nb.Cifti2Image):
+                plot_dscalar(data, colorbar=False, output_file=outname)
+        logger.info(f"GLM finished successfully for subject: {sub}, session: {session or 'N/A'}")
+    else:
+        logger.warning(f"No beta maps found for subject: {sub}, session: {session or 'N/A'}")
+
 def main():
     parser = argparse.ArgumentParser(
         description="Fit a General Linear Model (GLM) to surface-based fMRI data preprocessed with fMRIPrep for postprocessing and analysis."
@@ -84,6 +149,8 @@ def main():
     if not args.participant_label:
         layout = BIDSLayout(bids_dir, derivatives=fmriprep_dir, validate=False)
         participant_label = layout.get_subjects()
+    elif isinstance(args.participant_label, str):
+        participant_label = [args.participant_label]
     else:
         participant_label = []
         for label in args.participant_label:
@@ -96,11 +163,13 @@ def main():
             else:
                 # Process as individual participant label
                 participant_label.append(label.removeprefix("sub-"))
-    specs = LoadBidsModel(model)._ensure_model()
-    task_label = specs["Input"]["task"][0]
-    space_label = specs["Input"]["space"]
-    sessions = specs["Input"]["session"]
-    dense = specs["Input"]["dense"]
+    specs = LoadBidsModel(model).specs
+    task_label = get_single_value(specs["Input"]["task"], "task")
+    space_label = get_single_value(specs["Input"]["space"], "space")
+    dense = get_single_value(specs["Input"]["dense"], "dense")
+    # Get sessions from specs
+    input_sessions = specs["Input"].get("session")
+    
     # logger.info(
     #     f" bids_dir: {bids_dir, fmriprep_dir, participant_label, specs, task_label, space_label, sessions, dense}"
     # )
@@ -114,56 +183,91 @@ def main():
     logger.info(f"  Dense: {dense}")
     logger.info(f"  Model specifications: {json.dumps(specs, indent=2)}")
 
+    if not input_sessions:
+    logger.info("Session not provided. Checking for available sessions.")
     for sub in participant_label:
-        if not isinstance(sessions, (str, list)):
-            raise ValueError(f"sessions must be a string or a list")
-        if isinstance(sessions, list):
-            for session in sessions:
-                model_instance = FirstLevelModelFit(
-                    bids_dir,
-                    fmriprep_dir,
-                    sub,
-                    task_label,
-                    session,
-                    space_label,
-                    dense,
-                    model,
-                )
+        logger.info(f"Checking sessions for subject: {sub}")
 
-                # Fitting the model
-                logger.info(
-                    f"Found match runs: {[run for run in model_instance.match_runs]} for subject: {sub}"
-                )
-                beta_maps = model_instance.process_and_fit_valid_run()
-        elif isinstance(sessions, str):
-            model_instance = FirstLevelModelFit(
-                bids_dir,
-                fmriprep_dir,
-                sub,
-                task_label,
-                sessions,
-                space_label,
-                dense,
-                model,
-            )
+        layout = BIDSLayout(
+            bids_dir,
+            derivatives=fmriprep_dir,
+            validate=False,
+            ignore=[f'sub-(?!{sub}).*']
+        )
 
-            # Fitting the model
-            logger.info(
-                f"Found match runs: {[run for run in model_instance.match_runs]} for subject: {sub}"
-            )
-            beta_maps = model_instance.process_and_fit_valid_run()
+        sessions = _has_sessions(input_sessions, layout, sub)
 
-        if beta_maps:
-            logger.info(f"Plotting the betamap....")
-            for map in beta_maps:
-                outname = map.replace("dscalar.nii", "png")
-                data = load_data(map)
-
-                if isinstance(data, nb.Cifti2Image):
-                    plot_dscalar(data, colorbar=False, output_file=outname)
-            logger.info(f"glm finished successfully")
+        if not sessions:
+            # No sessions — run once with session=None
+            model_fit(bids_dir, fmriprep_dir, sub, task_label, sessions, space_label, dense, specs)
         else:
-            logger.warning(f"No betamaps found")
+            for session in sessions:
+                model_fit(bids_dir, fmriprep_dir, sub, task_label, session, space_label, dense, specs)
+
+    # if not input_sessions:
+    #     logger.info(
+    #         f"session was not provided. Checking if session exist for subject:{sub for sub in participant_label}"
+    #     )
+    #     for sub in particpant_label:
+    #         layout = BIDSLayout(bids_dir, derivatives=fmriprep_dir, validate=False, ignore=[f'sub-(?!{sub}).*']))
+    #         sessions = _has_sessions(input_sessions, layout, sub)
+    #         if not sessions:
+    #             model_instance = FirstLevelModelFit(
+    #                 bids_dir,
+    #                 fmriprep_dir,
+    #                 sub,
+    #                 task_label,
+    #                 session,
+    #                 space_label,
+    #                 dense,
+    #                 specs
+    #             )
+    #             logger.info(
+    #                 f"Found match runs: {[run for run in model_instance.match_runs]} for subject: {sub}"
+    #             )
+    #             beta_maps = model_instance.process_and_fit_valid_run()
+    #             if beta_maps:
+    #                 logger.info(f"Plotting the betamap....")
+    #                 for map in beta_maps:
+    #                     outname = map.replace("dscalar.nii", "png")
+    #                     data = load_data(map)
+
+    #                     if isinstance(data, nb.Cifti2Image):
+    #                         plot_dscalar(data, colorbar=False, output_file=outname)
+    #                 logger.info(f"glm finished successfully")
+    #             else:
+    #                 logger.warning(f"No betamaps found")
+
+    #         else:
+    #             for session in sesssions:
+    #                 model_instance = FirstLevelModelFit(
+    #                     bids_dir,
+    #                     fmriprep_dir,
+    #                     sub,
+    #                     task_label,
+    #                     session,
+    #                     space_label,
+    #                     dense,
+    #                     model,
+    #                 )
+
+    #                 # Fitting the model
+    #                 logger.info(
+    #                     f"Found match runs: {[run for run in model_instance.match_runs]} for subject: {sub}"
+    #                 )
+    #                 beta_maps = model_instance.process_and_fit_valid_run()
+
+    #                 if beta_maps:
+    #                     logger.info(f"Plotting the betamap....")
+    #                     for map in beta_maps:
+    #                         outname = map.replace("dscalar.nii", "png")
+    #                         data = load_data(map)
+
+    #                         if isinstance(data, nb.Cifti2Image):
+    #                             plot_dscalar(data, colorbar=False, output_file=outname)
+    #                     logger.info(f"glm finished successfully")
+    #                 else:
+    #                     logger.warning(f"No betamaps found")
 
 
 if __name__ == "__main__":
