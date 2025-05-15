@@ -77,15 +77,16 @@ singularity run --cleanenv \
   --notrack
 
 
-  exitcode=$?
+## nipoppy trackers 
 
-# Output results to a table
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/amiconoddi/0.22.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/*  derivatives/amiconoddi/0.22.0/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    amico failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline amiconoddi   --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
 done
