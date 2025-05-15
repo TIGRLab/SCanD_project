@@ -73,3 +73,18 @@ echo "copying templates..this might take a bit"
 scp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow templates/.cache/
 
 cd ${CURRENT_DIR}
+
+
+
+## nipoppy tracker init
+
+module load NiaEnv/2019b python/3.11.5
+python3 -m venv nipoppy
+source nipoppy/bin/activate 
+pip install git+https://github.com/nipoppy/nipoppy.git@dev-catalog
+
+mkdir ${CURRENT_DIR}/Neurobagel/
+nipoppy init --bids-source data/local/bids/  Neurobagel/
+
+rm -rf ${CURRENT_DIR}/Neurobagel/pipelines/processing/*
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
