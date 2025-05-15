@@ -746,7 +746,7 @@ sbatch  ./code/06_extract_noddi_scinet.sh
 
 ## Check tsv files
 
-At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the data/local/logs folder and review the .tsv files for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the .tsv files for both the fmriprep func and qsirecon pipelines. If no participants have encountered failures, you may proceed with running the next stage.
+At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the Neurobagel/derivatives/processing_status.tsv and review the file for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing_status.tsv for all the pipelins in stage 2. If no participants have encountered failures, you may proceed with running the next stage.
 
 However, if any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
 
