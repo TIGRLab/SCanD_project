@@ -26,6 +26,7 @@ ${BASEDIR}
 │   │   │   ├── fmriprep         # fmriprep derivatives
 │   │   │   ├── freesurfer       # freesurfer derivative
 │   │   │   ├── mriqc            # mriqc derivatives
+│   │   │   ├── MAGeTbrain       # MAGETbrain input and output folders
 │   │   │   ├── qsiprep          # qsiprep derivatives
 │   │   │   ├── smriprep         # smriprep derivatives
 │   │   │   ├── xcp_d            # xcp with GSR
@@ -33,7 +34,6 @@ ${BASEDIR}
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
-│   │   ├── MAGeTbrain           # MAGETbrain input and output folder
 │   │   ├── qsirecon             # qsirecon derivatives
 │   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
