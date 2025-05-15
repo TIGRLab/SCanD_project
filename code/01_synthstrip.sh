@@ -98,15 +98,20 @@ for session in ${sessions};do
         -i /dwi/${f} \
         -o /dwi/${f} \
         -m /masks/${b}_mask.nii.gz
+        
 
-        exitcode=$?
-        # Log results
-        if [ $exitcode -eq 0 ]; then
-            echo "${SUBJECTS}   ${SLURM_ARRAY_TASK_ID} ${session}    0" \
-                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-        else
-            echo "${SUBJECTS}   ${SLURM_ARRAY_TASK_ID} ${session}   singularity failed" \
-                >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-        fi
+        ## nipoppy trackers 
+        cd ${BASEDIR}/Neurobagel
+
+        source ../nipoppy/bin/activate
+
+        mkdir -p derivatives/synthstrip/0.2.0/output/
+        
+        ln -s ${BASEDIR}/data/local/bids/sourcedata/  derivatives/synthstrip/0.2.0/output/
+
+        for subject in $SUBJECTS; do
+	        nipoppy track  --pipeline synthstrip  --pipeline-version 0.2.0 --participant-id $subject
+        done
+ 
     done
 done
