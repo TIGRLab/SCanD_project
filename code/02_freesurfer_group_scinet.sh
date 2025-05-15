@@ -140,3 +140,18 @@ singularity exec \
     done
 
 EOF
+
+
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/freesurfergroup/7.4.1/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/*  derivatives/freesurfergroup/7.4.1/output/
+
+for subject in $SUBJECTS_BATCH; do
+	nipoppy track  --pipeline freesurfergroup  --pipeline-version 7.4.1 --participant-id $subject
+done
