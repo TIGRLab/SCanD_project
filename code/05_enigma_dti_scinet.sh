@@ -10,13 +10,6 @@
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-SUBJECTS=$(cut -f 1 ${BASEDIR}/data/local/bids/participants.tsv | tail -n +2)
-
-# Iterate over each subject in SUBJECTS
-for subject in $SUBJECTS; do
-    echo "$subject       0" >> ${BASEDIR}/logs/enigma_dti.tsv
-done
-
 # Set environment variables
 export DTIFIT_DIR=${BASEDIR}/data/local/dtifit
 export ENIGMA_DIR=${BASEDIR}/data/local/enigmaDTI
@@ -55,3 +48,16 @@ ${ENIGMA_DTI_CODES}/run_group_enigma_concat.py --output-nVox \
 ${ENIGMA_DTI_CODES}/run_group_dtifit_qc.py --debug /dtifit_dir
 
 EOF
+
+
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/enigmadti/0.1.1/output/
+
+ln -s ${BASEDIR}/data/local/data/local/enigmaDTI/  derivatives/enigmadti/0.1.1/output/
+
+nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
