@@ -91,5 +91,5 @@ mkdir -p derivatives/mriqc/24.0.0/output/
 ln -s ${BASEDIR}/data/local/derivatives/mriqc/24.0.0/*  derivatives/mriqc/24.0.0/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline mriqc   --pipeline-version 24.0.0 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline mriqc   --pipeline-version 24.0.0 --participant-id sub-$subject
 done
