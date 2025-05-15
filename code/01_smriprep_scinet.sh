@@ -83,5 +83,5 @@ mkdir -p derivatives/smriprep/23.2.3/output/
 ln -s ${BASEDIR}/data/local/derivatives/smriprep/23.2.3/smriprep/*  derivatives/smriprep/23.2.3/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline smriprep   --pipeline-version 23.2.3 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline smriprep   --pipeline-version 23.2.3 --participant-id sub-$subject
 done
