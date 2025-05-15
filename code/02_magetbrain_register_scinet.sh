@@ -32,12 +32,12 @@ singularity run \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+cd ${PROJECT_DIR}/Neurobagel
 
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/magetbrainregister/0.1.0/output/
 
-ln -s ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbrainregister/0.1.0/output/
+ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbrainregister/0.1.0/output/
 
 nipoppy track  --pipeline magetbrainregister  --pipeline-version 0.1.0 
