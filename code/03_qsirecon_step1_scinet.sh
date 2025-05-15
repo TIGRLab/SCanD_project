@@ -96,6 +96,6 @@ mkdir -p derivatives/qsirecon1/0.22.0/output/
 ln -s ${BASEDIR}/data/local/qsirecon-FSL/  derivatives/qsirecon1/0.22.0/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline qsirecon1  --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline qsirecon1  --pipeline-version 0.22.0 --participant-id sub-$subject
 done
     
