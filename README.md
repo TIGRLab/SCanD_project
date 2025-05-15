@@ -25,15 +25,15 @@ ${BASEDIR}
 │   │   │   ├── ciftify          # ciftify derivatives
 │   │   │   ├── fmriprep         # fmriprep derivatives
 │   │   │   ├── freesurfer       # freesurfer derivative
+│   │   │   ├── MAGeTbrain       # MAGETbrain input and output folders
 │   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── qsiprep          # qsiprep derivatives
-│   │   │   ├── smriprep          # smriprep derivatives
+│   │   │   ├── smriprep         # smriprep derivatives
 │   │   │   ├── xcp_d            # xcp with GSR
 │   │   │   └── xcp_noGSR        # xcp with GSR removed
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
-│   │   ├── MAGeTbrain           # MAGETbrain input and output folder
 │   │   ├── qsirecon             # qsirecon derivatives
 │   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
