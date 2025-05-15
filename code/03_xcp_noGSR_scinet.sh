@@ -144,15 +144,17 @@ ${SING_CONTAINER} \
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
-exitcode=$?
 
-# Output results to a table
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/xcpnogsr/0.7.3/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/xcp_noGSR/*  derivatives/xcpnogsr/0.7.3/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    xcp_d failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline xcpnogsr  --pipeline-version 0.7.3 --participant-id sub-$SUBJECTS
 done
