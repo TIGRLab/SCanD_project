@@ -99,5 +99,5 @@ mkdir -p derivatives/tractographymulti/0.22.0/output/
 ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS/  derivatives/tractographymulti/0.22.0/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline tractographymulti   --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline tractographymulti   --pipeline-version 0.22.0 --participant-id sub-$subject
 done
