@@ -84,16 +84,16 @@ singularity run --cleanenv \
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
-exitcode=$?
 
+cd ${BASEDIR}/Neurobagel
 
-# Output results to a table
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/freesurferlong/7.4.1/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/*  derivatives/freesurferlong/7.4.1/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    freesurfer failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline freesurferlong   --pipeline-version 7.4.1 --participant-id sub-$SUBJECTS
 done
+
