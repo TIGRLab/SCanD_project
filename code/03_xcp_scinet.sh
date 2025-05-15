@@ -89,6 +89,6 @@ mkdir -p derivatives/xcpd/0.7.3/output/
 ln -s ${BASEDIR}/data/local/derivatives/xcp_d/0.7.3/*  derivatives/xcpd/0.7.3/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline xcpd  --pipeline-version 0.7.3 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline xcpd  --pipeline-version 0.7.3 --participant-id sub-$subject
 done
 
