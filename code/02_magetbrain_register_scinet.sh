@@ -34,14 +34,16 @@ singularity run \
        --stage-voting-walltime 24:00:00
 
 
-exitcode=$?
+## nipoppy trackers 
 
-# Output results to a table
+cd ${BASEDIR}/Neurobagel
 
-exitcode=$?
+source ../nipoppy/bin/activate
 
-if [ "$exitcode" -eq 0 ]; then
-    echo "0" >> "${LOGS_DIR}/${SLURM_JOB_NAME}.tsv"
-else
-    echo "magetbrain_register  failed" >> "${LOGS_DIR}/${SLURM_JOB_NAME}.tsv"
-fi
+mkdir -p derivatives/magetbrainregister/0.1.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbrainregister/0.1.0/output/
+
+for subject in $SUBJECTS; do
+	nipoppy track  --pipeline magetbrainregister  --pipeline-version 0.1.0 
+done
