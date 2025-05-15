@@ -85,15 +85,17 @@ singularity run --cleanenv \
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
-exitcode=$?
 
-# Output results to a table
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/fmriprepapply/23.2.3/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/*  derivatives/fmriprepapply/23.2.3/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    fmriprep_apply failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline fmriprepapply   --pipeline-version 23.2.3 --participant-id sub-$SUBJECTS
 done
