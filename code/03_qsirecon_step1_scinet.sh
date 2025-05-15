@@ -63,12 +63,6 @@ fi
 
 export fs_license=${BASEDIR}/templates/.freesurfer.txt
 
-for subject in $SUBJECTS; do
-    
-      echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-         >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-done
-
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/qsiprep --home /home/qsiprep \
     -B ${BIDS_DIR}:/bids \
@@ -91,4 +85,17 @@ singularity run --cleanenv \
     --fs-license-file /li \
     --notrack
 
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/qsirecon1/0.22.0/output/
+
+ln -s ${BASEDIR}/data/local/qsirecon-FSL/  derivatives/qsirecon1/0.22.0/output/
+
+for subject in $SUBJECTS; do
+	nipoppy track  --pipeline qsirecon1  --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
+done
     
