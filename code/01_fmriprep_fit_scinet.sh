@@ -94,16 +94,17 @@ singularity run --cleanenv \
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
-exitcode=$?
 
+## nipoppy trackers 
 
-# Output results to a table
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/fmriprepfit/23.2.3/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/*  derivatives/fmriprepfit/23.2.3/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    fmriprep_fit failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline fmriprepfit   --pipeline-version 23.2.3 --participant-id sub-$SUBJECTS
 done
