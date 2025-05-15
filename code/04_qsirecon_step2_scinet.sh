@@ -129,19 +129,21 @@ if [ -z "$SESSIONS" ]; then
       --calc-all --debug \
       /enigma_dir/sub-${SUBJECTS} \
       /dtifit_dir/${DTIFIT_name}_FA.nii.gz
+      
 
-    exitcode=$?
+    ## nipoppy trackers 
+    cd ${BASEDIR}/Neurobagel
 
-    # Output results to a table
-   for subject in $SUBJECTS; do
-       if [ $exitcode -eq 0 ]; then
-           echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-               >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-       else
-           echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
-               >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-       fi
-   done
+    source ../nipoppy/bin/activate
+
+    mkdir -p derivatives/qsirecon2/0.22.0/output/
+
+    ln -s ${BASEDIR}/data/local/dtifit/  derivatives/qsirecon2/0.22.0/output/
+    ln -s ${BASEDIR}/data/local/enigmaDTI/  derivatives/qsirecon2/0.22.0/output/
+
+    for subject in $SUBJECTS; do
+	    nipoppy track  --pipeline qsirecon2  --pipeline-version 0.22.0 --participant-id sub-$subject
+    done
 
 
 else
@@ -208,18 +210,20 @@ else
           /enigma_dir/sub-${SUBJECTS}_${session_name} \
           /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
-        exitcode=$?
 
-        # Output results to a table
-       for subject in $SUBJECTS; do
-           if [ $exitcode -eq 0 ]; then
-               echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-                   >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-           else
-               echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsirecon failed" \
-                   >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-           fi
-       done
+        ## nipoppy trackers 
+        cd ${BASEDIR}/Neurobagel
+
+        source ../nipoppy/bin/activate
+
+        mkdir -p derivatives/qsirecon2/0.22.0/output/
+
+        ln -s ${BASEDIR}/data/local/dtifit/  derivatives/qsirecon2/0.22.0/output/
+        ln -s ${BASEDIR}/data/local/enigmaDTI/  derivatives/qsirecon2/0.22.0/output/
+
+        for subject in $SUBJECTS; do
+	        nipoppy track  --pipeline qsirecon2  --pipeline-version 0.22.0 --participant-id sub-$subject
+        done
 
     done
    
