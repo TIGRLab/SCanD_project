@@ -156,5 +156,5 @@ mkdir -p derivatives/xcpnogsr/0.7.3/output/
 ln -s ${BASEDIR}/data/local/derivatives/xcp_noGSR/*  derivatives/xcpnogsr/0.7.3/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline xcpnogsr  --pipeline-version 0.7.3 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline xcpnogsr  --pipeline-version 0.7.3 --participant-id sub-$subject
 done
