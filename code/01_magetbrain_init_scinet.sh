@@ -175,3 +175,18 @@ rm -rf ${INPUT_DIR}/templates/brains/*T1w.mnc
 
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
+
+
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/magetbraininit/0.1.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbraininit/0.1.0/output/
+
+for subject in $SUBJECTS; do
+	nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
+done
