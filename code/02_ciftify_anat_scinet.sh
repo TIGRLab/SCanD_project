@@ -84,5 +84,5 @@ mkdir -p derivatives/ciftify/1.3.2/output/
 ln -s ${BASEDIR}/data/local/derivatives/ciftify/*  derivatives/ciftify/1.3.2/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline ciftify   --pipeline-version 1.3.2 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline ciftify   --pipeline-version 1.3.2 --participant-id sub-$subject
 done
