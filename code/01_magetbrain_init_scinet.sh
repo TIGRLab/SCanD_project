@@ -183,7 +183,4 @@ mkdir -p derivatives/magetbraininit/0.1.0/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbraininit/0.1.0/output/
 
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
-done
-
+nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
