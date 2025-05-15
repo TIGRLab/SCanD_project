@@ -79,16 +79,17 @@ singularity run --cleanenv \
     --no-datalad-get \
     --no-sub
 
-exitcode=$?
 
- 
-# Output results to a table
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/mriqc/24.0.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/mriqc/24.0.0/*  derivatives/mriqc/24.0.0/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    mriqc failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline mriqc   --pipeline-version 24.0.0 --participant-id sub-$SUBJECTS
 done
