@@ -49,13 +49,13 @@ singularity run \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+cd ${PROJECT_DIR}/Neurobagel
 
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/magetbrainvote/0.1.0/output/
 
-ln -s ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/*  derivatives/magetbrainvote/0.1.0/output/
+ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/*  derivatives/magetbrainvote/0.1.0/output/
 
 subject=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
