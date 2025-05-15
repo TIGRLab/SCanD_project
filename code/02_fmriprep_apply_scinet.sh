@@ -96,5 +96,5 @@ mkdir -p derivatives/fmriprepapply/23.2.3/output/
 ln -s ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/*  derivatives/fmriprepapply/23.2.3/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline fmriprepapply   --pipeline-version 23.2.3 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline fmriprepapply   --pipeline-version 23.2.3 --participant-id sub-$subject
 done
