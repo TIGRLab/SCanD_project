@@ -27,13 +27,6 @@ for subject in $SUBJECTS; do
             ${BASEDIR}/containers/tbss_2023-10-10.simg \
             /bin/bash -c "/base/code/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject $subject"
 
-        # Check if the execution was successful
-        if [ $? -eq 0 ]; then
-            echo "$subject 0" >> ${BASEDIR}/logs/extract_noddi.tsv
-        else
-            echo "$subject extract_noddi failed" >> ${BASEDIR}/logs/extract_noddi.tsv
-        fi
-
     else
         # Iterate over each session folder found
         for session in $SESSIONS; do
@@ -43,13 +36,20 @@ for subject in $SUBJECTS; do
                 ${BASEDIR}/containers/tbss_2023-10-10.simg \
                 /bin/bash -c "/base/code/extract_NODDI_enigma.py --noddi_outputdir /noddi_dir --enigma_outputdir /enigma_dir --outputdir /noddi_dir/noddi_roi --subject $subject --session $session"
 
-            # Check if the execution was successful
-            if [ $? -eq 0 ]; then
-                echo "$subject $session 0" >> ${BASEDIR}/logs/extract_noddi.tsv
-            else
-                echo "$subject $session extract_noddi failed" >> ${BASEDIR}/logs/extract_noddi.tsv
-            fi
         done
     fi
 
 done
+
+
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/extractnoddi/0.1.1/output/
+
+ln -s ${BASEDIR}/data/local/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ derivatives/extractnoddi/0.1.1/output/
+
+nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1
