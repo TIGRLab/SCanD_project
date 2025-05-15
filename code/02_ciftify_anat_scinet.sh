@@ -73,13 +73,17 @@ else
     echo "ciftify_recon_all failed with exit code $exitcode for sub-${SUBJECTS}"
 fi
 
-# Log results
+
+## nipoppy trackers 
+
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/ciftify/1.3.2/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/ciftify/*  derivatives/ciftify/1.3.2/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    ciftify failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline ciftify   --pipeline-version 1.3.2 --participant-id sub-$SUBJECTS
 done
