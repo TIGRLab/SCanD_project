@@ -112,15 +112,16 @@ singularity run --cleanenv \
     --force-syn
 
 
-exitcode=$?
+## nipoppy trackers 
 
-# Output results to a table
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/qsiprep/0.22.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/*  derivatives/qsiprep/0.22.0/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    qsiprep failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline qsiprep   --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
 done
