@@ -88,5 +88,5 @@ mkdir -p derivatives/amiconoddi/0.22.0/output/
 ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/*  derivatives/amiconoddi/0.22.0/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline amiconoddi   --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline amiconoddi   --pipeline-version 0.22.0 --participant-id sub-$subject
 done
