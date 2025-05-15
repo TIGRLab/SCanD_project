@@ -2,7 +2,7 @@
 
 In this project, we have devised a streamlined solution for managing multiple pipelines with a focus on seamless coordination and code integration. Our approach involves the creation of an automated system that orchestrates the execution of diverse pipelines each stage. By combining and organizing the necessary codes for each stage's tasks, we aim to optimize workflow efficiency.
 
-The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip theå diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
+The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
 
 **Note:** At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the Neurobagel/derivatives/processing_status.tsv and review the file for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing_status.tsv for all the pipelins in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review. If any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
 
