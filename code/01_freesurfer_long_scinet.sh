@@ -97,5 +97,5 @@ mkdir -p derivatives/freesurferlong/7.4.1/output/
 ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/*  derivatives/freesurferlong/7.4.1/output/
 
 for subject in $SUBJECTS; do
-	nipoppy track  --pipeline freesurferlong   --pipeline-version 7.4.1 --participant-id sub-$SUBJECTS
+	nipoppy track  --pipeline freesurferlong   --pipeline-version 7.4.1 --participant-id sub-$subject
 done
