@@ -27,7 +27,7 @@ run_pipeline() {
 
 submit_magetbrain_job() {
     local sub_size=1
-    local subjects_list=($(ls ./data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
+    local subjects_list=($(ls ./data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
     local n_subjects=${#subjects_list[@]}
     local array_job_length=$(echo "$n_subjects / ${sub_size}" | bc)
     echo "Submitting MAGeTbrain Vote job with array size: ${array_job_length}"
