@@ -88,15 +88,16 @@ singularity run --cleanenv \
     --output-resolution 2.0 
 
 
-exitcode=$?
+## nipoppy trackers 
 
-# Output results to a table
+cd ${BASEDIR}/Neurobagel
+
+source ../nipoppy/bin/activate
+
+mkdir -p derivatives/tractographysingle/0.22.0/output/
+
+ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS/  derivatives/tractographysingle/0.22.0/output/
+
 for subject in $SUBJECTS; do
-    if [ $exitcode -eq 0 ]; then
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    0" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    else
-        echo "sub-$subject   ${SLURM_ARRAY_TASK_ID}    tractography failed" \
-            >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
-    fi
+	nipoppy track  --pipeline tractographysingle  --pipeline-version 0.22.0 --participant-id sub-$SUBJECTS
 done
