@@ -77,7 +77,7 @@ cd ${CURRENT_DIR}
 module load python/3.11.5
 module load rust/1.85.0
 
-python3 -m venv --without-pip nipoppy
+python3 -m venv nipoppy
 source nipoppy/bin/activate 
 pip install git+https://github.com/nipoppy/nipoppy.git@dev-catalog
 
