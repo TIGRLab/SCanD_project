@@ -364,15 +364,15 @@ To customize the selection, create a new TSV file named `participants_demographi
 If `participants_demographic.tsv` is not provided, the script will randomly select 20 subjects.  
 
 #### Changing Atlas Labels  
-By default, the labels in `data/local/MAGeTbrain/magetbrain_data/input/atlases/label` are based on **amygdala** segmentation.  
+By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label` are based on **amygdala** segmentation.  
 
 To change the segmentation to **cerebellum, hippocampus, or another region**:  
 1. Remove existing labels:  
    ```bash
-   rm data/local/MAGeTbrain/magetbrain_data/input/atlases/label/*
+   rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label/*
 2. Copy the desired labels from the shared directory:
    ```bash
-   cp /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/MAGeTbrain/magetbrain_data/input/atlases/label/
+   cp /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label/
 
 ### Run the pipeline:
 
@@ -670,7 +670,7 @@ git pull
 
 ## calculate the length of the array-job given
 SUB_SIZE=1
-N_SUBJECTS=$(ls ./data/local/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
+N_SUBJECTS=$(ls ./data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
