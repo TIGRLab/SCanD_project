@@ -53,7 +53,7 @@ mkdir -p derivatives/magetbrainvote/0.1.0/output/
 
 ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/*  derivatives/magetbrainvote/0.1.0/output/
 
-subject=$(echo "$SUBJECTS" | cut -d'_' -f1)
+SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
 for subject in $SUBJECTS; do
 	nipoppy track  --pipeline magetbrainvote  --pipeline-version 0.1.0 --participant-id $subject
