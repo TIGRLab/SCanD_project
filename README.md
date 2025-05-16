@@ -14,7 +14,7 @@ ${BASEDIR}
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
-│   ├── freesurfer_synthstrip-2023-04-07.simg
+│   ├── freesurfer_synthstrip-2023-04-07.simgdoesn
 │   ├── magetbrain.sif
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
