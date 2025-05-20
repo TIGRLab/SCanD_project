@@ -72,7 +72,7 @@ for session in ${sessions};do
         DESTINATION="${SOURCE_DATA}/${SUBJECTS}/${session}/dwi/"
         echo "Session ${session}, processing DWI files for ${SUBJECTS}/${session}..."
     fi
-    dwi_files=$(find ${SUB_PATH}/dwi -type f -name "*dwi.nii.gz" -exec basename {} \;)
+   
     for f in ${dwi_files};do
         # Create new filename with "_nostrip"
         new_name="${f%.nii.gz}_nostrip.nii.gz"
