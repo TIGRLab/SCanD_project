@@ -110,7 +110,7 @@ for session in ${sessions};do
 
         mkdir -p derivatives/synthstrip/0.2.0/output/
         
-        ln -s ${BASEDIR}/data/local/bids/sourcedata/  derivatives/synthstrip/0.2.0/output/
+        ln -s ${BASEDIR}/data/local/bids/sourcedata/  derivatives/synthstrip/0.2.0/output
 
         for subject in $SUBJECTS; do
 	        nipoppy track  --pipeline synthstrip  --pipeline-version 0.2.0 --participant-id $subject
