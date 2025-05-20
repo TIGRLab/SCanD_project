@@ -85,5 +85,5 @@ mkdir ${CURRENT_DIR}/Neurobagel/
 nipoppy init --bids-source data/local/bids/  Neurobagel/
 
 rm -rf ${CURRENT_DIR}/Neurobagel/pipelines/processing/*
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+cp -r /scratch/arisvoin/shared/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
 
