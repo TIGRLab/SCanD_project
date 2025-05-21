@@ -95,6 +95,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/tractographymulti/0.22.0/output/
+ls -al derivatives/tractographymulti/0.22.0/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS/  derivatives/tractographymulti/0.22.0/output/
 
