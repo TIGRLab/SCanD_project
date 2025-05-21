@@ -218,8 +218,10 @@ else
         source ../nipoppy/bin/activate
 
         mkdir -p derivatives/qsirecon2/0.22.0/output/
+	ls -al derivatives/qsirecon2/0.22.0/output/
 
         ln -s ${BASEDIR}/data/local/dtifit/  derivatives/qsirecon2/0.22.0/output/
+	ls -al derivatives/qsirecon2/0.22.0/output/
         ln -s ${BASEDIR}/data/local/enigmaDTI/  derivatives/qsirecon2/0.22.0/output/
 
         for subject in $SUBJECTS; do
