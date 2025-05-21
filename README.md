@@ -108,7 +108,7 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |^ |   06b	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 7 |   07a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
 
-(tigrbids_flow.png)
+![](tigrbids_flow.png)
 
 # Setting your SciNet environment and prepare dataset
 
