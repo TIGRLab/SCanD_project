@@ -106,6 +106,7 @@ for session in ${sessions};do
         source ../nipoppy/bin/activate
 
         mkdir -p derivatives/synthstrip/0.2.0/output/
+	ls -al derivatives/synthstrip/0.2.0/output/
         
         ln -s ${BASEDIR}/data/local/bids/sourcedata/  derivatives/synthstrip/0.2.0/output/
 
