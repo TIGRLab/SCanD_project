@@ -1,6 +1,8 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset
+This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
+
+![](tigrbids_flow.png)
 
 General folder structure for the repo (when all is run):
 
