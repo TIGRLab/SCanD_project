@@ -1,6 +1,8 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset
+This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
+
+![](tigrbids_flow.png)
 
 General folder structure for the repo (when all is run):
 
@@ -107,8 +109,6 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |stage 6 |  06a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   06b	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 7 |   07a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
-
-![](tigrbids_flow.png)
 
 # Setting your SciNet environment and prepare dataset
 
