@@ -92,6 +92,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/fmriprepapply/23.2.3/output/
+ls -al derivatives/fmriprepapply/23.2.3/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/*  derivatives/fmriprepapply/23.2.3/output/
 
