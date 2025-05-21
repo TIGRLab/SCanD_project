@@ -119,6 +119,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/qsiprep/0.22.0/output/
+ls -al derivatives/qsiprep/0.22.0/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/*  derivatives/qsiprep/0.22.0/output/
 
