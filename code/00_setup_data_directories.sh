@@ -88,3 +88,5 @@ nipoppy init --bids-source data/local/bids/  Neurobagel/
 
 rm -rf ${CURRENT_DIR}/Neurobagel/pipelines/processing/*
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+
+cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy_no_session/* ${CURRENT_DIR}/Neurobagel/pipelines/processin
