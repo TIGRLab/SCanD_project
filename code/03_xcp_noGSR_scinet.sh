@@ -151,6 +151,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/xcpnogsr/0.7.3/output/
+ls -al derivatives/xcpnogsr/0.7.3/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/xcp_noGSR/*  derivatives/xcpnogsr/0.7.3/output/
 
