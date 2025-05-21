@@ -168,7 +168,7 @@ Also, make sure dataset_description.json exists inside your bids folder.
 
 ### Edit fmap files
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
+In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
 
 ```sh
 ## First load a python module
@@ -384,7 +384,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_fmriprep_func_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
 ```
 
 
