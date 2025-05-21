@@ -80,6 +80,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/smriprep/23.2.3/output/
+ls -al derivatives/smriprep/23.2.3/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/smriprep/23.2.3/smriprep/*  derivatives/smriprep/23.2.3/output/
 
