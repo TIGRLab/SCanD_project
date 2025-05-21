@@ -85,6 +85,20 @@ mkdir ${CURRENT_DIR}/Neurobagel/
 nipoppy init --bids-source data/local/bids/  Neurobagel/
 
 rm -rf ${CURRENT_DIR}/Neurobagel/pipelines/processing/*
-cp -r /scratch/arisvoin/shared/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
 
-cp -r /scratch/arisvoin/shared/nipoppy_no_session/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+# Find the first sub-* folder
+first_subject=$(find "${CURRENT_DIR}/data/local/bids" -maxdepth 1 -type d -name "sub-*" | head -n 1)
+
+if [ -d "$first_subject" ]; then
+    # Check if there's any ses-* folder inside the first subject
+    if compgen -G "$first_subject/ses-*" > /dev/null; then
+        echo "Found ses-* folder in $first_subject. Copying from nipoppy..."
+        cp -r /scratch/arisvoin/shared/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+    else
+        echo "No ses-* folder in $first_subject. Copying from nipoppy_no_session..."
+        cp -r /scratch/arisvoin/shared/nipoppy_no_session/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+    fi
+else
+    echo "No sub-* folder found in $BASE_DIR."
+fi
+
