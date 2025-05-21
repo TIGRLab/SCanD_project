@@ -93,6 +93,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/freesurferlong/7.4.1/output/
+ls -al derivatives/freesurferlong/7.4.1/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/*  derivatives/freesurferlong/7.4.1/output/
 
