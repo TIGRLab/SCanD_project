@@ -93,6 +93,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/qsirecon1/0.22.0/output/
+ls -al derivatives/qsirecon1/0.22.0/output/
 
 ln -s ${BASEDIR}/data/local/qsirecon-FSL/  derivatives/qsirecon1/0.22.0/output/
 
