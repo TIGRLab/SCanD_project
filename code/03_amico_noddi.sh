@@ -84,6 +84,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/amiconoddi/0.22.0/output/
+ls -al derivatives/amiconoddi/0.22.0/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/*  derivatives/amiconoddi/0.22.0/output/
 
