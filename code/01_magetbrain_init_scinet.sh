@@ -184,6 +184,7 @@ cd ${PROJECT_DIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/magetbraininit/0.1.0/output/
+ls -al derivatives/magetbraininit/0.1.0/output/
 
 ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbraininit/0.1.0/output/
 
