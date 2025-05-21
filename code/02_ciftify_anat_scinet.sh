@@ -81,6 +81,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/ciftify/1.3.2/output/
+ls -al derivatives/ciftify/1.3.2/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/ciftify/*  derivatives/ciftify/1.3.2/output/
 
