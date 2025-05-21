@@ -87,6 +87,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/mriqc/24.0.0/output/
+ls -al derivatives/mriqc/24.0.0/output/
 
 ln -s ${BASEDIR}/data/local/derivatives/mriqc/24.0.0/*  derivatives/mriqc/24.0.0/output/
 
