@@ -57,6 +57,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/enigmadti/0.1.1/output/
+ls -al derivatives/enigmadti/0.1.1/output/
 
 ln -s ${BASEDIR}/data/local/data/local/enigmaDTI/  derivatives/enigmadti/0.1.1/output/
 
