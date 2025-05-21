@@ -49,6 +49,7 @@ cd ${BASEDIR}/Neurobagel
 source ../nipoppy/bin/activate
 
 mkdir -p derivatives/extractnoddi/0.1.1/output/
+ls -al derivatives/extractnoddi/0.1.1/output/
 
 ln -s ${BASEDIR}/data/local/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ derivatives/extractnoddi/0.1.1/output/
 
