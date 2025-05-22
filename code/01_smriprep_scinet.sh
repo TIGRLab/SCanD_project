@@ -2,9 +2,9 @@
 #SBATCH --job-name=smriprep
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=10
 #SBATCH --time=10:00:00
-#SBATCH --mem-per-cpu=75000
+#SBATCH --mem-per-cpu=7500
 
 SUB_SIZE=1 ## number of subjects to run
 CORES=40
