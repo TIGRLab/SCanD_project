@@ -783,13 +783,13 @@ source ./code/07_extract_to_share_terminal.sh
 
 Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
-You need to change the "your_group_name" and put your group name there and then run the code!
+You need to change the "groupName_studyName" and put your groupName_studyName there and then run the code!
 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/a/arisvoin/arisvoin/mlepage/your_group_name
-cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/your_group_name/
+mkdir /scratch/a/arisvoin/arisvoin/mlepage/groupName_studyName
+cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/groupName_studyName/
 ```
 
 # Appendix - Adding a test dataset from openneuro
