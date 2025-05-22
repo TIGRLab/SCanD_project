@@ -27,14 +27,6 @@ else
 fi
 
 
-## copy freesurfer licence
-cp /scratch/a/arisvoin/arisvoin/mlepage/fs_license/license.txt templates/.freesurfer.txt
-
-
-## copy templates
-echo "copying templates..this might take a bit"
-scp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow templates/.cache/
-
 cd ${CURRENT_DIR}
 
 ## nipoppy tracker init
