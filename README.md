@@ -783,7 +783,7 @@ source ./code/07_extract_to_share_terminal.sh
 
 Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
-You need to change the "groupName_studyName" and put your groupName_studyName there and then run the code!
+You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
 
 ```sh
 cd ${SCRATCH}/SCanD_project
