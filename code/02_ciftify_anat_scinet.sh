@@ -2,9 +2,9 @@
 #SBATCH --job-name=ciftify
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --time=08:00:00
-#SBATCH --mem-per-cpu=20000
+#SBATCH --mem-per-cpu=6000
 
 SUB_SIZE=1 ## number of subjects to run
 CORES=40
