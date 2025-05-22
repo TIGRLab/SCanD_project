@@ -171,7 +171,7 @@ Also, make sure dataset_description.json exists inside your bids folder.
 
 ### Initializing nipoppy trackers
 
-In this step, we initialize the nipoppy trackers and set up a folder structure based on the nipoppy directory specification:
+In this step, we initialize the [nipoppy trackers](https://nipoppy.readthedocs.io/en/0.2.1/index.html) and set up a folder structure based on the nipoppy directory specification:
 
 ```sh
 cd ${SCRATCH}/SCanD_project
