@@ -2,7 +2,7 @@
 #SBATCH --job-name=qsiprep
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=15
+#SBATCH --cpus-per-task=12
 #SBATCH --time=06:00:00
 #SBATCH --mem-per-cpu=10000
 
