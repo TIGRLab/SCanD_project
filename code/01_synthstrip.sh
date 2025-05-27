@@ -52,7 +52,7 @@ echo "Running ${SUBJECTS} and slurm_array_task_ID ${SLURM_ARRAY_TASK_ID}..."
 # setting up the input and output folders
 export SOURCE_DATA=${BIDS_DIR}/sourcedata/freesurfer_synthstrip
 export masks_dir=${SOURCE_DATA}/masks
-export WORK_DIR=${SCRATCH}/SCanD/freesurfer_synthstrip/${SUBJECTS}
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/freesurfer_synthstrip/${SUBJECTS}
 export LOGS_DIR=${BASEDIR}/logs
 
 mkdir -vp ${masks_dir} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
