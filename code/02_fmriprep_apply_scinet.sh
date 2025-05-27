@@ -41,7 +41,7 @@ export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3  # use if version of fmriprep >=20.2
 #export OUTPUT_DIR=${BASEDIR}/data/local/ # use if version of fmriprep <=21.0
 
-export WORK_DIR=${SCRATCH}/SCanD/fmriprep
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
