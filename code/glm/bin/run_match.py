@@ -96,9 +96,7 @@ class BoldEventsMatch(BIDSSelect):
 
         if matching_runs:
             match_runs = [(session, f"run-{run}") for run in sorted(matching_runs)]
-            # logger.info(
-            #     f"Found match runs: {[run for run in match_runs]} for subject: {self.participant_label}"
-            # )
+            
         missing_img_runs = events_runs - img_runs
         missing_events_runs = img_runs - events_runs
 
