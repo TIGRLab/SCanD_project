@@ -134,6 +134,34 @@ class FirstLevelModelFit(BoldEventsMatch):
                     )
         return out_contrasts
 
+    def _format_filename(
+        self,
+        prefix="",
+        suffix="",
+        participant_label=None,
+        task_label=None,
+        ses=None,
+        run=None,
+        contrast=None,
+        stat=None,
+        ext="nii",
+    ):
+        parts = []
+        if participant_label:
+            parts.append(f"sub-{participant_label}")
+        if ses and ses != "None":
+            parts.append(f"ses-{ses}")
+        if task_label:
+            parts.append(f"task-{task_label}")
+        if run:
+            parts.append(f"run-{run}")
+        if contrast:
+            parts.append(f"contrast-{contrast}")
+        if stat:
+            parts.append(f"stat-{stat}")
+        fname = "_".join(parts)
+        return f"{prefix}{fname}{suffix}.{ext}"
+
     def process_and_fit_valid_run(self):
         from nilearn.glm import compute_contrast
         from nilearn.glm import first_level as level1
@@ -202,14 +230,29 @@ class FirstLevelModelFit(BoldEventsMatch):
             # save design matrix
             fname_dm = os.path.join(
                 glm_dir,
-                f"sub-{self.participant_label}_ses-{ses}_task-{self.task_label}_run-{run}_design.tsv",
+                self._format_filename(
+                    participant_label=self.participant_label,
+                    ses=ses,
+                    task_label=self.task_label,
+                    run=run,
+                    stat="design",
+                    ext="tsv",
+                ),
             )
             fname_dm_fig = os.path.join(
                 glm_dir,
-                f"sub-{self.participant_label}_ses-{ses}_task-{self.task_label}_run-{run}_design.svg",
+                self._format_filename(
+                    participant_label=self.participant_label,
+                    ses=ses,
+                    task_label=self.task_label,
+                    run=run,
+                    stat="design",
+                    ext="svg",
+                ),
             )
-            logger.info(f"Saving the design matrix to {glm_dir}")
+            logger.info(f"Saving the {fname_dm}")
             dm.to_csv(fname_dm, index=False)
+            logger.info(f"Saving the {fname_dm_fig}")
             plot_design_matrix(dm, output_file=fname_dm_fig)
 
             # Save model level images
@@ -217,8 +260,16 @@ class FirstLevelModelFit(BoldEventsMatch):
 
             for attr, img in model_attr.items():
                 model_metadata.append({"stat": attr})
-                fname = modname_fmt(
-                    self.participant_label, ses, self.task_label, run, attr
+                fname = os.path.join(
+                    glm_dir,
+                    self._format_filename(
+                        participant_label=self.participant_label,
+                        ses=ses,
+                        task_label=self.task_label,
+                        run=run,
+                        stat=attr,
+                        ext="dscalar.nii",
+                    ),
                 )
                 logger.info(f"Saving Model outputs: {fname}")
                 img.to_filename(fname)
@@ -264,24 +315,18 @@ class FirstLevelModelFit(BoldEventsMatch):
                     ("p_value", pvalue_maps),
                     ("stat", stat_maps),
                 ):
-                    if map_type == "stat":
-                        fname = fname_fmt(
-                            self.participant_label,
-                            ses,
-                            self.task_label,
-                            run,
-                            name,
-                            contrast_test,
-                        )
-                    else:
-                        fname = fname_fmt(
-                            self.participant_label,
-                            ses,
-                            self.task_label,
-                            run,
-                            name,
-                            map_type,
-                        )
+                    fname = os.path.join(
+                        glm_dir,
+                        self._format_filename(
+                            participant_label=self.participant_label,
+                            ses=ses,
+                            task_label=self.task_label,
+                            run=run,
+                            contrast=name,
+                            stat=contrast_test if map_type == "stat" else map_type,
+                            ext="dscalar.nii",
+                        ),
+                    )
                     logger.info(f"Saving Regressor output: {fname}")
                     map_list.append(fname)
                     maps[map_type].to_filename(fname)
