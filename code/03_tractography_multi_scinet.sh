@@ -104,8 +104,6 @@ singularity exec \
 
     ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS/" derivatives/tractographymulti/0.22.0/output/ || true
 
-    SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
-
     for subject in $SUBJECTS; do
       nipoppy track \
         --pipeline tractographymulti \
