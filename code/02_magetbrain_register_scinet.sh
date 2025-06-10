@@ -36,13 +36,19 @@ singularity run \
 
 ## nipoppy trackers 
 
-cd ${PROJECT_DIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/magetbrainregister/0.1.0/output/
+    ls -al derivatives/magetbrainregister/0.1.0/output/
 
-mkdir -p derivatives/magetbrainregister/0.1.0/output/
-ls -al derivatives/magetbrainregister/0.1.0/output/
+    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbrainregister/0.1.0/output/ || true
 
-ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/*  derivatives/magetbrainregister/0.1.0/output/
-
-nipoppy track  --pipeline magetbrainregister  --pipeline-version 0.1.0 
+    nipoppy track  --pipeline magetbrainregister  --pipeline-version 0.1.0
+  '
