@@ -74,15 +74,23 @@ singularity exec --cleanenv \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/smriprep/23.2.3/output/
+    ls -al derivatives/smriprep/23.2.3/output/
+    ln -s "$BASEDIR/data/local/derivatives/smriprep/23.2.3/smriprep/"* derivatives/smriprep/23.2.3/output/ || true
 
-mkdir -p derivatives/smriprep/23.2.3/output/
-ls -al derivatives/smriprep/23.2.3/output/
-
-ln -s ${BASEDIR}/data/local/derivatives/smriprep/23.2.3/smriprep/*  derivatives/smriprep/23.2.3/output/
-
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline smriprep   --pipeline-version 23.2.3 --participant-id sub-$subject
-done
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline smriprep \
+        --pipeline-version 23.2.3 \
+        --participant-id sub-$subject
+    done
+  '
