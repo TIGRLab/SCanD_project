@@ -44,13 +44,19 @@ done
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/extractnoddi/0.1.1/output/
+    ls -al derivatives/extractnoddi/0.1.1/output/
 
-mkdir -p derivatives/extractnoddi/0.1.1/output/
-ls -al derivatives/extractnoddi/0.1.1/output/
+    ln -s "$BASEDIR/data/local/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
 
-ln -s ${BASEDIR}/data/local/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ derivatives/extractnoddi/0.1.1/output/
-
-nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1
+    nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1 
+  '
