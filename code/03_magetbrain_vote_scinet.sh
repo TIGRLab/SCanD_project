@@ -45,17 +45,26 @@ singularity run \
 
 ## nipoppy trackers 
 
-cd ${PROJECT_DIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/magetbrainvote/0.1.0/output/
+    ls -al derivatives/magetbrainvote/0.1.0/output/
 
-mkdir -p derivatives/magetbrainvote/0.1.0/output/
-ls -al derivatives/magetbrainvote/0.1.0/output/
+    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/output/"* derivatives/magetbrainvote/0.1.0/output/ || true
 
-ln -s ${PROJECT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/*  derivatives/magetbrainvote/0.1.0/output/
+    SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
-SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
-
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline magetbrainvote  --pipeline-version 0.1.0 --participant-id $subject
-done
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline magetbrainvote \
+        --pipeline-version 0.1.0 \
+        --participant-id $subject
+    done
+  '
