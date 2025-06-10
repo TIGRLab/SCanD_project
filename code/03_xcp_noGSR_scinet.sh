@@ -160,8 +160,6 @@ singularity exec \
 
     ln -s "$BASEDIR/data/local/derivatives/xcp_noGSR/"* derivatives/xcpnogsr/0.7.3/output/ || true
 
-    SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
-
     for subject in $SUBJECTS; do
       nipoppy track \
         --pipeline xcpnogsr \
