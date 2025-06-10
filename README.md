@@ -16,8 +16,9 @@ ${BASEDIR}
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
-│   ├── freesurfer_synthstrip-2023-04-07.simg
+│   ├── freesurfer_synthstrip-2023-04-07.simgdoesn
 │   ├── magetbrain.sif
+│   ├── nipoppy.sif
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
 ├── data
@@ -27,8 +28,8 @@ ${BASEDIR}
 │   │   │   ├── ciftify          # ciftify derivatives
 │   │   │   ├── fmriprep         # fmriprep derivatives
 │   │   │   ├── freesurfer       # freesurfer derivative
-│   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── MAGeTbrain       # MAGETbrain input and output folders
+│   │   │   ├── mriqc            # mriqc derivatives
 │   │   │   ├── qsiprep          # qsiprep derivatives
 │   │   │   ├── smriprep         # smriprep derivatives
 │   │   │   ├── xcp_d            # xcp with GSR
@@ -36,6 +37,7 @@ ${BASEDIR}
 │   │   │  
 │   │   ├── dtifit               # dtifit
 │   │   ├── enigmaDTI            # enigmadti
+│   │   ├── qsiprep            
 │   │   ├── qsirecon             # qsirecon derivatives
 │   │   └── qsirecon-FSL         # step1 qsirecon
 │   |
@@ -51,23 +53,28 @@ ${BASEDIR}
 │       ├── smriprep             # contains only qc images and metadata
 │       ├── tractify             # contains connectivity.mat file
 │       ├── xcp-d                # contains xcp results with GSR
-│       └── xcp_noGSR            # contains xcp results with GSR 
-├── logs                         # logs from jobs run on cluster                 
-|── README.md
+│       └── xcp_noGSR            # contains xcp results with GSR              
 |── LICENSE
+├── logs               # logs from jobs run on cluster           
+|── Neurobagel
+|── project_id
+|── QC guide.md
+|── Quick_start_workflow automation.md
+|── README.md
+|── share_folder.md
 |──stage_1.sh
 |──stage_2.sh
 |──stage_3.sh
 |──stage_4.sh
 |──stage_5.sh
 |──stage_6.sh
-|── Quick start_workflow automation.md
-|── QC guide.md
+|──stage_7.sh
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
         |── tpl-fsLR_res-91k_atlas-Glasser_dseg.dlabel.nii
         └── ...  #and 13 other atlases
+
 ```
 
 Currently this repo is going to be set up for running things on SciNet Niagara cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
