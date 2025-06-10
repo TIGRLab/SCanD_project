@@ -88,15 +88,24 @@ singularity run --cleanenv \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/qsirecon1/0.22.0/output/
+    ls -al derivatives/qsirecon1/0.22.0/output/
 
-mkdir -p derivatives/qsirecon1/0.22.0/output/
-ls -al derivatives/qsirecon1/0.22.0/output/
+    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsirecon1/0.22.0/output/ || true
 
-ln -s ${BASEDIR}/data/local/qsirecon-FSL/  derivatives/qsirecon1/0.22.0/output/
-
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline qsirecon1  --pipeline-version 0.22.0 --participant-id sub-$subject
-done
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline qsirecon1 \
+        --pipeline-version 0.22.0 \
+        --participant-id sub-$subject
+    done
+  '
