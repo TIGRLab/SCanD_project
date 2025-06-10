@@ -90,16 +90,26 @@ singularity run --cleanenv \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/tractographysingle/0.22.0/output/
+    ls -al derivatives/tractographysingle/0.22.0/output/
 
-mkdir -p derivatives/tractographysingle/0.22.0/output/
-ls -al derivatives/tractographysingle/0.22.0/output/
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qqsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
 
-ln -s ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS/  derivatives/tractographysingle/0.22.0/output/
+    SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline tractographysingle  --pipeline-version 0.22.0 --participant-id sub-$subject
-done
-
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline tractographysingle \
+        --pipeline-version 0.22.0 \
+        --participant-id sub-$subject
+    done
+  '
