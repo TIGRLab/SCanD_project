@@ -85,16 +85,24 @@ singularity run --cleanenv \
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
 
-cd ${BASEDIR}/Neurobagel
 
-source ../nipoppy/bin/activate
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-mkdir -p derivatives/freesurferlong/7.4.1/output/
-ls -al derivatives/freesurferlong/7.4.1/output/
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/freesurferlong/7.4.1/output/
+    ls -al derivatives/freesurferlong/7.4.1/output/
+    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferlong/7.4.1/output/ || true
 
-ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/*  derivatives/freesurferlong/7.4.1/output/
-
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline freesurferlong   --pipeline-version 7.4.1 --participant-id sub-$subject
-done
-
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline freesurferlong \
+        --pipeline-version 7.4.1 \
+        --participant-id sub-$subject
+    done
+  '
