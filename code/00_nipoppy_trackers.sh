@@ -32,6 +32,8 @@ cd ${CURRENT_DIR}
 
 ## nipoppy tracker init
 
+module load apptainer/1.3.5
+
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --bind /scratch/arisvoin/shared:/scratch/arisvoin/shared \
