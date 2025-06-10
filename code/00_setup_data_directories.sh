@@ -39,6 +39,8 @@ cp -r ${CONTAINER_DIR}/tbss_2023-10-10.simg containers/tbss_2023-10-10.simg
 
 cp -r ${CONTAINER_DIR}/magetbrain.sif  containers/magetbrain.sif
 
+ln -s ${CONTAINER_DIR}/nipoppy.sif  containers/nipoppy.sif
+
 
 ## copy freesurfer licence
 cp /scratch//arisvoin/shared/fs_license/license.txt templates/.freesurfer.txt
