@@ -81,15 +81,26 @@ ${SING_CONTAINER} \
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/xcpd/0.7.3/output/
+    ls -al derivatives/xcpd/0.7.3/output/
 
-mkdir -p derivatives/xcpd/0.7.3/output/
-ls -al derivatives/xcpd/0.7.3/output/
+    ln -s "$BASEDIR/data/local/derivatives/xcp_d/0.7.3/"* derivatives/xcpd/0.7.3/output/ || true
 
-ln -s ${BASEDIR}/data/local/derivatives/xcp_d/0.7.3/*  derivatives/xcpd/0.7.3/output/
+    SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline xcpd  --pipeline-version 0.7.3 --participant-id sub-$subject
-done
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline xcpd \
+        --pipeline-version 0.7.3  \
+        --participant-id sub-$subject
+    done
+  '
