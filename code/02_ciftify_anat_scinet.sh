@@ -76,15 +76,24 @@ fi
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/ciftify/1.3.2/output/
+    ls -al derivatives/ciftify/1.3.2/output/
 
-mkdir -p derivatives/ciftify/1.3.2/output/
-ls -al derivatives/ciftify/1.3.2/output/
+    ln -s "$BASEDIR/data/local/derivatives/ciftify/*" derivatives/ciftify/1.3.2/output/ || true
 
-ln -s ${BASEDIR}/data/local/derivatives/ciftify/*  derivatives/ciftify/1.3.2/output/
-
-for subject in $SUBJECTS; do
-	nipoppy track  --pipeline ciftify   --pipeline-version 1.3.2 --participant-id sub-$subject
-done
+    for subject in $SUBJECTS; do
+      nipoppy track \
+        --pipeline ciftify \
+        --pipeline-version 1.3.2 \
+        --participant-id sub-$subject
+    done
+  '
