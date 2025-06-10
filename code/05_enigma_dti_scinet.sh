@@ -52,13 +52,19 @@ EOF
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS="$SUBJECTS" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/enigmadti/0.1.1/output/
+    ls -al derivatives/enigmadti/0.1.1/output/
 
-mkdir -p derivatives/enigmadti/0.1.1/output/
-ls -al derivatives/enigmadti/0.1.1/output/
+    ln -s "$BASEDIR/data/local/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
 
-ln -s ${BASEDIR}/data/local/data/local/enigmaDTI/  derivatives/enigmadti/0.1.1/output/
-
-nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
+    nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
+  '
