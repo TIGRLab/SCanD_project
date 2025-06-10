@@ -132,18 +132,30 @@ if [ -z "$SESSIONS" ]; then
       
 
     ## nipoppy trackers 
-    cd ${BASEDIR}/Neurobagel
+    
+    singularity exec \
+  	--bind ${SCRATCH}:${SCRATCH} \
+  	--env SUBJECTS="$SUBJECTS" \
+  	containers/nipoppy.sif /bin/bash -c '
+    	set -euo pipefail
 
-    source ../nipoppy/bin/activate
+    	BASEDIR="$SCRATCH/SCanD_project"
+    	cd "$BASEDIR/Neurobagel"
+    
+    	mkdir -p derivatives/qsirecon2/0.22.0/output/
+    	ls -al derivatives/qsirecon2/0.22.0/output/
 
-    mkdir -p derivatives/qsirecon2/0.22.0/output/
+    	ln -s "$BASEDIR/data/local/dtifit/" derivatives/qsirecon2/0.22.0/output/ || true
+        ls -al derivatives/qsirecon2/0.22.0/output/
+    	ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/qsirecon2/0.22.0/output/ || true
 
-    ln -s ${BASEDIR}/data/local/dtifit/  derivatives/qsirecon2/0.22.0/output/
-    ln -s ${BASEDIR}/data/local/enigmaDTI/  derivatives/qsirecon2/0.22.0/output/
-
-    for subject in $SUBJECTS; do
-	    nipoppy track  --pipeline qsirecon2  --pipeline-version 0.22.0 --participant-id sub-$subject
-    done
+    	for subject in $SUBJECTS; do
+      	nipoppy track \
+        	--pipeline qsirecon2 \
+        	--pipeline-version 0.22.0 \
+        	--participant-id sub-$subject
+    	done
+  	'
 
 
 else
@@ -212,20 +224,30 @@ else
 
 
         ## nipoppy trackers 
-        cd ${BASEDIR}/Neurobagel
+	
+        singularity exec \
+  	--bind ${SCRATCH}:${SCRATCH} \
+  	--env SUBJECTS="$SUBJECTS" \
+  	containers/nipoppy.sif /bin/bash -c '
+    	set -euo pipefail
 
-        source ../nipoppy/bin/activate
+    	BASEDIR="$SCRATCH/SCanD_project"
+    	cd "$BASEDIR/Neurobagel"
+    
+    	mkdir -p derivatives/qsirecon2/0.22.0/output/
+    	ls -al derivatives/qsirecon2/0.22.0/output/
 
-        mkdir -p derivatives/qsirecon2/0.22.0/output/
-	ls -al derivatives/qsirecon2/0.22.0/output/
+    	ln -s "$BASEDIR/data/local/dtifit/" derivatives/qsirecon2/0.22.0/output/ || true
+        ls -al derivatives/qsirecon2/0.22.0/output/
+    	ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/qsirecon2/0.22.0/output/ || true
 
-        ln -s ${BASEDIR}/data/local/dtifit/  derivatives/qsirecon2/0.22.0/output/
-	ls -al derivatives/qsirecon2/0.22.0/output/
-        ln -s ${BASEDIR}/data/local/enigmaDTI/  derivatives/qsirecon2/0.22.0/output/
-
-        for subject in $SUBJECTS; do
-	        nipoppy track  --pipeline qsirecon2  --pipeline-version 0.22.0 --participant-id sub-$subject
-        done
+    	for subject in $SUBJECTS; do
+      	nipoppy track \
+        	--pipeline qsirecon2 \
+        	--pipeline-version 0.22.0 \
+        	--participant-id sub-$subject
+    	done
+  	'
 
     done
    
