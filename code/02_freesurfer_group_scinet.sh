@@ -143,15 +143,24 @@ EOF
 
 ## nipoppy trackers 
 
-cd ${BASEDIR}/Neurobagel
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
+  containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
 
-source ../nipoppy/bin/activate
+    BASEDIR="$SCRATCH/SCanD_project"
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/freesurfergroup/7.4.1/output/
+    ls -al derivatives/freesurfergroup/7.4.1/output/
 
-mkdir -p derivatives/freesurfergroup/7.4.1/output/
-ls -al derivatives/freesurfergroup/7.4.1/output/
+    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
 
-ln -s ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1  derivatives/freesurfergroup/7.4.1/output/
-
-for subject in $SUBJECTS_BATCH; do
-	nipoppy track  --pipeline freesurfergroup  --pipeline-version 7.4.1 --participant-id $subject
-done
+    for subject in $SUBJECTS_BATCH; do
+      nipoppy track \
+        --pipeline freesurfergroup \
+        --pipeline-version 7.4.1 \
+        --participant-id $subject
+    done
+  '
