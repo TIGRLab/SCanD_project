@@ -102,20 +102,28 @@ for session in ${sessions};do
         -i /dwi/${f} \
         -o /dwi/${f} \
         -m /masks/${b}_mask.nii.gz
-
+ 
         ## nipoppy trackers 
-        cd ${BASEDIR}/Neurobagel
+	singularity exec \
+  	--bind ${SCRATCH}:${SCRATCH} \
+  	--env SUBJECTS="$SUBJECTS" \
+  	containers/nipoppy.sif /bin/bash -c '
+    	set -euo pipefail
 
-        source ../nipoppy/bin/activate
+    	BASEDIR="$SCRATCH/SCanD_project"
+    	cd "$BASEDIR/Neurobagel"
+    
+    	mkdir -p derivatives/synthstrip/0.2.0/output/
+    	ls -al derivatives/synthstrip/0.2.0/output/
+    	ln -s "$BASEDIR/data/local/bids/sourcedata/" derivatives/synthstrip/0.2.0/output/ || true
 
-        mkdir -p derivatives/synthstrip/0.2.0/output/
-	ls -al derivatives/synthstrip/0.2.0/output/
-        
-        ln -s ${BASEDIR}/data/local/bids/sourcedata/  derivatives/synthstrip/0.2.0/output
-
-        for subject in $SUBJECTS; do
-	        nipoppy track  --pipeline synthstrip  --pipeline-version 0.2.0 --participant-id $subject
-        done
+    	for subject in $SUBJECTS; do
+      	nipoppy track \
+        	--pipeline synthstrip \
+        	--pipeline-version 0.2.0 \
+        	--participant-id $subject
+    	done
+  	'
 
     done
 done
