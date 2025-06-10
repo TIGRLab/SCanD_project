@@ -27,34 +27,36 @@ else
 fi
 
 
+
 cd ${CURRENT_DIR}
 
 ## nipoppy tracker init
 
-module load python/3.11.5
-module load rust/1.85.0
+singularity exec \
+  --bind ${SCRATCH}:${SCRATCH} \
+  --bind /scratch/arisvoin/shared:/scratch/arisvoin/shared \
+  containers/nipoppy.sif /bin/bash -c '
+    set -e
 
-virtualenv --system-site-packages nipoppy
-source nipoppy/bin/activate 
-pip install git+https://github.com/nipoppy/nipoppy.git@dev-catalog
+    mkdir -p $SCRATCH/SCanD_project/Neurobagel
+    nipoppy init --bids-source $SCRATCH/SCanD_project/data/local/bids/ $SCRATCH/SCanD_project/Neurobagel
 
-mkdir ${CURRENT_DIR}/Neurobagel/
-nipoppy init --bids-source data/local/bids/  Neurobagel/
+    NB_DIR="$SCRATCH/SCanD_project/Neurobagel"
+    BIDS_DIR="$SCRATCH/SCanD_project/data/local/bids"
 
-rm -rf ${CURRENT_DIR}/Neurobagel/pipelines/processing/*
+    rm -rf "$NB_DIR/pipelines/processing"/*
 
-# Find the first sub-* folder
-first_subject=$(find "${CURRENT_DIR}/data/local/bids" -maxdepth 1 -type d -name "sub-*" | head -n 1)
+    first_subject=$(find "$BIDS_DIR" -maxdepth 1 -type d -name "sub-*" | head -n 1)
 
-if [ -d "$first_subject" ]; then
-    # Check if there's any ses-* folder inside the first subject
-    if compgen -G "$first_subject/ses-*" > /dev/null; then
+    if [ -d "$first_subject" ]; then
+      if compgen -G "$first_subject/ses-*" > /dev/null; then
         echo "Found ses-* folder in $first_subject. Copying from nipoppy..."
-        cp -r /scratch/arisvoin/shared/nipoppy/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
-    else
+        cp -r /scratch/arisvoin/shared/nipoppy/* "$NB_DIR/pipelines/processing"
+      else
         echo "No ses-* folder in $first_subject. Copying from nipoppy_no_session..."
-        cp -r /scratch/arisvoin/shared/nipoppy_no_session/* ${CURRENT_DIR}/Neurobagel/pipelines/processing
+        cp -r /scratch/arisvoin/shared/nipoppy_no_session/* "$NB_DIR/pipelines/processing"
+      fi
+    else
+      echo "No sub-* folder found in $BIDS_DIR."
     fi
-else
-    echo "No sub-* folder found in $BASE_DIR."
-fi
+  '
