@@ -88,7 +88,7 @@ singularity exec \
     mkdir -p derivatives/ciftify/1.3.2/output/
     ls -al derivatives/ciftify/1.3.2/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/ciftify/*" derivatives/ciftify/1.3.2/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
