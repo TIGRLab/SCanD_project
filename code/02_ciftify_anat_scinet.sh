@@ -81,6 +81,8 @@ singularity exec \
 
     ln -s "$BASEDIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
 
+    SUBJECTS=$(echo "$SELECTED_SUBJECT" | cut -d'_' -f1)
+
     for subject in $SUBJECTS; do
       nipoppy track \
         --pipeline ciftify \
