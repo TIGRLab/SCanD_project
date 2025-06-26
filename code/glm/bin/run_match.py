@@ -59,6 +59,9 @@ class BoldEventsMatch(BIDSSelect):
         return f"Input Parameters(\n{params}\n)"
 
     def _find_matching_runs(self, verbose=True):
+
+        # This right now does not account for filename without run
+        # Need further development
         match_runs = []
         missing_img_runs = set()
         missing_events_runs = set()
@@ -83,20 +86,20 @@ class BoldEventsMatch(BIDSSelect):
         for img in sub_imgs:
             match = run_pattern.search(img.filename)
             if match:
-                img_runs.add(int(match.group(1)))
+                img_runs.add(match.group(1))
 
         events_runs = set()
         for events in sub_events:
             match = run_pattern.search(events.filename)
             if match:
-                events_runs.add(int(match.group(1)))
+                events_runs.add(match.group(1))
 
         # Find runs that are both in images and events
         matching_runs = img_runs.intersection(events_runs)
 
         if matching_runs:
             match_runs = [(session, f"run-{run}") for run in sorted(matching_runs)]
-            
+
         missing_img_runs = events_runs - img_runs
         missing_events_runs = img_runs - events_runs
 
