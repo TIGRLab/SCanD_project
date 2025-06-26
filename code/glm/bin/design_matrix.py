@@ -98,6 +98,8 @@ class FirstLevelDesignMatrix(BIDSSelect):
     def _load_run_level_events(self, sub_run_events, model_spec):
         events_df = pd.read_csv(sub_run_events[0].path, delimiter="\t")
 
+        # Ugly hack to format the trial_type from the events.tsv for CMH scans
+        # Need further development for other tasks
         if model_spec["Input"]["task"][0] == "nbk":
             # Extract hit, miss, and false alarm from n-back
             mask_hit = (events_df["correct_response"] == 1) & (
@@ -116,6 +118,9 @@ class FirstLevelDesignMatrix(BIDSSelect):
             events_df.loc[mask_false, "trial_type"] = (
                 events_df["trial_type"].astype(str) + "_false"
             )
+            # Ugly hack to ensure the time onset is formatted correctly for CMH scans
+            # The CMH parser dropped 8 seconds for the time onset already
+            # Need to remove these in actual production
             events_df["onset"] = events_df["onset"] + 8
         events_df = events_df[["onset", "duration", "trial_type"]]
 
