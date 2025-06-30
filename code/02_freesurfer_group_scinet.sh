@@ -143,20 +143,21 @@ EOF
 
 
 ## nipoppy trackers 
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "${ROOT_DIR}}/Neurobagel"
     
     mkdir -p derivatives/freesurfergroup/7.4.1/output/
     ls -al derivatives/freesurfergroup/7.4.1/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
 
     for subject in $SUBJECTS_BATCH; do
       nipoppy track \
@@ -165,3 +166,4 @@ singularity exec \
         --participant-id $subject
     done
   '
+unset APPTAINERENV_ROOT_DIR

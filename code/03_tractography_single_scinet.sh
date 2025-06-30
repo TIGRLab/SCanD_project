@@ -89,20 +89,21 @@ singularity run --cleanenv \
 
 
 ## nipoppy trackers 
+export APPTAINERENV_ROOT_DIR=${BASEDIR} 
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/tractographysingle/0.22.0/output/
     ls -al derivatives/tractographysingle/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qqsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qqsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
@@ -111,3 +112,4 @@ singularity exec \
         --participant-id sub-$subject
     done
   '
+unset APPTAINERENV_ROOT_DIR
