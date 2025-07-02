@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 6 (noddi_extract)
+## stage 5 (noddi_extract)
 
 # Function to calculate and submit array jobs
 submit_array_job() {
