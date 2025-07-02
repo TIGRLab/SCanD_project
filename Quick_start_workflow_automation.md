@@ -10,7 +10,7 @@ The script will prompt you at each stage to ask if you want to run only the func
 
 After setting up the SciNet environment and organizing your BIDS folder and participants.csv file, you can run the codes for each stage.
 
-## stage 1 (mriqc, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
+## stage 1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
@@ -23,7 +23,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
+## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register, qsirecon2, amico_noddi, tractography):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -36,7 +36,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon1, amico_noddi, tractography):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon2):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -49,7 +49,7 @@ git pull         #in case you need to pull new code
 source ./stage_3.sh
 ```
 
-## stage 4 (qsirecon2):
+## stage 4 (enigma_dti):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -61,7 +61,8 @@ git pull         #in case you need to pull new code
 
 source ./stage_4.sh
 ```
-## stage 5 (enigma_dti):
+
+## stage 5 (noddi_extract):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -74,7 +75,7 @@ git pull         #in case you need to pull new code
 source ./stage_5.sh
 ```
 
-## stage 6 (noddi_extract):
+## stage 6 (extract data to share folder):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -85,19 +86,6 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./stage_6.sh
-```
-
-## stage 7 (extract data to share folder):
-
-```sh
-# note step one is to make sure you are on one of the login nodes
-ssh nia-login07
-
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-source ./stage_7.sh
 ```
 
 After you are done with stage 7, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
