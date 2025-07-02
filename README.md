@@ -296,7 +296,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsiprep_scinet.sh
+sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
