@@ -16,7 +16,6 @@ ${BASEDIR}
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
-│   ├── freesurfer_synthstrip-2023-04-07.simgdoesn
 │   ├── magetbrain.sif
 │   ├── nipoppy.sif
 │   ├── tbss_2023-10-10.simg
@@ -91,18 +90,17 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 |^ |   0f	|  [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
 |^ |   0g	|  [Final step before running the pipeline](#Final-step-before-running-the-pipeline)	| a few days to get buffer space 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
-|^|   01b	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
-|^|   01c	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |  01d	|  [Run synthstrip](#Running-freesurfer-synthstrip-to-skullstrip-before-qsiprep) 	|   8 hours on slurm	|
+|^ |  01b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
+|^|   01c	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
+|^|   01d	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
 |^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
 |^ |  01f	|  [Run magetbrain-init](#Running-magetbrain-init) 	|   1 hours on slurm	|
 |^ |  01g	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
-|^ |  02b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|^ |   02c	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
-|^ |   02d	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02e	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
-|^ |   02f  |  [Check tsv file](#Check-tsv-file) 	|    	|
+|^ |   02b	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
+|^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
+|^ |   02d	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
+|^ |   02e  |  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
@@ -308,27 +306,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ```
 
-## Running freesurfer synthstrip to skullstrip before qsiprep
-### Outputs of freesurfer-synthstrip
-
-1. **The brain masks** (quality assessment) of the skullstrip images in `sourcedata/freesurfer-synthstrip/masks`.
-
-2. **Imaging data** including skullstripped images in the BIDS root directory and original images in `sourcedata/freesurfer-synthstrip/sub-<subject_label>/`.
-
-```sh
-cd ${SCRATCH}/SCanD_project
-git pull
-
-## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_synthstrip.sh
-```
-
 
 ## Running qsiprep
 
@@ -347,7 +324,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsiprep_scinet.sh
+sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
