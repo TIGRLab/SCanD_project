@@ -22,5 +22,5 @@ run_pipeline() {
     fi
 }
 
-# Prompt user for each pipeline in stage 5
+# Prompt user for each pipeline in stage 4
 run_pipeline "enigma_dti" "./code/04_enigma_dti_scinet.sh"
