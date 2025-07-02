@@ -11,7 +11,7 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata 
 
-## fmriprep, qsiprep, freesurfer, ciftify
+## fmriprep, freesurfer, ciftify
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
@@ -41,35 +41,6 @@ done
 else
 
     echo "FMRIPREP outputs not found."
-
-fi
-
-
-
-
-## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
-QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
-
-if [ -d "$QSIPREP_LOCAL_DIR" ];
-then
-
-echo "copying over the qsiprep metadata and qc images"
-mkdir -p ${QSIPREP_SHARE_DIR}
-rsync -a --include "*/" --include="*.json" --exclude="*" ${QSIPREP_LOCAL_DIR} ${QSIPREP_SHARE_DIR}
-
-## copy over the qsiprep html files
-subjects=`cd ${QSIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
-find ${QSIPREP_LOCAL_DIR} -name "*.html" -exec cp {} ${QSIPREP_SHARE_DIR}/ \;
-
-for subject in ${subjects}; do
- mkdir -p ${QSIPREP_SHARE_DIR}/${subject}/figures
- rsync -a ${QSIPREP_LOCAL_DIR}/${subject}/figures ${QSIPREP_SHARE_DIR}/${subject}/
-done
-
-else
-
-    echo "QSIPREP (DWI) outputs not found"
 
 fi
 
