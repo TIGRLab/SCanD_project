@@ -67,7 +67,6 @@ ${BASEDIR}
 |──stage_4.sh
 |──stage_5.sh
 |──stage_6.sh
-|──stage_7.sh
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
@@ -97,22 +96,21 @@ Currently this repo is going to be set up for running things on SciNet Cedar clu
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
 |^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02d	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
-|^ |   02e  |  [Check tsv file](#Check-tsv-file) 	|    	|
+|^ |   02d	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
+|^ |   02e  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
+|^ |   02f	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
+|^ |   02g	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
+|^ |   02h  |  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
-|^ |   03c	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
-|^ |   03d  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
-|^ |   03e	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
+|^ |   03c  |   [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
 |^ |   03f	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
 |^ |   03g	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 4 | 04a |  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
 |^ |   04b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 5 |  05a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
+|stage 5 |  05a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
 |^ |   05b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 6 |  06a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
-|^ |   06b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 7 |   07a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
 
 # Setting your SciNet environment and prepare dataset
 
@@ -385,7 +383,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_qsirecon_step1_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
 ```
 ## Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
@@ -402,7 +400,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_amico_noddi.sh
+sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
 ```
 
 To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
@@ -415,7 +413,7 @@ To complete the final step for amico noddi, you need a graphical user interface 
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/04_amico_VNC.sh
+source ./code/03_amico_VNC.sh
 ```
 
 ## Running freesurfer group analysis
@@ -467,7 +465,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_tractography_multi_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
 
 ```
 Singleshell:
@@ -483,7 +481,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_tractography_single_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
 
 ```
 
@@ -632,7 +630,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/04_qsirecon_step2_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 ```
 
 ## Running enigma-dti
@@ -643,7 +641,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/05_enigma_dti_scinet.sh
+sbatch  ./code/04_enigma_dti_scinet.sh
 ```
 
 ## Running extract-noddi
@@ -654,7 +652,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## submit the array job to the queue
-sbatch  ./code/06_extract_noddi_scinet.sh
+sbatch  ./code/05_extract_noddi_scinet.sh
 ```
 
 
@@ -676,8 +674,8 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 cd ${SCRATCH}/SCanD_project
 git pull
 
-sbatch ./code/07_extract_to_share_slurm.sh
-source ./code/07_extract_to_share_terminal.sh
+sbatch ./code/06_extract_to_share_slurm.sh
+source ./code/06_extract_to_share_terminal.sh
 ```
 Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/Cedar/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
