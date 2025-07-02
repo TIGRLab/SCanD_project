@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
+# Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
 
 #!/bin/bash
 
@@ -30,7 +30,6 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 2
-run_pipeline "qsiprep" "./code/02_qsiprep_scinet.sh" 1
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
 run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 1
 
