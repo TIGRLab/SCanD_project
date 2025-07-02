@@ -11,7 +11,7 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata 
 
-## fmriprep, freesurfer, ciftify
+## fmriprep, freesurfer, ciftify, tractography, amico-noddi
 
 PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
@@ -104,5 +104,73 @@ rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract $
 else
 
 echo "No ENIGMA_extract outputs found."
+
+fi
+
+
+TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+
+if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ];
+then
+echo "copying over the tractify multi-shell connectivity file"
+
+## copy over the tractify mat file
+subjects=`cd ${TRACTIFY_MULTI_LOCAL_DIR}; ls -1d sub-*`
+mkdir ${TRACTIFY_SHARE_DIR}
+for subject in ${subjects}; do
+ mkdir -p ${TRACTIFY_SHARE_DIR}/${subject}
+ find ${TRACTIFY_MULTI_LOCAL_DIR}/${subject} -type f -name '*connectivity.mat' -exec rsync -a {} ${TRACTIFY_SHARE_DIR}/${subject}/ \;
+done
+
+else
+
+echo "No TRACTIFY multi-shell outputs found."
+
+fi
+
+
+
+TRACTIFY_SINGLE_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
+TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+
+if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ];
+then
+echo "copying over the tractify single-shell connectivity file"
+
+## copy over the tractify mat file
+subjects=`cd ${TRACTIFY_SINGLE_LOCAL_DIR}; ls -1d sub-*`
+mkdir ${TRACTIFY_SHARE_DIR}
+for subject in ${subjects}; do
+ mkdir -p ${TRACTIFY_SHARE_DIR}/${subject}
+ find ${TRACTIFY_SINGLE_LOCAL_DIR}/${subject} -type f -name '*connectivity.mat' -exec rsync -a {} ${TRACTIFY_SHARE_DIR}/${subject}/ \;
+done
+
+else
+
+echo "No TRACTIFY single-shell outputs found."
+
+fi
+
+
+AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
+AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
+
+if [ -d "${AMICO_LOCAL_DIR}" ];
+then
+echo "copying over the amico noddi metadata and qc images"
+
+## copy over the amico noddi html files
+subjects=`cd ${AMICO_LOCAL_DIR}/qsirecon-NODDI; ls -1d sub-* | grep -v html`
+mkdir ${AMICO_SHARE_DIR}
+cp ${AMICO_LOCAL_DIR}/qsirecon-NODDI/*html ${AMICO_SHARE_DIR}/
+for subject in ${subjects}; do
+ mkdir -p ${AMICO_SHARE_DIR}/${subject}/figures
+ rsync -a ${AMICO_LOCAL_DIR}/qsirecon-NODDI/${subject}/figures ${AMICO_SHARE_DIR}/${subject}/
+done
+
+else
+
+echo "No NODDI outputs found."
 
 fi
