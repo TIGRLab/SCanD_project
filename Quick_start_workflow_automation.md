@@ -88,7 +88,7 @@ git pull         #in case you need to pull new code
 source ./stage_6.sh
 ```
 
-After you are done with stage 7, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+After you are done with stage 6, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "your_group_name" and put your group name there and then run the code!
 
