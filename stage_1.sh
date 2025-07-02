@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#stage1 (mriqc, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
+#stage1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
 
 # Function to calculate and submit array jobs
 submit_array_job() {
@@ -28,6 +28,7 @@ run_pipeline() {
 
 # Prompt user for each pipeline
 run_pipeline "mriqc" "./code/01_mriqc_scinet.sh" 1
+run_pipeline "qsiprep" "./code/01_qsiprep_scinet.sh" 1
 run_pipeline "fmriprep_fit" "code/01_fmriprep_fit_scinet.sh" 1
 run_pipeline "freesurfer" "code/01_freesurfer_long_scinet.sh" 1
 run_pipeline "smriprep" "./code/01_smriprep_scinet.sh" 1
