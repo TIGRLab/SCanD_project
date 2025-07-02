@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 5 (enigma_dti)
+## stage 4 (enigma_dti)
 
 # Function to calculate and submit array jobs
 submit_array_job() {
@@ -23,4 +23,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 5
-run_pipeline "enigma_dti" "./code/05_enigma_dti_scinet.sh"
+run_pipeline "enigma_dti" "./code/04_enigma_dti_scinet.sh"
