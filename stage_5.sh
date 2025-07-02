@@ -23,4 +23,4 @@ run_pipeline() {
 }
 
 # Prompt user for each pipeline in stage 5
-run_pipeline "noddi_extract" "./code/06_extract_noddi_scinet.sh"
+run_pipeline "noddi_extract" "./code/05_extract_noddi_scinet.sh"
