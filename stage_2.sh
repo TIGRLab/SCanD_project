@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (qsiprep, ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register):
+# Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_group, magetbrain_register, qsirecon_step1, amico_noddi, tractography):
 
 #!/bin/bash
 
@@ -31,9 +31,12 @@ run_pipeline() {
 
 
 # Prompt user for each pipeline in stage 2
-run_pipeline "qsiprep" "./code/02_qsiprep_scinet.sh" 1
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
 run_pipeline "freesurfer_group" "./code/02_freesurfer_group_scinet.sh" 1
+run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
+run_pipeline "amico_noddi" "./code/02_amico_noddi.sh" 1
+run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
+run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
 
 
 # Prompt separately for ciftify_anat (uses long folder names, not participants.tsv)
