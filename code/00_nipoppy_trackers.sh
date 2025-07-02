@@ -2,49 +2,61 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CURRENT_DIR=${PWD}
 
-cd ${SCRIPT_DIR}/..
+# ----------- Color codes ------------
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+YELLOW='\033[1;33m'
 
-## edit dataset_description and bold.json files in bids
-echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
-echo 'participant_id' > data/local/bids/participants.tsv
+# === Logging Setup ===
+timestamp=$(date +"%Y%m%d_%H%M%S")
 
-# Check if any *bold.json files exist
-if ls data/local/bids/*bold.json 1> /dev/null 2>&1; then
+# === Get the root of the SCanD_project repo ===
+ROOT_DIR=$(dirname "$SCRIPT_DIR")
+echo "🔧 Starting script at $(date)"
+echo "🔧 ROOT_DIR          : $ROOT_DIR"
+
+# === Define TSV path ===
+tsv_f="${ROOT_DIR}/data/local/bids/participants.tsv"
+
+# === Create participants.tsv if not already exist ===
+if [ ! -f "${tsv_f}" ]; then
+    echo "Creating a new participants.tsv file at ${tsv_f}"
+    echo 'participant_id' > "${tsv_f}"
+fi
+
+# === Check if any *bold.json files exist ===
+if ls ${ROOT_DIR}/data/local/bids/*bold.json 1> /dev/null 2>&1; then
     # Loop through each file
-    for file in data/local/bids/*bold.json; do
+    for file in ${ROOT_DIR}/data/local/bids/*bold.json; do
         # Check if "TotalReadoutTime" is not already in the file
         if ! grep -q "TotalReadoutTime" "$file"; then
             # Add the "TotalReadoutTime" before the last closing brace
             sed -i'' '$ s/}/     "TotalReadoutTime": 0.05\n}/' "$file"
-            
+
             # Add a comma to the second-to-last line if necessary
             awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
             mv -f temp.json "$file"
         fi
     done
 else
-    echo "No *bold.json files found in data/local/bids/"
+    echo -e "${YELLOW}WARNING: ${NC} No bold.json files found in ${ROOT_DIR}/data/local/bids/"
 fi
 
-
-
-cd ${CURRENT_DIR}
-
-## nipoppy tracker init
-
+# === nipoppy tracker init ===
 module load apptainer/1.3.5
+export APPTAINERENV_ROOT_DIR=$ROOT_DIR
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --bind ${ROOT_DIR}:${ROOT_DIR} \
   --bind /scratch/arisvoin/shared:/scratch/arisvoin/shared \
-  containers/nipoppy.sif /bin/bash -c '
+  ${ROOT_DIR}/containers/nipoppy.sif /bin/bash -c '
     set -e
+    mkdir -p $ROOT_DIR/Neurobagel
+    unset SSL_CERT_FILE
+    nipoppy init --bids-source $ROOT_DIR/data/local/bids/ $ROOT_DIR/Neurobagel
 
-    mkdir -p $SCRATCH/SCanD_project/Neurobagel
-    nipoppy init --bids-source $SCRATCH/SCanD_project/data/local/bids/ $SCRATCH/SCanD_project/Neurobagel
-
-    NB_DIR="$SCRATCH/SCanD_project/Neurobagel"
-    BIDS_DIR="$SCRATCH/SCanD_project/data/local/bids"
+    NB_DIR="$ROOT_DIR/Neurobagel"
+    BIDS_DIR="$ROOT_DIR/data/local/bids"
 
     rm -rf "$NB_DIR/pipelines/processing"/*
 
@@ -62,3 +74,4 @@ singularity exec \
       echo "No sub-* folder found in $BIDS_DIR."
     fi
   '
+unset APPTAINERENV_ROOT_DIR

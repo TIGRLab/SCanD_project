@@ -168,8 +168,15 @@ To link existing data from another location on SciNet Cedar to this folder:
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participany id" and then you have all the subject ids in the other rows.
+After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participant_id" and then you have all the subject ids in the other rows.
 
+For example:
+```bash
+participant_id
+sub-CMH00000005
+sub-CMH00000007
+sub-CMH00000012
+```
 Also, make sure dataset_description.json exists inside your bids folder.
 
 ### Initializing nipoppy trackers
@@ -277,6 +284,7 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ```
+<!-- This is outdated because qsiprep-0.22.0 include freesurfer synthstrip .
 ## Running freesurfer synthstrip to skullstrip before qsiprep
 ### Outputs of freesurfer-synthstrip
 
@@ -297,7 +305,7 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/01_synthstrip.sh
 ```
-
+ -->
 ## Running qsiprep
 
 ```sh

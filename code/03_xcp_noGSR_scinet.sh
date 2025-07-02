@@ -145,20 +145,21 @@ ${SING_CONTAINER} \
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
 ## nipoppy trackers 
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/xcpnogsr/0.7.3/output/
     ls -al derivatives/xcpnogsr/0.7.3/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/xcp_noGSR/"* derivatives/xcpnogsr/0.7.3/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/xcp_noGSR/"* derivatives/xcpnogsr/0.7.3/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
@@ -167,3 +168,4 @@ singularity exec \
         --participant-id sub-$subject
     done
   '
+unset APPTAINERENV_ROOT_DIR

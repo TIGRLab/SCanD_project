@@ -54,20 +54,22 @@ EOF
 
 
 ## nipoppy trackers 
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/enigmadti/0.1.1/output/
     ls -al derivatives/enigmadti/0.1.1/output/
 
-    ln -s "$BASEDIR/data/local/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
+    ln -s "${ROOT_DIR}/data/local/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
 
     nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
   '
+unset APPTAINERENV_ROOT_DIR

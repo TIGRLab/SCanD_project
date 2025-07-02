@@ -48,20 +48,21 @@ singularity run \
 
 
 ## nipoppy trackers 
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/magetbrainvote/0.1.0/output/
     ls -al derivatives/magetbrainvote/0.1.0/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/output/"* derivatives/magetbrainvote/0.1.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/"* derivatives/magetbrainvote/0.1.0/output/ || true
 
     SUBJECTS=$(echo "$SUBJECTS" | cut -d'_' -f1)
 
@@ -72,3 +73,4 @@ singularity exec \
         --participant-id $subject
     done
   '
+unset APPTAINERENV_ROOT_DIR
