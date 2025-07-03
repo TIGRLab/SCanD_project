@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd $SCRATCH/SCanD_project
+BASEDIR=$PWD
 
-input_dir="data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains"
-output_dir="data/local/derivatives/MAGeTbrain/magetbrain_data/output/fusion/majority_vote"
+input_dir="${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains"
+output_dir="${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/fusion/majority_vote"
 temp_dir="$input_dir/temp"
 
 mkdir -p "$temp_dir"
