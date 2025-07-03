@@ -68,10 +68,3 @@ echo "" >> ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract
 
 done
 
-
-SUBJECTS=$(cut -f 1 ${PROJECT_DIR}/data/local/bids/participants.tsv | tail -n +2)
-
-# Iterate over each subject in SUBJECTS
-for subject in $SUBJECTS; do
-    echo "$subject       0" >> ${PROJECT_DIR}/logs/ENIGMA_ExtractCortical.tsv
-done
