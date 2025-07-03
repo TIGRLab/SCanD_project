@@ -24,6 +24,8 @@ if [ ! -f "${tsv_f}" ]; then
     echo 'participant_id' > "${tsv_f}"
 fi
 
+echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > ${ROOT_DIR}/data/local/bids/dataset_description.json
+
 # === Check if any *bold.json files exist ===
 if ls ${ROOT_DIR}/data/local/bids/*bold.json 1> /dev/null 2>&1; then
     # Loop through each file
