@@ -1,6 +1,8 @@
-subjects_dir="$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains"
-output_dir="$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote"
-qc_dir="$SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data/QC"
+BASEDIR=$PWD
+
+subjects_dir="${BASEDIR}/data/local/MAGeTbrain/magetbrain_data/input/subjects/brains"
+output_dir="${BASEDIR}/data/local/MAGeTbrain/magetbrain_data/output/fusion/majority_vote"
+qc_dir="${BASEDIR}/data/local/MAGeTbrain/magetbrain_data/QC"
 
 for input_file in $subjects_dir/sub*.mnc; do
     # Extract the base subject ID (with or without session)
@@ -19,8 +21,8 @@ for input_file in $subjects_dir/sub*.mnc; do
     output_file=$(echo $output_file)  # Expand the wildcard   
     qc_file="$qc_dir/$(basename "$input_file" .mnc).jpg"
     
-    singularity exec --cleanenv --writable-tmpfs -B $SCRATCH/SCanD_project/data/local/MAGeTbrain/magetbrain_data:/data \
-    $SCRATCH/SCanD_project/containers/magetbrain.sif /bin/bash -c "
+    singularity exec --cleanenv --writable-tmpfs -B ${BASEDIR}/data/local/MAGeTbrain/magetbrain_data:/data \
+    ${BASEDIR}/containers/magetbrain.sif /bin/bash -c "
       mkdir -p /opt/minc/1.9.18/share/mni-models;
       export PERL5LIB=/opt/minc/1.9.18/perl:\$PERL5LIB;
       ln -s /opt/minc/1.9.18/share/ILT /opt/minc/1.9.18/share/mni-models/ILT;
