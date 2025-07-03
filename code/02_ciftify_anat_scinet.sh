@@ -59,9 +59,9 @@ if [ $exitcode -eq 0 ]; then
     singularity exec --cleanenv \
         -B ${OUTPUT_DIR}:/out \
         ${SING_CONTAINER} \
-        cifti_vis_recon_all subject sub-${SUBJECTS} --ciftify-work-dir /out
+        cifti_vis_recon_all subject ${SELECTED_SUBJECT} --ciftify-work-dir /out
 else
-    echo "ciftify_recon_all failed with exit code $exitcode for sub-${SUBJECTS}"
+    echo "ciftify_recon_all failed with exit code $exitcode for ${SELECTED_SUBJECT}"
 fi
 
 
@@ -70,7 +70,7 @@ export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
-  --env SUBJECTS="$SUBJECTS" \
+  --env SUBJECTS="$SELECTED_SUBJECT" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
