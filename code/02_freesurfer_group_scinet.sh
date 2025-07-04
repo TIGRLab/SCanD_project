@@ -64,6 +64,11 @@ singularity exec \
     for SUBJECT in $SUBJECT_BATCH; do
 
       SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+      
+      if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
+        SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -name "${SUBJECT}*" -type d)
+      fi
+      
 
       subject_exitcode=0  # Initialize success for each subject
 
