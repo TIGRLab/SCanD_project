@@ -352,10 +352,10 @@ echo "Running Enigma Extract"
 source ${PROJECT_DIR}/code/ENIGMA_ExtractCortical.sh
 
 ## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
+if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
 then
 echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group/
+rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group/
 fi
 
 
