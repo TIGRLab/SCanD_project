@@ -31,6 +31,7 @@ singularity run \
 
 
 ## nipoppy trackers 
+cd $PROJECT_DIR/
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
