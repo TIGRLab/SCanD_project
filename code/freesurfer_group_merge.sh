@@ -44,11 +44,10 @@ for N in {1..10}; do
       for subject in $SUBJECTS; do
         SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*.long.${subject}" -type d)
 
-       # Fallback if nothing found
-       if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
-         SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*" -type d)
-       fi
-
+        # Fallback if nothing found
+        if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
+          SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${subject}*" -type d)
+        fi
 
         for SUBJECT_LONG_DIR in $SUBJECT_LONG_DIRS; do
           FILE=${SUBJECT_LONG_DIR}/stats/${hemi}.Schaefer2018_${N}00Parcels_table_${type}.tsv
