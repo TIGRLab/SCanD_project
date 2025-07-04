@@ -147,6 +147,15 @@ EOF
 
 
 ## nipoppy trackers 
+
+export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
+SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+
+if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
+    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
+    cp -r /scratch/a/arisvoin/arisvoin/mlepage/freesurfernotlong/freesurfergroup/tracker_config.json Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+fi
+
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
