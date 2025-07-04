@@ -38,7 +38,12 @@ export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} 
 
 
-SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
+if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
+  SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
+else
+  SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
+fi
+
 SUBJECTS=("${SUBJECT_FOLDERS[@]##*/}")  # Just the folder names, like sub-CMH00000001_long-01
 
 SUBJECT_INDEX=${SLURM_ARRAY_TASK_ID}
