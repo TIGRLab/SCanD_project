@@ -45,17 +45,17 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     echo "Running ciftify_anat..."
 
     SUBJECTS_DIR="./data/local/derivatives/freesurfer/7.4.1"
-    
-    SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
-    
-    if [[ ${#SUBJECT_FOLDERS[@]} -eq 0 ]]; then
-        SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
+
+    if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
+      SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
+    else
+      SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
     fi
 
     N_SUBJECTS=${#SUBJECT_FOLDERS[@]}
 
     if [[ "$N_SUBJECTS" -eq 0 ]]; then
-        echo "No *long* subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
+        echo "No subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
     else
         ARRAY_JOB_LENGTH=$((N_SUBJECTS - 1))
         echo "Submitting ciftify_anat job array with indices 0 to ${ARRAY_JOB_LENGTH}"
