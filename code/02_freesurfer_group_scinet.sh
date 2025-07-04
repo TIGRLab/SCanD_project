@@ -152,7 +152,7 @@ SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUB
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/a/arisvoin/arisvoin/mlepage/freesurfernotlong/freesurfergroup/tracker_config.json Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    cp -r /scratch/a/arisvoin/arisvoin/mlepage/freesurfer_notlong/freesurfergroup/tracker_config.json Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
 fi
 
 singularity exec \
