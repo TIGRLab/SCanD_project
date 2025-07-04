@@ -44,7 +44,14 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     echo "Running ciftify_anat..."
 
     SUBJECTS_DIR="./data/local/derivatives/freesurfer/7.4.1"
-    N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/*long* 2>/dev/null | wc -l)
+    
+    SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
+    
+    if [[ ${#SUBJECT_FOLDERS[@]} -eq 0 ]]; then
+        SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
+    fi
+
+    N_SUBJECTS=${#SUBJECT_FOLDERS[@]}
 
     if [[ "$N_SUBJECTS" -eq 0 ]]; then
         echo "No *long* subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
