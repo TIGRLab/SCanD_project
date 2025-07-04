@@ -44,11 +44,11 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     echo "Running ciftify_anat..."
 
     SUBJECTS_DIR="./data/local/derivatives/freesurfer/7.4.1"
-    
-    SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
-    
-    if [[ ${#SUBJECT_FOLDERS[@]} -eq 0 ]]; then
-        SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
+
+    if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
+      SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*long*)
+    else
+      SUBJECT_FOLDERS=(${SUBJECTS_DIR}/*sub-*)
     fi
 
     N_SUBJECTS=${#SUBJECT_FOLDERS[@]}
