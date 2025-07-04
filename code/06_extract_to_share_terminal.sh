@@ -20,8 +20,8 @@ source ${PROJECT_DIR}/../.virtualenvs/myenv/bin/activate
 cd ${PROJECT_DIR}
 python3 ${PROJECT_DIR}/code/gen_qsiprep_motion_metrics.py
 
+mkdir -p ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
 rsync -a ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${PROJECT_DIR}/data/share/qsiprep/0.22.0/
-
 
 # sharing magetbrain outputs
 mkdir -p ${PROJECT_DIR}/data/local/MAGeTbrain/magetbrain_data/QC
