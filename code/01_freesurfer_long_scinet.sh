@@ -2,8 +2,8 @@
 #SBATCH --job-name=freesurfer
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=10
-#SBATCH --time=23:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --time=20:00:00
 #SBATCH --mem-per-cpu=4000
 
 SUB_SIZE=1 ## number of subjects to run
