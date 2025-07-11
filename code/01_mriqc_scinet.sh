@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=10
 #SBATCH --time=08:00:00
-#SBATCH --mem-per-cpu=7000
+#SBATCH --mem-per-cpu=4000
 
 SUB_SIZE=1 ## number of subjects to run
 export THREADS_PER_COMMAND=2
