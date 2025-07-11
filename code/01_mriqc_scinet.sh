@@ -2,7 +2,7 @@
 #SBATCH --job-name=mriqc
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=8
 #SBATCH --time=08:00:00
 #SBATCH --mem-per-cpu=4000
 
