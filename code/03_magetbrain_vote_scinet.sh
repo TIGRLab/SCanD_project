@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=16:00:00
-#SBATCH --mem-per-cpu=6000
+#SBATCH --mem-per-cpu=5000
 
 module load apptainer/1.3.5
 
