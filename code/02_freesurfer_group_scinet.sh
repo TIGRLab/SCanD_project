@@ -156,12 +156,11 @@ if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
 fi
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/freesurfergroup/7.4.1/output/
