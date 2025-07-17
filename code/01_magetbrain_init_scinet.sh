@@ -5,14 +5,14 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=01:00:00
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
-SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
+SING_CONTAINER="$BASEDIR/containers/magetbrain.sif"
 
 # Define directories
-BIDS_DIR="$PROJECT_DIR/data/local/bids"
-MAGETBRAIN_DIR="$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data"
+BIDS_DIR="$BASEDIR/data/local/bids"
+MAGETBRAIN_DIR="$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data"
 INPUT_DIR="$MAGETBRAIN_DIR/input"
 
 # Create necessary directories
@@ -20,7 +20,7 @@ mkdir -p "$INPUT_DIR/subjects/brains"
 mkdir -p "$INPUT_DIR/templates/brains"
 
 # Define the path to the demographic TSV file
-DEMOGRAPHIC_FILE="$PROJECT_DIR/data/local/bids/participants_demographic.tsv"
+DEMOGRAPHIC_FILE="$BASEDIR/data/local/bids/participants_demographic.tsv"
 
 # Function to select subjects randomly based on age and gender
 select_random_subjects() {
@@ -179,16 +179,16 @@ cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 ## nipoppy trackers 
 
 singularity exec \
-  --env PROJECT_DIR="$PROJECT_DIR" \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
-  ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "$PROJECT_DIR/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/magetbraininit/0.1.0/output/
     ls -al derivatives/magetbraininit/0.1.0/output/
-    ln -s "$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
 
     nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
   '
