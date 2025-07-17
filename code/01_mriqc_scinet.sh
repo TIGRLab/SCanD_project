@@ -92,7 +92,7 @@ singularity exec \
     cd "${ROOT_DIR}/Neurobagel"
     mkdir -p derivatives/mriqc/24.0.0/output/
     ls -al derivatives/mriqc/24.0.0/output/
-    ln -s "${ROOT_DIR}}/data/local/derivatives/mriqc/24.0.0/"* derivatives/mriqc/24.0.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/mriqc/24.0.0/"* derivatives/mriqc/24.0.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
