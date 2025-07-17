@@ -89,7 +89,7 @@ singularity exec \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}}/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     mkdir -p derivatives/mriqc/24.0.0/output/
     ls -al derivatives/mriqc/24.0.0/output/
     ln -s "${ROOT_DIR}}/data/local/derivatives/mriqc/24.0.0/"* derivatives/mriqc/24.0.0/output/ || true
