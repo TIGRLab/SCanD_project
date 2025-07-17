@@ -13,12 +13,12 @@
 
 ## mriqc, smriprep, qsiprep 
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
 
 ## run the smriprep sharing step
-SMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/smriprep/23.2.3/
-SMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/smriprep/23.2.3/smriprep
+SMRIPREP_SHARE_DIR=${BASEDIR}/data/share/smriprep/23.2.3/
+SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/23.2.3/smriprep
 
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
@@ -45,9 +45,9 @@ fi
 
 
 ## run the mriqc group step and copy over all outputs
-project_id=$(cat ${PROJECT_DIR}/project_id)
-MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
-MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
+project_id=$(cat ${BASEDIR}/project_id)
+MRIQC_SHARE_DIR=${BASEDIR}/data/share/mriqc/24.0.0
+MRIQC_LOCAL_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0
 export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
 mkdir -vp ${WORK_DIR}
 
@@ -56,11 +56,11 @@ then
 
 echo "running mriqc group and copying files"
 singularity run --cleanenv \
-    -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
-    -B ${PROJECT_DIR}/data/local/bids:/bids \
+    -B ${BASEDIR}/templates:/home/mriqc --home /home/mriqc \
+    -B ${BASEDIR}/data/local/bids:/bids \
     -B ${MRIQC_LOCAL_DIR}:/derived \
     -B ${WORK_DIR}:/work \
-    ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
+    ${BASEDIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group \
     -w /work
 
@@ -75,8 +75,8 @@ else
 fi
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
-QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
+QSIPREP_SHARE_DIR=${BASEDIR}/data/share/qsiprep/0.22.0
+QSIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 
 if [ -d "$QSIPREP_LOCAL_DIR" ];
 then
