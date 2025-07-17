@@ -16,11 +16,11 @@
 
 module load apptainer/1.3.5
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
 
-FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/23.2.3
-FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3
+FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/23.2.3
+FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3
 
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
@@ -49,23 +49,23 @@ fi
 
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/ciftify" ];
+if [ -d "${BASEDIR}/data/local/derivatives/ciftify" ];
 then
 
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
 
-mkdir ${PROJECT_DIR}/data/share/ciftify
+mkdir ${BASEDIR}/data/share/ciftify
 
 singularity exec --cleanenv \
-  -B ${PROJECT_DIR}/data/local/bids:/bids \
-  -B ${PROJECT_DIR}/data/local/derivatives/ciftify:/derived \
-  ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
+  -B ${BASEDIR}/data/local/bids:/bids \
+  -B ${BASEDIR}/data/local/derivatives/ciftify:/derived \
+  ${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
   cifti_vis_recon_all index --ciftify-work-dir /derived
 
 
 ## copy over the ciftify QC outputs
-rsync -a ${PROJECT_DIR}/data/local/derivatives/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
+rsync -a ${BASEDIR}/data/local/derivatives/ciftify/qc_recon_all  ${BASEDIR}/data/share/ciftify/
 
 else
 
@@ -76,13 +76,13 @@ fi
 
 #running Enigma_extract
 echo "Running Enigma Extract"
-source ${PROJECT_DIR}/code/ENIGMA_ExtractCortical.sh
+source ${BASEDIR}/code/ENIGMA_ExtractCortical.sh
 
 ## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
+if [ -d "${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
 then
 echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${BASEDIR}/data/share/freesurfer_group
 
 else
 
@@ -91,8 +91,8 @@ echo "No ENIGMA_extract outputs found."
 fi
 
 
-TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
-TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+TRACTIFY_MULTI_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ];
 then
@@ -114,8 +114,8 @@ fi
 
 
 
-TRACTIFY_SINGLE_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
-TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+TRACTIFY_SINGLE_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
+TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ];
 then
@@ -136,8 +136,8 @@ echo "No TRACTIFY single-shell outputs found."
 fi
 
 
-AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
-AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
+AMICO_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
+AMICO_SHARE_DIR=${BASEDIR}/data/share/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ];
 then
@@ -162,15 +162,15 @@ fi
 
 #running freesurfer group merge
 echo "Running freesurfer group merge code"
-source ${PROJECT_DIR}/code/freesurfer_group_merge.sh
+source ${BASEDIR}/code/freesurfer_group_merge.sh
 
 ## copy over freesurfer group tsv files
-if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables" ];
+if [ -d "${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables" ];
 then
 echo "copying over freesurfer group files"
-mkdir ${PROJECT_DIR}/data/share/freesurfer_group
-rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
-rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
+mkdir ${BASEDIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
 
 else
 
@@ -181,15 +181,15 @@ fi
 
 
 ## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
-export SING_CONTAINER=${PROJECT_DIR}/containers/freesurfer-7.4.1.simg
-export OUTPUT_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
-export ORIG_FS_LICENSE=${PROJECT_DIR}/templates/.freesurfer.txt
-export BIDS_DIR=${PROJECT_DIR}/data/local/bids
+export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
+export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
+export BIDS_DIR=${BASEDIR}/data/local/bids
 
 SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
 
 singularity run --cleanenv \
-    -B ${PROJECT_DIR}/templates:/home/freesurfer --home /home/freesurfer \
+    -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
     -B ${BIDS_DIR}:/bids \
     -B ${OUTPUT_DIR}:/derived \
     -B ${ORIG_FS_LICENSE}:/li \
@@ -201,4 +201,4 @@ singularity run --cleanenv \
     --license_file /li \
     --n_cpus 80
 
-rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
