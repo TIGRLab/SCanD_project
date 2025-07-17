@@ -30,7 +30,7 @@ fi
 ## nipoppy tracker init
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --bind /scratch/a/arisvoin/arisvoin/mlepage:/scratch/a/arisvoin/arisvoin/mlepage \
   containers/nipoppy.sif /bin/bash -c '
     set -e
