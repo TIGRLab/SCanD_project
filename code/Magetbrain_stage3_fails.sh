@@ -1,6 +1,6 @@
 #!/bin/bash
-
-BASEDIR=$PWD
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASEDIR=${SCRIPT_DIR}/..
 
 input_dir="${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains"
 output_dir="${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/output/fusion/majority_vote"
