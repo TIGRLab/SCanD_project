@@ -98,7 +98,7 @@ singularity run --cleanenv \
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${BASEDIR}:${BASEDIR} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
