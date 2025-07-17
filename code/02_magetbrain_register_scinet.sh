@@ -5,15 +5,15 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=23:59:00
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-DATA_DIR=$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
-LOGS_DIR="$PROJECT_DIR/logs"
+DATA_DIR=$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data
+SING_CONTAINER=$BASEDIR/containers/magetbrain.sif
+LOGS_DIR="$BASEDIR/logs"
 
 mkdir -p "$LOGS_DIR"
 
-cd $PROJECT_DIR/..
+cd $BASEDIR/..
 
 singularity run \
    -B ${DATA_DIR}:/data \
@@ -31,15 +31,14 @@ singularity run \
 
 
 ## nipoppy trackers 
-cd $PROJECT_DIR/
+cd $BASEDIR/
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
-
-    BASEDIR="$SCRATCH/SCanD_project"
+    
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/magetbrainregister/0.1.0/output/
