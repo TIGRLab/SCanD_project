@@ -118,6 +118,12 @@ Currently this repo is going to be set up for running things on SciNet Nibi clus
 
 ### Cloning this Repo
 
+Each study should be kept in a **separate `SCanD_project` folder** to prevent overwriting or mixing data between studies.
+
+Before starting a new study:
+- Either **rename** the existing `SCanD_project` folder (e.g., `SCanD_project_study1`),  
+- Or **move** it elsewhere before cloning the repository again.
+
 ```sh
 cd $SCRATCH
 git clone -b nibi --single-branch https://github.com/TIGRLab/SCanD_project.git
