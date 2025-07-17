@@ -121,6 +121,15 @@ Currently this repo is going to be set up for running things on SciNet Niagara c
 
 ### Cloning this Repo
 
+Each study should be kept in a **separate `SCanD_project` folder**. This ensures data and outputs are not accidentally overwritten or mixed between studies.
+
+- **Create a new project folder for each study.**
+
+### When starting a new study:
+1. Either **rename** the existing `SCanD_project` folder (e.g., `SCanD_project_study1`),  
+2. Or **move** it to another location before cloning the repository again.
+
+
 ```sh
 cd $SCRATCH
 git clone https://github.com/TIGRLab/SCanD_project.git
