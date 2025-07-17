@@ -13,16 +13,16 @@
 
 ## extract-noddi
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI" ];
+if [ -d "${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI" ];
 then
 
 echo "copying over the extract_noddi folder"
 
 rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/**/*.png' --include='noddi_roi/**/*.csv' --exclude='noddi_roi/**' \
-    ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
-    ${PROJECT_DIR}/data/share/amico_noddi
+    ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
+    ${BASEDIR}/data/share/amico_noddi
 
 else
 
