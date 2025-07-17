@@ -185,7 +185,7 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
 # Get subjects from OUTPUT_DIR, remove 'sub-' prefix
-SUBJECTS=$(find ${OUTPUT_DIR} -maxdepth 1 -type d -name "sub-*" | sed -E 's|.*/sub-||' | sort)
+SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
