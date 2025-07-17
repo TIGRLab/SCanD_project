@@ -342,8 +342,6 @@ source ${PROJECT_DIR}/code/freesurfer_group_merge.sh
 echo "copying over freesurfer group files"
 mkdir ${PROJECT_DIR}/data/share/freesurfer_group
 rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
-rsync -a ${PROJECT_DIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
-
 
 #running Enigma_extract
 echo "Running Enigma Extract"
