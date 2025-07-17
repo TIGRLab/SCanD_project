@@ -82,8 +82,6 @@ then
 echo "copying over freesurfer group files"
 mkdir ${BASEDIR}/data/share/freesurfer_group
 rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
-rsync -a ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
-
 else
 
 echo "No freesurfer group outputs found."
