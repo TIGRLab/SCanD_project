@@ -27,8 +27,6 @@ else
 fi
 
 
-cd ${CURRENT_DIR}
-
 ## nipoppy tracker init
 
 singularity exec \
@@ -37,11 +35,11 @@ singularity exec \
   containers/nipoppy.sif /bin/bash -c '
     set -e
 
-    mkdir -p $SCRATCH/SCanD_project/Neurobagel
-    nipoppy init --bids-source $SCRATCH/SCanD_project/data/local/bids/ $SCRATCH/SCanD_project/Neurobagel
+    mkdir -p $BASEDIR/Neurobagel
+    nipoppy init --bids-source $BASEDIR/data/local/bids/ $BASEDIR/Neurobagel
 
-    NB_DIR="$SCRATCH/SCanD_project/Neurobagel"
-    BIDS_DIR="$SCRATCH/SCanD_project/data/local/bids"
+    NB_DIR="$BASEDIR/Neurobagel"
+    BIDS_DIR="$BASEDIR/data/local/bids"
 
     rm -rf "$NB_DIR/pipelines/processing"/*
 
