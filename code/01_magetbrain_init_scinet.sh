@@ -180,17 +180,16 @@ cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --bind ${PROJECT_DIR}:${PROJECT_DIR} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
-    cd "$BASEDIR/Neurobagel"
+    cd "$PROJECT_DIR/Neurobagel"
     
     mkdir -p derivatives/magetbraininit/0.1.0/output/
     ls -al derivatives/magetbraininit/0.1.0/output/
-    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
+    ln -s "$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
 
     nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
   '
