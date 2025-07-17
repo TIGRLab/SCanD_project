@@ -80,12 +80,11 @@ singularity run --cleanenv \
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
-
-    BASEDIR="$SCRATCH/SCanD_project"
+    
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/amiconoddi/0.22.0/output/
