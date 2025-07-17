@@ -26,7 +26,6 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg 
 export LOGS_DIR=${BASEDIR}/logs
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-#export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export GCS_FILE_DIR=${BASEDIR}/templates/freesurfer_parcellate
 
