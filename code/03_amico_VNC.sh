@@ -1,4 +1,5 @@
-export BASEDIR=$(pwd)
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASEDIR=${SCRIPT_DIR}/..
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.4/qsiprep
