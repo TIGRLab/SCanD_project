@@ -8,14 +8,14 @@
 
 module load apptainer/1.3.5
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
-SING_CONTAINER="$PROJECT_DIR/containers/magetbrain.sif"
+SING_CONTAINER="$BASEDIR/containers/magetbrain.sif"
 
 # Define directories
-BIDS_DIR="$PROJECT_DIR/data/local/bids"
-MAGETBRAIN_DIR="$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data"
+BIDS_DIR="$BASEDIR/data/local/bids"
+MAGETBRAIN_DIR="$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data"
 INPUT_DIR="$MAGETBRAIN_DIR/input"
 
 # Create necessary directories
@@ -23,7 +23,7 @@ mkdir -p "$INPUT_DIR/subjects/brains"
 mkdir -p "$INPUT_DIR/templates/brains"
 
 # Define the path to the demographic TSV file
-DEMOGRAPHIC_FILE="$PROJECT_DIR/data/local/bids/participants_demographic.tsv"
+DEMOGRAPHIC_FILE="$BASEDIR/data/local/bids/participants_demographic.tsv"
 
 # Function to select subjects randomly based on age and gender
 select_random_subjects() {
@@ -174,12 +174,12 @@ cp -r /scratch/arisvoin/shared/templateflow/atlases  "$INPUT_DIR/"
 
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${PROJECT_DIR}
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS="$SUBJECTS" \
-  ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
