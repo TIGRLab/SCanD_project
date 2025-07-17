@@ -82,10 +82,10 @@ singularity exec \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}}/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     mkdir -p derivatives/smriprep/23.2.3/output/
     ls -al derivatives/smriprep/23.2.3/output/
-    ln -s "${ROOT_DIR}}/data/local/derivatives/smriprep/23.2.3/smriprep/"* derivatives/smriprep/23.2.3/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/smriprep/23.2.3/smriprep/"* derivatives/smriprep/23.2.3/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
