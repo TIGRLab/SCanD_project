@@ -5,18 +5,18 @@
 #SBATCH --cpus-per-task=40
 #SBATCH --time=10:00:00
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-DATA_DIR=$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
-LOGS_DIR="$PROJECT_DIR/logs"
+DATA_DIR=$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data
+SING_CONTAINER=$BASEDIR/containers/magetbrain.sif
+LOGS_DIR="$BASEDIR/logs"
 
 mkdir -p "$LOGS_DIR"
 
 SUB_SIZE=1
 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-SUBJECTS_LIST=($(ls $PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
+SUBJECTS_LIST=($(ls $BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | xargs -n 1 basename | sed 's/\.mnc$//'))
 
 N_SUBJECTS=${#SUBJECTS_LIST[@]}
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
@@ -25,7 +25,7 @@ Tail=$((N_SUBJECTS - (array_job_length * SUB_SIZE)))
 SUBJECTS=("${SUBJECTS_LIST[@]:bigger_bit-SUB_SIZE:SUB_SIZE}")
 
 
-cd $PROJECT_DIR/..
+cd $BASEDIR/..
 
 singularity run \
    -B ${DATA_DIR}:/data \
