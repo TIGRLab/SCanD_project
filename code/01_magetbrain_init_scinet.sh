@@ -176,11 +176,10 @@ rm -rf ${INPUT_DIR}/templates/brains/*T1w.mnc
 # Copy atlas data
 cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
-
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${PROJECT_DIR}:${PROJECT_DIR} \
+  --env PROJECT_DIR="$PROJECT_DIR" \
   --env SUBJECTS="$SUBJECTS" \
   ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
