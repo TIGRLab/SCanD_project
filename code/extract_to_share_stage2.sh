@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH --job-name=extract_to_share_stage2
 #SBATCH --output=logs/%x_%j.out
