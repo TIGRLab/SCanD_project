@@ -1,8 +1,8 @@
 ## hold many of the scripts needed to set-up the repo for the first time..
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-BASEDIR=${PWD}
+BASEDIR=${SCRIPT_DIR}/..
 
-cd ${BASEDIR}/..
+cd ${BASEDIR}
 
 ## edit dataset_description and bold.json files in bids
 echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
