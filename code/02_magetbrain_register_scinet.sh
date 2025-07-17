@@ -36,7 +36,7 @@ cd $BASEDIR/
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
     
     cd "$BASEDIR/Neurobagel"
