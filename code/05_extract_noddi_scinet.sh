@@ -52,7 +52,7 @@ singularity exec \
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
-    cd "${ROOT_DIR}}/Neurobagel"
+    cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/extractnoddi/0.1.1/output/
     ls -al derivatives/extractnoddi/0.1.1/output/
