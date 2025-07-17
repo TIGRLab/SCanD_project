@@ -1,4 +1,4 @@
-## hold many of the scripts needed to set-up the repo for the first time..
+#!/bin/bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 BASEDIR=${SCRIPT_DIR}/..
 
