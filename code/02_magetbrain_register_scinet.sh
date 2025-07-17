@@ -8,15 +8,15 @@
 
 module load apptainer/1.3.5
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-DATA_DIR=$PROJECT_DIR/data/local/derivatives/MAGeTbrain/magetbrain_data
-SING_CONTAINER=$PROJECT_DIR/containers/magetbrain.sif
-LOGS_DIR="$PROJECT_DIR/logs"
+DATA_DIR=$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data
+SING_CONTAINER=$BASEDIR/containers/magetbrain.sif
+LOGS_DIR="$BASEDIR/logs"
 
 mkdir -p "$LOGS_DIR"
 
-cd $PROJECT_DIR/..
+cd $BASEDIR/..
 
 singularity run \
    -B ${DATA_DIR}:/data \
@@ -35,12 +35,12 @@ singularity run \
 
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${PROJECT_DIR}
+export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --bind ${SCRATCH}:${SCRATCH} \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
-  ${PROJECT_DIR}/containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
     BASEDIR="$SCRATCH/SCanD_project"
