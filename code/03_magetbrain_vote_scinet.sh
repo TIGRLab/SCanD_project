@@ -46,12 +46,11 @@ singularity run \
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/magetbrainvote/0.1.0/output/
