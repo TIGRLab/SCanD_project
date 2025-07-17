@@ -98,12 +98,11 @@ singularity run --cleanenv \
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --bind ${BASEDIR}:${BASEDIR} \
   --env SUBJECTS="$SUBJECTS" \
-  containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/fmriprepfit/23.2.3/output/
