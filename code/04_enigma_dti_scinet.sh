@@ -53,12 +53,11 @@ EOF
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/enigmadti/0.1.1/output/
