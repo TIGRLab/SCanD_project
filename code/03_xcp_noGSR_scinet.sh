@@ -148,12 +148,11 @@ ${SING_CONTAINER} \
 ## nipoppy trackers 
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+--env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/xcpnogsr/0.7.3/output/
