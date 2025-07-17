@@ -344,7 +344,6 @@ source ${BASEDIR}/code/freesurfer_group_merge.sh
 echo "copying over freesurfer group files"
 mkdir ${BASEDIR}/data/share/freesurfer_group
 rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
-##rsync -a ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
 
 
 #running Enigma_extract
@@ -366,11 +365,12 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
 
 ## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
+# Get subjects from OUTPUT_DIR, remove 'sub-' prefix
+SUBJECTS=$(find ${OUTPUT_DIR} -maxdepth 1 -type d -name "sub-*" | sed -E 's|.*/sub-||' | sort)
 
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/freesurfer --home /home/freesurfer \
@@ -385,4 +385,4 @@ singularity run --cleanenv \
     --license_file /li \
     --n_cpus 80
 
-rsync -a ${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
