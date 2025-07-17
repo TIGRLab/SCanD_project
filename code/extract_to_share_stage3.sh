@@ -13,9 +13,9 @@
 
 ## xcp, xcp-noGSR
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
+if [ -d "${BASEDIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
     echo "Copying over the xcp_d folder"
 
     rsync -a \
@@ -26,11 +26,11 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
         --exclude '*/sub-*/func/*pearsoncorrelation*' \
         --exclude '*/atlases/' \
         --exclude '*/logs/' \
-        ${PROJECT_DIR}/data/local/derivatives/xcp_d ${PROJECT_DIR}/data/share
+        ${BASEDIR}/data/local/derivatives/xcp_d ${BASEDIR}/data/share
 
-    mkdir -p ${PROJECT_DIR}/data/share/xcp_d/0.7.3/dtseries
+    mkdir -p ${BASEDIR}/data/share/xcp_d/0.7.3/dtseries
 
-    BASE="${PROJECT_DIR}/data/share/xcp_d/0.7.3"
+    BASE="${BASEDIR}/data/share/xcp_d/0.7.3"
 
     for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
@@ -65,7 +65,7 @@ fi
 
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
+if [ -d "${BASEDIR}/data/local/derivatives/xcp_noGSR/" ]; then
     echo "Copying over the xcp_noGSR folder"
 
     rsync -a \
@@ -76,11 +76,11 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
         --exclude '*/sub-*/func/*pearsoncorrelation*' \
         --exclude '*/atlases/' \
         --exclude '*/logs/' \
-        ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR ${PROJECT_DIR}/data/share
+        ${BASEDIR}/data/local/derivatives/xcp_noGSR ${BASEDIR}/data/share
 
-    mkdir -p ${PROJECT_DIR}/data/share/xcp_noGSR/dtseries
+    mkdir -p ${BASEDIR}/data/share/xcp_noGSR/dtseries
 
-    BASE="${PROJECT_DIR}/data/share/xcp_noGSR"
+    BASE="${BASEDIR}/data/share/xcp_noGSR"
 
     for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
