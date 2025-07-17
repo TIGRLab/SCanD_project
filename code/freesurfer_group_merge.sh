@@ -3,11 +3,12 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 BASEDIR=${SCRIPT_DIR}/..
 
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/derivatives/freesurfer/7.4.1
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv)
+# Get subjects from OUTPUT_DIR, remove 'sub-' prefix
+SUBJECTS=$(find ${OUTPUT_DIR} -maxdepth 1 -type d -name "sub-*" | sed -E 's|.*/sub-||' | sort)
 
 module load apptainer/1.3.5
 
