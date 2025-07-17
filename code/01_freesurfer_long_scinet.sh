@@ -94,7 +94,7 @@ if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
 fi
 
 singularity exec \
-  --bind ${BASEDIR}:${BASEDIR} \
+  --env BASEDIR="$BASEDIR" \
   --env SUBJECTS="$SUBJECTS" \
   containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
