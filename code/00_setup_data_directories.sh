@@ -1,8 +1,9 @@
 ## hold many of the scripts needed to set-up the repo for the first time..
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-CURRENT_DIR=${PWD}
+BASEDIR=${SCRIPT_DIR}/..
 
-cd ${SCRIPT_DIR}/..
+cd ${BASEDIR}
+
 echo "making directories"
 mkdir -p containers
 mkdir -p data
