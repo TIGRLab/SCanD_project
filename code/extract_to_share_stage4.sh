@@ -13,18 +13,18 @@
 
 ## enigma_dti
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
 
 ## copy over the enigmaDTI files
-if [ -d "${PROJECT_DIR}/data/local/enigmaDTI" ];
+if [ -d "${BASEDIR}/data/local/enigmaDTI" ];
 then
 echo "copying over the enigmaDTI files"
-mkdir ${PROJECT_DIR}/data/share/enigmaDTI
-rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/group*  ${PROJECT_DIR}/data/share/enigmaDTI
-rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/*.html  ${PROJECT_DIR}/data/share/enigmaDTI
+mkdir ${BASEDIR}/data/share/enigmaDTI
+rsync -a ${BASEDIR}/data/local/enigmaDTI/group*  ${BASEDIR}/data/share/enigmaDTI
+rsync -a ${BASEDIR}/data/local/enigmaDTI/*.html  ${BASEDIR}/data/share/enigmaDTI
 
-rsync -a --include "*/" --include "*.png" --exclude "*" ${PROJECT_DIR}/data/local/enigmaDTI/ ${PROJECT_DIR}/data/share/enigmaDTI
+rsync -a --include "*/" --include "*.png" --exclude "*" ${BASEDIR}/data/local/enigmaDTI/ ${BASEDIR}/data/share/enigmaDTI
 
 else
 
