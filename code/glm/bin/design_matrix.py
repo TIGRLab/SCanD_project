@@ -16,7 +16,7 @@ from .run_match import BoldEventsMatch
 logger = logging.getLogger("bin.design_matrix")
 
 
-class FirstLevelDesignMatrix(BIDSSelect):
+class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
     """
     Generate a design matrix using the matched-run task events and fMRI data per session for each participant.
     """
@@ -37,8 +37,10 @@ class FirstLevelDesignMatrix(BIDSSelect):
         session,
         space_label,
         dense,
+        model_spec,
     ):
-        super().__init__(
+        BIDSSelect.__init__(
+            self,
             bids_dir,
             derivatives_dir,
             participant_label,
@@ -46,6 +48,10 @@ class FirstLevelDesignMatrix(BIDSSelect):
             session,
             space_label,
             dense,
+        )
+        LoadBidsModel.__init__(
+            self,
+            model_spec
         )
 
     def get_data_from_bids(self, run):
@@ -174,6 +180,39 @@ class FirstLevelDesignMatrix(BIDSSelect):
 
         return new_cifti_img, frame_times, non_steady_scans
 
+    def extract_confounds_from_model_spec(model_spec, sub_run_confounds):
+        """
+        Extract confound variables from model spec
+        Return None if no confound variable found in model (to trigger default usage)
+        """
+
+        try:
+            run_node = None
+            for node in model_spec.get("Nodes", []):
+                if node.get("Level").lower() == "run":
+                    run_node = node
+                    break
+            if not run_node:
+                return None
+            x_vars = run_node.get("Model", {}).get("X", [])
+
+            # Identify regressor
+            # Load confound columns available in confounds TSV file
+            confounds_df = pd.read_csv(sub_run_confounds_path, delimiter="\t")
+            available_confounds = set(confounds_df.columns)
+
+            # Identify which x_vars are confounds by intersection
+            confound_vars = [var for var in x_vars if var in available_confounds]
+
+            if len(confound_vars) == 0:
+                return None
+
+                return confound_vars
+
+        except Exception as e:
+            logger.warning(f"Could not extract confounds from model spec: {e}")
+            return None
+
     def get_design_matrix(self, run, model_spec):
 
         sub_run_imgs, sub_run_events, sub_run_confounds = self.get_data_from_bids(run)
@@ -182,26 +221,21 @@ class FirstLevelDesignMatrix(BIDSSelect):
 
         # Confound regressors
         confounds_df = pd.read_csv(sub_run_confounds[0].path, delimiter="\t")
-        confound_vars = [
-            col
-            for col in confounds_df.columns
-            if col.startswith(("white_matter", "csf", "trans", "rot"))
-        ]
-        confounds_df = confounds_df[confound_vars]
-        # confounds_df = confounds_df[
-        #     [
-        #         "csf",
-        #         "white_matter",
-        #         "trans_x",
-        #         "trans_y",
-        #         "trans_z",
-        #         "rot_x",
-        #         "rot_y",
-        #         "rot_z",
-        #         "framewise_displacement"
-        #     ]
-        # ]
 
+        # Try to get confounds from model specs first
+        confound_vars = self.extract_confounds_from_model_spec(model_spec)
+
+        # Default exact column names. Need to update so allow users to include more variables
+        if confound_vars is None:
+            confound_vars = [
+                'white_matter', 'csf', 'framewise_displacement',
+                'trans_x', 'trans_y', 'trans_z',
+                'rot_x', 'rot_y', 'rot_z'
+            ]
+            logger.info(f"Using default confounds: {confound_vars}")
+        else:
+            logger.info(f"Using confounds from model specification: {confound_vars}")
+        confounds_df = confounds_df[confound_vars]
         confounds_df = confounds_df[non_steady_scans:]
 
         # Demean the regressors but we have the constant in the deisgn-matrix already so no need
