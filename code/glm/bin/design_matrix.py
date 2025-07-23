@@ -34,7 +34,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         derivatives_dir,
         participant_label,
         task_label,
-        session,
+        session,c
         space_label,
         dense,
         model_spec,
