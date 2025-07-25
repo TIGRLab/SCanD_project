@@ -55,8 +55,8 @@ select_random_subjects() {
 # Check if the demographic file exists
 if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
     # Separate males and females based on the third column (Gender)
-    male_subjects=($(awk -F'\t' '$3 == "Male" {print $1}' "$DEMOGRAPHIC_FILE"))
-    female_subjects=($(awk -F'\t' '$3 == "Female" {print $1}' "$DEMOGRAPHIC_FILE"))
+    male_subjects=($(awk -F'\t' 'NR>1 && $3 == "Male" {print $1}' "$DEMOGRAPHIC_FILE"))
+    female_subjects=($(awk -F'\t' 'NR>1 && $3 == "Female" {print $1}' "$DEMOGRAPHIC_FILE"))
 
     # Select 10 males and 10 females randomly based on age for templates
     selected_males_for_templates=($(select_random_subjects 10 "${male_subjects[@]}"))
