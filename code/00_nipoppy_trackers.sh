@@ -44,7 +44,7 @@ else
 fi
 
 # === nipoppy tracker init ===
-module load apptainer/1.3.5
+module load apptainer/1.3.4
 export APPTAINERENV_ROOT_DIR=$ROOT_DIR
 
 singularity exec \
