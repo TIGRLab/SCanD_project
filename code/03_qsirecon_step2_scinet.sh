@@ -2,7 +2,7 @@
 #SBATCH --job-name=qsirecon2
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=192
 #SBATCH --time=01:00:00
 
 
