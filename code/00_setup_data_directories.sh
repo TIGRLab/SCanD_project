@@ -16,9 +16,6 @@ mkdir -p logs
 
 chmod +x code/*.py
 
-# create a random project id in a file to use for separating the work spaces across projects and runs
-openssl rand -hex 6 > project_id
-
 ## link the containers
 echo "linking singularity containers"
 CONTAINER_DIR=/scratch/a/arisvoin/arisvoin/mlepage/containers
