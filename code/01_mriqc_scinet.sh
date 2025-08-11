@@ -42,7 +42,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0 # use if versio
 
 
 project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/mriqc
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/${project_id}/mriqc
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
