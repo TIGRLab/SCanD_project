@@ -294,7 +294,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -311,7 +311,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -365,7 +365,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -383,7 +383,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -400,7 +400,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -465,7 +465,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -481,7 +481,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -567,7 +567,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -584,7 +584,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -630,7 +630,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
