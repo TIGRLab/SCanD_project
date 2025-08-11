@@ -2,7 +2,7 @@
 #SBATCH --job-name=xcp
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=80
+#SBATCH --cpus-per-task=192
 #SBATCH --time=05:00:00
 
 
