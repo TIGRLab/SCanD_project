@@ -44,8 +44,7 @@ export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourceda
 
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/qsiprep
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
