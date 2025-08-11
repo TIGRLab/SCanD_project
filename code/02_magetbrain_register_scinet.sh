@@ -2,7 +2,7 @@
 #SBATCH --job-name=magetbrain_register
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=192
 #SBATCH --time=23:59:00
 
 BASEDIR=${SLURM_SUBMIT_DIR}
