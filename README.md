@@ -201,7 +201,7 @@ In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files w
 
 ```sh
 ## First load a python module
-module load NiaEnv/2019b python/3.11.5
+module load python/3.11.5
 
 ## Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -597,7 +597,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 ```sh
 #First load a python module
-module load NiaEnv/2019b python/3.6.8
+module load python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -614,7 +614,7 @@ python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer34
 ```
 ```sh
 #First load a python module
-module load NiaEnv/2019b python/3.11.5
+module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
