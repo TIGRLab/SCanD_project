@@ -2,7 +2,7 @@
 #SBATCH --job-name=tractography
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=192
 #SBATCH --time=12:00:00
 
 
