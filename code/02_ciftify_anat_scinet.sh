@@ -7,7 +7,6 @@
 
 
 SUB_SIZE=1 ## number of subjects to run
-CORES=40
 export THREADS_PER_COMMAND=2
 
 ####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
