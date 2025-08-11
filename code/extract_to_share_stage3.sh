@@ -2,7 +2,7 @@
 #SBATCH --job-name=extract_to_share_stage3
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=192
 #SBATCH --time=08:00:00
 
 
