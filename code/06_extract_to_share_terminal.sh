@@ -4,7 +4,7 @@ BASEDIR=${SCRIPT_DIR}/..
 
 
 ## Generate qsiprep motion metrics and extract NODDI indices
-module load NiaEnv/2019b python/3.6.8
+module load python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ${BASEDIR}/../.virtualenvs
