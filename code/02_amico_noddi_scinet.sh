@@ -2,7 +2,7 @@
 #SBATCH --job-name=amico_noddi
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=40
+#SBATCH --cpus-per-task=192
 #SBATCH --time=02:00:00
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
