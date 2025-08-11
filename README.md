@@ -702,7 +702,7 @@ For a test run of this available code you can work with a test dataset from open
 
 To get an openneuro dataset for testing - we will use datalad
 
-### Loading datalad on SciNet Niagara
+### Loading datalad on SciNet Trillium
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
