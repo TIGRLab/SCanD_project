@@ -75,7 +75,7 @@ ${BASEDIR}
 
 ```
 
-Currently this repo is going to be set up for running things on SciNet Niagara cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
+Currently this repo is going to be set up for running things on SciNet Trillium cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
 # The general overview of what to do
 
@@ -163,12 +163,12 @@ If you are copying data from another computer or server, you should use the SciN
 
 To switch into the dm node: 
 ```sh
-ssh <cc_username>@niagara.scinet.utoronto.ca
+ssh <cc_username>@trillium.alliancecan.ca
 ssh nia-dm1
 rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
-To link existing data from another location on SciNet Niagara to this folder:
+To link existing data from another location on SciNet Trillium to this folder:
 
 ```sh
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
@@ -255,7 +255,7 @@ After setting up the scinet environment and organizing your BIDS folder and `par
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -276,7 +276,7 @@ sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -301,7 +301,7 @@ Note -  the script enclosed uses some interesting extra options:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
@@ -323,7 +323,7 @@ sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -343,7 +343,7 @@ If you want to only run structural data, you will need this pipeline. Otherwise,
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -386,7 +386,7 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -404,7 +404,7 @@ Note -  the script enclosed uses some interesting extra options:
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -425,7 +425,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -445,7 +445,7 @@ In case your data is multi-shell you need to run amico noddi pipeline, otherwise
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -467,7 +467,7 @@ To complete the final step for amico noddi, you need a graphical user interface 
 3. Run the following command:
    
 ```sh
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -481,7 +481,7 @@ source ./code/03_amico_VNC.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
@@ -502,7 +502,7 @@ If you do not plan to run stage 6 (data sharing) and only wish to obtain the Fre
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -520,7 +520,7 @@ The final output for the tractography pipeline will be a **.mat** file containin
 Multishell:
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -539,7 +539,7 @@ sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
 Singleshell:
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -560,7 +560,7 @@ sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -580,7 +580,7 @@ sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -633,7 +633,7 @@ If you've already set up the pipeline before, bypass the previously mentioned in
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -653,7 +653,7 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -694,7 +694,7 @@ sbatch --array=0-${array_job_length} ./code/03_magetbrain_vote_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -707,7 +707,7 @@ source ./code/ENIGMA_ExtractCortical.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -727,7 +727,7 @@ sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -741,7 +741,7 @@ sbatch  ./code/04_enigma_dti_scinet.sh
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -767,7 +767,7 @@ It takes about 10 minutes to run (depending on how much data you are synching). 
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
-ssh nia-login07
+ssh tri-login01
 
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -796,7 +796,7 @@ For a test run of this available code you can work with a test dataset from open
 
 To get an openneuro dataset for testing - we will use datalad
 
-### Loading datalad on SciNet Niagara
+### Loading datalad on SciNet Trillium
 
 ```sh
 ## loading Erin's datalad environment on the SciNet system
