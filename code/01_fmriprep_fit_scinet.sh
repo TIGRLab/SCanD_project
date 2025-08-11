@@ -43,7 +43,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3  # use if ve
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/fmriprep
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/fmriprep
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
 
