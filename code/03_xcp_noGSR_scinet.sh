@@ -36,8 +36,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_noGSR
 export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/
 export CONFOUND_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/custom_confounds/
 
-project_id=$(cat ${BASEDIR}/project_id)
-export WORK_DIR=${BBUFFER}/SCanD/${project_id}/xcp_noGSR
+export WORK_DIR=${SLURM_TMPDIR}/SCanD/xcp_noGSR
 export LOGS_DIR=${BASEDIR}/logs
 export FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
