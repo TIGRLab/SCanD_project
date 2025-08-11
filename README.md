@@ -197,7 +197,7 @@ source code/00_nipoppy_trackers.sh
 
 ### Edit fmap files
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_func step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
+In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
 
 ```sh
 ## First load a python module
@@ -330,7 +330,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -350,7 +350,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -411,7 +411,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -432,7 +432,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -452,7 +452,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -527,7 +527,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -546,7 +546,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -640,7 +640,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -660,7 +660,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
@@ -714,7 +714,7 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 ## figuring out appropriate array-job size
-SUB_SIZE=1 # for func the sub size is moving to 1 participant because there are two runs and 8 tasks per run..
+SUB_SIZE=1 
 N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
 array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
