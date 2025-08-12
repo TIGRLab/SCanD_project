@@ -74,7 +74,7 @@ ${BASEDIR}
         └── ...  #and 13 other atlases
 ```
 
-Currently this repo is going to be set up for running things on SciNet Cedar cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
+Currently this repo is going to be set up for running things on SciNet Fir cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
 # The general overview of what to do
 
@@ -126,7 +126,7 @@ Before starting a new study:
 
 ```sh
 cd $SCRATCH
-git clone -b Cedar --single-branch https://github.com/TIGRLab/SCanD_project.git
+git clone -b Fir --single-branch https://github.com/TIGRLab/SCanD_project.git
 ```
 
 ### Run the software set-up script
@@ -160,11 +160,11 @@ If you are copying data from another computer or server, you should use the SciN
 
 To switch into the dm node: 
 ```sh
-ssh <cc_username>@cedar.computecanada.ca
+ssh <cc_username>@fir.alliancecan.ca
 rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
-To link existing data from another location on SciNet Cedar to this folder:
+To link existing data from another location on SciNet Fir to this folder:
 
 ```sh
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
@@ -683,7 +683,7 @@ git pull
 sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
-Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/Cedar/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/Fir/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
 
