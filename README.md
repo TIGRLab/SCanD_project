@@ -224,6 +224,72 @@ mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
 
+
+### Check "IntendedFor" in fieldmap
+
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run QSIprep](#Running-qsiprep).
+
+If IntendedFor is missing, QSIprep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
+
+This guide shows 
+   1. A correct example of fieldmap file with ``IntendedFor`` field
+   2. how check all participants before running QSIprep.
+
+**1. Verify a fieldmap manually**
+
+```bash
+cd ${SCRATCH}/SCanD_project
+grep "IntendedFor" -A10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000027_ses-01_acq-dwi_dir-AP_epi.json # Replace this with actual path
+```
+You should see something like 
+```json
+"IntendedFor": [
+    "ses-01/dwi/sub-CMH00000005_ses-01_dwi.nii.gz"
+  ]
+```
+This confirms that the fieldmap is correctly linked to your DWI scan.
+
+**2. Run the QC script**
+
+```bash
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+## Create a directory for virtual environments if it doesn't exist
+mkdir ~/.virtualenvs
+cd ~/.virtualenvs
+virtualenv --system-site-packages ~/.virtualenvs/myenv
+
+## Activate the virtual environment
+source ~/.virtual envs/myenv/bin/activate
+python3 -m pip install pybids==0.18.1
+
+python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
+```
+**3. Interpret the output**
+
+You will see a summary table like this:
+
+### Fieldmap QC Summary
+
+| Subject        | Session    | Fieldmap Status | IntendedFor Status    |
+|----------------|-----------|----------------|---------------------|
+| participant_id | no-session | ❌ Missing     | ❌ Invalid/Missing  |
+| CMH00000062    | ses-01     | ✅ Found       | ❌ Invalid/Missing  |
+| CMH00000077    | ses-02     | ✅ Found       | ❌ Invalid/Missing  |
+
+⚠️ Please review failed subjects above.
+
+**Summary:**
+
+- ✅ Passed: 0  
+- ❌ Failed: 2  
+- Total: 2
+
+> Action: If a subject shows ❌ in the IntendedFor Status column, edit their fieldmap.json to include the correct DWI file paths before running QSIprep.
+
+
 # Quick Start - Workflow Automation
 
 After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
