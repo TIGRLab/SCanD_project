@@ -73,6 +73,7 @@ fi
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
+  --bind $BASEDIR:$BASEDIR \
   --env SUBJECTS="$SELECTED_SUBJECT" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
