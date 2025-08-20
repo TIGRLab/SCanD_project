@@ -35,6 +35,7 @@ cd $BASEDIR/
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
+  --bind $BASEDIR:$BASEDIR \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
