@@ -31,6 +31,7 @@ fi
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
+  --bind $BASEDIR:$BASEDIR \
   --bind /scratch/a/arisvoin/arisvoin/mlepage:/scratch/a/arisvoin/arisvoin/mlepage \
   containers/nipoppy.sif /bin/bash -c '
     set -e
