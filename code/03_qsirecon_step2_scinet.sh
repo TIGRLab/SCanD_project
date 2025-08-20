@@ -133,6 +133,7 @@ if [ -z "$SESSIONS" ]; then
     
     singularity exec \
   	--env BASEDIR="$BASEDIR" \
+    --bind $BASEDIR:$BASEDIR \
   	--env SUBJECTS="$SUBJECTS" \
   	${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     	set -euo pipefail
@@ -224,6 +225,7 @@ else
 	
         singularity exec \
   	--env BASEDIR="$BASEDIR" \
+    --bind $BASEDIR:$BASEDIR \
   	--env SUBJECTS="$SUBJECTS" \
   	${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     	set -euo pipefail
