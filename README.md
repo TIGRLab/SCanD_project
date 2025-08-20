@@ -163,7 +163,6 @@ If you are copying data from another computer or server, you should use the SciN
 To switch into the dm node: 
 ```sh
 ssh <cc_username>@trillium.alliancecan.ca
-ssh nia-dm1
 rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
 ```
 
