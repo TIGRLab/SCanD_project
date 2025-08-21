@@ -221,9 +221,9 @@ else
           /dtifit_dir/${DTIFIT_name}_FA.nii.gz
 
 
-        ## nipoppy trackers 
-	
-        singularity exec \
+    ## nipoppy trackers 
+    
+    singularity exec \
   	--env BASEDIR="$BASEDIR" \
     --bind $BASEDIR:$BASEDIR \
   	--env SUBJECTS="$SUBJECTS" \
