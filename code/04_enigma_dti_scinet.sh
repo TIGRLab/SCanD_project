@@ -68,7 +68,7 @@ singularity exec \
     mkdir -p derivatives/enigmadti/0.1.1/output/
     ls -al derivatives/enigmadti/0.1.1/output/
 
-    ln -s "${ROOT_DIR}/data/local/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
+    ln -s "${ROOT_DIR}/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
 
     nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
   '
