@@ -147,7 +147,7 @@ EOF
 
 ## nipoppy trackers 
 
-SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
+SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECTS_BATCH}*.long.${SUBJECTS_BATCH}" -type d)
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
