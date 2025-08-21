@@ -150,8 +150,15 @@ EOF
 SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECTS_BATCH}*.long.${SUBJECTS_BATCH}" -type d)
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
+    # No longitudinal dirs → use notlong tracker_config
     rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/arisvoin/shared/freesurfer_notlong/freesurfergroup/tracker_config.json Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    cp -r /scratch/arisvoin/shared/freesurfer_notlong/freesurfergroup/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+else
+    # Longitudinal dirs found → use long tracker_config
+    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
+    cp -r /scratch/arisvoin/shared/nipoppy/freesurfergroup-7.4.1/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
 fi
 
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
