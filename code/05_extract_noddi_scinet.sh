@@ -2,9 +2,9 @@
 #SBATCH --job-name=extract_noddi
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=16
 #SBATCH --time=03:00:00
-#SBATCH --mem-per-cpu=1000
+#SBATCH --mem-per-cpu=4000
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
