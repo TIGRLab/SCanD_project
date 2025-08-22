@@ -94,7 +94,7 @@ SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUB
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     # No longitudinal dirs → use notlong tracker_config
     rm -rf Neurobagel/pipelines/processing/freesurferlong-7.4.1/tracker_config.json
-    cp -r /scratch/a/arisvoin/arisvoin/mlepage/freesurfer_notlong/freesurfer/tracker_config.json \
+    cp -r /scratch/arisvoin/shared/freesurfer_notlong/freesurfer/tracker_config.json \
           Neurobagel/pipelines/processing/freesurferlong-7.4.1/
 else
     # Longitudinal dirs found → use long tracker_config
