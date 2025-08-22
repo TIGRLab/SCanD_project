@@ -2,9 +2,9 @@
 #SBATCH --job-name=fmriprep_apply
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=16
 #SBATCH --time=08:00:00
-#SBATCH --mem-per-cpu=4000
+#SBATCH --mem-per-cpu=8000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 export THREADS_PER_COMMAND=2
