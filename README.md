@@ -424,10 +424,10 @@ By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/inp
 To change the segmentation to **cerebellum, amygdala, or another region**:  
 1. Remove existing labels:  
    ```bash
-   rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label/*
+   rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/*
 2. Copy the desired labels from the shared directory:
    ```bash
-   cp /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label/
+   cp /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/
 
 ### Run the pipeline:
 
