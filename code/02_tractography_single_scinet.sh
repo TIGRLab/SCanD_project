@@ -100,7 +100,7 @@ singularity exec \
     mkdir -p derivatives/tractographysingle/0.22.0/output/
     ls -al derivatives/tractographysingle/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qqsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
