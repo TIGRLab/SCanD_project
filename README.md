@@ -419,7 +419,7 @@ To customize the selection, create a new TSV file named `participants_demographi
 If `participants_demographic.tsv` is not provided, the script will randomly select 20 subjects.  
 
 #### Changing Atlas Labels  
-By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/label` are based on **hippocampus** segmentation.  
+By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels` are based on **hippocampus** segmentation.  
 
 To change the segmentation to **cerebellum, amygdala, or another region**:  
 1. Remove existing labels:  
