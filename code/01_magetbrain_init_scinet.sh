@@ -174,7 +174,7 @@ rm -rf ${INPUT_DIR}/templates/brains/*T1w.mnc
 
 
 # Copy atlas data
-cp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
+cp -r /scratch/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
 ## nipoppy trackers 
 
