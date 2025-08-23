@@ -18,7 +18,7 @@ chmod +x code/*.py
 
 ## link the containers
 echo "linking singularity containers"
-CONTAINER_DIR=/scratch/a/arisvoin/arisvoin/mlepage/containers
+CONTAINER_DIR=/scratch/arisvoin/mlepage/containers
 ln -s ${CONTAINER_DIR}/fmriprep-23.2.3.simg containers/fmriprep-23.2.3.simg
 
 ln -s ${CONTAINER_DIR}/mriqc-24.0.0.simg containers/mriqc-24.0.0.simg
@@ -40,9 +40,9 @@ ln -s ${CONTAINER_DIR}/nipoppy.sif  containers/nipoppy.sif
 
 
 ## copy freesurfer licence
-cp /scratch/a/arisvoin/arisvoin/mlepage/fs_license/license.txt templates/.freesurfer.txt
+cp /scratch/arisvoin/mlepage/fs_license/license.txt templates/.freesurfer.txt
 
 
 ## copy templates
 echo "copying templates..this might take a bit"
-scp -r /scratch/a/arisvoin/arisvoin/mlepage/templateflow templates/.cache/
+scp -r /scratch/arisvoin/mlepage/templateflow templates/.cache/
