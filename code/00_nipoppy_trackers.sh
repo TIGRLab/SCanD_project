@@ -32,7 +32,7 @@ fi
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --bind /scratch/a/arisvoin/arisvoin/mlepage:/scratch/a/arisvoin/arisvoin/mlepage \
+  --bind /scratch/arisvoin/mlepage/:/scratch/arisvoin/mlepage/ \
   containers/nipoppy.sif /bin/bash -c '
     set -e
 
@@ -49,10 +49,10 @@ singularity exec \
     if [ -d "$first_subject" ]; then
       if compgen -G "$first_subject/ses-*" > /dev/null; then
         echo "Found ses-* folder in $first_subject. Copying from nipoppy..."
-        cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy/* "$NB_DIR/pipelines/processing"
+        cp -r /scratch/arisvoin/mlepage/nipoppy/* "$NB_DIR/pipelines/processing"
       else
         echo "No ses-* folder in $first_subject. Copying from nipoppy_no_session..."
-        cp -r /scratch/a/arisvoin/arisvoin/mlepage/nipoppy_no_session/* "$NB_DIR/pipelines/processing"
+        cp -r /scratch/arisvoin/mlepage/nipoppy_no_session/* "$NB_DIR/pipelines/processing"
       fi
     else
       echo "No sub-* folder found in $BIDS_DIR."
