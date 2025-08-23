@@ -427,7 +427,7 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
    rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/*
 2. Copy the desired labels from the shared directory:
    ```bash
-   cp /scratch/a/arisvoin/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/
+   cp /scratch/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/
 
 ### Run the pipeline:
 
@@ -831,8 +831,8 @@ You need to change the "groupName_studyName" in the code below and put your grou
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/a/arisvoin/arisvoin/mlepage/groupName_studyName
-cp -r data/share  /scratch/a/arisvoin/arisvoin/mlepage/groupName_studyName/
+mkdir /scratch/arisvoin/mlepage/groupName_studyName
+cp -r data/share  /scratch/arisvoin/mlepage/groupName_studyName/
 ```
 
 # Appendix - Adding a test dataset from openneuro
