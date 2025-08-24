@@ -77,6 +77,7 @@ fi
 #running Enigma_extract
 echo "Running Enigma Extract"
 source ${BASEDIR}/code/ENIGMA_ExtractCortical.sh
+mkdir ${BASEDIR}/data/share/freesurfer_group
 
 ## copy over the Enigma_extract outputs
 if [ -d "${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
