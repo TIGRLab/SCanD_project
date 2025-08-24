@@ -33,3 +33,5 @@ python3 ${BASEDIR}/code/gen_qsiprep_motion_metrics.py
 
 mkdir -p ${BASEDIR}/data/share/qsiprep/0.22.0/
 rsync -a ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv ${BASEDIR}/data/share/qsiprep/0.22.0/
+
+rsync -a ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
