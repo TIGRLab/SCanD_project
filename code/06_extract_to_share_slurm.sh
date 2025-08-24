@@ -358,4 +358,4 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
     ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
     ${PROJECT_DIR}/data/share/amico_noddi
 
-rsync -a ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
+cp ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
