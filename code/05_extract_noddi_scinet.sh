@@ -57,7 +57,7 @@ singularity exec \
     mkdir -p derivatives/extractnoddi/0.1.1/output/
     ls -al derivatives/extractnoddi/0.1.1/output/
 
-    ln -s "${ROOT_DIR}/data/local/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
 
     nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1 
   '
