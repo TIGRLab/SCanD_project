@@ -32,3 +32,5 @@ else
     echo "No extract_noddi outputs found."
 
 fi
+
+rsync -a ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
