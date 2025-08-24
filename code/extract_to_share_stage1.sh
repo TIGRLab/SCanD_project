@@ -49,7 +49,6 @@ fi
 
 
 ## run the mriqc group step and copy over all outputs
-project_id=$(cat ${BASEDIR}/project_id)
 MRIQC_SHARE_DIR=${BASEDIR}/data/share/mriqc/24.0.0
 MRIQC_LOCAL_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/mriqc
