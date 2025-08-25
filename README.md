@@ -257,15 +257,21 @@ cd ~/.virtualenvs
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
-source ~/.virtual envs/myenv/bin/activate
+source ~/.virtualenvs/myenv/bin/activate
 python3 -m pip install pybids==0.18.1
 
+## Go to the repo 
+cd ${SCRATCH}/SCanD_project
 python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
 ```
 **3. Interpret the output**
 
-You will see a summary table like this:
+You will see a summary table like this in the terminal:
 
+There is also a log file in 
+```bash
+cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
+```
 ### Fieldmap QC Summary
 
 | Subject        | Session    | Fieldmap Status | IntendedFor Status    |
@@ -282,7 +288,15 @@ You will see a summary table like this:
 - ❌ Failed: 2  
 - Total: 2
 
-> Action: If a subject shows ❌ in the IntendedFor Status column, edit their fieldmap.json to include the correct DWI file paths before running QSIprep.
+> Action: If a subject shows ✅ in the FieldMap Status and ❌ in the IntendedFor Status column, edit their fieldmap.json to include the correct DWI file paths before running QSIprep.
+
+**Log File**: 
+
+The same summary is saved in a log file for later reference: 
+
+```bash
+cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
+```
 
 # Quick Start - Workflow Automation
 
