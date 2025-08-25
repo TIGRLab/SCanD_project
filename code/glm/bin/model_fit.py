@@ -18,7 +18,7 @@ from .run_match import BoldEventsMatch
 logger = logging.getLogger("bin.model_fit")
 
 
-class FirstLevelModelFit(BoldEventsMatch):
+class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
     """
     A class to handle BIDS directory inputs for GLM analysis.
 
@@ -48,7 +48,8 @@ class FirstLevelModelFit(BoldEventsMatch):
         dense,
         model_spec,
     ):
-        super().__init__(
+        BoldEventsMatch.__init__(
+            self,
             bids_dir,
             derivatives_dir,
             participant_label,
@@ -57,8 +58,18 @@ class FirstLevelModelFit(BoldEventsMatch):
             space_label,
             dense,
         )
-        self.specs = LoadBidsModel(model_spec)._ensure_model()
-
+        FirstLevelDesignMatrix.__init__(
+            self,
+            bids_dir,
+            derivatives_dir,
+            participant_label,
+            task_label,
+            session,
+            space_label,
+            dense,
+            model_spec,
+        )
+        # self.specs = LoadBidsModel(model_spec)._ensure_model()
     def dscalar_from_cifti(self, img, data, name):
         import nibabel as nb
         import numpy as np
@@ -99,9 +110,9 @@ class FirstLevelModelFit(BoldEventsMatch):
         return voxelwise_attribute
 
     def _iter_valid_runs(self):
-        """Generator that yields (session, run) tuples."""
-        for session, run in self.match_runs:
-            yield session, run
+        """Generator that yields entry of the match dictionary."""
+        for entry in self.match_runs:
+            yield entry
 
     def _get_run_level_contrasts(self, dm, model_spec):
         out_contrasts = []
@@ -149,7 +160,7 @@ class FirstLevelModelFit(BoldEventsMatch):
         parts = []
         if participant_label:
             parts.append(f"sub-{participant_label}")
-        if ses and ses != "None":
+        if ses and ses != None:
             parts.append(f"ses-{ses}")
         if task_label:
             parts.append(f"task-{task_label}")
@@ -167,43 +178,40 @@ class FirstLevelModelFit(BoldEventsMatch):
         from nilearn.glm import first_level as level1
         from nilearn.plotting import plot_contrast_matrix, plot_design_matrix
 
-        for ses, run in self._iter_valid_runs():
-            ses = ses.split("-")[1]  # Extract session (e.g., '01')
-            run = run.split("-")[1]  # Extract run (e.g., '1')
+        all_effect_maps = []
+        for entry in self._iter_valid_runs():
+            ses = entry["session"]
+            task = entry["task"]
+            run = entry["run"]
+
+            ses_str = f"| ses-{ses} " if ses else ""
+            run_str = f"| run-{run}" if run else ""
+            task_str = f"| task-{task} "
             logger.info(
-                f"Generating design matrix for: {self.participant_label} | ses-{ses} | run-{run}"
+                f"Generating design matrix for: {self.participant_label} {ses_str}{task_str}{run_str}"
             )
 
-            dm_instance = FirstLevelDesignMatrix(
-                self.bids_dir,
-                self.derivatives_dir,
-                self.participant_label,
-                self.task_label,
-                self.session,
-                self.space_label,
-                self.dense,
-            )
-            dm = dm_instance.get_design_matrix(run, self.specs)
+            dm = self.get_design_matrix(run, self.specs)
             logger.info(f"Columns of the convolved design matrix: {dm.columns}")
             logger.info(f"{'='*40}")
-            sub_run_imgs, _, _ = dm_instance.get_data_from_bids(run)
-            new_cifti_img, _, _ = dm_instance.drop_non_steady_scans(sub_run_imgs)
+            sub_run_imgs, _, _ = self.get_data_from_bids(run)
+            new_cifti_img, _, _ = self.drop_non_steady_scans(sub_run_imgs)
             is_cifti = isinstance(new_cifti_img, nib.Cifti2Image)
             if is_cifti:
                 # Set up output directory
                 outdir = Path(self.derivatives_dir).parent
-                glm_dir = outdir / "glm" / f"sub-{self.participant_label}"
+                glm_dir = outdir / "glm_August" / f"sub-{self.participant_label}"
                 glm_dir.mkdir(exist_ok=True, parents=True)
-                fname_fmt = os.path.join(
-                    glm_dir,
-                    "sub-{}_ses-{}_task-{}_run-{}_contrast-{}_stat-{}_statmap.dscalar.nii",
-                ).format
-                modname_fmt = os.path.join(
-                    glm_dir, "sub-{}_ses-{}_task-{}_run-{}_stat-{}_statmap.dscalar.nii"
-                ).format
+                # fname_fmt = os.path.join(
+                #     glm_dir,
+                #     "sub-{}_ses-{}_task-{}_run-{}_contrast-{}_stat-{}_statmap.dscalar.nii",
+                # ).format
+                # modname_fmt = os.path.join(
+                #     glm_dir, "sub-{}_ses-{}_task-{}_run-{}_stat-{}_statmap.dscalar.nii"
+                # ).format
 
                 logger.info(
-                    f"Fitting Model for subject: {self.participant_label} | ses-{ses} | run-{run}"
+                    f"Fitting Model for subject: {self.participant_label} {ses_str}{task_str}{run_str}"
                 )
                 logger.info(f"{'='*40}")
                 labels, estimates = level1.run_glm(
@@ -233,7 +241,7 @@ class FirstLevelModelFit(BoldEventsMatch):
                 self._format_filename(
                     participant_label=self.participant_label,
                     ses=ses,
-                    task_label=self.task_label,
+                    task_label=task,
                     run=run,
                     stat="design",
                     ext="tsv",
@@ -244,7 +252,7 @@ class FirstLevelModelFit(BoldEventsMatch):
                 self._format_filename(
                     participant_label=self.participant_label,
                     ses=ses,
-                    task_label=self.task_label,
+                    task_label=task,
                     run=run,
                     stat="design",
                     ext="svg",
@@ -265,7 +273,7 @@ class FirstLevelModelFit(BoldEventsMatch):
                     self._format_filename(
                         participant_label=self.participant_label,
                         ses=ses,
-                        task_label=self.task_label,
+                        task_label=task,
                         run=run,
                         stat=attr,
                         ext="dscalar.nii",
@@ -283,12 +291,24 @@ class FirstLevelModelFit(BoldEventsMatch):
             for name, weights, contrast_test in contrasts:
                 fname_contrast = os.path.join(
                     glm_dir,
-                    f"{self.participant_label}_ses-{ses}_task-{self.task_label}_run-{run}_contrast-{name}_stat-{contrast_test}.svg",
+                    self._format_filename(
+                        participant_label=self.participant_label,
+                        ses=ses,
+                        task_label=task,
+                        run=run,
+                        contrast=name,
+                        stat=contrast_test,
+                        ext="svg"
+                    )
                 )
+                # fname_contrast = os.path.join(
+                #     glm_dir,
+                #     f"{self.participant_label}_ses-{ses}_task-{self.task_label}_run-{run}_contrast-{name}_stat-{contrast_test}.svg",
+                # )
                 plot_contrast_matrix(weights, dm, output_file=fname_contrast)
                 logger.info(f"\n{'='*40}")
                 logger.info(
-                    f"Computing contrast for: {self.participant_label} | ses-{ses} | run-{run}"
+                    f"Computing contrast for: {self.participant_label} {ses_str}{task_str}{run_str}"
                 )
                 logger.info(f"Contrast name: {name}")
                 logger.info(f"Contrast weights: {weights}")
@@ -320,7 +340,7 @@ class FirstLevelModelFit(BoldEventsMatch):
                         self._format_filename(
                             participant_label=self.participant_label,
                             ses=ses,
-                            task_label=self.task_label,
+                            task_label=task,
                             run=run,
                             contrast=name,
                             stat=contrast_test if map_type == "stat" else map_type,
@@ -330,4 +350,6 @@ class FirstLevelModelFit(BoldEventsMatch):
                     logger.info(f"Saving Regressor output: {fname}")
                     map_list.append(fname)
                     maps[map_type].to_filename(fname)
-        return effect_maps
+            # accumulate effect_maps for this run/task
+            all_effect_maps.extend(effect_maps)
+        return all_effect_maps

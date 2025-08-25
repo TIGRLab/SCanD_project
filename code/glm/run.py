@@ -59,16 +59,16 @@ def _has_session(input_sessions, layout, participant_label):
             return None
 
 
-def get_single_value(field, field_name):
+def get_value(field, field_name):
     """
-    Ensures the field from BIDS stat model has only one value
+    Ensures the field from BIDS stat model has atleast one value
     """
     if isinstance(field, list):
-        if len(field) != 1:
+        if len(field) < 1:
             raise ValueError(
                 f"The {field_name} field must contain one value. Found: {len(field)} values"
             )
-        return field[0]
+        return field[:]
     elif isinstance(field, str):
         return field
     else:
@@ -80,6 +80,8 @@ def get_single_value(field, field_name):
 def model_fit(
     bids_dir, fmriprep_dir, sub, task_label, session, space_label, dense, specs
 ):
+    
+    # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
     model_instance = FirstLevelModelFit(
         bids_dir,
         fmriprep_dir,
@@ -91,10 +93,10 @@ def model_fit(
         specs,
     )
 
-    matched_runs = model_instance.match_runs
-    logger.info(
-        f"Found matched runs: {matched_runs} for subject: {sub}, session: {session or 'N/A'}"
-    )
+    # matched_runs = model_instance.match_runs
+    # logger.info(
+    #     f"Found matched runs: {matched_runs} for subject: {sub}, session: {session or 'N/A'}"
+    # )
 
     beta_maps = model_instance.process_and_fit_valid_run()
     if beta_maps:
@@ -105,11 +107,11 @@ def model_fit(
             if isinstance(data, nb.Cifti2Image):
                 plot_dscalar(data, colorbar=False, output_file=outname)
         logger.info(
-            f"GLM finished successfully for subject: {sub}, session: {session or 'N/A'}"
+            f"GLM finished successfully for subject: {sub}"
         )
     else:
         logger.warning(
-            f"No beta maps found for subject: {sub}, session: {session or 'N/A'}"
+            f"No beta maps found for subject: {sub}"
         )
 
 
@@ -180,10 +182,16 @@ def main():
             else:
                 # Process as individual participant label
                 participant_label.append(label.removeprefix("sub-"))
+    #%%
+    model="/projects/ttan/SCanD_project/code/glm/examples/models/RTMSWM/model-002_smdl.json"
+    bids_dir = "/scratch/ttan/ScanD_pipelines_scc/data/local/bids/"
+    participant_label = ['CMHTEST001']
+    fmriprep_dir = "/scratch/ttan/ScanD_pipelines_scc/data/local/derivatives/fmriprep"
+
     specs = LoadBidsModel(model).specs
-    task_label = get_single_value(specs["Input"]["task"], "task")
-    space_label = get_single_value(specs["Input"]["space"], "space")
-    dense = get_single_value(specs["Input"]["dense"], "dense")
+    task_label = get_value(specs["Input"]["task"], "task")
+    space_label = get_value(specs["Input"]["space"], "space")
+    dense = get_value(specs["Input"]["dense"], "dense")
     # Get sessions from specs
     input_sessions = specs["Input"].get("session")
 
@@ -197,49 +205,34 @@ def main():
     logger.info(f"  Dense: {dense}")
     logger.info(f"  Model specifications: {json.dumps(specs, indent=2)}")
 
-    if not input_sessions:
-        logger.info("Session not provided. Checking for available sessions.")
     for sub in participant_label:
-        logger.info(f"Checking sessions for subject: {sub}")
-
-        layout = BIDSLayout(
-            bids_dir,
-            derivatives=fmriprep_dir,
-            validate=False,
-            ignore=[f"sub-(?!{sub}).*"],
-        )
-
-        sessions = _has_session(input_sessions, layout, sub)
+        if input_sessions:
+            sessions = input_sessions
+        else:
+            logger.info("Session not provided. Checking for available sessions.")
+            layout = BIDSLayout(
+                bids_dir,
+                derivatives=fmriprep_dir,
+                validate=False,
+                ignore=[f"(?!sub-{sub}).*"],
+            )
+            sessions = _has_session(input_sessions, layout, sub)
 
         if not sessions:
             # No sessions — run once with session=None
-            logger.info(f"{sub} has {sessions} session")
+            sessions = [None]
+
+        for session in sessions:
             model_fit(
                 bids_dir,
                 fmriprep_dir,
                 sub,
                 task_label,
-                sessions,
+                session,
                 space_label,
                 dense,
                 specs,
             )
-        else:
-            for session in sessions:
-                logger.info(f"Found session: {session}")
-                logger.info(
-                    f" model_fit({bids_dir}, {fmriprep_dir}, {sub}, {task_label}, {session}, {space_label}, {dense}, {specs})"
-                )
-                model_fit(
-                    bids_dir,
-                    fmriprep_dir,
-                    sub,
-                    task_label,
-                    session,
-                    space_label,
-                    dense,
-                    specs,
-                )
 
 if __name__ == "__main__":
     main()

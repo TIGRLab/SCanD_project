@@ -34,7 +34,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         derivatives_dir,
         participant_label,
         task_label,
-        session,c
+        session,
         space_label,
         dense,
         model_spec,
@@ -53,7 +53,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             self,
             model_spec
         )
-
+        
     def get_data_from_bids(self, run):
         """
         Collect the BIDS-formatted task events, CIFTI dtseries files, and associated confound
@@ -64,37 +64,10 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             sub_run_events (list): List of BIDSFile objects for task event TSV files.
             sub_run_confounds (list): List of BIDSFile objects for confound regressor TSV files.
         """
-        sub_run_events = self.layout.get(
-            extension="tsv",
-            task=self.task_label,
-            subject=self.participant_label,
-            session=self.session,
-            run=run,
-            suffix="events",
-            scope="raw",
-        )
-
-        sub_run_imgs = self.layout.get(
-            extension="dtseries.nii",
-            suffix="bold",
-            task=self.task_label,
-            subject=self.participant_label,
-            session=self.session,
-            run=run,
-            space="fsLR",
-            den="91k",
-        )
-
-        sub_run_confounds = self.layout.get(
-            extension="tsv",
-            task=self.task_label,
-            subject=self.participant_label,
-            session=self.session,
-            desc="confounds",
-            scope="derivatives",
-            run=run,
-            suffix="timeseries",
-        )
+        sub_run_imgs = self._get_func_img(run)
+        sub_run_events = self._get_events_files(run)
+        sub_run_confounds = self._get_confounds_files(run)
+        
         if not sub_run_imgs or not sub_run_events or not sub_run_confounds:
             raise ValueError(
                 f"Expected 3 files for sub-{self.participant_label}, only getting {len(sub_run_imgs) + len(sub_run_events) + len(sub_run_confounds)}"
@@ -126,7 +99,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             )
             # Ugly hack to ensure the time onset is formatted correctly for CMH scans
             # The CMH parser dropped 8 seconds for the time onset already
-            # Need to remove these in actual production
+            # Need to remove + 8 in actual production
             events_df["onset"] = events_df["onset"] + 8
         events_df = events_df[["onset", "duration", "trial_type"]]
 
@@ -180,7 +153,8 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
         return new_cifti_img, frame_times, non_steady_scans
 
-    def extract_confounds_from_model_spec(model_spec, sub_run_confounds):
+    @staticmethod
+    def extract_confounds_from_model_spec(model_spec, sub_run_confounds_path):
         """
         Extract confound variables from model spec
         Return None if no confound variable found in model (to trigger default usage)
@@ -206,8 +180,8 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
             if len(confound_vars) == 0:
                 return None
-
-                return confound_vars
+            
+            return confound_vars
 
         except Exception as e:
             logger.warning(f"Could not extract confounds from model spec: {e}")
@@ -223,7 +197,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         confounds_df = pd.read_csv(sub_run_confounds[0].path, delimiter="\t")
 
         # Try to get confounds from model specs first
-        confound_vars = self.extract_confounds_from_model_spec(model_spec)
+        confound_vars = self.extract_confounds_from_model_spec(model_spec, sub_run_confounds[0].path)
 
         # Default exact column names. Need to update so allow users to include more variables
         if confound_vars is None:

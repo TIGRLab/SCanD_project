@@ -35,8 +35,14 @@ class LoadBidsModel:
                     model = json.load(fobj)
                     self._validate_input_field(model)
             else:
-                model = json.loads(model)
-                self._validate_input_field(model)
+                # raise error if it's a path but does not exist
+                if model.endswith(".json"):
+                    raise FileNotFoundError(f"Model Specifications file not found: {model}")
+                try:
+                    model = json.loads(model)
+                    self._validate_input_field(model)
+                except json.JSONDecodeError:
+                    raise ValueError("Provided model_spec is neither a valid path nor valid JSON string.")
 
         return model
 
@@ -46,8 +52,8 @@ class LoadBidsModel:
         missing = [field for field in required_fields if field not in input_field]
         if missing:
             raise ValueError(f"Missing required Input fields: {missing}")
-        else:
-            print("All required Input fields are present")
+        # else:
+        #     logger.info(f"All required Input fields are present from {self.model_spec}")
 
 
 class BIDSSelect:
@@ -71,35 +77,82 @@ class BIDSSelect:
         self.dense = dense
         # self.indexer = BIDSLayoutIndexer(ignore=[f'sub-(?!{self.participant_label}).*'])
         self.layout = BIDSLayout(
-            self.bids_dir, derivatives=self.derivatives_dir, validate=False
+            self.bids_dir, 
+            derivatives=self.derivatives_dir, 
+            validate=False,
+            ignore=[f"(?!sub-{participant_label}).*"]
+
         )
+
         if self.participant_label not in self.layout.get_subject():
             raise ValueError(
                 f"No BIDS dataset found for subject: {self.participant_label}"
             )
 
-    def _get_func_img(self):
-        sub_imgs = self.layout.get(
-            extension="dtseries.nii",
-            suffix="bold",
-            task=self.task_label,
-            subject=self.participant_label,
-            session=self.session,
-            space="fsLR",
-            den="91k",
-        )
-        return sub_imgs
+    def _get_func_img(self, run=None):
 
-    def _get_events_files(self):
-        sub_events_files = self.layout.get(
-            extension="tsv",
-            task=self.task_label,
+        query = dict(
+        subject=self.participant_label,
+        session=self.session,
+        task=self.task_label,
+        space="fsLR",
+        den="91k",
+        extension="dtseries.nii",
+        suffix="bold",
+        )
+
+        if run is not None:   # only add run if specified
+            query["run"] = run
+        return self.layout.get(**query)
+    
+        # sub_imgs = self.layout.get(
+        #     extension="dtseries.nii",
+        #     suffix="bold",
+        #     task=self.task_label,
+        #     subject=self.participant_label,
+        #     session=self.session,
+        #     space="fsLR",
+        #     den="91k",
+        # )
+        # return sub_imgs
+
+    def _get_events_files(self, run=None):
+        query = dict(
             subject=self.participant_label,
             session=self.session,
+            task=self.task_label,
             suffix="events",
             scope="raw",
+            extension="tsv",
         )
-        return sub_events_files
+        # sub_events_files = self.layout.get(
+        #     extension="tsv",
+        #     task=self.task_label,
+        #     subject=self.participant_label,
+        #     session=self.session,
+        #     suffix="events",
+        #     scope="raw",
+        # )
+        # return sub_events_files
+
+        if run is not None:   # only add run if specified
+            query["run"] = run
+        return self.layout.get(**query)
+    
+    def _get_confounds_files(self, run=None):
+        query = dict(
+            subject=self.participant_label,
+            session=self.session,
+            task=self.task_label,
+            desc="confounds",
+            scope="derivatives",
+            suffix="timeseries",
+            extension="tsv",
+        )
+
+        if run is not None:
+            query["run"] = run
+        return self.layout.get(**query)
 
     def __repr__(self):
         # Detailed string for debugging or logging

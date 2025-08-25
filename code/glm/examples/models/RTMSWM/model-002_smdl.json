@@ -4,7 +4,8 @@
   "Description": "RTMSWM first BIDS model: a simple 2-condition block contrast.",
   "Input": {
     "task": [
-      "nbk"
+      "nbk",
+      "imob"
     ],
     "session": [],
     "space": "fsLR",
