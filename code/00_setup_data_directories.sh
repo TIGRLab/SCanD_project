@@ -45,3 +45,12 @@ cp /scratch//arisvoin/shared/fs_license/license.txt templates/.freesurfer.txt
 ## copy templates
 echo "copying templates..this might take a bit"
 scp -r /scratch/arisvoin/shared/templateflow templates/.cache/
+
+## check for multiple T1w files for freesurfer
+find "$BASEDIR/data/local/bids"/sub-* -type d -name "anat" | while read -r anat_dir; do
+    t1_count=$(ls "$anat_dir"/*T1w*.nii.gz 2>/dev/null | wc -l)
+    if [ "$t1_count" -gt 1 ]; then
+        echo "⚠️ WARNING: $t1_count T1w files found in $anat_dir"
+    fi
+done
+
