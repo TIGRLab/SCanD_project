@@ -48,9 +48,16 @@ scp -r /scratch/arisvoin/shared/templateflow templates/.cache/
 
 ## check for multiple T1w files for freesurfer
 find "$BASEDIR/data/local/bids"/sub-* -type d -name "anat" | while read -r anat_dir; do
-    t1_count=$(ls "$anat_dir"/*T1w*.nii.gz 2>/dev/null | wc -l)
+    t1_files=("$anat_dir"/*T1w*.nii.gz)
+    t1_count=${#t1_files[@]}
+
     if [ "$t1_count" -gt 1 ]; then
         echo "⚠️ WARNING: $t1_count T1w files found in $anat_dir"
+        printf '   Files:\n'
+        for f in "${t1_files[@]}"; do
+            echo "     - $(basename "$f")"
+        done
+        echo "   ➡️ Consider averaging these T1w images or removing extra ones before running FreeSurfer longitudinal."
+        echo
     fi
 done
-
