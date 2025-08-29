@@ -93,11 +93,6 @@ def model_fit(
         specs,
     )
 
-    # matched_runs = model_instance.match_runs
-    # logger.info(
-    #     f"Found matched runs: {matched_runs} for subject: {sub}, session: {session or 'N/A'}"
-    # )
-
     beta_maps = model_instance.process_and_fit_valid_run()
     if beta_maps:
         logger.info(f"Plotting beta maps...")
@@ -182,12 +177,7 @@ def main():
             else:
                 # Process as individual participant label
                 participant_label.append(label.removeprefix("sub-"))
-    #%%
-    model="/projects/ttan/SCanD_project/code/glm/examples/models/RTMSWM/model-002_smdl.json"
-    bids_dir = "/scratch/ttan/ScanD_pipelines_scc/data/local/bids/"
-    participant_label = ['CMHTEST001']
-    fmriprep_dir = "/scratch/ttan/ScanD_pipelines_scc/data/local/derivatives/fmriprep"
-
+    
     specs = LoadBidsModel(model).specs
     task_label = get_value(specs["Input"]["task"], "task")
     space_label = get_value(specs["Input"]["space"], "space")

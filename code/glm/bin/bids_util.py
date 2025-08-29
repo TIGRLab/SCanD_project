@@ -52,9 +52,6 @@ class LoadBidsModel:
         missing = [field for field in required_fields if field not in input_field]
         if missing:
             raise ValueError(f"Missing required Input fields: {missing}")
-        # else:
-        #     logger.info(f"All required Input fields are present from {self.model_spec}")
-
 
 class BIDSSelect:
 
