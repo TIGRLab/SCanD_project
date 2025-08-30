@@ -132,6 +132,16 @@ def main():
         ),
     )
     parser.add_argument(
+        "--output_dir",
+        dest="output_dir",
+        type=Path,
+        default=None,
+        help=(
+            "Optional: custom output directory for GLM results. "
+            "If not provided, falls back to default relative to fmriprep_dir."
+        ),
+    )
+    parser.add_argument(
         "--participant-label",
         "--participant_label",
         dest="participant_label",

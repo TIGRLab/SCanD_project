@@ -47,6 +47,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         space_label,
         dense,
         model_spec,
+        outputdir=None
     ):
         BoldEventsMatch.__init__(
             self,
@@ -70,6 +71,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             model_spec,
         )
         # self.specs = LoadBidsModel(model_spec)._ensure_model()
+        self.outputdir = outputdir
     def dscalar_from_cifti(self, img, data, name):
         import nibabel as nb
         import numpy as np
@@ -199,8 +201,12 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             is_cifti = isinstance(new_cifti_img, nib.Cifti2Image)
             if is_cifti:
                 # Set up output directory
-                outdir = Path(self.derivatives_dir).parent
-                glm_dir = outdir / "glm_August" / f"sub-{self.participant_label}"
+                if self.outputdir is not None:
+                    self.outdir = Path(self.outputdir)
+                else:
+                    self.outdir = Path(self.derivatives_dir).parent
+
+                glm_dir = self.outdir / "glm" / f"sub-{self.participant_label}"
                 glm_dir.mkdir(exist_ok=True, parents=True)
                 # fname_fmt = os.path.join(
                 #     glm_dir,
