@@ -79,28 +79,28 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
         # Ugly hack to format the trial_type from the events.tsv for CMH scans
         # Need further development for other tasks
-        if model_spec["Input"]["task"][0] == "nbk":
-            # Extract hit, miss, and false alarm from n-back
-            mask_hit = (events_df["correct_response"] == 1) & (
-                events_df["participant_response"] == 1
-            )
-            mask_miss = (events_df["correct_response"] == 1) & (
-                events_df["participant_response"] == 0
-            )
-            mask_false = (events_df["correct_response"] == 0) & (
-                events_df["participant_response"] == 1
-            )
+        # if model_spec["Input"]["task"][0] == "nbk":
+        #     # Extract hit, miss, and false alarm from n-back
+        #     mask_hit = (events_df["correct_response"] == 1) & (
+        #         events_df["participant_response"] == 1
+        #     )
+        #     mask_miss = (events_df["correct_response"] == 1) & (
+        #         events_df["participant_response"] == 0
+        #     )
+        #     mask_false = (events_df["correct_response"] == 0) & (
+        #         events_df["participant_response"] == 1
+        #     )
 
-            events_df.loc[mask_hit, "trial_type"] = (
-                events_df["trial_type"].astype(str) + "_hit"
-            )
-            events_df.loc[mask_false, "trial_type"] = (
-                events_df["trial_type"].astype(str) + "_false"
-            )
-            # Ugly hack to ensure the time onset is formatted correctly for CMH scans
-            # The CMH parser dropped 8 seconds for the time onset already
-            # Need to remove + 8 in actual production
-            events_df["onset"] = events_df["onset"] + 8
+        #     events_df.loc[mask_hit, "trial_type"] = (
+        #         events_df["trial_type"].astype(str) + "_hit"
+        #     )
+        #     events_df.loc[mask_false, "trial_type"] = (
+        #         events_df["trial_type"].astype(str) + "_false"
+        #     )
+        #     # Ugly hack to ensure the time onset is formatted correctly for CMH scans
+        #     # The CMH parser dropped 8 seconds for the time onset already
+        #     # Need to remove + 8 in actual production
+        #     events_df["onset"] = events_df["onset"] + 8
         events_df = events_df[["onset", "duration", "trial_type"]]
 
         # Account for 4 seconds drops so first trial start time is shifted by 4 seconds
@@ -111,10 +111,16 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         for node in model_spec["Nodes"]:
             if node["Level"] == "Run":
                 x_inputs = node["Model"]["X"]
+                if not x_inputs:
+                    raise ValueError(
+                        f"Node '{node['Name']}' at Run level has no regressors (X). "
+                        "Cannot format events_df for GLM."
+                    )
+                # Filter events_df only if X exists
                 mask = events_df["trial_type"].str.contains("|".join(x_inputs))
                 events_df = events_df.loc[mask]
             else:
-                logger.warning(f"Run node is not identified in model specification")
+                raise ValueError(f"Run node is not identified in model specification")
 
         return events_df
 
