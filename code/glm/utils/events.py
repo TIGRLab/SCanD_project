@@ -45,7 +45,9 @@ def validate_events_tsv(events_df, required_cols=None):
 
     return True
 
-# utils/events_validation.py
+
+
+# This section is designed to work with CAMH dataset only!
 
 import pandas as pd
 
