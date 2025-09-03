@@ -128,7 +128,7 @@ Before starting a new study:
 
 ```sh
 cd $SCRATCH
-git clone https://github.com/TIGRLab/SCanD_project.git
+git clone -b trillium --single-branch https://github.com/TIGRLab/SCanD_project.git
 ```
 
 ### Run the software set-up script
