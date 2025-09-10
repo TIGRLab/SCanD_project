@@ -106,7 +106,7 @@ echo "No ENIGMA_extract outputs found."
 fi
 
 
-TRACTIFY_MULTI_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_MULTI_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_act-HSVS
 TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ];
@@ -129,7 +129,7 @@ fi
 
 
 
-TRACTIFY_SINGLE_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS
+TRACTIFY_SINGLE_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS
 TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ];
