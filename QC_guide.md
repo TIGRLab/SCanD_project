@@ -58,13 +58,11 @@ Large signal dropout in the EPI image but not in the T1, which should always res
    
 This is the final image output of the pipeline, so it has been motion corrected, denoised, bias corrected, etc. So, this is the first image you should be checking to see if anything went wrong with those steps, namely if it has been distorted too much, cut off, etc. In this case, the images clearly resemble the shape of a brain and there are little to no artifacts visible outside of the brain.
 
-
     ![image](figures/qsiprep_motion.png)
     
 2) Good framewise displacement graph:
 
 The y axis has a relatively low maximum value, indicating overall lower levels of motion. The two traces do not significantly diverge from each other, with generally similar peaks and troughs.
-
 
     ![image](figures/qsiprep_FD.png)
     
