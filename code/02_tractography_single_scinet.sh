@@ -38,7 +38,7 @@ export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 
 ## setting up the output folders
 # export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0 # use if version of fmriprep <=20.1
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography # use if version of fmriprep <=20.1
 
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
@@ -102,7 +102,7 @@ singularity exec \
     mkdir -p derivatives/tractographysingle/0.22.0/output/
     ls -al derivatives/tractographysingle/0.22.0/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
