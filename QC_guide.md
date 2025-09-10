@@ -58,31 +58,32 @@ Large signal dropout in the EPI image but not in the T1, which should always res
    
 This is the final image output of the pipeline, so it has been motion corrected, denoised, bias corrected, etc. So, this is the first image you should be checking to see if anything went wrong with those steps, namely if it has been distorted too much, cut off, etc. In this case, the images clearly resemble the shape of a brain and there are little to no artifacts visible outside of the brain.
 
-    ![image](figures/qsiprep_motion.png)
+   ![image](figures/qsiprep_motion.png)
     
 2) Good framewise displacement graph:
 
 The y axis has a relatively low maximum value, indicating overall lower levels of motion. The two traces do not significantly diverge from each other, with generally similar peaks and troughs.
 
-    ![image](figures/qsiprep_FD.png)
+   ![image](figures/qsiprep_FD.png)
     
 3) Good Q-space sampling:
    
 Compare the two images by rotating the images around and ensuring that they both generally make out the shape of a ball as seen below.
 
-    ![image](figures/qsiprep_qspace.png)
+   ![image](figures/qsiprep_qspace.png)
     
 4) Good brain mask:
    
 The brain mask creates a clear outline of the brain, with no significant deviations. Ensure to scroll through each of the sections, ensuring that the brain mask has correctly registered to the brain’s shape at each slice.
 
-    ![image](figures/qsiprep_brainmask.png)
+ ![image](figures/qsiprep_brainmask.png)
+    
     
 5) Good Tensor image:
     
 Each of the different directions as indicated by the different colors need to be localized to their own locations and discernible from each other. For example the sagittal section shows a clear separation between the green and red tracts.
 
-    ![image](figures/qsiprep_tensor.png)
+   ![image](figures/qsiprep_tensor.png)
     
 ## ciftify
 
