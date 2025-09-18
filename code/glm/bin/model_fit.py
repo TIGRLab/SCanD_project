@@ -181,6 +181,9 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         from nilearn.plotting import plot_contrast_matrix, plot_design_matrix
 
         all_effect_maps = []
+        all_variance_maps = []
+        all_dms = []
+
         for entry in self._iter_valid_runs():
             ses = entry["session"]
             task = entry["task"]
@@ -268,7 +271,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             dm.to_csv(fname_dm, index=False)
             logger.info(f"Saving the {fname_dm_fig}")
             plot_design_matrix(dm, output_file=fname_dm_fig)
-
+            all_dms.append(fname_dm)
             # Save model level images
             model_metadata = []
 
@@ -354,8 +357,38 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                         ),
                     )
                     logger.info(f"Saving Regressor output: {fname}")
+                    print(f"effect map before adding: {effect_maps}")
                     map_list.append(fname)
+                    print(f"effect map after adding: {effect_maps}")
                     maps[map_type].to_filename(fname)
             # accumulate effect_maps for this run/task
             all_effect_maps.extend(effect_maps)
-        return all_effect_maps
+            all_variance_maps.extend(variance_maps)
+
+        return all_effect_maps, all_variance_maps, all_dms
+
+# class SubjectFixedEffects(FirstLevelModelFit):
+#     def __init__(
+#             self, 
+#             bids_dir, 
+#             derivatives_dir, 
+#             participant_label, 
+#             task_label, 
+#             session, 
+#             space_label, 
+#             dense, 
+#             model_spec, 
+#             outputdir=None
+#     ):
+#         super().__init__(
+#             bids_dir, 
+#             derivatives_dir, 
+#             participant_label, 
+#             task_label, 
+#             session, 
+#             space_label, 
+#             dense, 
+            
+#             model_spec, 
+#             outputdir
+#         )
