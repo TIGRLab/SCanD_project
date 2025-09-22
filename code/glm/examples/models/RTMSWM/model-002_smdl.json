@@ -4,8 +4,7 @@
   "Description": "RTMSWM first BIDS model: a simple 2-condition block contrast.",
   "Input": {
     "task": [
-      "nbk",
-      "imob"
+      "nbk"
     ],
     "session": [],
     "space": "fsLR",
@@ -15,10 +14,6 @@
     {
       "Level": "Run",
       "Name": "run_level",
-      "GroupBy": [
-        "run",
-        "subject"
-      ],
       "Model": {
         "X": [
           "threebackblock",

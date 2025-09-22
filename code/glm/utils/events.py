@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def validate_events_tsv(events_df, required_cols=None):
     if required_cols is None:
         required_cols = ["onset", "duration", "trial_type"]
@@ -41,15 +42,17 @@ def validate_events_tsv(events_df, required_cols=None):
 
     # Report unique trial_types
     unique_trials = events_df["trial_type"].unique()
-    print(f"Validation passed. Found {len(unique_trials)} unique trial types: {unique_trials}")
+    print(
+        f"Validation passed. Found {len(unique_trials)} unique trial types: {unique_trials}"
+    )
 
     return True
-
 
 
 # This section is designed to work with CAMH dataset only!
 
 import pandas as pd
+
 
 def format_events(events_tsv: str, task: str):
     """
@@ -61,6 +64,7 @@ def format_events(events_tsv: str, task: str):
         return _format_nback(events_tsv)
     else:
         raise ValueError(f"Unsupported task: {task}")
+
 
 def _format_imob(event_file: str) -> pd.DataFrame:
     """
@@ -88,7 +92,9 @@ def _format_imob(event_file: str) -> pd.DataFrame:
 
     # Classify button presses based on stim_file
     circle_bp = button_press[button_press["stim_file"].str.contains("circles")].copy()
-    ea_bp = button_press[button_press["stim_file"].str.contains("NW|AR|TA|CT|ME|HR|DH")].copy()
+    ea_bp = button_press[
+        button_press["stim_file"].str.contains("NW|AR|TA|CT|ME|HR|DH")
+    ].copy()
 
     # Relabel trial types
     circle_bp["trial_type"] = "circle_button_press"
@@ -104,6 +110,7 @@ def _format_imob(event_file: str) -> pd.DataFrame:
     events["onset"] = events["onset"] - 8
 
     return events
+
 
 def _format_imob(event_file: str):
     event_df = pd.read_csv(event_file, delimiter="\t")
@@ -139,8 +146,11 @@ def _format_imob(event_file: str):
 
 
 def _format_nback(event_file: str):
+
     events_df = pd.read_csv(event_file, delimiter="\t")
-    events_df = events_df[["trial_type", "onset", "duration", "correct_response", "participant_response"]]
+    events_df = events_df[
+        ["trial_type", "onset", "duration", "correct_response", "participant_response"]
+    ]
 
     mask_hit = (events_df["correct_response"] == 1) & (
         events_df["participant_response"] == 1
@@ -152,9 +162,7 @@ def _format_nback(event_file: str):
         events_df["participant_response"] == 1
     )
 
-    events_df.loc[mask_hit, "trial_type"] = (
-        events_df["trial_type"].astype(str) + "_hit"
-    )
+    events_df.loc[mask_hit, "trial_type"] = events_df["trial_type"].astype(str) + "_hit"
     events_df.loc[mask_false, "trial_type"] = (
         events_df["trial_type"].astype(str) + "_false"
     )
