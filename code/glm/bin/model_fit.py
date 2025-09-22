@@ -6,13 +6,14 @@ from functools import partial
 from pathlib import Path
 from warnings import warn
 
-import nibabel as nib
+import nibabel as nb
 import numpy as np
 import pandas as pd
 
 from .bids_util import LoadBidsModel
 from .design_matrix import FirstLevelDesignMatrix
 from .run_match import BoldEventsMatch
+from .visualize import load_data, plot_dscalar
 
 # Configure module logger
 logger = logging.getLogger("bin.model_fit")
@@ -24,7 +25,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
 
     This class stores essential information about a BIDS dataset and its
     derivatives, including the task, participant, session, space, and density
-    parameters, and a BIDS Stat Model dictionary which are used to fit a GLM model on CIFTI files from fmriprep derivative.
+    parameters, and a BIDS Stat Model dictionary which are used to fit a run-level GLM for each session from fmriprep derivative.
 
     Attributes:
         bids_dir (str): Path to the root BIDS dataset.
@@ -47,7 +48,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         space_label,
         dense,
         model_spec,
-        outputdir=None
+        outputdir=None,
     ):
         BoldEventsMatch.__init__(
             self,
@@ -72,9 +73,8 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         )
         # self.specs = LoadBidsModel(model_spec)._ensure_model()
         self.outputdir = outputdir
+
     def dscalar_from_cifti(self, img, data, name):
-        import nibabel as nb
-        import numpy as np
 
         # Clear old CIFTI-2 extensions from NIfTI header and set intent
         nifti_header = img.nifti_header.copy()
@@ -182,7 +182,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
 
         all_effect_maps = []
         all_variance_maps = []
-        all_dms = []
 
         for entry in self._iter_valid_runs():
             ses = entry["session"]
@@ -201,7 +200,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             logger.info(f"{'='*40}")
             sub_run_imgs, _, _ = self.get_data_from_bids(run)
             new_cifti_img, _, _ = self.drop_non_steady_scans(sub_run_imgs)
-            is_cifti = isinstance(new_cifti_img, nib.Cifti2Image)
+            is_cifti = isinstance(new_cifti_img, nb.Cifti2Image)
             if is_cifti:
                 # Set up output directory
                 if self.outputdir is not None:
@@ -271,7 +270,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             dm.to_csv(fname_dm, index=False)
             logger.info(f"Saving the {fname_dm_fig}")
             plot_design_matrix(dm, output_file=fname_dm_fig)
-            all_dms.append(fname_dm)
+
             # Save model level images
             model_metadata = []
 
@@ -307,8 +306,8 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                         run=run,
                         contrast=name,
                         stat=contrast_test,
-                        ext="svg"
-                    )
+                        ext="svg",
+                    ),
                 )
                 # fname_contrast = os.path.join(
                 #     glm_dir,
@@ -357,38 +356,124 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                         ),
                     )
                     logger.info(f"Saving Regressor output: {fname}")
-                    print(f"effect map before adding: {effect_maps}")
                     map_list.append(fname)
-                    print(f"effect map after adding: {effect_maps}")
                     maps[map_type].to_filename(fname)
-            # accumulate effect_maps for this run/task
+            # accumulate effect_maps for run
             all_effect_maps.extend(effect_maps)
             all_variance_maps.extend(variance_maps)
 
-        return all_effect_maps, all_variance_maps, all_dms
+        return all_effect_maps, all_variance_maps
 
-# class SubjectFixedEffects(FirstLevelModelFit):
-#     def __init__(
-#             self, 
-#             bids_dir, 
-#             derivatives_dir, 
-#             participant_label, 
-#             task_label, 
-#             session, 
-#             space_label, 
-#             dense, 
-#             model_spec, 
-#             outputdir=None
-#     ):
-#         super().__init__(
-#             bids_dir, 
-#             derivatives_dir, 
-#             participant_label, 
-#             task_label, 
-#             session, 
-#             space_label, 
-#             dense, 
-            
-#             model_spec, 
-#             outputdir
-#         )
+    def compute_fix_effect(self, effect_maps, variance_maps):
+        from collections import defaultdict
+
+        from nilearn.glm.contrasts import _compute_fixed_effects_params
+
+        if self.outputdir is not None:
+            self.outdir = Path(self.outputdir)
+        else:
+            self.outdir = Path(self.derivatives_dir).parent
+
+        glm_dir = self.outdir / "glm" / f"sub-{self.participant_label}"
+        glm_dir.mkdir(exist_ok=True, parents=True)
+
+        # Prepare DataFrame
+        rows = []
+        for eff, var in zip(effect_maps, variance_maps):
+            m = re.search(r"ses-([a-zA-Z0-9]+).*contrast-([a-zA-Z0-9]+)", eff)
+            if m:
+                ses, contrast = m.groups()
+                rows.append(
+                    {
+                        "session": ses,
+                        "contrast": contrast,
+                        "effect_path": eff,
+                        "var_path": var,
+                    }
+                )
+            else:
+                # fallback if session is missing, assume single session
+                contrast = eff.split("contrast-")[1].split("_stat")[0]
+                rows.append(
+                    {
+                        "session": None,
+                        "contrast": contrast,
+                        "effect_path": eff,
+                        "var_path": var,
+                    }
+                )
+
+        df = pd.DataFrame(rows)
+
+        # Determine grouping columns
+        group_cols = (
+            ["session", "contrast"] if df["session"].notna().all() else ["contrast"]
+        )
+
+        for key, group in df.groupby(group_cols):
+            if isinstance(key, tuple) and len(key) > 1:
+                session, contrast = key
+            else:
+                session, contrast = None, key[0]
+
+            contrast_imgs = group["effect_path"].tolist()
+            variance_imgs = group["var_path"].tolist()
+            n_runs = len(contrast_imgs)
+            dofs = [100] * n_runs
+
+            if n_runs < 2:
+                logger.info(
+                    f"Skip computing the fix-effects for {contrast} session {session}: only {n_runs} run available"
+                )
+                continue
+
+            # Compute fixed effects
+            ffx_cont, ffx_var, ffx_t, ffx_z_score = _compute_fixed_effects_params(
+                np.squeeze([nb.load(f).get_fdata(dtype="f4") for f in contrast_imgs]),
+                np.squeeze([nb.load(f).get_fdata(dtype="f4") for f in variance_imgs]),
+                precision_weighted=False,
+                dofs=dofs,
+            )
+
+            # Use first run as template
+            img = nb.load(contrast_imgs[0])
+            maps = {
+                "fixed_effect_size": self.dscalar_from_cifti(
+                    img, ffx_cont, "fixed_effect_size"
+                ),
+                "fixed_effect_variance": self.dscalar_from_cifti(
+                    img, ffx_var, "fixed_effect_variance"
+                ),
+                "fixed_effect_stat": self.dscalar_from_cifti(
+                    img, ffx_t, "fixed_effect_stat"
+                ),
+                "fixed_effect_z_score": self.dscalar_from_cifti(
+                    img, ffx_z_score, "fixed_effect_z_score"
+                ),
+            }
+
+            # Save maps
+            task_label = (
+                self.task_label[0]
+                if isinstance(self.task_label, list)
+                else self.task_label
+            )
+            for map_type, cifti_img in maps.items():
+                stat_label = "fixed_t" if map_type == "fixed_stat" else map_type
+                fname = os.path.join(
+                    glm_dir,
+                    self._format_filename(
+                        participant_label=self.participant_label,
+                        ses=session,
+                        task_label=task_label,
+                        contrast=contrast,
+                        stat=stat_label,
+                        ext="dscalar.nii",
+                    ),
+                )
+                logger.info(f"Saving {map_type} to: {fname}")
+                maps[map_type].to_filename(fname)
+                logger.info(f"Plotting the computed fix-effect contrast: {map_type}")
+                outname = fname.replace("dscalar.nii", "png")
+                if isinstance(maps[map_type], nb.Cifti2Image):
+                    plot_dscalar(maps[map_type], colorbar=False, output_file=outname)

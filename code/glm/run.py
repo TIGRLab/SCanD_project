@@ -80,7 +80,7 @@ def get_value(field, field_name):
 def model_fit(
     bids_dir, fmriprep_dir, sub, task_label, session, space_label, dense, specs
 ):
-    
+
     # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
     model_instance = FirstLevelModelFit(
         bids_dir,
@@ -93,21 +93,19 @@ def model_fit(
         specs,
     )
 
-    beta_maps = model_instance.process_and_fit_valid_run()
-    if beta_maps:
+    effect_maps, variance_maps = model_instance.process_and_fit_valid_run()
+    if effect_maps:
         logger.info(f"Plotting beta maps...")
-        for map in beta_maps:
+        for map in effect_maps:
             outname = map.replace("dscalar.nii", "png")
             data = load_data(map)
             if isinstance(data, nb.Cifti2Image):
                 plot_dscalar(data, colorbar=False, output_file=outname)
-        logger.info(
-            f"GLM finished successfully for subject: {sub}"
-        )
+        logger.info(f"GLM finished successfully for subject: {sub}")
     else:
-        logger.warning(
-            f"No beta maps found for subject: {sub}"
-        )
+        logger.warning(f"No beta maps found for subject: {sub}")
+
+    return model_instance, effect_maps, variance_maps
 
 
 def main():
@@ -187,7 +185,7 @@ def main():
             else:
                 # Process as individual participant label
                 participant_label.append(label.removeprefix("sub-"))
-    
+
     specs = LoadBidsModel(model).specs
     task_label = get_value(specs["Input"]["task"], "task")
     space_label = get_value(specs["Input"]["space"], "space")
@@ -223,7 +221,7 @@ def main():
             sessions = [None]
 
         for session in sessions:
-            model_fit(
+            model_instance, effect_maps, variance_maps = model_fit(
                 bids_dir,
                 fmriprep_dir,
                 sub,
@@ -233,6 +231,12 @@ def main():
                 dense,
                 specs,
             )
+
+            logger.info("All the beta maps:\n%s", "\n".join(effect_maps))
+            logger.info("All the variance maps:\n%s", "\n".join(variance_maps))
+            logger.info("Compute fix-effect...")
+            model_instance.compute_fix_effect(effect_maps, variance_maps)
+
 
 if __name__ == "__main__":
     main()
