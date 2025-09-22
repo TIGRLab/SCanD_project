@@ -49,11 +49,8 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             space_label,
             dense,
         )
-        LoadBidsModel.__init__(
-            self,
-            model_spec
-        )
-        
+        LoadBidsModel.__init__(self, model_spec)
+
     def get_data_from_bids(self, run):
         """
         Collect the BIDS-formatted task events, CIFTI dtseries files, and associated confound
@@ -67,7 +64,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         sub_run_imgs = self._get_func_img(run)
         sub_run_events = self._get_events_files(run)
         sub_run_confounds = self._get_confounds_files(run)
-        
+
         if not sub_run_imgs or not sub_run_events or not sub_run_confounds:
             raise ValueError(
                 f"Expected 3 files for sub-{self.participant_label}, only getting {len(sub_run_imgs) + len(sub_run_events) + len(sub_run_confounds)}"
@@ -76,32 +73,10 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
     def _load_run_level_events(self, sub_run_events, model_spec):
         events_df = pd.read_csv(sub_run_events[0].path, delimiter="\t")
-
-        # Ugly hack to format the trial_type from the events.tsv for CMH scans
-        # Need further development for other tasks
-        # if model_spec["Input"]["task"][0] == "nbk":
-        #     # Extract hit, miss, and false alarm from n-back
-        #     mask_hit = (events_df["correct_response"] == 1) & (
-        #         events_df["participant_response"] == 1
-        #     )
-        #     mask_miss = (events_df["correct_response"] == 1) & (
-        #         events_df["participant_response"] == 0
-        #     )
-        #     mask_false = (events_df["correct_response"] == 0) & (
-        #         events_df["participant_response"] == 1
-        #     )
-
-        #     events_df.loc[mask_hit, "trial_type"] = (
-        #         events_df["trial_type"].astype(str) + "_hit"
-        #     )
-        #     events_df.loc[mask_false, "trial_type"] = (
-        #         events_df["trial_type"].astype(str) + "_false"
-        #     )
-        #     # Ugly hack to ensure the time onset is formatted correctly for CMH scans
-        #     # The CMH parser dropped 8 seconds for the time onset already
-        #     # Need to remove + 8 in actual production
-        #     events_df["onset"] = events_df["onset"] + 8
-        events_df = events_df[["onset", "duration", "trial_type"]]
+        if "modulation" in events_df.columns:
+            events_df = events_df[["onset", "duration", "trial_type", "modulation"]]
+        else:
+            events_df = events_df[["onset", "duration", "trial_type"]]
 
         # Account for 4 seconds drops so first trial start time is shifted by 4 seconds
         events_df["onset"] = events_df["onset"] - self.drop_duration
@@ -186,7 +161,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
             if len(confound_vars) == 0:
                 return None
-            
+
             return confound_vars
 
         except Exception as e:
@@ -203,14 +178,22 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         confounds_df = pd.read_csv(sub_run_confounds[0].path, delimiter="\t")
 
         # Try to get confounds from model specs first
-        confound_vars = self.extract_confounds_from_model_spec(model_spec, sub_run_confounds[0].path)
+        confound_vars = self.extract_confounds_from_model_spec(
+            model_spec, sub_run_confounds[0].path
+        )
 
         # Default exact column names. Need to update so allow users to include more variables
         if confound_vars is None:
             confound_vars = [
-                'white_matter', 'csf', 'framewise_displacement',
-                'trans_x', 'trans_y', 'trans_z',
-                'rot_x', 'rot_y', 'rot_z'
+                "white_matter",
+                "csf",
+                "framewise_displacement",
+                "trans_x",
+                "trans_y",
+                "trans_z",
+                "rot_x",
+                "rot_y",
+                "rot_z",
             ]
             logger.info(f"Using default confounds: {confound_vars}")
         else:
