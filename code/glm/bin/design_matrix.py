@@ -72,7 +72,13 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         return sub_run_imgs, sub_run_events, sub_run_confounds
 
     def _load_run_level_events(self, sub_run_events, model_spec):
-        events_df = pd.read_csv(sub_run_events[0].path, delimiter="\t")
+        try:
+            events_df = pd.read_csv(sub_run_events[0].path, delimiter="\t")
+        except pd.errors.ParserError:
+            logger.error(
+                "Error parsing with tab delimiter. It might not be tab-delimited."
+            )
+
         if "modulation" in events_df.columns:
             events_df = events_df[["onset", "duration", "trial_type", "modulation"]]
         else:

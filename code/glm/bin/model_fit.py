@@ -459,7 +459,9 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 else self.task_label
             )
             for map_type, cifti_img in maps.items():
-                stat_label = "fixed_t" if map_type == "fixed_stat" else map_type
+                stat_label = (
+                    "fixed_effect_t" if map_type == "fixed_effect_stat" else map_type
+                )
                 fname = os.path.join(
                     glm_dir,
                     self._format_filename(
