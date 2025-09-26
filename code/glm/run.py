@@ -80,7 +80,15 @@ def get_value(field, field_name):
 
 
 def model_fit(
-    bids_dir, fmriprep_dir, sub, task_label, session, space_label, dense, specs
+    bids_dir,
+    fmriprep_dir,
+    sub,
+    task_label,
+    session,
+    space_label,
+    dense,
+    specs,
+    output_dir,
 ):
 
     # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
@@ -93,6 +101,7 @@ def model_fit(
         space_label,
         dense,
         specs,
+        output_dir,
     )
 
     effect_maps, variance_maps = model_instance.process_and_fit_valid_run()
@@ -168,6 +177,7 @@ def main():
     args = parser.parse_args()
     bids_dir = args.bids_dir
     fmriprep_dir = args.fmriprep_dir
+    output_dir = args.output_dir
     model = args.model
 
     if not args.participant_label:
@@ -232,6 +242,7 @@ def main():
                 space_label,
                 dense,
                 specs,
+                output_dir,
             )
 
             logger.info("All the beta maps:\n%s", "\n".join(effect_maps))

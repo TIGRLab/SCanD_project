@@ -210,13 +210,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
 
                 glm_dir = self.outdir / "glm" / f"sub-{self.participant_label}"
                 glm_dir.mkdir(exist_ok=True, parents=True)
-                # fname_fmt = os.path.join(
-                #     glm_dir,
-                #     "sub-{}_ses-{}_task-{}_run-{}_contrast-{}_stat-{}_statmap.dscalar.nii",
-                # ).format
-                # modname_fmt = os.path.join(
-                #     glm_dir, "sub-{}_ses-{}_task-{}_run-{}_stat-{}_statmap.dscalar.nii"
-                # ).format
 
                 logger.info(
                     f"Fitting Model for subject: {self.participant_label} {ses_str}{task_str}{run_str}"
