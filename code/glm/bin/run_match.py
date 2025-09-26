@@ -17,9 +17,10 @@ from .bids_util import BIDSSelect
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
 class BoldEventsMatch(BIDSSelect):
     """
-    Ensures that for a given participant, session, and task, 
+    Ensures that for a given participant, session, and task,
     only runs with both BOLD images and events files are returned.
     """
 
@@ -32,7 +33,7 @@ class BoldEventsMatch(BIDSSelect):
         session,
         space_label,
         dense,
-        verbose=True
+        verbose=True,
     ):
         BIDSSelect.__init__(
             self,
@@ -51,7 +52,7 @@ class BoldEventsMatch(BIDSSelect):
         # Detailed string for debugging or logging
         params = "\n".join(f"  {key}: {value}" for key, value in self.__dict__.items())
         return f"Input Parameters(\n{params}\n)"
-    
+
     @staticmethod
     def get_task_run_id(file):
         """Return a tuple identifying a task/run combination.
@@ -64,8 +65,9 @@ class BoldEventsMatch(BIDSSelect):
         return (task, int(run))
 
     def _find_matching_runs(self, verbose=True):
-        """Return a list of runs that have both BOLD images and events files."""
+        """Return a list of runs that have both BOLD images and events files for a single session."""
 
+        # Work only for one session
         session_label = f"{self.session}" if self.session else None
         sub_imgs = self._get_func_img()
         sub_events = self._get_events_files()
@@ -98,9 +100,9 @@ class BoldEventsMatch(BIDSSelect):
                         task, run = pair
                         message.append(f"{task} | run-{run} ")
                     else:
-                        task, = pair
+                        (task,) = pair
                         message.append(task)
-                
+
                     logger.warning(
                         f"{self.participant_label} missing BOLD files for: "
                         f"{', '.join(message)} {session_str}"
@@ -112,7 +114,7 @@ class BoldEventsMatch(BIDSSelect):
                         task, run = pair
                         message.append(f"{task} | run-{run} ")
                     else:
-                        task, = pair
+                        (task,) = pair
                         message.append(task)
                 logger.warning(
                     f"{self.participant_label} missing events files for: "
@@ -125,11 +127,7 @@ class BoldEventsMatch(BIDSSelect):
             if len(pair) == 2:
                 task, run = pair
             else:
-                task, = pair
+                (task,) = pair
                 run = None
-            result.append({
-                "session": self.session, 
-                "task": task,
-                "run": run
-                })
+            result.append({"session": self.session, "task": task, "run": run})
         return result
