@@ -3,6 +3,7 @@
 
 import logging
 import math
+import warnings
 from functools import partial
 
 import nibabel as nib
@@ -74,7 +75,6 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
     def _load_run_level_events(self, sub_run_events, model_spec):
         try:
             events_df = pd.read_csv(sub_run_events[0].path, sep=None, engine="python")
-            print(events_df)
         except pd.errors.ParserErro as e:
             raise ValueError(f"Could not parse {sub_run_events[0].path}: {e}")
 
@@ -96,7 +96,18 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
                         f"Node '{node['Name']}' at Run level has no regressors (X). "
                         "Cannot format events_df for GLM."
                     )
-                # Filter events_df only if X exists
+                # Check which regressors are missing
+                missing = [
+                    x
+                    for x in x_inputs
+                    if not events_df["trial_type"].str.contains(x).any()
+                ]
+                if missing:
+                    logger.warning(
+                        f"Node '{node['Name']}': the following regressors are in the model "
+                        f"spec but not present in events_df: {missing}",
+                    )
+                # Keep only rows that match regressors that do exist
                 mask = events_df["trial_type"].str.contains("|".join(x_inputs))
                 events_df = events_df.loc[mask]
             else:
@@ -128,10 +139,21 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             cifti_data = cifti_img.get_fdata(dtype="f4")
             t_r = sub_run_imgs[0].get_metadata()["RepetitionTime"]
             non_steady_scans = math.ceil(self.drop_duration / t_r)
+
             # drop non steady scans from the data
             new_cifti_data = cifti_data[non_steady_scans:, :]
-            new_cifti_img = nib.Cifti2Image(new_cifti_data, header=cifti_img.header)
             n_scans = new_cifti_data.shape[0]
+
+            # Create new CIFTI image with updated header
+            origin_cifti_header = cifti_img.header
+            # Create new axes 0 to match new mat size and store orig axes 1
+            ax_0 = nib.cifti2.SeriesAxis(
+                start=0, step=t_r, size=new_cifti_data.shape[0]
+            )
+            ax_1 = origin_cifti_header.get_axis(1)
+            # Create new header and cifti object
+            new_header = nib.cifti2.Cifti2Header.from_axes((ax_0, ax_1))
+            new_cifti_img = nib.cifti2.Cifti2Image(new_cifti_data, header=new_header)
             # Calculate the timing of acquisition of the scans in seconds
             frame_times = np.arange(n_scans) * t_r
         else:
