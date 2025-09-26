@@ -41,7 +41,7 @@ def _has_session(input_sessions, layout, participant_label):
         - If sessions found, return the list.
     """
 
-    if input_sessions not in (None, "", []):
+    if input_sessions not in (None, "", [], [""]):
         if isinstance(input_sessions, str):
             return [input_sessions]
         elif isinstance(input_sessions, list):
@@ -70,6 +70,8 @@ def get_value(field, field_name):
             )
         return field[:]
     elif isinstance(field, str):
+        if field_name == "session":
+            return [field]
         return field
     else:
         raise TypeError(
@@ -191,7 +193,7 @@ def main():
     space_label = get_value(specs["Input"]["space"], "space")
     dense = get_value(specs["Input"]["dense"], "dense")
     # Get sessions from specs
-    input_sessions = specs["Input"].get("session")
+    input_sessions = get_value(specs["Input"].get("session"), "session")
 
     logger.info("Analysis parameters:")
     logger.info(f"  BIDS directory: {bids_dir}")
@@ -204,7 +206,7 @@ def main():
     logger.info(f"  Model specifications: {json.dumps(specs, indent=2)}")
 
     for sub in participant_label:
-        if input_sessions:
+        if input_sessions and input_sessions != [""]:
             sessions = input_sessions
         else:
             logger.info("Session not provided. Checking for available sessions.")
