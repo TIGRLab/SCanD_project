@@ -85,7 +85,9 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
         # Account for 4 seconds drops so first trial start time is shifted by 4 seconds
         events_df["onset"] = events_df["onset"] - self.drop_duration
-        logger.info(f"Trial types: {events_df['trial_type'].unique()}")
+        logger.info(
+            f"Found: {', '.join(events_df['trial_type'].unique())} from BIDS task events "
+        )
 
         # Get the Model X inputs from root/Run node
         for node in model_spec["Nodes"]:
@@ -96,20 +98,21 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
                         f"Node '{node['Name']}' at Run level has no regressors (X). "
                         "Cannot format events_df for GLM."
                     )
-                # Check which regressors are missing
-                missing = [
-                    x
-                    for x in x_inputs
-                    if not events_df["trial_type"].str.contains(x).any()
-                ]
+
+                # Trial types in events_df that are not in model spec
+                trial_types_in_df = set(events_df["trial_type"].unique())
+                missing = trial_types_in_df - set(x_inputs)
                 if missing:
                     logger.warning(
-                        f"Node '{node['Name']}': the following regressors are in the model "
-                        f"spec but not present in events_df: {missing}",
+                        f"Node '{node['Name']}': {', '.join(missing)} trial_type not provided in BIDS Stat Model"
                     )
-                # Keep only rows that match regressors that do exist
-                mask = events_df["trial_type"].str.contains("|".join(x_inputs))
+                mask = events_df["trial_type"].isin(x_inputs)
                 events_df = events_df.loc[mask]
+                if events_df.empty:
+                    raise ValueError(
+                        f"No condition of interest was specifed\n"
+                        f"Provide one of the trial_type: {', '.join(trial_types_in_df)}"
+                    )
             else:
                 raise ValueError(f"Run node is not identified in model specification")
 
