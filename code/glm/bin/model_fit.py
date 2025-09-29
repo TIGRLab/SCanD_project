@@ -35,7 +35,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         space_label (str): The anatomical or functional space of the images (e.g., "MNI152NLin2009cAsym", "fsLR").
         session (str): Session identifier (e.g., "01").
         dense (str): Numbers of vertices on CIFTI surfaces (e.g., 91k).
-        specs (dict): A dictionary represent BIDS Stat Model
+        model_spec (str): Path to a BIDS Stat Model json
     """
 
     def __init__(
