@@ -33,45 +33,41 @@ def _path_exists(path, parser):
 
 def _has_session(input_sessions, layout, participant_label):
     """
-    Check sessions for participant.
-    - If input_sessions is provided (string or list), return as a list
-    - If input_sessions is None or empty:
-        - Check BIDS layout for sessions.
-        - If no sessions found, return None.
-        - If sessions found, return the list.
+    Return sessions for a participant, querying BIDS layout only if input_sessions is empty.
+    Assumes input_sessions was already normalized with get_value (so empty strings are removed).
     """
-
-    if input_sessions not in (None, "", [], [""]):
-        if isinstance(input_sessions, str):
-            return [input_sessions]
-        elif isinstance(input_sessions, list):
-            return input_sessions
-        else:
-            raise TypeError(
-                f"'session' field must be string, list, or None, got: {type(input_sessions)}"
-            )
-
+    if input_sessions:  # non-empty list
+        return input_sessions
+    # input_sessions is empty → query BIDS layout
+    bids_sessions = layout.get_sessions(subject=participant_label)
+    if bids_sessions:
+        return bids_sessions
     else:
-        bids_sessions = layout.get_sessions(subject=participant_label)
-        if bids_sessions:
-            return bids_sessions
-        else:
-            return None
+        return None
 
 
 def get_value(field, field_name):
     """
     Ensures the field from BIDS stat model has atleast one value
     """
+
+    if field is None:
+        if field_name == "session":
+            return None
+        else:
+            raise ValueError(f" The {field_name} field cannot be None")
+
     if isinstance(field, list):
-        if len(field) < 1:
+        if field_name == "session":
+            return [s for s in field if s != ""]
+        elif len(field) < 1:
             raise ValueError(
                 f"The {field_name} field must contain one value. Found: {len(field)} values"
             )
         return field[:]
     elif isinstance(field, str):
         if field_name == "session":
-            return [field]
+            return [field] if field != "" else []
         return field
     else:
         raise TypeError(
@@ -216,7 +212,7 @@ def main():
     logger.info(f"  Model specifications: {json.dumps(specs, indent=2)}")
 
     for sub in participant_label:
-        if input_sessions and input_sessions != [""]:
+        if input_sessions:
             sessions = input_sessions
         else:
             logger.info("Session not provided. Checking for available sessions.")
