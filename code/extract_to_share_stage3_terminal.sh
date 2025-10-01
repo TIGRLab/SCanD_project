@@ -8,7 +8,7 @@ module load apptainer/1.3.5
 
 echo "Running qsiprep_metrics.csv"
 
-## Generate qsiprep motion metrics and extract NODDI indices
+## Generate qsiprep motion metrics and magetbrain
 module load NiaEnv/2019b python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
