@@ -94,7 +94,7 @@ Currently this repo is going to be set up for running things on SciNet Fir clust
 |^ |  01f	|  [Run magetbrain-init](#Running-magetbrain-init) 	|   1 hours on slurm	|
 |^ |  01g	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
-|^ |   02b	|  [Run freesurfer group analysis](#Running-freesurfer-group-analysis) 	|  6 hour of slurm 	|
+|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#Running-freesurfer-atlas-parcellate-analysis) 	|  6 hour of slurm 	|
 |^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
 |^ |   02d	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
 |^ |   02e  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
@@ -499,7 +499,7 @@ git pull
 source ./code/03_amico_VNC.sh
 ```
 
-## Running freesurfer group analysis
+## Running freesurfer atlas parcellate analysis
 
 
 ```sh
@@ -515,10 +515,10 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/02_freesurfer_group_scinet.sh
+sbatch --array=0-${array_job_length} code/02_freesurfer_atlas_parcellate_scinet.sh
 ```
 
-If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer group processing:
+If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
 
 ```sh
 ## go to the repo and pull new changes
