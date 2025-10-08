@@ -103,7 +103,7 @@ singularity exec \
 
     for subject in $SUBJECTS; do
       nipoppy track \
-        --pipeline qsirecon1 \
+        --pipeline qsireconfsl \
         --pipeline-version 0.22.0 \
         --participant-id sub-$subject
     done
