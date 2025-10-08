@@ -96,10 +96,10 @@ singularity exec \
     BASEDIR="$SCRATCH/SCanD_project"
     cd "${ROOT_DIR}/Neurobagel"
     
-    mkdir -p derivatives/qsirecon1/0.22.0/output/
-    ls -al derivatives/qsirecon1/0.22.0/output/
+    mkdir -p derivatives/qsireconfsl/0.22.0/output/
+    ls -al derivatives/qsireconfsl/0.22.0/output/
 
-    ln -s "${ROOT_DIR}/data/local/qsirecon-FSL/" derivatives/qsirecon1/0.22.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/qsirecon-FSL/" derivatives/qsireconfsl/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
