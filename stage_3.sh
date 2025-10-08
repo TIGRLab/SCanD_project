@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (xcp-d, xcp_noGSR, magetbrain_vote, qsirecon_step2):
+## stage 3 (xcp-d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit):
 
 submit_array_job() {
     local script=$1
@@ -37,7 +37,7 @@ submit_magetbrain_job() {
 # Prompt user for each pipeline
 run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
 run_pipeline "xcp-noGSR" "code/03_xcp_noGSR_scinet.sh" 1
-run_pipeline "qsirecon_step2" "./code/03_qsirecon_step2_scinet.sh" 1
+run_pipeline "qsirecon_dtifit" "./code/03_qsirecon_dtifit_scinet.sh" 1
 
 
 read -p "Do you want to run the MAGeTbrain_vote pipeline? (yes/no): " run_magetbrain
