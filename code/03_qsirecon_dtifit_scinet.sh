@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=qsirecon2
+#SBATCH --job-name=qsirecon_dtifit
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
