@@ -127,14 +127,14 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/qsirecon1/0.22.0/output/
-    ls -al derivatives/qsirecon1/0.22.0/output/
+    mkdir -p derivatives/qsireconfsl/0.22.0/output/
+    ls -al derivatives/qsireconfsl/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsirecon1/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsireconfsl/0.22.0/output/ || true
 
    
       nipoppy track \
-        --pipeline qsirecon1 \
+        --pipeline qsireconfsl \
         --pipeline-version 0.22.0 \
   '
 
@@ -215,13 +215,13 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/freesurfergroup/7.4.1/output/
-    ls -al derivatives/freesurfergroup/7.4.1/output/
+    mkdir -p derivatives/freesurferparcellate/7.4.1/output/
+    ls -al derivatives/freesurferparcellate/7.4.1/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
 
       nipoppy track \
-        --pipeline freesurfergroup \
+        --pipeline freesurferparcellate \
         --pipeline-version 7.4.1 \
         
   '
@@ -330,16 +330,16 @@ singularity exec \
 
     	cd "$BASEDIR/Neurobagel"
     
-    	mkdir -p derivatives/qsirecon2/0.22.0/output/
-    	ls -al derivatives/qsirecon2/0.22.0/output/
+    	mkdir -p derivatives/qsirecondtifit/0.22.0/output/
+    	ls -al derivatives/qsirecondtifit/0.22.0/output/
 
-    	ln -s "$BASEDIR/data/local/dtifit/" derivatives/qsirecon2/0.22.0/output/ || true
-        ls -al derivatives/qsirecon2/0.22.0/output/
-    	ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/qsirecon2/0.22.0/output/ || true
+    	ln -s "$BASEDIR/data/local/dtifit/" derivatives/qsirecondtifit/0.22.0/output/ || true
+        ls -al derivatives/qsirecondtifit/0.22.0/output/
+    	ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/qsirecondtifit/0.22.0/output/ || true
 
     	
       	nipoppy track \
-        	--pipeline qsirecon2 \
+        	--pipeline qsirecondtifit \
         	--pipeline-version 0.22.0 \
         	
   	'
