@@ -137,7 +137,7 @@ singularity exec \
       if [ $subject_exitcode -eq 0 ]; then
           echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    0" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
       else
-          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    freesurfer_group failed" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    freesurfer_parcellate failed" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
       fi
 
     done
@@ -151,14 +151,14 @@ SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECTS_BATCH}*.lon
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     # No longitudinal dirs → use notlong tracker_config
-    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/arisvoin/shared/freesurfer_notlong/freesurfergroup/tracker_config.json \
-          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    rm -rf Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/tracker_config.json
+    cp -r /scratch/arisvoin/shared/freesurfer_notlong/freesurferparcellate/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/
 else
     # Longitudinal dirs found → use long tracker_config
-    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/arisvoin/shared/nipoppy/freesurfergroup-7.4.1/tracker_config.json \
-          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    rm -rf Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/tracker_config.json
+    cp -r /scratch/arisvoin/shared/nipoppy/freesurferparcellate-7.4.1/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/
 fi
 
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
@@ -172,14 +172,14 @@ singularity exec \
     BASEDIR="$SCRATCH/SCanD_project"
     cd "${ROOT_DIR}/Neurobagel"
     
-    mkdir -p derivatives/freesurfergroup/7.4.1/output/
-    ls -al derivatives/freesurfergroup/7.4.1/output/
+    mkdir -p derivatives/freesurferparcellate/7.4.1/output/
+    ls -al derivatives/freesurferparcellate/7.4.1/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
 
     for subject in $SUBJECTS_BATCH; do
       nipoppy track \
-        --pipeline freesurfergroup \
+        --pipeline freesurferparcellate \
         --pipeline-version 7.4.1 \
         --participant-id $subject
     done
