@@ -255,6 +255,7 @@ git pull         #in case you need to pull new code
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 module load python
+pip install rich
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
