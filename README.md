@@ -254,6 +254,7 @@ git pull         #in case you need to pull new code
 ## Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
+module load python
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
