@@ -51,7 +51,7 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
         if not os.path.isfile(image_i):
             # Fallback to the second image path
             image_i = os.path.join(noddi_dir, subject, session, "dwi", 
-                                    subject + "_" + session + "_acq-multishelldir92_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
+                                    subject + "_" + session + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
         image_o = os.path.join(outputdir, subject + "_" + session, NODDItag, 'origdata', 
                                 subject + "_" + session + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
@@ -67,7 +67,7 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
         if not os.path.isfile(image_i):
             # Fallback to the second image path
             image_i = os.path.join(noddi_dir, subject, "dwi", 
-                                    subject + "_acq-multishelldir92_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
+                                    subject + "_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
         image_o = os.path.join(outputdir, subject, NODDItag, 'origdata', 
                                 subject + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
@@ -94,7 +94,7 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
         temp = os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
 
         if not os.path.isfile(temp):
-            FA_stem = "{}_{}_acq-multishelldir92_run-1_space-T1w_desc-preproc_FA".format(subject, session)
+            FA_stem = "{}_{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject, session)
          
     else:
         O_dir = os.path.join(outputdir, subject)
@@ -104,7 +104,7 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
         temp = os.path.join(FA_dir, FA_stem + '_mask.nii.gz')
 
         if not os.path.isfile(temp):
-            FA_stem = "{}_acq-multishelldir92_run-1_space-T1w_desc-preproc_FA".format(subject)
+            FA_stem = "{}_acq-singleshelldir60b1000_run-1_space-T1w_desc-preproc_FA".format(subject)
 	
     masked =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '.nii.gz')
     to_target = os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '_to_target.nii.gz')
