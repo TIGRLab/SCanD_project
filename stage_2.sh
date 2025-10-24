@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_step1, amico_noddi, tractography):
+# Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 
 #!/bin/bash
 
@@ -32,7 +32,7 @@ run_pipeline() {
 # Prompt user for each pipeline in stage 2
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
 run_pipeline "freesurfer_parcellate" "./code/02_freesurfer_atlas_parcellate_scinet.sh" 1
-run_pipeline "qsirecon_step1" "./code/02_qsirecon_step1_scinet.sh" 1
+run_pipeline "qsirecon_step1" "./code/02_qsirecon_FSL_scinet.sh" 1
 run_pipeline "amico_noddi" "./code/02_amico_noddi_scinet.sh" 1
 run_pipeline "tractography_multi shell" "./code/02_tractography_multi_scinet.sh" 1
 run_pipeline "tractography_single shell" "./code/02_tractography_single_scinet.sh" 1
