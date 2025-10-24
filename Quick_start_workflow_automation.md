@@ -23,7 +23,7 @@ source ./stage_1.sh
 ```
 
 
-## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon2, amico_noddi, tractography):
+## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsireconfsl, amico_noddi, tractography):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -36,7 +36,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon2):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecondtifit):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
