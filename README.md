@@ -38,7 +38,7 @@ ${BASEDIR}
 │   │   ├── enigmaDTI            # enigmadti
 │   │   ├── qsiprep            
 │   │   ├── qsirecon             # qsirecon derivatives
-│   │   └── qsirecon-FSL         # step1 qsirecon
+│   │   └── qsirecon-FSL         # qsirecon FSL
 │   |
 │   └── share                    # folder with a smaller subset ready to share
 │       ├── amico_noddi          # contains only qc images and metadata
@@ -97,14 +97,14 @@ Currently this repo is going to be set up for running things on SciNet Trillium 
 |stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
 |^ |   02b	|  [Run freesurfer atlas parcellate analysis](#Running-freesurfer-atlas-parcellate-analysis) 	|  6 hour of slurm 	|
 |^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02d	|  [Run qsirecon step1](#Running-qsirecon-step1) 	|  20 min of slurm 	|
+|^ |   02d	|  [Run qsirecon FSL](#Running-qsirecon-FSL) 	|  20 min of slurm 	|
 |^ |   02e  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
 |^ |   02f	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
 |^ |   02g	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
 |^ |   02h  |  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
-|^ |   03c |  [Run qsirecon step2](#Running-qsirecon-step2) 	|  1 hour of slurm 	|
+|^ |   03c |  [Run qsirecon dtifit](#Running-qsirecon-dtifit) 	|  1 hour of slurm 	|
 |^ |   03d	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
 |^ |   03e	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
@@ -481,7 +481,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
 ```
 
 
-## Running qsirecon step1
+## Running qsirecon FSL
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -498,7 +498,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_step1_scinet.sh
+sbatch --array=0-${array_job_length} ./code/02_qsirecon_FSL_scinet.sh
 ```
 ## Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
@@ -763,7 +763,7 @@ git pull
 source ./code/ENIGMA_ExtractCortical.sh
 ```
 
-## Running qsirecon step2
+## Running qsirecon dtifit
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -780,7 +780,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_qsirecon_step2_scinet.sh
+sbatch --array=0-${array_job_length} ./code/03_qsirecon_dtifit_scinet.sh
 ```
 
 ## Running enigma-dti
