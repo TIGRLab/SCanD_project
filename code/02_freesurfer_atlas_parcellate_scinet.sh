@@ -137,7 +137,7 @@ singularity exec \
       if [ $subject_exitcode -eq 0 ]; then
           echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    0" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
       else
-          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    freesurfer_group failed" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
+          echo "$SUBJECT   ${SLURM_ARRAY_TASK_ID}    freesurfer_parcellate failed" >> ${LOGS_DIR}/${SLURM_JOB_NAME}.${SLURM_ARRAY_JOB_ID}.tsv
       fi
 
     done
