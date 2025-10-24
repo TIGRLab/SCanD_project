@@ -151,14 +151,14 @@ SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECTS_BATCH}*.lon
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     # No longitudinal dirs → use notlong tracker_config
-    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/arisvoin/mlepage/freesurfer_notlong/freesurfergroup/tracker_config.json \
-          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    rm -rf Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/tracker_config.json
+    cp -r /scratch/arisvoin/mlepage/freesurfer_notlong/freesurferparcellate/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/
 else
     # Longitudinal dirs found → use long tracker_config
-    rm -rf Neurobagel/pipelines/processing/freesurfergroup-7.4.1/tracker_config.json
-    cp -r /scratch/arisvoin/mlepage/nipoppy/freesurfergroup-7.4.1/tracker_config.json \
-          Neurobagel/pipelines/processing/freesurfergroup-7.4.1/
+    rm -rf Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/tracker_config.json
+    cp -r /scratch/arisvoin/mlepage/nipoppy/freesurferparcellate-7.4.1/tracker_config.json \
+          Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/
 fi
 
 singularity exec \
@@ -170,14 +170,14 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/freesurfergroup/7.4.1/output/
-    ls -al derivatives/freesurfergroup/7.4.1/output/
+    mkdir -p derivatives/freesurferparcellate/7.4.1/output/
+    ls -al derivatives/freesurferparcellate/7.4.1/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurfergroup/7.4.1/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
 
     for subject in $SUBJECTS_BATCH; do
       nipoppy track \
-        --pipeline freesurfergroup \
+        --pipeline freesurferparcellate \
         --pipeline-version 7.4.1 \
         --participant-id $subject
     done
