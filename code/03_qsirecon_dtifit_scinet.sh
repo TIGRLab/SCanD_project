@@ -170,12 +170,12 @@ for subj in $SUBJECTS; do
         set -euo pipefail
         cd "${ROOT_DIR}/Neurobagel"
 
-        mkdir -p derivatives/qsirecon2/0.22.0/output/
-        ln -s "${ROOT_DIR}/data/local/dtifit/" derivatives/qsirecon2/0.22.0/output/ || true
-        ln -s "${ROOT_DIR}/data/local/enigmaDTI/" derivatives/qsirecon2/0.22.0/output/ || true
+        mkdir -p derivatives/qsirecondtifit/0.22.0/output/
+        ln -s "${ROOT_DIR}/data/local/dtifit/" derivatives/qsirecondtifit/0.22.0/output/ || true
+        ln -s "${ROOT_DIR}/data/local/enigmaDTI/" derivatives/qsirecondtifit/0.22.0/output/ || true
 
         nipoppy track \
-          --pipeline qsirecon2 \
+          --pipeline qsirecondtifit \
           --pipeline-version 0.22.0 \
           --participant-id sub-'$subj'
         '
