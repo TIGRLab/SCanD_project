@@ -95,14 +95,14 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/qsirecon1/0.22.0/output/
-    ls -al derivatives/qsirecon1/0.22.0/output/
+    mkdir -p derivatives/qsireconfsl/0.22.0/output/
+    ls -al derivatives/qsireconfsl/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsirecon1/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsireconfsl/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
-        --pipeline qsirecon1 \
+        --pipeline qsireconfsl \
         --pipeline-version 0.22.0 \
         --participant-id sub-$subject
     done
