@@ -254,7 +254,7 @@ singularity exec \
     mkdir -p derivatives/tractographymulti/0.22.0/output/
     ls -al derivatives/tractographymulti/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_act-HSVS/" derivatives/tractographymulti/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_act-HSVS/" derivatives/tractographymulti/0.22.0/output/ || true
 
       nipoppy track \
         --pipeline tractographymulti \
@@ -273,7 +273,7 @@ singularity exec \
     mkdir -p derivatives/tractographysingle/0.22.0/output/
     ls -al derivatives/tractographysingle/0.22.0/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
 
       nipoppy track \
         --pipeline tractographysingle \
