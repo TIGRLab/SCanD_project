@@ -43,6 +43,22 @@ else
     echo -e "${YELLOW}WARNING: ${NC} No bold.json files found in ${ROOT_DIR}/data/local/bids/"
 fi
 
+## check for multiple T1w files for freesurfer
+find "${ROOT_DIR}/data/local/bids"/sub-* -type d -name "anat" | while read -r anat_dir; do
+    t1_files=("$anat_dir"/*T1w*.nii.gz)
+    t1_count=${#t1_files[@]}
+
+    if [ "$t1_count" -gt 1 ]; then
+        echo "⚠️ WARNING: $t1_count T1w files found in $anat_dir"
+        printf '   Files:\n'
+        for f in "${t1_files[@]}"; do
+            echo "     - $(basename "$f")"
+        done
+        echo "   ➡️ Consider averaging these T1w images or removing extra ones before running FreeSurfer longitudinal."
+        echo
+    fi
+done
+
 # === nipoppy tracker init ===
 module load apptainer/1.3.5
 export APPTAINERENV_ROOT_DIR=$ROOT_DIR
