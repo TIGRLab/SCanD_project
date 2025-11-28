@@ -9,9 +9,11 @@ Utilities to handle BIDS inputs
 import json
 import logging
 import os
+from pathlib import Path
 from warnings import warn
 
 from bids import BIDSLayout, BIDSLayoutIndexer
+from bids.layout import BIDSFile
 
 # Setup logging configuration
 logging.basicConfig(
@@ -37,12 +39,16 @@ class LoadBidsModel:
             else:
                 # raise error if it's a path but does not exist
                 if model.endswith(".json"):
-                    raise FileNotFoundError(f"Model Specifications file not found: {model}")
+                    raise FileNotFoundError(
+                        f"Model Specifications file not found: {model}"
+                    )
                 try:
                     model = json.loads(model)
                     self._validate_input_field(model)
                 except json.JSONDecodeError:
-                    raise ValueError("Provided model_spec is neither a valid path nor valid JSON string.")
+                    raise ValueError(
+                        "Provided model_spec is neither a valid path nor valid JSON string."
+                    )
 
         return model
 
@@ -52,6 +58,7 @@ class LoadBidsModel:
         missing = [field for field in required_fields if field not in input_field]
         if missing:
             raise ValueError(f"Missing required Input fields: {missing}")
+
 
 class BIDSSelect:
 
@@ -74,11 +81,10 @@ class BIDSSelect:
         self.dense = dense
         # self.indexer = BIDSLayoutIndexer(ignore=[f'sub-(?!{self.participant_label}).*'])
         self.layout = BIDSLayout(
-            self.bids_dir, 
-            derivatives=self.derivatives_dir, 
+            self.bids_dir,
+            derivatives=self.derivatives_dir,
             validate=False,
-            ignore=[f"(?!sub-{participant_label}).*"]
-
+            ignore=[f"(?!sub-{participant_label}).*"],
         )
 
         if self.participant_label not in self.layout.get_subject():
@@ -89,29 +95,43 @@ class BIDSSelect:
     def _get_func_img(self, run=None):
 
         query = dict(
-        subject=self.participant_label,
-        session=self.session,
-        task=self.task_label,
-        space="fsLR",
-        den="91k",
-        extension="dtseries.nii",
-        suffix="bold",
+            subject=self.participant_label,
+            session=self.session,
+            task=self.task_label,
+            space="fsLR",
+            den="91k",
+            extension="dtseries.nii",
+            suffix="bold",
+            desc=None,
         )
-
-        if run is not None:   # only add run if specified
+        if run is not None:  # only add run if specified
             query["run"] = run
         return self.layout.get(**query)
-    
-        # sub_imgs = self.layout.get(
-        #     extension="dtseries.nii",
-        #     suffix="bold",
-        #     task=self.task_label,
+
+    def _get_smoothed_func_img(self, run=None):
+        raw_file = self._get_func_img(run)[0].path
+        smoothed_file = Path(raw_file).with_name(
+            Path(raw_file).name.replace(
+                "_bold.dtseries.nii", "_desc-Smoothed_bold.dtseries.nii"
+            )
+        )
+        if not smoothed_file.exists():
+            raise FileNotFoundError(f"Missing Smoothed dtseries")
+        return smoothed_file
+        # query = dict(
         #     subject=self.participant_label,
         #     session=self.session,
+        #     task=self.task_label,
         #     space="fsLR",
         #     den="91k",
+        #     extension="dtseries.nii",
+        #     suffix="bold",
+        #     desc="Smoothed",
         # )
-        # return sub_imgs
+
+        # if run is not None:  # only add run if specified
+        #     query["run"] = run
+        # return self.layout.get(**query)
 
     def _get_events_files(self, run=None):
         query = dict(
@@ -122,20 +142,11 @@ class BIDSSelect:
             scope="raw",
             extension="tsv",
         )
-        # sub_events_files = self.layout.get(
-        #     extension="tsv",
-        #     task=self.task_label,
-        #     subject=self.participant_label,
-        #     session=self.session,
-        #     suffix="events",
-        #     scope="raw",
-        # )
-        # return sub_events_files
 
-        if run is not None:   # only add run if specified
+        if run is not None:  # only add run if specified
             query["run"] = run
         return self.layout.get(**query)
-    
+
     def _get_confounds_files(self, run=None):
         query = dict(
             subject=self.participant_label,

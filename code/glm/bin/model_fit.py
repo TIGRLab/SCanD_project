@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from .bids_util import LoadBidsModel
+from .cifti_smooth import get_cifti_surf, wb_smooth
 from .design_matrix import FirstLevelDesignMatrix
 from .run_match import BoldEventsMatch
 from .visualize import load_data, plot_dscalar
@@ -42,6 +43,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         self,
         bids_dir,
         derivatives_dir,
+        cifti_dir,
         participant_label,
         task_label,
         session,
@@ -71,8 +73,8 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             dense,
             model_spec,
         )
-        # self.specs = LoadBidsModel(model_spec)._ensure_model()
         self.outputdir = outputdir
+        self.cifti_dir = cifti_dir
 
     def dscalar_from_cifti(self, img, data, name):
 
@@ -171,7 +173,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         if contrast:
             parts.append(f"contrast-{contrast}")
         if stat:
-            parts.append(f"stat-{stat}")
+            parts.append(f"stat-{stat}_statmap")
         fname = "_".join(parts)
         return f"{prefix}{fname}{suffix}.{ext}"
 
@@ -182,7 +184,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
 
         all_effect_maps = []
         all_variance_maps = []
-
+        all_t_maps = []
         for entry in self._iter_valid_runs():
             ses = entry["session"]
             task = entry["task"]
@@ -191,24 +193,39 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             ses_str = f"| ses-{ses} " if ses else ""
             run_str = f"| run-{run}" if run else ""
             task_str = f"| task-{task} "
+
+            # Smooth the data using the _iter_valid_runs then the down stream can grab the smoothed data
+            cifti_in = self._get_func_img(run=run)[0].path
+            logger.info(
+                f"The input dtseries for smoothing before model fitting is: {cifti_in}"
+            )
+            l_surf, r_surf = get_cifti_surf(
+                self.cifti_dir, self.participant_label, session=ses
+            )
+            logger.info(
+                f"Smoothing data before fitting model:{wb_smooth(cifti_in, l_surf, r_surf)}"
+            )
+
             logger.info(
                 f"Generating design matrix for: {self.participant_label} {ses_str}{task_str}{run_str}"
             )
-
             dm = self.get_design_matrix(run, self.specs)
             logger.info(f"Columns of the convolved design matrix: {dm.columns}")
             logger.info(f"{'='*40}")
-            sub_run_imgs, _, _ = self.get_data_from_bids(run)
-            new_cifti_img, _, _ = self.drop_non_steady_scans(sub_run_imgs)
+            sub_run_imgs, sub_run_smoothed_imgs, _, _ = self.get_data_from_bids(run)
+            logger.info(f"The functional image for GLM fit : {sub_run_smoothed_imgs}")
+            new_cifti_img, _, _ = self.drop_non_steady_scans(
+                sub_run_imgs, sub_run_smoothed_imgs
+            )
             is_cifti = isinstance(new_cifti_img, nb.Cifti2Image)
             if is_cifti:
                 # Set up output directory
                 if self.outputdir is not None:
                     self.outdir = Path(self.outputdir)
                 else:
-                    self.outdir = Path(self.derivatives_dir).parent
+                    self.outdir = Path(self.derivatives_dir).parent / "glm" / "0.0.1"
 
-                glm_dir = self.outdir / "glm" / f"sub-{self.participant_label}"
+                glm_dir = self.outdir / f"sub-{self.participant_label}"
                 glm_dir.mkdir(exist_ok=True, parents=True)
 
                 logger.info(
@@ -236,6 +253,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                         "mean_square_error",
                     ),
                 }
+
             # save design matrix
             fname_dm = os.path.join(
                 glm_dir,
@@ -244,7 +262,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                     ses=ses,
                     task_label=task,
                     run=run,
-                    stat="design",
+                    suffix="_design",
                     ext="tsv",
                 ),
             )
@@ -255,7 +273,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                     ses=ses,
                     task_label=task,
                     run=run,
-                    stat="design",
+                    suffix="_design",
                     ext="svg",
                 ),
             )
@@ -298,7 +316,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                         task_label=task,
                         run=run,
                         contrast=name,
-                        stat=contrast_test,
+                        suffix="_design",
                         ext="svg",
                     ),
                 )
@@ -351,13 +369,30 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                     logger.info(f"Saving Regressor output: {fname}")
                     map_list.append(fname)
                     maps[map_type].to_filename(fname)
+
             # accumulate effect_maps for run
             all_effect_maps.extend(effect_maps)
             all_variance_maps.extend(variance_maps)
+            all_t_maps.extend(stat_maps)
 
-        return all_effect_maps, all_variance_maps
+        return all_effect_maps, all_variance_maps, all_t_maps
 
     def compute_fix_effect(self, effect_maps, variance_maps):
+        """
+        Compute fixed-effects across multiple runs.
+
+        Parameters
+        ----------
+        effect_maps : list of str
+            List of file paths to effect size images (e.g., contrast maps).
+        variance_maps : list of str
+            List of file paths to corresponding variance images.
+        Return:
+            List of fixed-effect files
+        Notes
+        -----
+        - At least two valid runs are required to compute the fixed-effects.
+        """
         from collections import defaultdict
 
         from nilearn.glm.contrasts import _compute_fixed_effects_params
@@ -365,9 +400,9 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         if self.outputdir is not None:
             self.outdir = Path(self.outputdir)
         else:
-            self.outdir = Path(self.derivatives_dir).parent
+            self.outdir = Path(self.derivatives_dir).parent / "glm" / "0.0.1"
 
-        glm_dir = self.outdir / "glm" / f"sub-{self.participant_label}"
+        glm_dir = self.outdir / f"sub-{self.participant_label}"
         glm_dir.mkdir(exist_ok=True, parents=True)
 
         # Prepare DataFrame

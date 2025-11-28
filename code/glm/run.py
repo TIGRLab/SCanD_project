@@ -78,6 +78,7 @@ def get_value(field, field_name):
 def model_fit(
     bids_dir,
     fmriprep_dir,
+    cifti_dir,
     sub,
     task_label,
     session,
@@ -91,6 +92,7 @@ def model_fit(
     model_instance = FirstLevelModelFit(
         bids_dir,
         fmriprep_dir,
+        cifti_dir,
         sub,
         task_label,
         session,
@@ -100,19 +102,19 @@ def model_fit(
         output_dir,
     )
 
-    effect_maps, variance_maps = model_instance.process_and_fit_valid_run()
-    if effect_maps:
-        logger.info(f"Plotting beta maps...")
-        for map in effect_maps:
+    effect_maps, variance_maps, t_stat_maps = model_instance.process_and_fit_valid_run()
+    if t_stat_maps:
+        logger.info(f"Plotting t-stat maps...")
+        for map in t_stat_maps:
             outname = map.replace("dscalar.nii", "png")
             data = load_data(map)
             if isinstance(data, nb.Cifti2Image):
                 plot_dscalar(data, colorbar=False, output_file=outname)
         logger.info(f"GLM finished successfully for subject: {sub}")
     else:
-        logger.warning(f"No beta maps found for subject: {sub}")
+        logger.warning(f"No t-stat maps found for subject: {sub}")
 
-    return model_instance, effect_maps, variance_maps
+    return model_instance, effect_maps, variance_maps, t_stat_maps
 
 
 def main():
@@ -136,6 +138,16 @@ def main():
             "For example, '/path/to/local/data/derivatives/fmriprep'"
         ),
     )
+
+    parser.add_argument(
+        "cifti_dir",
+        type=PathExists,
+        help=(
+            "The root folder of Ciftify preprocessing derivatives. "
+            "For example, '/path/to/local/data/derivatives/ciftify'"
+        ),
+    )
+
     parser.add_argument(
         "--output_dir",
         dest="output_dir",
@@ -173,6 +185,7 @@ def main():
     args = parser.parse_args()
     bids_dir = args.bids_dir
     fmriprep_dir = args.fmriprep_dir
+    cifti_dir = args.cifti_dir
     output_dir = args.output_dir
     model = args.model
 
@@ -204,6 +217,7 @@ def main():
     logger.info("Analysis parameters:")
     logger.info(f"  BIDS directory: {bids_dir}")
     logger.info(f"  FMRIPREP directory: {fmriprep_dir}")
+    logger.info(f"  CIFTIFY directory: {cifti_dir}")
     logger.info(f"  Participant ID: {participant_label}")
     logger.info(f"  Task label: {task_label}")
     logger.info(f"  Space label: {space_label}")
@@ -229,22 +243,29 @@ def main():
             sessions = [None]
 
         for session in sessions:
-            model_instance, effect_maps, variance_maps = model_fit(
-                bids_dir,
-                fmriprep_dir,
-                sub,
-                task_label,
-                session,
-                space_label,
-                dense,
-                specs,
-                output_dir,
-            )
+            try:
+                model_instance, effect_maps, variance_maps, _ = model_fit(
+                    bids_dir,
+                    fmriprep_dir,
+                    cifti_dir,
+                    sub,
+                    task_label,
+                    session,
+                    space_label,
+                    dense,
+                    specs,
+                    output_dir,
+                )
 
-            logger.info("All the beta maps:\n%s", "\n".join(effect_maps))
-            logger.info("All the variance maps:\n%s", "\n".join(variance_maps))
-            logger.info("Compute fix-effect...")
-            model_instance.compute_fix_effect(effect_maps, variance_maps)
+                logger.info("All the beta maps:\n%s", "\n".join(effect_maps))
+                logger.info("All the variance maps:\n%s", "\n".join(variance_maps))
+                logger.info("Compute fix-effect...")
+                model_instance.compute_fix_effect(effect_maps, variance_maps)
+            except Exception as e:
+                logger.error(
+                    f"Error processing session {session} for subject {sub}: {e}"
+                )
+                continue
 
 
 if __name__ == "__main__":
