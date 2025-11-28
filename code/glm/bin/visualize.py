@@ -2,6 +2,7 @@ import os
 
 import nibabel as nb
 import numpy as np
+import pandas as pd
 from nilearn import plotting as nlp
 from nipype.utils.filemanip import fname_presuffix, split_filename
 
@@ -30,9 +31,14 @@ def plot_dscalar(
     subcort, ltexture, rtexture = decompose_dscalar(img)
 
     if not vmax:
-        vmax_r = np.percentile(rtexture, 99)
-        vmax_l = np.percentile(ltexture, 99)
-        vmax = (vmax_r + vmax_l) / 2
+        combined = np.concatenate([ltexture, rtexture])
+        pmax = pmax = np.percentile(np.abs(combined), 98)
+        pmin = np.percentile(np.abs(combined), 2)
+        vmax = pmax
+        vmin = -pmax
+        # vmax_r = np.percentile(rtexture, 99)
+        # vmax_l = np.percentile(ltexture, 99)
+        # vmax = (vmax_r + vmax_l) / 2
 
     fig = plt.figure(figsize=(11, 9))
     ax1 = plt.subplot2grid((2, 2), (0, 0), projection="3d")
@@ -47,9 +53,11 @@ def plot_dscalar(
     ).format
     lsurf = nb.load(surf_fmt(hemi="L")).agg_data()
     rsurf = nb.load(surf_fmt(hemi="R")).agg_data()
+
     nlp.plot_surf_stat_map(
         lsurf,
         ltexture,
+        vmin=vmin,
         vmax=vmax,
         cmap=cmap,
         view="lateral",
@@ -58,6 +66,7 @@ def plot_dscalar(
     nlp.plot_surf_stat_map(
         rsurf,
         rtexture,
+        vmin=vmin,
         vmax=vmax,
         cmap=cmap,
         view="medial",
@@ -66,6 +75,7 @@ def plot_dscalar(
     nlp.plot_surf_stat_map(
         lsurf,
         ltexture,
+        vmin=vmin,
         vmax=vmax,
         cmap=cmap,
         view="medial",
@@ -74,6 +84,7 @@ def plot_dscalar(
     nlp.plot_surf_stat_map(
         rsurf,
         rtexture,
+        vmin=vmin,
         vmax=vmax,
         cmap=cmap,
         view="lateral",
