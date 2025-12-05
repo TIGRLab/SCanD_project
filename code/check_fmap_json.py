@@ -10,12 +10,11 @@ from rich.panel import Panel
 from rich.table import Table
 
 
-def get_log_file(log_filename="dwi_qc_summary.log"):
+def get_log_file(log_filename="fieldmap_qc_summary.log"):
     script_dir = Path(__file__).resolve().parent
     logs_dir = script_dir.parent / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     return logs_dir / log_filename
-
 
 def summarize_results(results, messages, log_path):
     console = Console()
@@ -24,31 +23,40 @@ def summarize_results(results, messages, log_path):
     )
 
     table = Table(
-        title="📋 Diffusion Fieldmap QC Summary",
+        title="📋 Fieldmap QC Summary",
         title_style="bold magenta",
         show_header=True,
         header_style="bold cyan",
         row_styles=["none", "dim"],
     )
-    table.add_column("Subject", style="bold white")
-    table.add_column("Session", style="white")
-    table.add_column("Fieldmap", style="green")
+    table.add_column("FileName", style="bold white")
+    table.add_column("DataType", style="white")
+    # table.add_column("Fieldmap", style="green")
     table.add_column("IntendedFor", style="yellow")
 
     # Filter failed results
-    failed_results = [r for r in results if "❌" in r[2] or "❌" in r[3]]
-
+    # failed_results = [r for r in results if "❌" in r[2] or "❌" in r[3]]
+    failed_results = [r for r in results if "❌" in r[2]]
     # Use failed_results for the table if you only want to display failures
     table_results = failed_results if failed_results else results
 
     for row in table_results:
-        table.add_row(*row)
+        filename, datatype, intended_status = row
+
+        # Color the IntendedFor cell based on status
+        if "❌" in intended_status:
+            intended_status = f"[red]{intended_status}[/red]"
+        elif "✅" in intended_status:
+            intended_status = f"[green]{intended_status}[/green]"
+
+        table.add_row(filename, datatype, intended_status)
+        # table.add_row(*row)  # row: (filename, datatype, intended_status)
 
     console.print(table)
     file_console.print(table)
 
     total = len(results)
-    failed = sum(1 for r in results if "❌" in r[2] or "❌" in r[3])
+    failed = sum(1 for r in results if "❌" in r[2])
     passed = total - failed
 
     summary = [
@@ -59,111 +67,52 @@ def summarize_results(results, messages, log_path):
     ]
     if failed:
         console.print(
-            "[bold yellow]⚠️ Please review failed subjects above.[/bold yellow]"
+            "[bold yellow]⚠️ Please review failed images above.[/bold yellow]"
         )
 
     for line in summary:
         console.print(line)
         file_console.print(line)
 
-    # if messages:
-    #     warning_panel = Panel(
-    #         "\n".join(messages),
-    #         title="[bold yellow]QC Warnings[/bold yellow]",
-    #         border_style="white",
-    #         padding=(1, 2),
-    #     )
-    #     console.print(warning_panel)
-    #     file_console.print(warning_panel)
-
-
 def check_fmap_intendedfor(subject_layout, subject, session):
+    
     messages = []
     results = []
-
     session_kwargs = {"session": session} if session else {}
     session_label = f"ses-{session}" if session else "no-session"
-
-    fmap_jsons = subject_layout.get(
+    
+    target_imgs = subject_layout.get(
         subject=subject,
-        datatype="fmap",      # restrict to fmap folder
-        acquisition="dwi",  # grabbing all json maps not clean  
-        extension=".json",    
-        return_type="file",
+        datatype=["func","dwi"],
+        extension="nii.gz",
         **session_kwargs
     )
+    if not target_imgs:
+        print(f"WARNING: No functional or DWI data found for subject {subject}")
+    # Scans the JSON sidecars of all files in the fmap/ 
+    # It looks specifically for the IntendedFor field
+    # If it finds a match: It returns a list containing the paths to the fieldmap NIfTI files
+    # If you have a fieldmap file, but the JSON is missing the IntendedFor line: This function returns [] (Empty).
+    # If you have a fieldmap file, but the filename in IntendedFor has a typo: This function returns [] (Empty).
+    # For example: 
+        # [
+        #  {'epi': '/projects/ttan/EPIPHANI/data/local/bids/sub-CMH0014/ses-02/fmap/sub-CMH0014_ses-02_acq-rest_dir-AP_run-01_epi.nii.gz', 'suffix': 'epi'},
+        #  {'epi': '/projects/ttan/EPIPHANI/data/local/bids/sub-CMH0014/ses-02/fmap/sub-CMH0014_ses-02_acq-rest_dir-PA_run-01_epi.nii.gz', 'suffix': 'epi'}
+        # ]
+    for img in target_imgs:
+        fieldmaps = subject_layout.get_fieldmap(img.path, return_list=True)
+        datatype = img.entities.get("datatype", "unknown")
 
-    dwi_images = subject_layout.get(
-        subject=subject,
-        datatype="dwi",
-        suffix="dwi",
-        extension=".nii.gz",
-        return_type="file",
-        **session_kwargs,
-    )
+        has_fmap = bool(fieldmaps)  # True if ANY fieldmap matches this exact file
 
-    # fmri_images = subject_layout.get(
-    #     subject=subject,
-    #     suffix="bold",
-    #     extension=".nii.gz",
-    #     return_type="file",
-    #     **session_kwargs,
-    # )
+        if not has_fmap:
+            messages.append(f"Missing or wrong IntendedFor: {img.filename}")
 
-    fmap_valid = bool(fmap_jsons)
-    intended_valid = False
+        intended_status = "✅ Valid" if has_fmap else "❌ Invalid/Missing"
 
-    if len(dwi_images) != 1:
-        messages.append(
-            f"[{subject}, {session_label}] Expected one DWI image, found {len(dwi_images)}."
-        )
+        results.append((img.filename, datatype, intended_status))
+    return messages, results
 
-    if not fmap_jsons:
-        messages.append(f"[{subject}, {session_label}] No fieldmap JSONs found.")
-    else:
-        for fmap_path in fmap_jsons:
-            with open(fmap_path) as f:
-                metadata = json.load(f)
-
-            intended_for = metadata.get("IntendedFor", [])
-            
-            # Ensure list type
-            if isinstance(intended_for, str):
-                intended_for = [intended_for]
-
-            # Remove blank strings
-            intended_for = [entry for entry in intended_for if entry.strip()]
-
-            if not intended_for:
-                messages.append(
-                    f"[{subject}, {session_label}] Fieldmap {os.path.basename(fmap_path)} missing IntendedFor."
-                )
-                continue
-
-            # Check if all IntendedFor entry matches an actual DWI image
-            matched = all(
-                any(dwi_path.endswith(intended) for dwi_path in dwi_images)
-                for intended in intended_for
-            )
-
-            # Check if all IntendedFor entry matches an actual fMRI image
-            # matched = all(
-            #     any(fmri_path.endswith(intended) for fmri_path in fmri_images)
-            #     for intended in intended_for
-            # )
-                    
-            if matched:
-                intended_valid = True
-            else:
-                messages.append(
-                    f"[{subject}, {session_label}] IntendedFor in {os.path.basename(fmap_path)} does not match any DWI file."
-                )
-
-    fmap_status = "✅ Found" if fmap_valid else "❌ Missing"
-    intended_status = "✅ Valid" if intended_valid else "❌ Invalid/Missing"
-    results.append((subject, session_label, fmap_status, intended_status))
-    return results, messages
-    
 def run_qc(bids_dir, subjects=None, layout=None):
     results, all_messages = [], []
     if layout:
@@ -180,18 +129,16 @@ def run_qc(bids_dir, subjects=None, layout=None):
     for subject in subjects:
         sessions = subject_layout.get_sessions(subject=subject) or [None]
         for session in sessions:
-            subject_results, subject_messages = check_fmap_intendedfor(
+            subject_messages, subject_results = check_fmap_intendedfor(
                 subject_layout, subject, session
             )
             results.extend(subject_results)
-            all_messages.extend(subject_messages)
-
+            all_messages.extend(subject_messages)       
     summarize_results(results, all_messages, get_log_file())
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Check if fieldmaps match DWI files via IntendedFor."
+        description="Check if fieldmap json match inteded functional files via IntendedFor."
     )
 
     default_bids_dir = (
@@ -223,9 +170,15 @@ if __name__ == "__main__":
         for item in args.participant_label:
             if os.path.isfile(item):
                 with open(item) as f:
-                    participants.extend(line.strip().removeprefix("sub-") for line in f)
+                    for line in f:
+                        line = line.strip()
+                        # Skip blank lines and the header
+                        if not line or line.lower() == "participant_id":
+                            continue
+                        participants.append(line.removeprefix("sub-"))
             else:
                 participants.append(item.removeprefix("sub-"))
     else:
         participants = None
+
     run_qc(args.bids_dir, subjects=participants)
