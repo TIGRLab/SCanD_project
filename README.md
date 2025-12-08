@@ -190,9 +190,13 @@ cd ${SCRATCH}/SCanD_project
 source code/00_nipoppy_trackers.sh
 ```
 
-### Edit fmap files
+### 1. Edit TOP-UP fmap files ONLY.
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run a python code.
+In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run the following python code with a specific configuration depend on each dataset.
+
+This script automatically fills the ``"IntendedFor"`` field in BIDS fieldmap JSON files. It reads a YAML configuration file that describes your dataset's naming patterns, then links each fieldmap to correct fMRI or DWI files.
+
+This helps make your dataset ready for tools like fMRIPrep, QSIPrep, and other BIDS-app pipelines
 
 ```sh
 ## First load a python module
@@ -210,8 +214,122 @@ python3 -m pip install bids
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py
+python3 code/fmap_intended_for.py ./local/data/bids --participant-label ./local/data/bids/participants.tsv --config ./EPIPHANI_query_config.yaml
 ```
+### 2. What the script does
+1. Searches your BIDS dataset for fieldmaps (/fmap)
+2. Searches for fMRI and/or DWI data (/func, /dwi)
+3. Uses patterns defined in your YAML config to decide which files belong together
+4. Writes a correct "IntendedFor" entry into each fieldmap JSON
+```bash
+fmap/sub-001_ses-01_acq-rest_run-01_epi.json
+    → IntendedFor: ["func/sub-001_ses-01_task-rest_run-01_bold.nii.gz",
+                    "func/sub-001_ses-01_task-rest_run-02_bold.nii.gz"]
+
+```
+### Example of BIDS structure
+```lua
+sub-001/
+  ses-01/
+    fmap/
+      sub-001_ses-01_acq-rest_dir-AP_run-01_epi.json
+      sub-001_ses-01_acq-rest_dir-AP_run-02_epi.json
+    func/
+      sub-001_ses-01_task-rest_run-01_bold.nii.gz
+      sub-001_ses-01_task-rest_run-02_bold.nii.gz
+      sub-001_ses-01_task-rest_run-03_bold.nii.gz
+    dwi/
+      sub-001_ses-01_dwi.nii.gz
+```
+### 3. YAML Configuration File
+You customize how your dataset is structured by editing the YAML file.
+
+#### 3.1. Query blocks (how to find files)
+Each block describes how filenames are expected to look:
+```yaml
+bold_query:
+  datatype: func
+  suffix: bold
+  task: rest
+  extension: nii.gz
+```
+This tells the script to find all BOLD fMRI files like:
+```lua
+sub-XXX_ses-01_task-rest_run-XX_bold.nii.gz
+```
+
+```yaml
+fmap_fmri_query:
+  datatype: fmap
+  suffix: [epi,phasediff,phase1,fieldmap]     
+  acquisition: rest
+  extension: json
+```
+
+This tells the script to find all fieldmap JSON files like:
+```lua
+sub-XXX_ses-01_acq-rest_dir-AP_run-XX_epi.json
+sub-XXX_ses-01_acq-rest_dir-PA_run-XX_epi.json
+```
+
+#### 3.2. Mapping blocks (how to assign fieldmaps)
+
+This is where you define which fieldmaps apply to which runs.
+
+Example: If you have the following field map and BOLD
+```lua
+Fieldmap: /fmap/sub-XXX_ses-01_acq-rest_dir-AP_run-01_epi.json
+BOLD:     /func/sub-XXX_ses-01_task-rest_run-01_bold.nii.gz
+```
+
+```yaml
+fmap_to_bold:
+  - fmap: "acq-rest_dir-*_run-01"
+    bold_keys: ["task-rest_run-01", "task-rest_run-02"]
+
+  - fmap: "acq-rest_dir-*_run-02"
+    bold_keys: ["task-rest_run-03"]
+```
+Meaning:
+
+1. fieldmaps whose filename contains:
+```acq-rest_dir-*_run-01```
+→ assigned to BOLD runs 01 & 02
+
+2. fieldmaps matching:
+```acq-rest_dir-*_run-02```
+→ assigned to BOLD run 03
+
+#### 3.3 DWI example
+```yaml
+fmap_to_dwi:
+  - fmap: "acq-dwi_dir-AP"
+    dwi_keys: "dwi"
+```
+
+### 4. Output
+The script updates each fieldmap JSON like:
+```json
+{
+  "PhaseEncodingDirection": "j-",
+  "IntendedFor": [
+    "/ses-01/func/sub-001_ses-01_task-rest_run-01_bold.nii.gz",
+    "/ses-01/func/sub-001_ses-01_task-rest_run-02_bold.nii.gz"
+  ]
+}
+```
+## Notes 
+
+- **Only edit values, not keys**  
+  Do **not** rename sections like `bold_query` or `fmap_to_bold`. Change only values, e.g., `task: rest` or `bold_keys: ["task-rest_run-01","task-rest_run-02"]`.
+
+- **bold_keys / dwi_keys**  
+  These are **filename patterns**, not arbitrary numbers.  
+  Example: if a file is `sub-001_ses-01_task-rest_run-01_bold.nii.gz`, use `bold_keys: ["task-rest_run-01"]`.
+
+- **Acquisition field**  
+  - Use the label if present in filenames: `acquisition: rest`  
+  - Set to `null` if not in filenames: `acquisition: null`
 
 In case you want to backup your json files before editing them:
 
@@ -222,9 +340,9 @@ rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  b
 
 ### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run QSIprep](#Running-qsiprep).
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](##Running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
 
-If IntendedFor is missing, QSIprep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
+If IntendedFor is missing, fMRIPREP and QSIprep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
 
 This guide shows 
    1. A correct example of fieldmap file with ``IntendedFor`` field
@@ -275,22 +393,26 @@ There is also a log file in
 cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
 ```
 ### Fieldmap QC Summary
-
-| Subject        | Session    | Fieldmap Status | IntendedFor Status    |
-|----------------|-----------|----------------|---------------------|
-| participant_id | no-session | ❌ Missing     | ❌ Invalid/Missing  |
-| CMH00000062    | ses-01     | ✅ Found       | ❌ Invalid/Missing  |
-| CMH00000077    | ses-02     | ✅ Found       | ❌ Invalid/Missing  |
+| FileName                                        | DataType | IntendedFor       |
+| ----------------------------------------------- | -------- | ----------------- |
+| sub-CMH0014_ses-01_dwi.nii.gz                   | dwi      | ❌ Invalid/Missing |
+| sub-CMH0014_ses-01_task-rest_run-01_bold.nii.gz | func     | ❌ Invalid/Missing |
+| sub-CMH0014_ses-01_task-rest_run-02_bold.nii.gz | func     | ❌ Invalid/Missing |
+| sub-CMH0014_ses-01_task-rest_run-03_bold.nii.gz | func     | ❌ Invalid/Missing |
+| sub-CMH0014_ses-02_dwi.nii.gz                   | dwi      | ❌ Invalid/Missing |
+| sub-CMH0014_ses-02_task-rest_run-01_bold.nii.gz | func     | ❌ Invalid/Missing |
+| sub-CMH0014_ses-02_task-rest_run-02_bold.nii.gz | func     | ❌ Invalid/Missing |
+| sub-CMH0014_ses-02_task-rest_run-03_bold.nii.gz | func     | ❌ Invalid/Missing |
 
 ⚠️ Please review failed subjects above.
 
 **Summary:**
 
 - ✅ Passed: 0  
-- ❌ Failed: 2  
-- Total: 2
+- ❌ Failed: 8 
+- Total: 8
 
-> Action: If a subject shows ✅ in the FieldMap Status and ❌ in the IntendedFor Status column, edit their fieldmap.json to include the correct DWI file paths before running QSIprep.
+> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPREPQSIprep.
 
 **Log File**: 
 
@@ -451,6 +573,13 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
+```
+When the fmriprep apply step is completed. You can run this script to check which fieldmap method was being used.
+```bash
+source ~/.virtualenvs/myenv/bin/activate
+python3 -m pip install pybids==0.18.1
+cd ${SCRATCH}/SCanD_project
+python get_fieldmap_method -i ./data/local/derivatives/fmriprep/23.2.3/ -o ./data/local/derivatives/fmriprep/23.3.2/fieldmap_methods.csv 
 ```
 
 

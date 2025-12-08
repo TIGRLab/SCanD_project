@@ -1,0 +1,45 @@
+# -----------------------------
+# BIDS Query Configuration
+# -----------------------------
+# Edit the values below to match YOUR dataset filenames.
+# Only edit the values, not the keys.
+# Examples of filenames:
+#   Fieldmap: /fmap/sub-XXX_ses-01_acq-rest_dir-AP_run-01_epi.json
+#   BOLD:     /func/sub-XXX_ses-01_task-rest_run-01_bold.nii.gz
+#             sub-XXX_ses-01_task-rest_run-02_bold.nii.gz
+# If your dataset does not use 'acquisition' or 'task', you can set it to null.
+
+fmap_fmri_query:
+  datatype: fmap          # usually 'fmap'
+  suffix: [epi,phasediff,phase1,fieldmap]             # 'epi', 'phasediff', or 'magnitude'
+  acquisition: rest       # e.g., 'rest', 'fmri' or null
+  extension: json
+
+fmap_dwi_query:
+  datatype: fmap
+  suffix: [epi,phasediff,phase1,fieldmap]
+  acquisition: dwi
+  extension: json
+
+bold_query:
+  datatype: func          # usually 'func'
+  suffix: bold            # usually 'bold'
+  task: rest              # e.g., 'rest', 'nbk', 'gng' or null
+  extension: nii.gz
+
+dwi_query:
+  datatype: dwi
+  suffix: dwi
+  extension: nii.gz
+
+# -----------------------------
+# Mapping fmap to target files
+fmap_to_bold:
+  - fmap: "acq-rest_dir-*_run-01"
+    bold_keys: ["task-rest_run-01","task-rest_run-02"]
+  - fmap: "acq-rest_dir-*_run-02"
+    bold_keys: ["task-rest_run-03"]  
+
+fmap_to_dwi:
+  - fmap: "acq-dwi_dir-AP"
+    dwi_keys: "dwi" 
