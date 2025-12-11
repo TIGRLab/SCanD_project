@@ -373,12 +373,11 @@ git pull         #in case you need to pull new code
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 module load python
-pip install rich
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.18.1
+python3 -m pip install pybids==0.18.1 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project

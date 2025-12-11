@@ -34,7 +34,8 @@ subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${FMRIPREP_LOCAL_DIR}/*html ${FMRIPREP_SHARE_DIR}/
 for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
- rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
+ rsync -zarv ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
+ rsync -zarvR ${FMRIPREP_LOCAL_DIR}/./sourcedata/freesurfer/${subject}/scripts/recon-all-status.log ${FMRIPREP_SHARE_DIR}/
 done
 
 else
