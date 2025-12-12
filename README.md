@@ -192,6 +192,13 @@ source code/00_nipoppy_trackers.sh
 
 ### 1. Edit TOP-UP fmap files ONLY.
 
+#### In case you want to backup your json files before editing them:
+
+```sh
+mkdir bidsbackup_json
+rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
+```
+
 In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run the following python code with a specific configuration depend on each dataset.
 
 This script automatically fills the ``"IntendedFor"`` field in BIDS fieldmap JSON files. It reads a YAML configuration file that describes your dataset's naming patterns, then links each fieldmap to correct fMRI or DWI files.
@@ -210,7 +217,7 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
-python3 -m pip install bids
+python3 -m pip install pybids=0.15.6
 
 cd $SCRATCH/SCanD_project
 
@@ -337,13 +344,6 @@ The script updates each fieldmap JSON like:
   - Use the label if present in filenames: `acquisition: rest`  
   - Set to `null` if not in filenames: `acquisition: null`
 
-In case you want to backup your json files before editing them:
-
-```sh
-mkdir bidsbackup_json
-rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
-```
-
 ### Check "IntendedFor" in fieldmap
 
 If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](##Running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
@@ -358,7 +358,7 @@ This guide shows
 
 ```bash
 cd ${SCRATCH}/SCanD_project
-grep "IntendedFor" -A10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000027_ses-01_acq-dwi_dir-AP_epi.json # Replace this with actual path
+grep "IntendedFor" -A 10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000027_ses-01_acq-dwi_dir-AP_epi.json # Replace this with actual path
 ```
 You should see something like 
 ```json
@@ -384,7 +384,7 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.18.1
+python3 -m pip install pybids==0.15.6
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
@@ -394,10 +394,6 @@ python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
 
 You will see a summary table like this in the terminal:
 
-There is also a log file in 
-```bash
-cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
-```
 ### Fieldmap QC Summary
 | FileName                                        | DataType | IntendedFor       |
 | ----------------------------------------------- | -------- | ----------------- |
@@ -425,7 +421,7 @@ cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
 The same summary is saved in a log file for later reference: 
 
 ```bash
-cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
+cat ${SCRATCH}/SCanD_project/logs/fieldmaps_qc_summary.log
 ```
 
 # Quick Start - Workflow Automation
