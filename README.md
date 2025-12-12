@@ -221,7 +221,7 @@ python3 -m pip install pybids=0.15.6
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py ./local/data/bids --participant-label ./local/data/bids/participants.tsv --config ./EPIPHANI_query_config.yaml
+python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./EPIPHANI_query_config.yaml
 ```
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
