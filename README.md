@@ -210,7 +210,7 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
-python3 -m pip install bids
+python3 -m pip install pybids==0.15.6
 
 cd $SCRATCH/SCanD_project
 
@@ -377,20 +377,16 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.18.1 rich
+python3 -m pip install pybids==0.15.6 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
-python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
+python3 ./code/check_fmap_json.py ./data/local/bids/participants.tsv
 ```
 **3. Interpret the output**
 
 You will see a summary table like this in the terminal:
 
-There is also a log file in 
-```bash
-cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
-```
 ### Fieldmap QC Summary
 | FileName                                        | DataType | IntendedFor       |
 | ----------------------------------------------- | -------- | ----------------- |
@@ -418,7 +414,7 @@ cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
 The same summary is saved in a log file for later reference: 
 
 ```bash
-cat ${SCRATCH}/SCanD_project/logs/dwi_qc_summary.log
+cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 ```
 
 # Quick Start - Workflow Automation
