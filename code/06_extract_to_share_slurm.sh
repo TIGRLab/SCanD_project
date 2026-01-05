@@ -358,4 +358,28 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
     ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
     ${PROJECT_DIR}/data/share/amico_noddi
 
+
+#running Noddi-registration
+NODDIREG_LOCAL_DIR="${PROJECT_DIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/ciftify_parcellations"
+NODDIREG_SHARE_DIR="${PROJECT_DIR}/data/share/noddireg"
+
+if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
+    echo "Copying noddireg files"
+
+    mkdir -p "${NODDIREG_SHARE_DIR}"
+
+    for subject in $(cd "${NODDIREG_LOCAL_DIR}" && ls -1d sub-*); do
+        mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
+
+        find "${NODDIREG_LOCAL_DIR}/${subject}" \
+            -type f \
+            -path "*/ses-*/dwi/*" \
+            -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
+    done
+else
+    echo "No noddireg outputs found."
+fi
+
+# sharing nipoppy trackers
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
+
