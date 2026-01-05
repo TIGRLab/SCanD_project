@@ -36,7 +36,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecondtifit):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecondtifit, noddireg):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
