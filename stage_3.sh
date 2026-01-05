@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## stage 3 (xcp-d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit):
+## stage 3 (xcp-d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit, noddireg):
 
 submit_array_job() {
     local script=$1
@@ -38,6 +38,7 @@ submit_magetbrain_job() {
 run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
 run_pipeline "xcp-noGSR" "code/03_xcp_noGSR_scinet.sh" 1
 run_pipeline "qsirecon_dtifit" "./code/03_qsirecon_dtifit_scinet.sh" 1
+run_pipeline "noddi-registration" "code/03_noddi_reg_scinet.sh" 1
 
 
 read -p "Do you want to run the MAGeTbrain_vote pipeline? (yes/no): " run_magetbrain
