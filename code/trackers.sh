@@ -364,6 +364,26 @@ singularity exec \
       
   '
 
+  singularity exec \
+  --env BASEDIR="$BASEDIR" \
+  --bind $BASEDIR:$BASEDIR \
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
+
+    cd "$BASEDIR/Neurobagel"
+    
+    mkdir -p derivatives/noddireg/0.22.0/output/
+    ls -al derivatives/noddireg/0.22.0/output/
+
+
+    ln -s "${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/"* \
+      derivatives/noddireg/0.22.0/output/ || true
+
+      nipoppy track \
+        --pipeline noddireg \
+        --pipeline-version 0.22.0 \
+       
+  '
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
