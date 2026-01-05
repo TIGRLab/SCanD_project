@@ -18,6 +18,7 @@ ${BASEDIR}
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── magetbrain.sif
 │   ├── nipoppy.sif
+│   ├── noddi_postproc-v.1.0.simg
 │   ├── tbss_2023-10-10.simg
 │   └── xcp_d-0.7.3.simg
 ├── data
@@ -48,6 +49,7 @@ ${BASEDIR}
 │       ├── freesurfer_group     # contains tsv files of group data
 │       ├── magetbrain           # fusion folder
 │       ├── mriqc                # contains only qc images and metadata
+│       ├── noddireg             # Parcel-wise summary statistics of NODDI microstructural metrics
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── smriprep             # contains only qc images and metadata
 │       ├── tractify             # contains connectivity.mat file
@@ -104,8 +106,9 @@ Currently this repo is going to be set up for running things on SciNet Fir clust
 |stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c  |   [Run qsirecon dtifit](#Running-qsirecon-dtifit) 	|  1 hour of slurm 	|
-|^ |   03f	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
-|^ |   03g	|  [Check tsv file](#Check-tsv-file) 	|    	|
+|^ |   03d	|  [Run noddi-registration](#Running-noddi-registration) 	|  4 hours on slurm 	|
+|^ |   03e	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
+|^ |   03f	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
 |^ |   04b	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 5 |  05a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
@@ -801,6 +804,23 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
+```
+
+## Running noddi-registration
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull
+
+## figuring out appropriate array-job size
+SUB_SIZE=1 
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue
+sbatch --array=0-${array_job_length} ./code/03_noddi_reg_scinet.sh
 ```
 
 ## Running magetbrain vote
