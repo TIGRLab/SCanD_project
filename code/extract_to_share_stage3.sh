@@ -11,7 +11,7 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
 
-## xcp, xcp-noGSR
+## xcp, xcp-noGSR, noddireg
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
@@ -111,4 +111,25 @@ if [ -d "${BASEDIR}/data/local/derivatives/xcp_noGSR/" ]; then
 
 else
     echo "No XCP_noGSR outputs found."
+fi
+
+
+NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/ciftify_parcellations"
+NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
+
+if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
+    echo "Copying noddireg files"
+
+    mkdir -p "${NODDIREG_SHARE_DIR}"
+
+    for subject in $(cd "${NODDIREG_LOCAL_DIR}" && ls -1d sub-*); do
+        mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
+
+        find "${NODDIREG_LOCAL_DIR}/${subject}" \
+            -type f \
+            -path "*/ses-*/dwi/*" \
+            -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
+    done
+else
+    echo "No noddireg outputs found."
 fi
