@@ -1,15 +1,18 @@
 #!/bin/bash
-
 #SBATCH --job-name=noddi_reg
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=192
-#SBATCH --time=02:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --time=04:00:00
+#SBATCH --mem-per-cpu=4000
 
+set -euo pipefail
 
 SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 BASEDIR=${SLURM_SUBMIT_DIR}
+
+module load apptainer/1.3.5
 
 # =========================
 # PATHS
@@ -40,18 +43,18 @@ else
   SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-
 for subj in ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/sub-*; do
     surfdir="$subj/surf"
 
     if [ -f "$surfdir/lh.pial.T1" ]; then
-       	mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
+        mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
     fi
 
     if [ -f "$surfdir/rh.pial.T1" ]; then
-       	mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
+        mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
     fi
 done
+
 
 # =========================
 # MAIN LOOP
@@ -109,7 +112,7 @@ for SUBJECT in ${SUBJECTS}; do
     for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
       parc_name=$(basename "${parc_file}" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
 
-      OUT_NII="${CIFTIFY_PARC}/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-T1w_desc-${parc_name}_dseg.nii.gz"
+      OUT_NII="${parc_dir}/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-ACPC_desc-${parc_name}_dseg.nii.gz"
 
       if [[ -f "${OUT_NII}" ]]; then
         echo "✓ Stage 2: ${parc_name} already exists — skipping"
