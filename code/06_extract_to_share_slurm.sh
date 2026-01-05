@@ -388,4 +388,27 @@ singularity run --cleanenv \
 
 rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
 
+#running Noddi-registration
+NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/ciftify_parcellations"
+NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
+
+if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
+    echo "Copying noddireg files"
+
+    mkdir -p "${NODDIREG_SHARE_DIR}"
+
+    for subject in $(cd "${NODDIREG_LOCAL_DIR}" && ls -1d sub-*); do
+        mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
+
+        find "${NODDIREG_LOCAL_DIR}/${subject}" \
+            -type f \
+            -path "*/ses-*/dwi/*" \
+            -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
+    done
+else
+    echo "No noddireg outputs found."
+fi
+
+# sharing nipoppy trackers
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
+
