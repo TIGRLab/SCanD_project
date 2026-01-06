@@ -179,22 +179,6 @@ done
 
 ## nipoppy trackers
 
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
-
-SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -type d -name "*.long.*" | head -n 1)
-
-if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
-    # No longitudinal dirs → use notlong tracker_config
-    rm -rf ${BASEDIR}/Neurobagel/pipelines/processing/noddireg-0.22.0/tracker_config.json
-    cp -r /scratch/arisvoin/shared/noddireg_notlong/tracker_config.json \
-          ${BASEDIR}/Neurobagel/pipelines/processing/noddireg-0.22.0/
-else
-    # Longitudinal dirs found → use long tracker_config
-    rm -rf ${BASEDIR}/Neurobagel/pipelines/processing/noddireg-0.22.0/tracker_config.json
-    cp -r /scratch/arisvoin/shared/nipoppy/noddireg-0.22.0/tracker_config.json \
-          ${BASEDIR}/Neurobagel/pipelines/processing/noddireg-0.22.0/
-fi
-
 
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
