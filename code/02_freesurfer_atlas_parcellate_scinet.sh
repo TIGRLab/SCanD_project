@@ -147,7 +147,7 @@ EOF
 
 ## nipoppy trackers 
 
-SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECTS_BATCH}*.long.${SUBJECTS_BATCH}" -type d)
+SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -type d -name "*.long.*" | head -n 1)
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     # No longitudinal dirs → use notlong tracker_config
