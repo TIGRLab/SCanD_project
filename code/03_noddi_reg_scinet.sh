@@ -18,7 +18,7 @@ module load apptainer/1.3.5
 # PATHS
 # =========================
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
+export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export NODDI_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI
 export CIFTIFY_DIR=${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg
