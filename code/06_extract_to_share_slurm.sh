@@ -381,5 +381,4 @@ else
 fi
 
 # sharing nipoppy trackers
-cp ${PROJECT_DIR}/Neurobagel/derivatives/processing_status.tsv ${PROJECT_DIR}/data/share/
-
+cp "$(ls -t ${PROJECT_DIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
