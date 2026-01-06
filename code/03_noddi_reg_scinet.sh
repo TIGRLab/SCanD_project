@@ -109,7 +109,7 @@ for SUBJECT in ${SUBJECTS}; do
     for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
       parc_name=$(basename "${parc_file}" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
 
-      OUT_NII="${CIFTIFY_PARC}/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-T1w_desc-${parc_name}_dseg.nii.gz"
+      OUT_NII="${CIFTIFY_PARC}/${subj_id}_ses-${session}_space-T1w_desc-${parc_name}_dseg.nii.gz"
 
       if [[ -f "${OUT_NII}" ]]; then
         echo "✓ Stage 2: ${parc_name} already exists — skipping"
