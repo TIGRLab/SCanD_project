@@ -177,7 +177,7 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
-SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name ""sub-${SUBJECTS}*.long.sub-${SUBJECTS}" " -type d)
+SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -type d -name "*.long.*" | head -n 1)
 
 if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
     # No longitudinal dirs → use notlong tracker_config
