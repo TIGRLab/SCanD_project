@@ -41,7 +41,7 @@ else
 fi
 
 
-for subj in SUBJECTS_DIR/sub-*; do
+for subj in $SUBJECTS_DIR/sub-*; do
     surfdir="$subj/surf"
 
     if [ -f "$surfdir/lh.pial.T1" ]; then
