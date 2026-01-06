@@ -154,7 +154,7 @@ for SUBJECT in ${SUBJECTS}; do
     # =========================
     # STEP 4: METRIC EXTRACTION
     # =========================
-    scp ${TEMPLATES_DIR}/*dseg.tsv ${CIFTIFY_PARC}/
+    cp ${TEMPLATES_DIR}/*dseg.tsv ${CIFTIFY_PARC}/
 
     singularity exec --cleanenv \
       -B "${BASEDIR}/code:/code" \
