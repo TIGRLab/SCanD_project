@@ -43,7 +43,7 @@ else
   SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-for subj in ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/sub-*; do
+for subj in SUBJECTS_DIR/sub-*; do
     surfdir="$subj/surf"
 
     if [ -f "$surfdir/lh.pial.T1" ]; then
