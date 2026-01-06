@@ -41,7 +41,7 @@ else
 fi
 
 
-for subj in ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/sub-*; do
+for subj in SUBJECTS_DIR/sub-*; do
     surfdir="$subj/surf"
 
     if [ -f "$surfdir/lh.pial.T1" ]; then
