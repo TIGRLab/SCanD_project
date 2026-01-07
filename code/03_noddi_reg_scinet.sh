@@ -93,7 +93,7 @@ for SUBJECT in ${SUBJECTS}; do
     subj_id="sub-${SUBJECT}"
     mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
 
-    for parc_file in ${TEMPLATES_DIR}/parcellations/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
+    for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
         parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
 
         output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
