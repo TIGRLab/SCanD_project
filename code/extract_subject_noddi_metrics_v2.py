@@ -10,7 +10,6 @@ Arguments:
     --parc-dir <parc-dir>            Input and output directory
     --qsiprep-dir <qsiprep-dir>      Input qsiprep output directory
     --amico-noddi-dir <amico-noddi>  Input amico-noddi outputs from qsiprep
-    --anat-id <anat-id>            FreeSurfer anatomy ID (cross or longitudinal)
 Options:
     --session <session>      BIDS session to pull the amico noddi values from
     --icvf-thresh <thres>    Threshold [default: 0.99] used for creating brainmask
@@ -294,8 +293,6 @@ def main():
     subject=arguments['--subject']
     subject = str(subject).replace('sub-','')
 
-    anat_id = arguments['--anat-id']
-
     session=arguments['--session']
     icvf_max_threshold = arguments['--icvf-thresh']
 
@@ -303,23 +300,20 @@ def main():
 
     parc_list = arguments['--parcellation']
 
-    print("DEBUG anat_id:", anat_id)
-    print("DEBUG glob path:", f'{parc_dir}/{anat_id}/anat')
-
     if not parc_list:
         parc_list = []
-        parc_files = glob(f'{parc_dir}/{anat_id}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-*_dseg.nii.gz')
+        parc_files = glob(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-*_dseg.nii.gz')
 
         if len(parc_files) > 0:
             for parc_file in parc_files:
                 parc = parse_file_entities(parc_file)['desc']
                 parc_list.append(parc)
         else:
-            logger.error(f'No ACPC parcellations found in {parc_dir}/{anat_id}/anat')
+            logger.error(f'No ACPC parcellations found in {parc_dir}/sub-{subject}/anat')
 
     else:
         parc = parc_list
-        parc_file = os.path.join(f'{parc_dir}/{anat_id}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
+        parc_file = os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
         if not os.path.exists(parc_file):
             logger.error(f"Input parcellation file {parc_file} not found")
 
@@ -365,7 +359,7 @@ def main():
 
         ## now loop over the parcellations
         for parc in parc_list:
-            parc_file=os.path.join(f'{parc_dir}/{anat_id}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
+            parc_file=os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
 
             ## make a two qa figures plotted on OD and ICVF
             for noddi_mdp in ["od", "icvf"]:
@@ -391,10 +385,10 @@ def main():
                 parc_tsv=os.path.join(f'{templates_dir}/atlas-{parc}_dseg.tsv')
 
             if session:
-                tsv_out=os.path.join(f'{parc_dir}/{anat_id}/ses-{session}/dwi/sub-{subject}_ses-{session}_desc-{parc}_model-noddi_results.tsv')
+                tsv_out=os.path.join(f'{parc_dir}/sub-{subject}/ses-{session}/dwi/sub-{subject}_ses-{session}_desc-{parc}_model-noddi_results.tsv')
 
             else:
-                tsv_out=os.path.join(f'{parc_dir}/{anat_id}/dwi/sub-{subject}_desc-{parc}_model-noddi_results.tsv')
+                tsv_out=os.path.join(f'{parc_dir}/sub-{subject}/dwi/sub-{subject}_desc-{parc}_model-noddi_results.tsv')
 
             if not os.path.exists(os.path.dirname(tsv_out)):
                 os.makedirs(os.path.dirname(tsv_out))
