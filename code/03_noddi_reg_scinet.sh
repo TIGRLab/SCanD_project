@@ -134,7 +134,7 @@ for SUBJECT in ${SUBJECTS}; do
 
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
-        -B "${CIFTIFY_PARC}:/parc" \
+        -B "${OUTPUT_DIR}:/parc" \
         "${SING_CONTAINER}" \
         antsApplyTransforms -d 3 \
           -i "/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" \
@@ -150,7 +150,7 @@ done
 # STEP 4: METRIC EXTRACTION
 # =========================
 
-cp ${TEMPLATES_DIR}/*dseg.tsv ${CIFTIFY_PARC}/
+cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
 
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
@@ -163,7 +163,7 @@ for SUBJECT in ${SUBJECTS}; do
       -B "${BASEDIR}/code:/code" \
       -B "${QSIPREP_DIR}:/qsiprep" \
       -B "${NODDI_DIR}:/noddi" \
-      -B "${CIFTIFY_PARC}:/parc" \
+      -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
       python /code/extract_subject_noddi_metrics_v2.py \
         --subject "${SUBJECT}" \
