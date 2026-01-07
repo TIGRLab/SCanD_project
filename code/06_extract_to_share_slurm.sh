@@ -360,7 +360,7 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
 
 
 #running Noddi-registration
-NODDIREG_LOCAL_DIR="${PROJECT_DIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/ciftify_parcellations"
+NODDIREG_LOCAL_DIR="${PROJECT_DIR}/data/local/derivatives/noddi_reg"
 NODDIREG_SHARE_DIR="${PROJECT_DIR}/data/share/noddireg"
 
 if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
