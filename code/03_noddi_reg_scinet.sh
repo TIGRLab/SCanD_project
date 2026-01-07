@@ -105,7 +105,7 @@ for SUBJECT in ${SUBJECTS}; do
           -B ${OUTPUT_DIR}:/parc \
           -B ${BASEDIR}/code:/code \
           ${SING_CONTAINER} \
-          python /code/ciftify_dlabel_to_vol.py --cortex-only \
+          /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
             --input-dlabel /templates/$(basename "$parc_file") \
             --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
             --volume-template /out/ciftify/${subj_id}/T1w/T1w.nii.gz \
@@ -165,7 +165,7 @@ for SUBJECT in ${SUBJECTS}; do
       -B "${NODDI_DIR}:/noddi" \
       -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
-      python /code/extract_subject_noddi_metrics_v2.py \
+      /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics_v2.py \
         --subject "${SUBJECT}" \
         --session "${session}" \
         --parc-dir "/parc" \
