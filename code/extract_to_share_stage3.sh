@@ -114,7 +114,7 @@ else
 fi
 
 
-NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/ciftify_parcellations"
+NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/noddi_reg"
 NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
 
 if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
