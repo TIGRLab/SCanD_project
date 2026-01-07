@@ -302,7 +302,7 @@ def main():
 
     if not parc_list:
         parc_list = []
-        parc_files = glob(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-*_dseg.nii.gz')
+        parc_files = glob(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_space-ACPC_desc-*_dseg.nii.gz')
 
         if len(parc_files) > 0:
             for parc_file in parc_files:
@@ -313,7 +313,7 @@ def main():
 
     else:
         parc = parc_list
-        parc_file = os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
+        parc_file = os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_space-ACPC_desc-{parc}_dseg.nii.gz')
         if not os.path.exists(parc_file):
             logger.error(f"Input parcellation file {parc_file} not found")
 
@@ -359,7 +359,7 @@ def main():
 
         ## now loop over the parcellations
         for parc in parc_list:
-            parc_file=os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_ses-{session}_space-ACPC_desc-{parc}_dseg.nii.gz')
+            parc_file=os.path.join(f'{parc_dir}/sub-{subject}/anat/sub-{subject}_space-ACPC_desc-{parc}_dseg.nii.gz')
 
             ## make a two qa figures plotted on OD and ICVF
             for noddi_mdp in ["od", "icvf"]:
