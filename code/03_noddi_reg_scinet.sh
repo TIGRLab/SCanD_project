@@ -191,7 +191,7 @@ singularity exec \
     mkdir -p derivatives/noddireg/0.22.0/output/
     ls -al derivatives/noddireg/0.22.0/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/"* derivatives/noddireg/0.22.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/noddi_reg" derivatives/noddireg/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
