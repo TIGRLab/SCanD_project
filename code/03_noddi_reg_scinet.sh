@@ -6,6 +6,7 @@
 #SBATCH --cpus-per-task=192
 #SBATCH --time=02:00:00
 
+set -euo pipefail
 
 SUB_SIZE=1
 export THREADS_PER_COMMAND=2
@@ -19,12 +20,12 @@ export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export NODDI_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI
 export CIFTIFY_DIR=${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg
-export CIFTIFY_PARC=${CIFTIFY_DIR}/ciftify_parcellations
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/noddi_reg
 export TEMPLATES_DIR=${BASEDIR}/templates/parcellations
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SING_CONTAINER=${BASEDIR}/containers/noddi_postproc-v.1.0.simg
 
-mkdir -p "${CIFTIFY_DIR}" "${CIFTIFY_PARC}"
+mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}"
 
 # =========================
 # SUBJECT SELECTION
@@ -40,141 +41,136 @@ else
   SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
-
 for subj in $SUBJECTS_DIR/sub-*; do
     surfdir="$subj/surf"
 
     if [ -f "$surfdir/lh.pial.T1" ]; then
-       	mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
+        mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
     fi
 
     if [ -f "$surfdir/rh.pial.T1" ]; then
-       	mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
+        mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
     fi
 done
 
-# =========================
-# MAIN LOOP
-# =========================
+
+############################
+# STEP 1: CIFTIFY
+############################
+
+for SUBJECT in ${SUBJECTS}; do
+
+    singularity exec --cleanenv \
+        -B ${SUBJECTS_DIR}:/freesurfer \
+        -B ${CIFTIFY_DIR}:/out \
+        -B ${ORIG_FS_LICENSE}:/li \
+        ${SING_CONTAINER} \
+        ciftify_recon_all \
+            --fs-subjects-dir /freesurfer \
+            --ciftify-work-dir /out/ciftify \
+            --fs-license /li \
+            --resample-to-T1w32k \
+            --surf-reg FS \
+            sub-${SUBJECT}
+
+    mkdir -p ${OUTPUT_DIR}/sub-${SUBJECT}/anat
+
+    cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/aparc+aseg.nii.gz" \
+       "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-aparcaseg_dseg.nii.gz"
+
+    cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/wmparc.nii.gz" \
+       "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-wmparc_dseg.nii.gz"
+done
+
+
+############################
+# STEP 2: DLABEL → T1w
+############################
+
+for SUBJECT in ${SUBJECTS}; do
+    subj_id="sub-${SUBJECT}"
+    mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
+
+    for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
+        parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
+
+        output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
+        [[ -f "$output_file" ]] && continue
+
+        singularity exec --cleanenv \
+          -B ${TEMPLATES_DIR}:/templates \
+          -B ${CIFTIFY_DIR}:/out \
+          -B ${OUTPUT_DIR}:/parc \
+          -B ${BASEDIR}/code:/code \
+          ${SING_CONTAINER} \
+          /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
+            --input-dlabel /templates/$(basename "$parc_file") \
+            --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
+            --volume-template /out/ciftify/${subj_id}/T1w/T1w.nii.gz \
+            --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
+    done
+done
+
+############################
+# STEP 3: ACPC TRANSFORM (NO SESSION)
+############################
+
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
-  # ---- Sessions ----
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 1 -type d -name "ses-*" -printf "%f\n" | sed 's/ses-//')
+  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 1 -type d -name "ses-*" -printf "%f\n" | sed 's/^ses-//')
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
 
   for session in ${SESSIONS}; do
-
-    # =========================
-    # CROSS vs LONG DECISION
-    # =========================
-    LONG_FS_DIR="${SUBJECTS_DIR}/${subj_id}_ses-${session}.long.${subj_id}"
-
-    if [[ -d "${LONG_FS_DIR}" ]]; then
-      echo "→ Using LONGITUDINAL anatomy for ${subj_id} ses-${session}"
-      ANAT_ID="${subj_id}_ses-${session}.long.${subj_id}"
-    else
-      echo "→ Using CROSS-SECTIONAL anatomy for ${subj_id}"
-      ANAT_ID="${subj_id}"
-    fi
-
-    parc_dir="${CIFTIFY_PARC}/${ANAT_ID}/anat"
-    mkdir -p "${parc_dir}"
-
-    # =========================
-    # STEP 1: CIFTIFY
-    # =========================
-    singularity exec --cleanenv \
-      -B "${SUBJECTS_DIR}:/freesurfer" \
-      -B "${CIFTIFY_DIR}:/out" \
-      -B "${ORIG_FS_LICENSE}:/li" \
-      "${SING_CONTAINER}" \
-      ciftify_recon_all \
-        --fs-subjects-dir /freesurfer \
-        --ciftify-work-dir /out/ciftify \
-        --fs-license /li \
-        --resample-to-T1w32k \
-        --surf-reg FS \
-        "${ANAT_ID}"
-
-    cp "${CIFTIFY_DIR}/ciftify/${ANAT_ID}/T1w/aparc+aseg.nii.gz" \
-       "${parc_dir}/${subj_id}_ses-${session}_space-T1w_desc-aparcaseg_dseg.nii.gz"
-
-    cp "${CIFTIFY_DIR}/ciftify/${ANAT_ID}/T1w/wmparc.nii.gz" \
-       "${parc_dir}/${subj_id}_ses-${session}_space-T1w_desc-wmparc_dseg.nii.gz"
-
-    # =========================
-    # STEP 2: DLABEL → VOL
-    # =========================
-    for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
-      parc_name=$(basename "${parc_file}" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
-
-      OUT_NII="${CIFTIFY_PARC}/${subj_id}_ses-${session}_space-T1w_desc-${parc_name}_dseg.nii.gz"
-
-      if [[ -f "${OUT_NII}" ]]; then
-        echo "✓ Stage 2: ${parc_name} already exists — skipping"
-        continue
-      fi
-
-      echo "→ Stage 2: converting ${parc_name}"
-
-      singularity exec --cleanenv \
-        -B "${TEMPLATES_DIR}:/templates" \
-        -B "${CIFTIFY_DIR}:/out" \
-        -B "${CIFTIFY_PARC}:/parc" \
-        -B "${BASEDIR}/code:/code" \
-        "${SING_CONTAINER}" \
-        /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py \
-          --cortex-only \
-          --input-dlabel "/templates/$(basename ${parc_file})" \
-          --left-mid-surface "/out/ciftify/${ANAT_ID}/T1w/fsaverage_LR32k/${ANAT_ID}.L.midthickness.32k_fs_LR.surf.gii" \
-          --volume-template "/out/ciftify/${ANAT_ID}/T1w/T1w.nii.gz" \
-          --output-nifti "/parc/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-T1w_desc-${parc_name}_dseg.nii.gz"
-    done
-
-    # =========================
-    # STEP 3: ACPC TRANSFORM
-    # =========================
     ref_file=$(find "${QSIPREP_DIR}/${subj_id}/ses-${session}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
     xfm_file="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_from-T1wNative_to-T1wACPC_mode-image_xfm.mat"
 
-    for parc in aparcaseg wmparc Glasser Gordon 4S1056Parcels 4S156Parcels 4S256Parcels 4S356Parcels 4S456Parcels 4S556Parcels 4S656Parcels 4S756Parcels 4S856Parcels 4S956Parcels; do
+    for parc in aparcaseg wmparc Glasser Gordon \
+                4S1056Parcels 4S156Parcels 4S256Parcels 4S356Parcels \
+                4S456Parcels 4S556Parcels 4S656Parcels 4S756Parcels \
+                4S856Parcels 4S956Parcels; do
+
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
-        -B "${CIFTIFY_PARC}:/parc" \
+        -B "${OUTPUT_DIR}:/parc" \
         "${SING_CONTAINER}" \
         antsApplyTransforms -d 3 \
-          -i "/parc/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-T1w_desc-${parc}_dseg.nii.gz" \
+          -i "/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" \
           -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
           -t "/qsiprep/${xfm_file#${QSIPREP_DIR}/}" \
           --interpolation GenericLabel \
-          -o "/parc/${ANAT_ID}/anat/${subj_id}_ses-${session}_space-ACPC_desc-${parc}_dseg.nii.gz"
+          -o "/parc/${subj_id}/anat/${subj_id}_space-ACPC_desc-${parc}_dseg.nii.gz"
     done
+  done
+done
 
-    # =========================
-    # STEP 4: METRIC EXTRACTION
-    # =========================
-    cp ${TEMPLATES_DIR}/*dseg.tsv ${CIFTIFY_PARC}/
+# =========================
+# STEP 4: METRIC EXTRACTION
+# =========================
 
+cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
+
+for SUBJECT in ${SUBJECTS}; do
+  subj_id="sub-${SUBJECT}"
+
+  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 1 -type d -name "ses-*" -printf "%f\n" | sed 's/^ses-//')
+  [[ -z "${SESSIONS}" ]] && SESSIONS="01"
+
+  for session in ${SESSIONS}; do
     singularity exec --cleanenv \
       -B "${BASEDIR}/code:/code" \
       -B "${QSIPREP_DIR}:/qsiprep" \
       -B "${NODDI_DIR}:/noddi" \
-      -B "${CIFTIFY_PARC}:/parc" \
+      -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
       /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics_v2.py \
         --subject "${SUBJECT}" \
         --session "${session}" \
         --parc-dir "/parc" \
-        --anat-id "${ANAT_ID}" \
         --qsiprep-dir "/qsiprep" \
         --amico-noddi-dir "/noddi"
-
   done
 done
-
-
-
 
 
 ## nipoppy trackers
@@ -193,7 +189,7 @@ singularity exec \
     mkdir -p derivatives/noddireg/0.22.0/output/
     ls -al derivatives/noddireg/0.22.0/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/"* derivatives/noddireg/0.22.0/output/ || true
+    ln -s "${ROOT_DIR}/data/local/derivatives/noddi_reg" derivatives/noddireg/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
@@ -203,3 +199,4 @@ singularity exec \
     done
   '
 unset APPTAINERENV_ROOT_DIR
+
