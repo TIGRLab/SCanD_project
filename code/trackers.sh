@@ -376,7 +376,7 @@ singularity exec \
     ls -al derivatives/noddireg/0.22.0/output/
 
 
-    ln -s "${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg/"* \
+    ln -s "${BASEDIR}/data/local/derivatives/noddi_reg" \
       derivatives/noddireg/0.22.0/output/ || true
 
       nipoppy track \
