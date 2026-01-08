@@ -77,7 +77,7 @@ This is the final image output of the pipeline, so it has been motion corrected,
     
 4) DWI summary:
 
-The y axis has a relatively low maximum value, indicating overall lower levels of motion. The two traces do not significantly diverge from each other, with generally similar peaks and troughs.
+In the FD plot, look for large or frequent spikes, which indicate sudden head movements during the scan. Consistently high FD values or many volumes above common thresholds (e.g., ~0.5 mm) suggest excessive motion and reduced data quality.
 
    ![image](figures/qsiprep_FD.png)      
 
