@@ -53,8 +53,6 @@ Large signal dropout in the EPI image but not in the T1, which should always res
       
 ## qsiprep
 
-**Things to check:**
-
 ### Diffusion Section
 
 1) b=0 reference image:
