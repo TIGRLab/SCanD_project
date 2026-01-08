@@ -40,14 +40,15 @@ The “After” Image should more closely align with the blue outline than the �
 
 In some cases the bottom part of the cerebellum gets clipped, this is acceptable (a pass) but should still be annotated as having a Clipping issue. However, if any part of the cortex itself is clipped (bottom or top) this rating should always result in a fail.
 
-    ![image](figures/Clipping.png)
+   ![image](figures/Clipping.png)
 
 
 4) EPI signal dropout:
 
 Large signal dropout in the EPI image but not in the T1, which should always result in a Fail.
 
-    ![image](figures/Signal_dropout.png)
+   ![image](figures/Signal_dropout.png)
+    
 
       
 ## qsiprep
