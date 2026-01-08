@@ -87,7 +87,7 @@ Currently this repo is going to be set up for running things on SciNet Nibi clus
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |  0d	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
 |^ |   0e	|  [Initializing nipoppy trackers](#Initializing-nipoppy-trackers)	| 2 minutes in terminal 	|
-|^ |   0f	|  [Edit TOP-UP fmap files ONLY](#Edit-TOP-UP-fmap-files-ONLY)	| 2 minutes in terminal 	|
+|^ |   0f	|  [Edit TOP-UP fmap files ONLY](#1-edit-top-up-fmap-files-only)	| 2 minutes in terminal 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
 |^ |  01b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
 |^|   01c	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
@@ -193,7 +193,7 @@ cd ${SCRATCH}/SCanD_project
 source code/00_nipoppy_trackers.sh
 ```
 
-### 1. Edit TOP UP fmap files ONLY
+### 1. Edit TOP-UP fmap files ONLY
 
 #### In case you want to backup your json files before editing them:
 
