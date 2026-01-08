@@ -73,6 +73,7 @@ Compare the two images by rotating the images around and ensuring that they both
 This is the final image output of the pipeline, so it has been motion corrected, denoised, bias corrected, etc. So, this is the first image you should be checking to see if anything went wrong with those steps, namely if it has been distorted too much, cut off, etc. In this case, the images clearly resemble the shape of a brain and there are little to no artifacts visible outside of the brain.
 
    ![image](figures/qsiprep_motion.png)
+   
     
 4) DWI summary:
 
