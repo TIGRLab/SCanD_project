@@ -236,23 +236,23 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                     new_cifti_img.get_fdata(dtype="f4"), dm.values
                 )
 
-                model_attr = {
-                    "r_square": self.dscalar_from_cifti(
-                        new_cifti_img,
-                        self._get_voxelwise_stat(labels, estimates, "r_square"),
-                        "r_square",
-                    ),
-                    "log_likelihood": self.dscalar_from_cifti(
-                        new_cifti_img,
-                        self._get_voxelwise_stat(labels, estimates, "logL"),
-                        "log_likelihood",
-                    ),
-                    "mean_square_error": self.dscalar_from_cifti(
-                        new_cifti_img,
-                        self._get_voxelwise_stat(labels, estimates, "MSE"),
-                        "mean_square_error",
-                    ),
-                }
+                # model_attr = {
+                #     "r_square": self.dscalar_from_cifti(
+                #         new_cifti_img,
+                #         self._get_voxelwise_stat(labels, estimates, "r_square"),
+                #         "r_square",
+                #     ),
+                #     "log_likelihood": self.dscalar_from_cifti(
+                #         new_cifti_img,
+                #         self._get_voxelwise_stat(labels, estimates, "logL"),
+                #         "log_likelihood",
+                #     ),
+                #     "mean_square_error": self.dscalar_from_cifti(
+                #         new_cifti_img,
+                #         self._get_voxelwise_stat(labels, estimates, "MSE"),
+                #         "mean_square_error",
+                #     ),
+                # }
 
             # save design matrix
             fname_dm = os.path.join(
@@ -285,21 +285,21 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             # Save model level images
             model_metadata = []
 
-            for attr, img in model_attr.items():
-                model_metadata.append({"stat": attr})
-                fname = os.path.join(
-                    glm_dir,
-                    self._format_filename(
-                        participant_label=self.participant_label,
-                        ses=ses,
-                        task_label=task,
-                        run=run,
-                        stat=attr,
-                        ext="dscalar.nii",
-                    ),
-                )
-                logger.info(f"Saving Model outputs: {fname}")
-                img.to_filename(fname)
+            # for attr, img in model_attr.items():
+            #     model_metadata.append({"stat": attr})
+            #     fname = os.path.join(
+            #         glm_dir,
+            #         self._format_filename(
+            #             participant_label=self.participant_label,
+            #             ses=ses,
+            #             task_label=task,
+            #             run=run,
+            #             stat=attr,
+            #             ext="dscalar.nii",
+            #         ),
+            #     )
+            #     logger.info(f"Saving Model outputs: {fname}")
+            #     img.to_filename(fname)
 
             contrasts = self._get_run_level_contrasts(dm, self.specs)
             effect_maps = []
@@ -350,8 +350,8 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 for map_type, map_list in (
                     ("effect_size", effect_maps),
                     ("effect_variance", variance_maps),
-                    ("z_score", zscore_maps),
-                    ("p_value", pvalue_maps),
+                    # ("z_score", zscore_maps),
+                    # ("p_value", pvalue_maps),
                     ("stat", stat_maps),
                 ):
                     fname = os.path.join(
@@ -469,15 +469,15 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 "fixed_effect_size": self.dscalar_from_cifti(
                     img, ffx_cont, "fixed_effect_size"
                 ),
-                "fixed_effect_variance": self.dscalar_from_cifti(
-                    img, ffx_var, "fixed_effect_variance"
-                ),
+                # "fixed_effect_variance": self.dscalar_from_cifti(
+                #     img, ffx_var, "fixed_effect_variance"
+                # ),
                 "fixed_effect_stat": self.dscalar_from_cifti(
                     img, ffx_t, "fixed_effect_stat"
                 ),
-                "fixed_effect_z_score": self.dscalar_from_cifti(
-                    img, ffx_z_score, "fixed_effect_z_score"
-                ),
+                # "fixed_effect_z_score": self.dscalar_from_cifti(
+                #     img, ffx_z_score, "fixed_effect_z_score"
+                # ),
             }
 
             # Save maps
@@ -505,5 +505,5 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 maps[map_type].to_filename(fname)
                 logger.info(f"Plotting the computed fix-effect contrast: {map_type}")
                 outname = fname.replace("dscalar.nii", "png")
-                if isinstance(maps[map_type], nb.Cifti2Image):
+                if map_type == "fixed_effect_stat" and isinstance(maps[map_type], nb.Cifti2Image):
                     plot_dscalar(maps[map_type], colorbar=False, output_file=outname)

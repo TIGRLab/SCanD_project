@@ -6,21 +6,25 @@ from nipype.interfaces.workbench import CiftiSmooth
 
 
 def get_cifti_surf(ciftify_dir, participant_label, session=None):
+    if session:
+        sub_ses_prefix = f"sub-{participant_label}_ses-{session}"
+        dir_name = f"{sub_ses_prefix}.long.sub-{participant_label}"
+        file_prefix = dir_name
+    else:
+        sub_ses_prefix = f"sub-{participant_label}"
+        dir_name = sub_ses_prefix
+        file_prefix = sub_ses_prefix
+
+    # Build the path    
     subj_dir = (
         Path(ciftify_dir)
-        / f"sub-{participant_label}_ses-{session}.long.sub-{participant_label}"
+        / dir_name
         / "MNINonLinear"
         / "fsaverage_LR32k"
     )
     # left/right surfaces
-    l_surf = (
-        subj_dir
-        / f"sub-{participant_label}_ses-{session}.long.sub-{participant_label}.L.midthickness.32k_fs_LR.surf.gii"
-    )
-    r_surf = (
-        subj_dir
-        / f"sub-{participant_label}_ses-{session}.long.sub-{participant_label}.R.midthickness.32k_fs_LR.surf.gii"
-    )
+    l_surf = subj_dir / f"{file_prefix}.L.midthickness.32k_fs_LR.surf.gii"
+    r_surf = subj_dir / f"{file_prefix}.R.midthickness.32k_fs_LR.surf.gii"
     if not l_surf.exists():
         raise FileNotFoundError(f"Missing left surface file: {l_surf}")
     if not r_surf.exists():
