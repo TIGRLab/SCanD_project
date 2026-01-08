@@ -193,7 +193,7 @@ cd ${SCRATCH}/SCanD_project
 source code/00_nipoppy_trackers.sh
 ```
 
-### 1. Edit TOP UP fmap files ONLY.
+### 1. Edit TOP UP fmap files ONLY
 
 #### In case you want to backup your json files before editing them:
 
