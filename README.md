@@ -574,7 +574,7 @@ sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
 When the fmriprep apply step is completed. You can run this script to check which fieldmap method was being used.
 ```bash
 source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.18.1
+python3 -m pip install pybids==0.15.6
 cd ${SCRATCH}/SCanD_project
 python get_fieldmap_method -i ./data/local/derivatives/fmriprep/23.2.3/ -o ./data/local/derivatives/fmriprep/23.3.2/fieldmap_methods.csv 
 ```
