@@ -56,8 +56,8 @@ else
 fi
 
 
-# Extract voxel sizes using fslinfo
-first_session=$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' | head -n 1)
+# Extract voxel sizes using fslinfo with session that actual have dwi subdirectory
+first_session=$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 2 -type d -path "*/ses-*/dwi" | sort -V | head -n 1 | xargs dirname)
 
 if [ -n "$(find "${BIDS_DIR}/sub-${SUBJECTS}" -maxdepth 1 -type d -name 'ses-*' -print -quit)" ]; then
 voxel_info=$(singularity exec -B ${BASEDIR}/data/local/bids:/bids -B ${first_session}:/first_session containers/qsiprep-0.22.0.sif fslinfo /first_session/dwi/*.nii.gz)
