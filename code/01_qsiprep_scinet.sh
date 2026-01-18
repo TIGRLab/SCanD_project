@@ -107,7 +107,8 @@ singularity run --cleanenv \
     --separate_all_dwis \
     --hmc_model eddy \
     --output-resolution ${RESOLUTION}\
-    --use-syn-sdc
+    --use-syn-sdc \
+    --force-syn
 
 
 ## nipoppy trackers 
