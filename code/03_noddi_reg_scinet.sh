@@ -61,6 +61,12 @@ done
 ############################
 
 for SUBJECT in ${SUBJECTS}; do
+    CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}"
+
+    if [[ -d "$CIFTIFY_SUBJ_DIR" ]]; then
+        echo "Removing existing ciftify output for sub-${SUBJECT}"
+        rm -rf "$CIFTIFY_SUBJ_DIR"
+    fi
 
     singularity exec --cleanenv \
         -B ${SUBJECTS_DIR}:/freesurfer \
@@ -92,6 +98,7 @@ done
 for SUBJECT in ${SUBJECTS}; do
     subj_id="sub-${SUBJECT}"
     mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
+    echo "Mapping DLABEL to T1w"
 
     for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
         parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
@@ -120,8 +127,14 @@ done
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 1 -type d -name "ses-*" -printf "%f\n" | sed 's/^ses-//')
+  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
+    | sort -V \
+    | xargs -n1 dirname \
+    | xargs -n1 basename \
+    | sed 's/^ses-//')
+
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
+  echo "Transforming T1w to ACPC space"
 
   for session in ${SESSIONS}; do
     ref_file=$(find "${QSIPREP_DIR}/${subj_id}/ses-${session}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
@@ -155,9 +168,15 @@ cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 1 -type d -name "ses-*" -printf "%f\n" | sed 's/^ses-//')
+  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
+    | sort -V \
+    | xargs -n1 dirname \
+    | xargs -n1 basename \
+    | sed 's/^ses-//')
+
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
 
+  echo "Extracting noddi metric" 
   for session in ${SESSIONS}; do
     singularity exec --cleanenv \
       -B "${BASEDIR}/code:/code" \
