@@ -85,6 +85,29 @@ average=$(bc -l <<< "$sum / 3")
 RESOLUTION=$(printf "%.1f" $average)
 
 
+# --------------------------------------------
+# Detect dwitopup fieldmaps
+# --------------------------------------------
+HAS_DWITOPUP=0
+
+if find "${BIDS_DIR}/sub-${SUBJECTS}" \
+    \( -path "*/ses-*/fmap/*dwitopup*.nii.gz" -o -path "*/fmap/*dwitopup*.nii.gz" \) \
+    -print -quit | grep -q .; then
+    HAS_DWITOPUP=1
+fi
+
+SDC_ARGS="--use-syn-sdc"
+
+if [ "$HAS_DWITOPUP" -eq 0 ]; then
+    echo "No dwitopup found for sub-${SUBJECTS} → using --force-syn"
+    SDC_ARGS="${SDC_ARGS} --force-syn"
+else
+    echo "dwitopup found for sub-${SUBJECTS} → NOT forcing SyN"
+fi
+
+echo "SDC flags: ${SDC_ARGS}"
+
+
 ## set singularity environment variables that will point to the freesurfer license and the templateflow bits
 # Make sure FS_LICENSE is defined in the container.
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
@@ -107,8 +130,7 @@ singularity run --cleanenv \
     --separate_all_dwis \
     --hmc_model eddy \
     --output-resolution ${RESOLUTION}\
-    --use-syn-sdc \
-    --force-syn
+   ${SDC_ARGS}
 
 
 ## nipoppy trackers 
