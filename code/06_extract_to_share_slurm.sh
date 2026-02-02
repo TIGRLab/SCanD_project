@@ -361,8 +361,8 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
 
 
 #running Noddi-registration
-NODDIREG_LOCAL_DIR="${PROJECT_DIR}/data/local/derivatives/noddi_reg"
-NODDIREG_SHARE_DIR="${PROJECT_DIR}/data/share/noddireg"
+NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/noddi_reg"
+NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
 
 if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
     echo "Copying noddireg files"
@@ -373,8 +373,10 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
         mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
 
         find "${NODDIREG_LOCAL_DIR}/${subject}" \
-            -type f \
-            -path "*/ses-*/dwi/*" \
+            -type f \( \
+                -path "*/ses-*/dwi/*" -o \
+                -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" \
+            \) \
             -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
     done
 else
