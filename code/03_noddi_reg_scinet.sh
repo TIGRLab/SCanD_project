@@ -12,6 +12,9 @@ SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 BASEDIR=${SLURM_SUBMIT_DIR}
 
+module load StdEnv/2023
+module load connectomeworkbench/2.0.1
+
 # =========================
 # PATHS
 # =========================
