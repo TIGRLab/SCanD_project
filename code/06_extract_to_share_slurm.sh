@@ -401,8 +401,10 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
         mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
 
         find "${NODDIREG_LOCAL_DIR}/${subject}" \
-            -type f \
-            -path "*/ses-*/dwi/*" \
+            -type f \( \
+                -path "*/ses-*/dwi/*" -o \
+                -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" \
+            \) \
             -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
     done
 else
