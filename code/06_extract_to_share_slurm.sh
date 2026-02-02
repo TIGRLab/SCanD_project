@@ -401,13 +401,16 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
         mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
 
         find "${NODDIREG_LOCAL_DIR}/${subject}" \
-            -type f \
-            -path "*/ses-*/dwi/*" \
+            -type f \( \
+                -path "*/ses-*/dwi/*" -o \
+                -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" \
+            \) \
             -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
     done
 else
     echo "No noddireg outputs found."
 fi
+
 
 # sharing nipoppy trackers
 cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
