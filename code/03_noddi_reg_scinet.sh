@@ -193,6 +193,121 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 
+############################
+# STEP 5: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
+############################
+
+QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
+
+# one template pscalar per subject
+CIFTI_TMP_DIR="${OUTPUT_DIR}/_cifti_templates"
+mkdir -p "${CIFTI_TMP_DIR}"
+
+DLABEL_4S1056="${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-4S1056Parcels_dseg.dlabel.nii"
+
+for SUBJECT in ${SUBJECTS}; do
+  subj_id="sub-${SUBJECT}"
+
+  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
+    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
+  [[ -z "${SESSIONS}" ]] && SESSIONS="01"
+
+  SURF_DIR_SUBJ="${CIFTIFY_DIR}/ciftify/${subj_id}/MNINonLinear/fsaverage_LR32k"
+  DENSE_TEMPLATE="${SURF_DIR_SUBJ}/${subj_id}.thickness.32k_fs_LR.dscalar.nii"
+  [[ ! -f "${DENSE_TEMPLATE}" ]] && DENSE_TEMPLATE="${SURF_DIR_SUBJ}/${subj_id}.sulc.32k_fs_LR.dscalar.nii"
+
+  if [[ ! -d "${SURF_DIR_SUBJ}" || ! -f "${DENSE_TEMPLATE}" ]]; then
+    echo "[WARN] Missing ciftify outputs for ${subj_id}, skipping."
+    continue
+  fi
+
+  # Create subject pscalar template ONCE
+  TEMPLATE_PSCALAR="${CIFTI_TMP_DIR}/${subj_id}_template_4S1056.pscalar.nii"
+  if [[ ! -f "${TEMPLATE_PSCALAR}" ]]; then
+    wb_command -cifti-math "0" "${CIFTI_TMP_DIR}/${subj_id}_zero.dscalar.nii" -var x "${DENSE_TEMPLATE}"
+    wb_command -cifti-parcellate \
+      "${CIFTI_TMP_DIR}/${subj_id}_zero.dscalar.nii" \
+      "${DLABEL_4S1056}" \
+      COLUMN \
+      "${TEMPLATE_PSCALAR}"
+  fi
+
+  for session in ${SESSIONS}; do
+    ses_id="ses-${session}"
+
+    TSV="${OUTPUT_DIR}/${subj_id}/${ses_id}/dwi/${subj_id}_${ses_id}_desc-4S1056Parcels_model-noddi_results.tsv"
+    if [[ ! -f "${TSV}" ]]; then
+      TSV=$(find "${OUTPUT_DIR}/${subj_id}" -type f -name "${subj_id}_${ses_id}*4S1056Parcels*results.tsv" | head -n 1 || true)
+    fi
+    if [[ -z "${TSV}" || ! -f "${TSV}" ]]; then
+      echo "[WARN] TSV not found for ${subj_id} ${ses_id}, skipping."
+      continue
+    fi
+
+    DWI_OUT_DIR="$(dirname "${TSV}")"
+
+    for METRIC in od_mean icvf_mean isovf_mean; do
+
+      VEC_TXT="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.txt"
+      OUT_PSCALAR="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.pscalar.nii"
+      QC_PNG="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}_qc.png"
+
+      if [[ ! -f "${VEC_TXT}" ]]; then
+        python3 - <<PY
+import csv
+tsv="${TSV}"
+col="${METRIC}"
+out="${VEC_TXT}"
+n=1056
+vec=[0.0]*n
+
+def parse_float(x):
+    if x is None: return None
+    x=x.strip()
+    if x=="" or x.lower() in ("na","nan","null","none"): return None
+    return float(x)
+
+with open(tsv, newline='') as f:
+    r=csv.DictReader(f, delimiter="\\t")
+    for row in r:
+        i=int(row["index"])-1
+        v=parse_float(row.get(col,""))
+        vec[i]=0.0 if v is None else v
+
+with open(out,"w") as g:
+    for v in vec:
+        g.write(f"{v}\\n")
+PY
+      fi
+
+
+      if [[ ! -f "${OUT_PSCALAR}" ]]; then
+        wb_command -cifti-convert -from-text \
+          "${VEC_TXT}" \
+          "${TEMPLATE_PSCALAR}" \
+          "${OUT_PSCALAR}"
+      fi
+
+      # --- QC PNG creation
+      if [[ ! -f "${QC_PNG}" ]]; then
+        singularity exec --cleanenv \
+          -B "${DWI_OUT_DIR}:/data" \
+          -B "${BASEDIR}/code:/code" \
+          -B "${TEMPLATES_DIR}:/templates" \
+          -B "${SURF_DIR_SUBJ}:/surf" \
+          "${QC_CONTAINER}" \
+          python3 /code/noddireg_qc.py \
+            --pscalar "/data/$(basename "${OUT_PSCALAR}")" \
+            --dlabel  "/templates/tpl-fsLR_res-91k_atlas-4S1056Parcels_dseg.dlabel.nii" \
+            --surf-dir "/surf" \
+            --out "/data/$(basename "${QC_PNG}")"
+      fi
+
+    done
+  done
+done
+
+
 ## nipoppy trackers
 
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
