@@ -50,7 +50,7 @@ def plot_view(surf, data, hemi, view, out_png):
         hemi=hemi,
         view=view,
         cmap="viridis",
-        colorbar=True,
+        colorbar=False,
         output_file=out_png,
     )
 
