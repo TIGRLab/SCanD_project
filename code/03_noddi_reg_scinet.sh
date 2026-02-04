@@ -123,43 +123,50 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 ############################
-# STEP 3: ACPC TRANSFORM (NO SESSION)
+# STEP 3 (FIXED): RESAMPLE PARCELLATION TO DWIREF GRID (NO ACPC XFM)
 ############################
-
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
   SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
-    | sort -V \
-    | xargs -n1 dirname \
-    | xargs -n1 basename \
-    | sed 's/^ses-//')
-
+    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-  echo "Transforming T1w to ACPC space"
+
+  echo "Resampling parcellations to QSIPrep T1w dwiref grid for ${subj_id}"
 
   for session in ${SESSIONS}; do
-    ref_file=$(find "${QSIPREP_DIR}/${subj_id}/ses-${session}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
-    xfm_file="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_from-T1wNative_to-T1wACPC_mode-image_xfm.mat"
+    ses_id="ses-${session}"
+    ref_file=$(find "${QSIPREP_DIR}/${subj_id}/${ses_id}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1 || true)
+
+    if [[ -z "${ref_file}" || ! -f "${ref_file}" ]]; then
+      echo "[WARN] No *_space-T1w_dwiref.nii.gz found for ${subj_id} ${ses_id}, skipping session."
+      continue
+    fi
 
     for parc in aparcaseg wmparc Glasser Gordon \
                 4S1056Parcels 4S156Parcels 4S256Parcels 4S356Parcels \
                 4S456Parcels 4S556Parcels 4S656Parcels 4S756Parcels \
                 4S856Parcels 4S956Parcels; do
 
+      in_parc="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz"
+      out_onref="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg_on-dwiref.nii.gz"
+
+      [[ ! -f "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" ]] && continue
+
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
         -B "${OUTPUT_DIR}:/parc" \
         "${SING_CONTAINER}" \
         antsApplyTransforms -d 3 \
-          -i "/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" \
+          -i "${in_parc}" \
           -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
-          -t "/qsiprep/${xfm_file#${QSIPREP_DIR}/}" \
           --interpolation GenericLabel \
-          -o "/parc/${subj_id}/anat/${subj_id}_space-ACPC_desc-${parc}_dseg.nii.gz"
+          -o "${out_onref}"
+
     done
   done
 done
+
 
 # =========================
 # STEP 4: METRIC EXTRACTION
