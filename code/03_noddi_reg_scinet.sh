@@ -123,8 +123,10 @@ done
 
 ############################
 # STEP 3: RESAMPLE LABELS TO EACH SESSION'S space-T1w_dwiref GRID
-# ALSO: write ACPC-named labels into anat/ for Step 4 compatibility
+# Write outputs into OUTPUT_DIR/sub-*/ses-*/dwi (session-specific)
+# ALSO write "space-ACPC" symlinks into OUTPUT_DIR/sub-*/anat (old behavior)
 ############################
+
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
@@ -153,9 +155,6 @@ for SUBJECT in ${SUBJECTS}; do
       out_base="${subj_id}_${ses_id}_space-T1w_ref-dwiref_desc-${desc}_dseg.nii.gz"
       acpc_base="${subj_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
 
-      # Skip if already exists
-      [[ -f "${DWI_OUT_DIR}/${out_base}" ]] && continue
-
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
         -B "${OUTPUT_DIR}:/parc" \
@@ -166,7 +165,6 @@ for SUBJECT in ${SUBJECTS}; do
           -n GenericLabel \
           -o "/parc/${subj_id}/${ses_id}/dwi/${out_base}"
 
-      # Write ACPC-named copy into anat/ (for Step 4 compatibility)
       ln -sf "../${ses_id}/dwi/${out_base}" "${ANAT_OUT_DIR}/${acpc_base}"
 
     done
