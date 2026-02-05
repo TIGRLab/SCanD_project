@@ -28,7 +28,7 @@ export TEMPLATES_DIR=${BASEDIR}/templates/parcellations
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SING_CONTAINER=${BASEDIR}/containers/noddi_postproc-v.1.0.simg
 
-mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}"
+mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
 
 # =========================
 # SUBJECT SELECTION
@@ -45,82 +45,75 @@ else
 fi
 
 for subj in $SUBJECTS_DIR/sub-*; do
-    surfdir="$subj/surf"
-
-    if [ -f "$surfdir/lh.pial.T1" ]; then
-        mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
-    fi
-
-    if [ -f "$surfdir/rh.pial.T1" ]; then
-        mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
-    fi
+  surfdir="$subj/surf"
+  [[ -f "$surfdir/lh.pial.T1" ]] && mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
+  [[ -f "$surfdir/rh.pial.T1" ]] && mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
 done
 
 
 ############################
 # STEP 1: CIFTIFY
 ############################
-
 for SUBJECT in ${SUBJECTS}; do
+  CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}"
 
-    CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}"
+  if [[ -d "$CIFTIFY_SUBJ_DIR" ]]; then
+    echo "Removing existing ciftify output for sub-${SUBJECT}"
+    rm -rf "$CIFTIFY_SUBJ_DIR"
+  fi
 
-    if [[ -d "$CIFTIFY_SUBJ_DIR" ]]; then
-        echo "Removing existing ciftify output for sub-${SUBJECT}"
-        rm -rf "$CIFTIFY_SUBJ_DIR"
-    fi
+  singularity exec --cleanenv \
+    -B ${SUBJECTS_DIR}:/freesurfer \
+    -B ${CIFTIFY_DIR}:/out \
+    -B ${ORIG_FS_LICENSE}:/li \
+    ${SING_CONTAINER} \
+    ciftify_recon_all \
+      --fs-subjects-dir /freesurfer \
+      --ciftify-work-dir /out/ciftify \
+      --fs-license /li \
+      --resample-to-T1w32k \
+      --surf-reg FS \
+      sub-${SUBJECT}
 
-    singularity exec --cleanenv \
-        -B ${SUBJECTS_DIR}:/freesurfer \
-        -B ${CIFTIFY_DIR}:/out \
-        -B ${ORIG_FS_LICENSE}:/li \
-        ${SING_CONTAINER} \
-        ciftify_recon_all \
-            --fs-subjects-dir /freesurfer \
-            --ciftify-work-dir /out/ciftify \
-            --fs-license /li \
-            --resample-to-T1w32k \
-            --surf-reg FS \
-            sub-${SUBJECT}
+  mkdir -p ${OUTPUT_DIR}/sub-${SUBJECT}/anat
 
-    mkdir -p ${OUTPUT_DIR}/sub-${SUBJECT}/anat
+  cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/aparc+aseg.nii.gz" \
+     "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-aparcaseg_dseg.nii.gz"
 
-    cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/aparc+aseg.nii.gz" \
-       "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-aparcaseg_dseg.nii.gz"
-
-    cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/wmparc.nii.gz" \
-       "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-wmparc_dseg.nii.gz"
+  cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/wmparc.nii.gz" \
+     "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-wmparc_dseg.nii.gz"
 done
 
 
 ############################
 # STEP 2: DLABEL → T1w
 ############################
-
 for SUBJECT in ${SUBJECTS}; do
-    subj_id="sub-${SUBJECT}"
-    mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
-    echo "Mapping DLABEL to T1w"
+  subj_id="sub-${SUBJECT}"
+  mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
+  echo "Mapping DLABEL to T1w for ${subj_id}"
 
-    for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
-        parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
+  for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
+    parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
 
-        output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
-        [[ -f "$output_file" ]] && continue
+    output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
+    [[ -f "$output_file" ]] && continue
 
-        singularity exec --cleanenv \
-          -B ${TEMPLATES_DIR}:/templates \
-          -B ${CIFTIFY_DIR}:/out \
-          -B ${OUTPUT_DIR}:/parc \
-          -B ${BASEDIR}/code:/code \
-          ${SING_CONTAINER} \
-          /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
-            --input-dlabel /templates/$(basename "$parc_file") \
-            --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
-            --volume-template /out/ciftify/${subj_id}/T1w/T1w.nii.gz \
-            --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
-    done
+    singularity exec --cleanenv \
+      -B ${TEMPLATES_DIR}:/templates \
+      -B ${CIFTIFY_DIR}:/out \
+      -B ${QSIPREP_DIR}:/qsiprep \
+      -B ${OUTPUT_DIR}:/parc \
+      -B ${BASEDIR}/code:/code \
+      ${SING_CONTAINER} \
+      /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
+        --input-dlabel /templates/$(basename "$parc_file") \
+        --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
+        --volume-template /qsiprep/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii \
+        --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
+  done
 done
+
 
 ############################
 # STEP 3 (FIXED): RESAMPLE PARCELLATION TO DWIREF GRID (NO ACPC XFM)
@@ -151,6 +144,8 @@ for SUBJECT in ${SUBJECTS}; do
       in_parc="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz"
       out_onref="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg_on-dwiref.nii.gz"
 
+      xfm_file="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_from-T1wNative_to-T1wACPC_mode-image_xfm.mat"
+
       [[ ! -f "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" ]] && continue
 
       singularity exec --cleanenv \
@@ -160,6 +155,7 @@ for SUBJECT in ${SUBJECTS}; do
         antsApplyTransforms -d 3 \
           -i "${in_parc}" \
           -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
+          -t "/qsiprep/${xfm_file#${QSIPREP_DIR}/}" \
           --interpolation GenericLabel \
           -o "${out_onref}"
 
@@ -171,20 +167,16 @@ done
 # =========================
 # STEP 4: METRIC EXTRACTION
 # =========================
-
 cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
 
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
 
   SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
-    | sort -V \
-    | xargs -n1 dirname \
-    | xargs -n1 basename \
-    | sed 's/^ses-//')
-
+    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-  echo "Extracting noddi metric"
+
+  echo "Extracting noddi metric for ${subj_id}"
 
   for session in ${SESSIONS}; do
     singularity exec --cleanenv \
@@ -206,10 +198,8 @@ done
 ############################
 # STEP 5: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
 ############################
-
 QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 
-# one template pscalar per subject
 CIFTI_TMP_DIR="${OUTPUT_DIR}/_cifti_templates"
 mkdir -p "${CIFTI_TMP_DIR}"
 
@@ -231,7 +221,6 @@ for SUBJECT in ${SUBJECTS}; do
     continue
   fi
 
-  # Create subject pscalar template ONCE
   TEMPLATE_PSCALAR="${CIFTI_TMP_DIR}/${subj_id}_template_4S1056.pscalar.nii"
   if [[ ! -f "${TEMPLATE_PSCALAR}" ]]; then
     wb_command -cifti-math "0" "${CIFTI_TMP_DIR}/${subj_id}_zero.dscalar.nii" -var x "${DENSE_TEMPLATE}"
@@ -257,7 +246,6 @@ for SUBJECT in ${SUBJECTS}; do
     DWI_OUT_DIR="$(dirname "${TSV}")"
 
     for METRIC in od_mean icvf_mean isovf_mean; do
-
       VEC_TXT="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.txt"
       OUT_PSCALAR="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.pscalar.nii"
       QC_PNG="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}_qc.png"
@@ -290,7 +278,6 @@ with open(out,"w") as g:
 PY
       fi
 
-
       if [[ ! -f "${OUT_PSCALAR}" ]]; then
         wb_command -cifti-convert -from-text \
           "${VEC_TXT}" \
@@ -298,7 +285,6 @@ PY
           "${OUT_PSCALAR}"
       fi
 
-      # --- QC PNG creation
       if [[ ! -f "${QC_PNG}" ]]; then
         singularity exec --cleanenv \
           -B "${DWI_OUT_DIR}:/data" \
@@ -312,14 +298,12 @@ PY
             --surf-dir "/surf" \
             --out "/data/$(basename "${QC_PNG}")"
       fi
-
     done
   done
 done
 
 
-## nipoppy trackers
-
+## nipoppy trackers (unchanged)
 export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
@@ -327,13 +311,10 @@ singularity exec \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
-
     BASEDIR="$SCRATCH/SCanD_project"
     cd "${ROOT_DIR}/Neurobagel"
 
     mkdir -p derivatives/noddireg/0.22.0/output/
-    ls -al derivatives/noddireg/0.22.0/output/
-
     ln -s "${ROOT_DIR}/data/local/derivatives/noddi_reg" derivatives/noddireg/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
@@ -344,4 +325,3 @@ singularity exec \
     done
   '
 unset APPTAINERENV_ROOT_DIR
-
