@@ -123,8 +123,7 @@ done
 
 ############################
 # STEP 3: RESAMPLE LABELS TO EACH SESSION'S space-T1w_dwiref GRID
-# Write outputs into OUTPUT_DIR/sub-*/ses-*/dwi (session-specific)
-# Also create "space-ACPC" symlinks per session for Step 4 compatibility
+# ALSO: write ACPC-named labels into anat/ for Step 4 compatibility
 ############################
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
@@ -138,24 +137,24 @@ for SUBJECT in ${SUBJECTS}; do
   for session in ${SESSIONS}; do
     ses_id="ses-${session}"
 
-    # QSIPrep reference grid (this is session-specific)
     ref_file=$(find "${QSIPREP_DIR}/${subj_id}/${ses_id}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
     [[ -f "${ref_file}" ]] || { echo "[ERROR] Missing dwiref for ${subj_id} ${ses_id}"; exit 1; }
 
-    # output folder for session-specific labels
     DWI_OUT_DIR="${OUTPUT_DIR}/${subj_id}/${ses_id}/dwi"
-    mkdir -p "${DWI_OUT_DIR}"
+    ANAT_OUT_DIR="${OUTPUT_DIR}/${subj_id}/anat"
+    mkdir -p "${DWI_OUT_DIR}" "${ANAT_OUT_DIR}"
 
-    # Resample all subject T1w labels into this session's dwiref grid
     for in_path in ${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-*_dseg.nii.gz; do
       [[ -f "${in_path}" ]] || continue
-      base=$(basename "${in_path}")
 
-      # extract desc label name (XXX)
+      base=$(basename "${in_path}")
       desc=$(echo "${base}" | sed -E "s/^${subj_id}_space-T1w_desc-(.*)_dseg\.nii\.gz/\1/")
 
       out_base="${subj_id}_${ses_id}_space-T1w_ref-dwiref_desc-${desc}_dseg.nii.gz"
-      acpc_base="${subj_id}_${ses_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
+      acpc_base="${subj_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
+
+      # Skip if already exists
+      [[ -f "${DWI_OUT_DIR}/${out_base}" ]] && continue
 
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
@@ -167,8 +166,9 @@ for SUBJECT in ${SUBJECTS}; do
           -n GenericLabel \
           -o "/parc/${subj_id}/${ses_id}/dwi/${out_base}"
 
-      # Session-specific ACPC-named symlink (relative link, safer)
-      ln -sf "${out_base}" "${DWI_OUT_DIR}/${acpc_base}"
+      # Write ACPC-named copy into anat/ (for Step 4 compatibility)
+      ln -sf "../${ses_id}/dwi/${out_base}" "${ANAT_OUT_DIR}/${acpc_base}"
+
     done
   done
 done
