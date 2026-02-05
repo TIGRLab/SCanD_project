@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 """
 Extract NODDI metrics per parcel and write TSV + QA PNGs.
 
