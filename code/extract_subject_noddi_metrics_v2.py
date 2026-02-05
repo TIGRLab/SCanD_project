@@ -77,19 +77,32 @@ def _masker_to_series(masker: NiftiLabelsMasker, values_1d: np.ndarray) -> pd.Se
 
 def noddi_filename(noddi_dir: str, subject: str, session: str | None, noddi_mdp: str) -> str:
     if session:
-        pattern = (
-            f"{noddi_dir}/sub-{subject}/ses-{session}/dwi/"
-            f"sub-{subject}_ses-{session}_*space-T1w*_model-noddi_*-{noddi_mdp}_dwimap.nii*"
-        )
+        pattern = f"{noddi_dir}/sub-{subject}/ses-{session}/dwi/*.nii*"
     else:
-        pattern = (
-            f"{noddi_dir}/sub-{subject}/dwi/"
-            f"sub-{subject}_*space-T1w*_model-noddi_*-{noddi_mdp}_dwimap.nii*"
-        )
-    matches = glob(pattern)
-    if not matches:
-        raise FileNotFoundError(f"NODDI file not found with pattern: {pattern}")
-    return matches[0]
+        pattern = f"{noddi_dir}/sub-{subject}/dwi/*.nii*"
+
+    cands = glob(pattern)
+    keep = []
+    for p in cands:
+        ent = parse_file_entities(p)
+        if ent.get("model") != "noddi":
+            continue
+        # your naming uses mdp-<metric>
+        if ent.get("mdp") != noddi_mdp:
+            continue
+        if ent.get("space") != "T1w":
+            continue
+        keep.append(p)
+
+    if not keep:
+        raise FileNotFoundError(f"No NODDI {noddi_mdp} in space-T1w under {pattern}")
+
+    # Prefer a preproc/desc if you have it (optional)
+    def score(p):
+        e = parse_file_entities(p)
+        return (1 if e.get("desc") in ("preproc", "coreg", "aligned") else 0, len(p))
+    keep = sorted(keep, key=score, reverse=True)
+    return keep[0]
 
 
 def find_parc_files_t1w(parc_dir: str, subject: str) -> list[str]:
