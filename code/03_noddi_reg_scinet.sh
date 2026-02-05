@@ -119,10 +119,12 @@ for SUBJECT in ${SUBJECTS}; do
         --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
   done
 done
+   
 
 ############################
-# STEP 3: RESAMPLE LABELS TO QSIPREP space-T1w_dwiref GRID (NEW; replaces ACPC transform)
-# ALSO: create ACPC-named links for Step 4 compatibility
+# STEP 3: RESAMPLE LABELS TO EACH SESSION'S space-T1w_dwiref GRID
+# Write outputs into OUTPUT_DIR/sub-*/ses-*/dwi (session-specific)
+# Also create "space-ACPC" symlinks per session for Step 4 compatibility
 ############################
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
@@ -134,18 +136,26 @@ for SUBJECT in ${SUBJECTS}; do
   echo "Resampling parcellations to dwiref grid for ${subj_id} (sessions: ${SESSIONS})"
 
   for session in ${SESSIONS}; do
-    # QSIPrep reference grid
-    ref_file=$(find "${QSIPREP_DIR}/${subj_id}/ses-${session}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
-    [[ -f "${ref_file}" ]] || { echo "[ERROR] Missing dwiref for ${subj_id} ses-${session}"; exit 1; }
+    ses_id="ses-${session}"
 
-    # Resample EVERYTHING we have in OUTPUT anat that matches space-T1w_desc-*_dseg.nii.gz
+    # QSIPrep reference grid (this is session-specific)
+    ref_file=$(find "${QSIPREP_DIR}/${subj_id}/${ses_id}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
+    [[ -f "${ref_file}" ]] || { echo "[ERROR] Missing dwiref for ${subj_id} ${ses_id}"; exit 1; }
+
+    # output folder for session-specific labels
+    DWI_OUT_DIR="${OUTPUT_DIR}/${subj_id}/${ses_id}/dwi"
+    mkdir -p "${DWI_OUT_DIR}"
+
+    # Resample all subject T1w labels into this session's dwiref grid
     for in_path in ${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-*_dseg.nii.gz; do
       [[ -f "${in_path}" ]] || continue
-
       base=$(basename "${in_path}")
-      # space-T1w_desc-XXX_dseg.nii.gz -> space-T1w_ref-dwiref_desc-XXX_dseg.nii.gz
-      out_base=$(echo "${base}" | sed 's/_space-T1w_desc-/_space-T1w_ref-dwiref_desc-/')
-      out_path="${OUTPUT_DIR}/${subj_id}/anat/${out_base}"
+
+      # extract desc label name (XXX)
+      desc=$(echo "${base}" | sed -E "s/^${subj_id}_space-T1w_desc-(.*)_dseg\.nii\.gz/\1/")
+
+      out_base="${subj_id}_${ses_id}_space-T1w_ref-dwiref_desc-${desc}_dseg.nii.gz"
+      acpc_base="${subj_id}_${ses_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
 
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
@@ -155,14 +165,10 @@ for SUBJECT in ${SUBJECTS}; do
           -i "/parc/${subj_id}/anat/${base}" \
           -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
           -n GenericLabel \
-          -o "/parc/${subj_id}/anat/${out_base}"
+          -o "/parc/${subj_id}/${ses_id}/dwi/${out_base}"
 
-      # Step 4 expects "space-ACPC" files; satisfy it with a symlink to the ref-dwiref volume.
-      # (No actual ACPC transform; just naming to keep extract_subject_noddi_metrics_v2.py happy.)
-      acpc_base=$(echo "${base}" | sed 's/_space-T1w_desc-/_space-ACPC_desc-/')
-      acpc_path="${OUTPUT_DIR}/${subj_id}/anat/${acpc_base}"
-
-      ln -sf "${out_path}" "${acpc_path}"
+      # Session-specific ACPC-named symlink (relative link, safer)
+      ln -sf "${out_base}" "${DWI_OUT_DIR}/${acpc_base}"
     done
   done
 done
