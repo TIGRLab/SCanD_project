@@ -151,7 +151,7 @@ for SUBJECT in ${SUBJECTS}; do
       desc=$(echo "${base}" | sed -E "s/^${subj_id}_space-T1w_desc-(.*)_dseg\.nii\.gz/\1/")
 
       out_base="${subj_id}_${ses_id}_space-T1w_ref-dwiref_desc-${desc}_dseg.nii.gz"
-      acpc_base="${subj_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
+      acpc_base="${subj_id}_${ses_id}_space-ACPC_desc-${desc}_dseg.nii.gz"
 
       singularity exec --cleanenv \
         -B "${QSIPREP_DIR}:/qsiprep" \
