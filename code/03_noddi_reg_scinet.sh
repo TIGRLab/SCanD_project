@@ -45,21 +45,22 @@ else
   SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
 fi
 
+# Fix FS pial names if needed
 for subj in $SUBJECTS_DIR/sub-*; do
   surfdir="$subj/surf"
   [[ -f "$surfdir/lh.pial.T1" ]] && mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
   [[ -f "$surfdir/rh.pial.T1" ]] && mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
 done
 
-
 ############################
 # STEP 1: CIFTIFY
 ############################
 for SUBJECT in ${SUBJECTS}; do
-  CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}"
+  subj_id="sub-${SUBJECT}"
+  CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/${subj_id}"
 
   if [[ -d "$CIFTIFY_SUBJ_DIR" ]]; then
-    echo "Removing existing ciftify output for sub-${SUBJECT}"
+    echo "Removing existing ciftify output for ${subj_id}"
     rm -rf "$CIFTIFY_SUBJ_DIR"
   fi
 
@@ -74,29 +75,34 @@ for SUBJECT in ${SUBJECTS}; do
       --fs-license /li \
       --resample-to-T1w32k \
       --surf-reg FS \
-      sub-${SUBJECT}
+      ${subj_id}
 
-  mkdir -p ${OUTPUT_DIR}/sub-${SUBJECT}/anat
+  mkdir -p "${OUTPUT_DIR}/${subj_id}/anat"
 
-  cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/aparc+aseg.nii.gz" \
-     "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-aparcaseg_dseg.nii.gz"
+  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/aparc+aseg.nii.gz" \
+     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-aparcaseg_dseg.nii.gz"
 
-  cp "${CIFTIFY_DIR}/ciftify/sub-${SUBJECT}/T1w/wmparc.nii.gz" \
-     "${OUTPUT_DIR}/sub-${SUBJECT}/anat/sub-${SUBJECT}_space-T1w_desc-wmparc_dseg.nii.gz"
+  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/wmparc.nii.gz" \
+     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-wmparc_dseg.nii.gz"
 done
 
-
 ############################
-# STEP 2: DLABEL → T1w
+# STEP 2: DLABEL → T1w (QSIPrep preproc T1w template)
 ############################
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
-  mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
-  echo "Mapping DLABEL to T1w for ${subj_id}"
+  mkdir -p "${OUTPUT_DIR}/${subj_id}/anat"
+  echo "Mapping DLABEL to QSIPrep T1w for ${subj_id}"
+
+  # QSIPrep preproc T1w is the correct “truth” for this pipeline
+  T1W_TEMPLATE="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii"
+  if [[ ! -f "${T1W_TEMPLATE}" ]]; then
+    echo "[WARN] Missing ${T1W_TEMPLATE} for ${subj_id}, skipping dlabel->vol."
+    continue
+  fi
 
   for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
     parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
-
     output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
     [[ -f "$output_file" ]] && continue
 
@@ -116,54 +122,8 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 
-############################
-# STEP 3 (FIXED): RESAMPLE PARCELLATION TO DWIREF GRID (NO ACPC XFM)
-############################
-for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
-    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
-  [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-
-  echo "Resampling parcellations to QSIPrep T1w dwiref grid for ${subj_id}"
-
-  for session in ${SESSIONS}; do
-    ses_id="ses-${session}"
-    ref_file=$(find "${QSIPREP_DIR}/${subj_id}/${ses_id}/dwi" -name "*_space-T1w_dwiref.nii.gz" | head -n 1 || true)
-
-    if [[ -z "${ref_file}" || ! -f "${ref_file}" ]]; then
-      echo "[WARN] No *_space-T1w_dwiref.nii.gz found for ${subj_id} ${ses_id}, skipping session."
-      continue
-    fi
-
-    for parc in aparcaseg wmparc Glasser Gordon \
-                4S1056Parcels 4S156Parcels 4S256Parcels 4S356Parcels \
-                4S456Parcels 4S556Parcels 4S656Parcels 4S756Parcels \
-                4S856Parcels 4S956Parcels; do
-
-      in_parc="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz"
-      out_onref="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg_on-dwiref.nii.gz"
-
-      [[ ! -f "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" ]] && continue
-
-      singularity exec --cleanenv \
-        -B "${QSIPREP_DIR}:/qsiprep" \
-        -B "${OUTPUT_DIR}:/parc" \
-        "${SING_CONTAINER}" \
-        antsApplyTransforms -d 3 \
-          -i "${in_parc}" \
-          -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
-          --interpolation GenericLabel \
-          -o "${out_onref}"
-
-    done
-  done
-done
-
-
 # =========================
-# STEP 4: METRIC EXTRACTION
+# STEP 3: METRIC EXTRACTION (Python does resampling-to-dwimap internally)
 # =========================
 cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
 
@@ -173,8 +133,6 @@ for SUBJECT in ${SUBJECTS}; do
   SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
     | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
   [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-
-  echo "Extracting noddi metric for ${subj_id}"
 
   for session in ${SESSIONS}; do
     singularity exec --cleanenv \
@@ -191,6 +149,11 @@ for SUBJECT in ${SUBJECTS}; do
         --amico-noddi-dir "/noddi"
   done
 done
+
+############################
+# STEP 4: TSV -> PSCALAR + QC PNG (unchanged)
+############################
+# (keep your existing Step 5 block as-is)
 
 
 ############################
