@@ -258,15 +258,21 @@ def make_noddi_3tissues_plot(subject, session, noddi_dir, qsiprep_dir, out_png=N
 
 def make_dseg_qsi_qa_image(subject, session, noddi_mdp, noddi_dir, parc_file, parc_name, out_png):
     noddi_file = noddi_filename(noddi_dir, subject, session, noddi_mdp)
+
+    parc_img  = nilearn.image.load_img(parc_file)
+    noddi_img = nilearn.image.load_img(noddi_file)
+
+    # KEY FIX: force ROI onto the exact grid/affine of the NODDI background
+    parc_on_bg = resample_to_img(parc_img, noddi_img, interpolation="nearest")
+
     return nilearn.plotting.plot_roi(
-        roi_img=parc_file,
-        bg_img=noddi_file,
+        roi_img=parc_on_bg,
+        bg_img=noddi_img,
         alpha=0.4,
         display_mode="mosaic",
         title=f"{subject} {parc_name} on noddi {noddi_mdp}",
         output_file=out_png,
     )
-
 
 def main():
     arguments = docopt(__doc__)
