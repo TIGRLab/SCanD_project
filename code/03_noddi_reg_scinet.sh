@@ -79,12 +79,6 @@ for SUBJECT in ${SUBJECTS}; do
 
   mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
 
-  # keep these for completeness; they'll get resampled to dwiref later
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/aparc+aseg.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-aparcaseg_dseg.nii.gz"
-
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/wmparc.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-wmparc_dseg.nii.gz"
 done
 
 ############################
