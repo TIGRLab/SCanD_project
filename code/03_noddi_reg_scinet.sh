@@ -123,7 +123,7 @@ done
 
 
 # =========================
-# STEP 3: METRIC EXTRACTION (Python does resampling-to-dwimap internally)
+# STEP 3: METRIC EXTRACTION
 # =========================
 cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
 
@@ -150,14 +150,9 @@ for SUBJECT in ${SUBJECTS}; do
   done
 done
 
-############################
-# STEP 4: TSV -> PSCALAR + QC PNG (unchanged)
-############################
-# (keep your existing Step 5 block as-is)
-
 
 ############################
-# STEP 5: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
+# STEP 4: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
 ############################
 QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
 
