@@ -144,6 +144,8 @@ for SUBJECT in ${SUBJECTS}; do
       in_parc="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz"
       out_onref="/parc/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg_on-dwiref.nii.gz"
 
+      xfm_file="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_from-T1wNative_to-T1wACPC_mode-image_xfm.mat"
+
       [[ ! -f "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc}_dseg.nii.gz" ]] && continue
 
       singularity exec --cleanenv \
@@ -153,6 +155,7 @@ for SUBJECT in ${SUBJECTS}; do
         antsApplyTransforms -d 3 \
           -i "${in_parc}" \
           -r "/qsiprep/${ref_file#${QSIPREP_DIR}/}" \
+          -t "/qsiprep/${xfm_file#${QSIPREP_DIR}/}" \
           --interpolation GenericLabel \
           -o "${out_onref}"
 
