@@ -89,7 +89,7 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 ############################
-# STEP 2: DLABEL → QSIPREP T1w
+# STEP 2: DLABEL → QSIPREP T1w 
 ############################
 for SUBJECT in ${SUBJECTS}; do
   subj_id="sub-${SUBJECT}"
