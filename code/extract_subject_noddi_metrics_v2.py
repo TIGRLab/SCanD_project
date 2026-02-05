@@ -10,13 +10,17 @@ FINAL FIX:
 This removes all dwiref/dwimap grid mismatch issues.
 
 Usage:
-    extract_subject_noddi_metrics [options] --subject <subject> --parc-dir <parc-dir> --qsiprep-dir <qsiprep-dir> --amico-noddi-dir <amico-noddi>
+  extract_subject_noddi_metrics_v2.py --subject=<subject> --parc-dir=<parc-dir> --qsiprep-dir=<qsiprep-dir> --amico-noddi-dir=<amico-noddi> [--session=<session>] [--icvf-thresh=<thres>] [--parcellation=<parc>] [--debug]
 
 Options:
-    --session <session>
-    --icvf-thresh <thres>    [default: 0.99]
-    --parcellation <parc>
-    --debug
+  --subject=<subject>            BIDS subject id (e.g., MRP0007 or sub-MRP0007)
+  --parc-dir=<parc-dir>          Parcellations + outputs directory (e.g., /parc)
+  --qsiprep-dir=<qsiprep-dir>    QSIPrep derivatives root (e.g., /qsiprep)
+  --amico-noddi-dir=<amico-noddi> AMICO-NODDI derivatives root (e.g., /noddi)
+  --session=<session>            Session label without "ses-" (e.g., 01)
+  --icvf-thresh=<thres>          Threshold for mask [default: 0.99]
+  --parcellation=<parc>          Optional single parcellation desc to run
+  --debug                        Verbose logging
 """
 
 from docopt import docopt
