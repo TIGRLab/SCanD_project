@@ -1,283 +1,462 @@
-#!/bin/bash
-#SBATCH --job-name=noddi_reg
-#SBATCH --output=logs/%x_%j.out
-#SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
-#SBATCH --time=04:00:00
-#SBATCH --mem-per-cpu=4000
+#!/usr/bin/env python3
+"""
+Extract NODDI metrics per parcel and write TSV + QA PNGs.
 
-set -euo pipefail
+Usage:
+  extract_subject_noddi_metrics_v2.py --subject <subject> --parc-dir <parc-dir> --qsiprep-dir <qsiprep-dir> --amico-noddi-dir <amico-noddi-dir> [--session <session>] [--icvf-thresh <thres>] [--parcellation <parc>] [--debug]
 
-SUB_SIZE=1
-export THREADS_PER_COMMAND=2
-BASEDIR=${SLURM_SUBMIT_DIR}
+Options:
+  --subject <subject>              Subject ID (e.g. MRP0007 or sub-MRP0007)
+  --parc-dir <parc-dir>            Parcellations + outputs root (e.g. /parc)
+  --qsiprep-dir <qsiprep-dir>      QSIPrep derivatives root (e.g. /qsiprep)
+  --amico-noddi-dir <amico-noddi-dir>  AMICO-NODDI derivatives root (e.g. /noddi)
+  --session <session>              Session label without "ses-" (e.g. 01) [default: ]
+  --icvf-thresh <thres>            ICVF threshold for mask [default: 0.99]
+  --parcellation <parc>            Run only one parcellation desc (e.g. 4S1056Parcels)
+  --debug                          Verbose logging
+"""
 
-module load apptainer/1.3.5
-module load StdEnv/2023
-module load connectomeworkbench/2.0.1
+from __future__ import annotations
 
-# =========================
-# PATHS
-# =========================
-export BIDS_DIR=${BASEDIR}/data/local/bids
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
-export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
-export NODDI_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI
-export CIFTIFY_DIR=${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/noddi_reg
-export TEMPLATES_DIR=${BASEDIR}/templates/parcellations
-export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-export SING_CONTAINER=${BASEDIR}/containers/noddi_postproc-v.1.0.simg
+from docopt import docopt
+import os
+from glob import glob
+import logging
 
-mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
-# =========================
-# SUBJECT SELECTION
-# =========================
-bigger_bit=$(echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc)
-N_SUBJECTS=$(( $(wc -l < ${BIDS_DIR}/participants.tsv) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
-
-if [[ "${SLURM_ARRAY_TASK_ID}" -eq "${array_job_length}" ]]; then
-  SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${N_SUBJECTS} | tail -n ${Tail})
-else
-  SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE})
-fi
-
-# Fix FS pial names if needed
-for subj in $SUBJECTS_DIR/sub-*; do
-  surfdir="$subj/surf"
-  [[ -f "$surfdir/lh.pial.T1" ]] && mv "$surfdir/lh.pial.T1" "$surfdir/lh.pial"
-  [[ -f "$surfdir/rh.pial.T1" ]] && mv "$surfdir/rh.pial.T1" "$surfdir/rh.pial"
-done
-
-############################
-# STEP 1: CIFTIFY
-############################
-for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-  CIFTIFY_SUBJ_DIR="${CIFTIFY_DIR}/ciftify/${subj_id}"
-
-  if [[ -d "$CIFTIFY_SUBJ_DIR" ]]; then
-    echo "Removing existing ciftify output for ${subj_id}"
-    rm -rf "$CIFTIFY_SUBJ_DIR"
-  fi
-
-  singularity exec --cleanenv \
-    -B ${SUBJECTS_DIR}:/freesurfer \
-    -B ${CIFTIFY_DIR}:/out \
-    -B ${ORIG_FS_LICENSE}:/li \
-    ${SING_CONTAINER} \
-    ciftify_recon_all \
-      --fs-subjects-dir /freesurfer \
-      --ciftify-work-dir /out/ciftify \
-      --fs-license /li \
-      --resample-to-T1w32k \
-      --surf-reg FS \
-      ${subj_id}
-
-  mkdir -p "${OUTPUT_DIR}/${subj_id}/anat"
-
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/aparc+aseg.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-aparcaseg_dseg.nii.gz"
-
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/wmparc.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-wmparc_dseg.nii.gz"
-done
-
-############################
-# STEP 2: DLABEL → T1w (QSIPrep preproc T1w template)
-############################
-for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-  mkdir -p "${OUTPUT_DIR}/${subj_id}/anat"
-  echo "Mapping DLABEL to QSIPrep T1w for ${subj_id}"
-
-  # QSIPrep preproc T1w is the correct “truth” for this pipeline
-  T1W_TEMPLATE="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii"
-  if [[ ! -f "${T1W_TEMPLATE}" ]]; then
-    echo "[WARN] Missing ${T1W_TEMPLATE} for ${subj_id}, skipping dlabel->vol."
-    continue
-  fi
-
-  for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
-    parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
-    output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
-    [[ -f "$output_file" ]] && continue
-
-    singularity exec --cleanenv \
-      -B ${TEMPLATES_DIR}:/templates \
-      -B ${CIFTIFY_DIR}:/out \
-      -B ${QSIPREP_DIR}:/qsiprep \
-      -B ${OUTPUT_DIR}:/parc \
-      -B ${BASEDIR}/code:/code \
-      ${SING_CONTAINER} \
-      /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
-        --input-dlabel /templates/$(basename "$parc_file") \
-        --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
-        --volume-template /qsiprep/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii \
-        --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
-  done
-done
+import nibabel as nib
+import nilearn.image
+import nilearn.plotting
+from nilearn.image import math_img, resample_to_img, new_img_like
+from nilearn.maskers import NiftiLabelsMasker
+from bids.layout import parse_file_entities
 
 
-# =========================
-# STEP 3: METRIC EXTRACTION
-# =========================
-cp ${TEMPLATES_DIR}/*dseg.tsv ${OUTPUT_DIR}/
-
-for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
-    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
-  [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-
-  for session in ${SESSIONS}; do
-    singularity exec --cleanenv \
-      -B "${BASEDIR}/code:/code" \
-      -B "${QSIPREP_DIR}:/qsiprep" \
-      -B "${NODDI_DIR}:/noddi" \
-      -B "${OUTPUT_DIR}:/parc" \
-      "${SING_CONTAINER}" \
-      /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics_v2.py \
-        --subject "${SUBJECT}" \
-        --session "${session}" \
-        --parc-dir /parc \
-        --qsiprep-dir /qsiprep \
-        --amico-noddi-dir /noddi
-  done
-done
+logger = logging.getLogger("extract_subject_noddi_metrics_v2")
 
 
-############################
-# STEP 4: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
-############################
-QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
+# -----------------------------
+# Helpers
+# -----------------------------
 
-CIFTI_TMP_DIR="${OUTPUT_DIR}/_cifti_templates"
-mkdir -p "${CIFTI_TMP_DIR}"
-
-DLABEL_4S1056="${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-4S1056Parcels_dseg.dlabel.nii"
-
-for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-
-  SESSIONS=$(find "${BIDS_DIR}/${subj_id}" -maxdepth 2 -type d -path "*/ses-*/dwi" \
-    | sort -V | xargs -n1 dirname | xargs -n1 basename | sed 's/^ses-//')
-  [[ -z "${SESSIONS}" ]] && SESSIONS="01"
-
-  SURF_DIR_SUBJ="${CIFTIFY_DIR}/ciftify/${subj_id}/MNINonLinear/fsaverage_LR32k"
-  DENSE_TEMPLATE="${SURF_DIR_SUBJ}/${subj_id}.thickness.32k_fs_LR.dscalar.nii"
-  [[ ! -f "${DENSE_TEMPLATE}" ]] && DENSE_TEMPLATE="${SURF_DIR_SUBJ}/${subj_id}.sulc.32k_fs_LR.dscalar.nii"
-
-  if [[ ! -d "${SURF_DIR_SUBJ}" || ! -f "${DENSE_TEMPLATE}" ]]; then
-    echo "[WARN] Missing ciftify outputs for ${subj_id}, skipping."
-    continue
-  fi
-
-  TEMPLATE_PSCALAR="${CIFTI_TMP_DIR}/${subj_id}_template_4S1056.pscalar.nii"
-  if [[ ! -f "${TEMPLATE_PSCALAR}" ]]; then
-    wb_command -cifti-math "0" "${CIFTI_TMP_DIR}/${subj_id}_zero.dscalar.nii" -var x "${DENSE_TEMPLATE}"
-    wb_command -cifti-parcellate \
-      "${CIFTI_TMP_DIR}/${subj_id}_zero.dscalar.nii" \
-      "${DLABEL_4S1056}" \
-      COLUMN \
-      "${TEMPLATE_PSCALAR}"
-  fi
-
-  for session in ${SESSIONS}; do
-    ses_id="ses-${session}"
-
-    TSV="${OUTPUT_DIR}/${subj_id}/${ses_id}/dwi/${subj_id}_${ses_id}_desc-4S1056Parcels_model-noddi_results.tsv"
-    if [[ ! -f "${TSV}" ]]; then
-      TSV=$(find "${OUTPUT_DIR}/${subj_id}" -type f -name "${subj_id}_${ses_id}*4S1056Parcels*results.tsv" | head -n 1 || true)
-    fi
-    if [[ -z "${TSV}" || ! -f "${TSV}" ]]; then
-      echo "[WARN] TSV not found for ${subj_id} ${ses_id}, skipping."
-      continue
-    fi
-
-    DWI_OUT_DIR="$(dirname "${TSV}")"
-
-    for METRIC in od_mean icvf_mean isovf_mean; do
-      VEC_TXT="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.txt"
-      OUT_PSCALAR="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}.pscalar.nii"
-      QC_PNG="${DWI_OUT_DIR}/${subj_id}_${ses_id}_${METRIC}_qc.png"
-
-      if [[ ! -f "${VEC_TXT}" ]]; then
-        python3 - <<PY
-import csv
-tsv="${TSV}"
-col="${METRIC}"
-out="${VEC_TXT}"
-n=1056
-vec=[0.0]*n
-
-def parse_float(x):
-    if x is None: return None
-    x=x.strip()
-    if x=="" or x.lower() in ("na","nan","null","none"): return None
-    return float(x)
-
-with open(tsv, newline='') as f:
-    r=csv.DictReader(f, delimiter="\\t")
-    for row in r:
-        i=int(row["index"])-1
-        v=parse_float(row.get(col,""))
-        vec[i]=0.0 if v is None else v
-
-with open(out,"w") as g:
-    for v in vec:
-        g.write(f"{v}\\n")
-PY
-      fi
-
-      if [[ ! -f "${OUT_PSCALAR}" ]]; then
-        wb_command -cifti-convert -from-text \
-          "${VEC_TXT}" \
-          "${TEMPLATE_PSCALAR}" \
-          "${OUT_PSCALAR}"
-      fi
-
-      if [[ ! -f "${QC_PNG}" ]]; then
-        singularity exec --cleanenv \
-          -B "${DWI_OUT_DIR}:/data" \
-          -B "${BASEDIR}/code:/code" \
-          -B "${TEMPLATES_DIR}:/templates" \
-          -B "${SURF_DIR_SUBJ}:/surf" \
-          "${QC_CONTAINER}" \
-          python3 /code/noddireg_qc.py \
-            --pscalar "/data/$(basename "${OUT_PSCALAR}")" \
-            --dlabel  "/templates/tpl-fsLR_res-91k_atlas-4S1056Parcels_dseg.dlabel.nii" \
-            --surf-dir "/surf" \
-            --out "/data/$(basename "${QC_PNG}")"
-      fi
-    done
-  done
-done
+def _force_xform_like(img: nib.Nifti1Image, ref: nib.Nifti1Image) -> nib.Nifti1Image:
+    """Force qform/sform + affine to match ref exactly."""
+    hdr = img.header.copy()
+    hdr.set_qform(ref.affine, code=1)
+    hdr.set_sform(ref.affine, code=1)
+    return nib.Nifti1Image(img.get_fdata(dtype=np.float32), ref.affine, header=hdr)
 
 
-## nipoppy trackers (unchanged)
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
+def _load_img(path: str) -> nib.Nifti1Image:
+    return nilearn.image.load_img(path)
 
-singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-    BASEDIR="$SCRATCH/SCanD_project"
-    cd "${ROOT_DIR}/Neurobagel"
 
-    mkdir -p derivatives/noddireg/0.22.0/output/
-    ln -s "${ROOT_DIR}/data/local/derivatives/noddi_reg" derivatives/noddireg/0.22.0/output/ || true
+def _parcel_counts(parc_img: nib.Nifti1Image) -> pd.DataFrame:
+    data = np.asarray(parc_img.get_fdata(), dtype=np.int32)
+    labels, counts = np.unique(data, return_counts=True)
+    df = pd.DataFrame({"index": labels, "n_vx": counts})
+    df = df[df["index"] > 0].copy()
+    return df
 
-    for subject in $SUBJECTS; do
-      nipoppy track \
-        --pipeline noddireg \
-        --pipeline-version 0.22.0 \
-        --participant-id sub-$subject
-    done
-  '
-unset APPTAINERENV_ROOT_DIR
+
+def _masker_to_series(masker: NiftiLabelsMasker, values_1d: np.ndarray) -> pd.Series:
+    # safest mapping when labels missing
+    if hasattr(masker, "labels_") and masker.labels_ is not None:
+        label_ids = np.array(masker.labels_, dtype=int)
+        return pd.Series(values_1d, index=label_ids)
+    # fallback (less safe)
+    idx = np.arange(1, len(values_1d) + 1)
+    return pd.Series(values_1d, index=idx)
+
+
+def noddi_filename(noddi_dir: str, subject: str, session: str | None, noddi_mdp: str) -> str:
+    """
+    Robust NODDI file selection:
+      - must be model-noddi
+      - must match requested metric (mdp / metric / substring)
+      - prefer space-T1w if available, otherwise fallback (ACPC/None) instead of hard failing
+    """
+    if session:
+        dwi_dir = f"{noddi_dir}/sub-{subject}/ses-{session}/dwi"
+    else:
+        dwi_dir = f"{noddi_dir}/sub-{subject}/dwi"
+
+    cands = sorted(glob(f"{dwi_dir}/*.nii*"))
+    if not cands:
+        raise FileNotFoundError(f"No NIfTIs found under {dwi_dir}")
+
+    keep: list[tuple[str, dict]] = []
+    for p in cands:
+        ent = parse_file_entities(p)
+
+        if ent.get("model") != "noddi":
+            continue
+
+        metric = ent.get("mdp") or ent.get("metric") or ent.get("map")
+        # prefer entity match; fallback to substring if naming is weird
+        if metric is not None:
+            if str(metric) != noddi_mdp:
+                continue
+        else:
+            if f"mdp-{noddi_mdp}" not in p and f"-{noddi_mdp}_" not in p and noddi_mdp not in p:
+                continue
+
+        keep.append((p, ent))
+
+    if not keep:
+        raise FileNotFoundError(f"No NODDI {noddi_mdp} files matched under {dwi_dir}")
+
+    def rank(item):
+        p, ent = item
+        space = ent.get("space")
+        return (
+            2 if space == "T1w" else (1 if space is not None else 0),
+            1 if "dwimap" in p else 0,
+            len(p),
+        )
+
+    keep_sorted = sorted(keep, key=rank, reverse=True)
+    chosen, ent = keep_sorted[0]
+    logger.warning(
+        f"[NODDI PICK] subj={subject} ses={session} mdp={noddi_mdp} space={ent.get('space')} -> {chosen}"
+    )
+    return chosen
+
+
+def find_parc_files_t1w(parc_dir: str, subject: str) -> list[str]:
+    return glob(f"{parc_dir}/sub-{subject}/anat/sub-{subject}_space-T1w_desc-*_dseg.nii.gz")
+
+
+def parc_file_t1w(parc_dir: str, subject: str, parc_desc: str) -> str:
+    return os.path.join(parc_dir, f"sub-{subject}", "anat", f"sub-{subject}_space-T1w_desc-{parc_desc}_dseg.nii.gz")
+
+
+def _read_label_tsv(templates_dir: str, parc: str) -> str | None:
+    # your template TSV copies land in /parc root
+    if parc in ["wmparc", "aparcaseg"]:
+        tsv = os.path.join(templates_dir, "desc-FreeSurferAll_dseg.tsv")
+    else:
+        tsv = os.path.join(templates_dir, f"atlas-{parc}_dseg.tsv")
+    return tsv if os.path.exists(tsv) else None
+
+
+def _qsiprep_t1w_ref(qsiprep_dir: str, subject: str) -> nib.Nifti1Image:
+    p = os.path.join(qsiprep_dir, f"sub-{subject}", "anat", f"sub-{subject}_desc-preproc_T1w.nii")
+    if not os.path.exists(p):
+        raise FileNotFoundError(f"Missing QSIPrep preproc T1w: {p}")
+    return _load_img(p)
+
+
+def _qsiprep_dseg(qsiprep_dir: str, subject: str) -> str | None:
+    p = os.path.join(qsiprep_dir, f"sub-{subject}", "anat", f"sub-{subject}_dseg.nii.gz")
+    return p if os.path.exists(p) else None
+
+
+# -----------------------------
+# Core compute (ALL on QSIPrep preproc T1w grid)
+# -----------------------------
+
+def extract_noddi_parc_results(
+    subject: str,
+    session: str | None,
+    parc_file: str,
+    parc_tsv: str | None,
+    noddi_dir: str,
+    qsiprep_dir: str,
+    tsv_out: str,
+    icvf_max_threshold: float,
+):
+    # Truth grid
+    t1w_img = _qsiprep_t1w_ref(qsiprep_dir, subject)
+
+    parc_img_native = _load_img(parc_file)
+    parc_t1w = resample_to_img(parc_img_native, t1w_img, interpolation="nearest")
+    parc_t1w = _force_xform_like(parc_t1w, t1w_img)
+
+    # ICVF on truth grid (for coverage + masking)
+    icvf_path = noddi_filename(noddi_dir, subject, session, "icvf")
+    icvf_img_native = _load_img(icvf_path)
+    icvf_t1w = resample_to_img(icvf_img_native, t1w_img, interpolation="continuous")
+    icvf_t1w = _force_xform_like(icvf_t1w, t1w_img)
+
+    # voxel volume
+    pixdim = parc_t1w.header.get_zooms()[:3]
+    voxel_size = float(pixdim[0] * pixdim[1] * pixdim[2])
+
+    full_df = _parcel_counts(parc_t1w).rename(columns={"n_vx": "n_vx_full"})
+    full_df["size_full"] = full_df["n_vx_full"] * voxel_size
+    results = full_df.copy()
+
+    # label names
+    if parc_tsv:
+        labeldf = pd.read_csv(parc_tsv, sep="\t")
+        if not {"index", "name"}.issubset(labeldf.columns):
+            raise ValueError(f"Label TSV missing required columns {{index,name}}: {parc_tsv}")
+        labeldf = labeldf[["index", "name"]].copy()
+        labeldf["index"] = labeldf["index"].astype(int)
+        labeldf = labeldf.drop_duplicates("index").set_index("index")
+        results = results.set_index("index").join(labeldf, how="left").reset_index()
+    else:
+        results["name"] = np.nan
+
+    # coverage mask from ICVF (on truth grid)
+    good_mask = math_img(f"(img1 > 0) * (img1 < {float(icvf_max_threshold)})", img1=icvf_t1w)
+    good_mask = _force_xform_like(good_mask, t1w_img)
+
+    good_parc = math_img("img1 * img2", img1=good_mask, img2=parc_t1w)
+    good_parc = _force_xform_like(good_parc, t1w_img)
+
+    masked_df = _parcel_counts(good_parc).rename(columns={"n_vx": "n_vx_masked"})
+    results = results.merge(masked_df, on="index", how="left")
+    results["n_vx_masked"] = results["n_vx_masked"].fillna(0).astype(int)
+    results["coverage"] = np.where(
+        results["n_vx_full"] > 0,
+        results["n_vx_masked"] / results["n_vx_full"],
+        np.nan
+    )
+
+    # stats per metric (resample each NODDI metric to truth grid)
+    for noddi_mdp in ["icvf", "od", "isovf"]:
+        noddi_path = noddi_filename(noddi_dir, subject, session, noddi_mdp)
+        noddi_img_native = _load_img(noddi_path)
+        noddi_t1w = resample_to_img(noddi_img_native, t1w_img, interpolation="continuous")
+        noddi_t1w = _force_xform_like(noddi_t1w, t1w_img)
+
+        # Use the ICVF-derived good mask for ICVF stats (and optional masking can be applied to others too if you want)
+        if noddi_mdp == "icvf":
+            parc_for_stats = good_parc
+        else:
+            parc_for_stats = parc_t1w
+
+        # mean
+        m_mean = NiftiLabelsMasker(labels_img=parc_for_stats, strategy="mean")
+        mean_vals = m_mean.fit_transform(noddi_t1w).ravel()
+        s_mean = _masker_to_series(m_mean, mean_vals)
+        results[f"{noddi_mdp}_mean"] = results["index"].map(s_mean)
+
+        # stdev
+        m_std = NiftiLabelsMasker(labels_img=parc_for_stats, strategy="standard_deviation")
+        std_vals = m_std.fit_transform(noddi_t1w).ravel()
+        s_std = _masker_to_series(m_std, std_vals)
+        results[f"{noddi_mdp}_stdev"] = results["index"].map(s_std)
+
+    # tissue probs from qsiprep dseg -> resample to truth grid
+    qsiprep_dseg_path = _qsiprep_dseg(qsiprep_dir, subject)
+    if qsiprep_dseg_path:
+        tissue_native = _load_img(qsiprep_dseg_path)
+        tissue_t1w = resample_to_img(tissue_native, t1w_img, interpolation="nearest")
+        tissue_t1w = _force_xform_like(tissue_t1w, t1w_img)
+
+        dseg_labels = {"CSF": 1, "GM": 2, "WM": 3}
+        for tissue, val in dseg_labels.items():
+            tissue_mask = math_img(f"img1 == {int(val)}", img1=tissue_t1w)
+            tissue_mask = _force_xform_like(tissue_mask, t1w_img)
+
+            tmasker = NiftiLabelsMasker(labels_img=parc_t1w, strategy="mean")
+            tvals = tmasker.fit_transform(tissue_mask).ravel()
+            s_t = _masker_to_series(tmasker, tvals)
+            results[f"{tissue}_prob"] = results["index"].map(s_t)
+
+        results["tissue"] = results[["CSF_prob", "GM_prob", "WM_prob"]].idxmax(axis=1).str.replace("_prob", "")
+        results["tissue_prob"] = results[["CSF_prob", "GM_prob", "WM_prob"]].max(axis=1)
+    else:
+        for tissue in ["CSF", "GM", "WM"]:
+            results[f"{tissue}_prob"] = np.nan
+        results["tissue"] = np.nan
+        results["tissue_prob"] = np.nan
+
+    results["subject"] = subject
+    results["session"] = session
+
+    outcols = [
+        "subject", "session", "index", "name",
+        "tissue", "tissue_prob",
+        "size_full", "n_vx_full", "n_vx_masked", "coverage",
+        "od_mean", "od_stdev",
+        "icvf_mean", "icvf_stdev",
+        "isovf_mean", "isovf_stdev",
+    ]
+    for c in outcols:
+        if c not in results.columns:
+            results[c] = np.nan
+    results = results[outcols]
+
+    os.makedirs(os.path.dirname(tsv_out), exist_ok=True)
+    results.to_csv(tsv_out, index=False, sep="\t")
+    return results
+
+
+# -----------------------------
+# QA Figures (ALL on QSIPrep preproc T1w grid)
+# -----------------------------
+
+def make_dseg_qsi_qa_image(subject, session, noddi_mdp, noddi_dir, qsiprep_dir, parc_file, parc_name, out_png):
+    t1w_img = _qsiprep_t1w_ref(qsiprep_dir, subject)
+
+    parc_img = _load_img(parc_file)
+    parc_t1w = resample_to_img(parc_img, t1w_img, interpolation="nearest")
+    parc_t1w = _force_xform_like(parc_t1w, t1w_img)
+
+    noddi_file = noddi_filename(noddi_dir, subject, session, noddi_mdp)
+    noddi_img = _load_img(noddi_file)
+    noddi_t1w = resample_to_img(noddi_img, t1w_img, interpolation="continuous")
+    noddi_t1w = _force_xform_like(noddi_t1w, t1w_img)
+
+    roi_data = np.asarray(parc_t1w.get_fdata(), dtype=np.int16)
+    roi_on_bg = new_img_like(noddi_t1w, roi_data, copy_header=True)
+
+    os.makedirs(os.path.dirname(out_png), exist_ok=True)
+    return nilearn.plotting.plot_roi(
+        roi_img=roi_on_bg,
+        bg_img=noddi_t1w,
+        alpha=0.4,
+        display_mode="mosaic",
+        title=f"sub-{subject} {parc_name} on noddi {noddi_mdp} (QSIPrep T1w grid)",
+        output_file=out_png,
+    )
+
+
+def make_noddi_3tissues_plot(subject, session, noddi_dir, qsiprep_dir, out_png, icvf_thresh):
+    t1w_img = _qsiprep_t1w_ref(qsiprep_dir, subject)
+    qsiprep_dseg_path = _qsiprep_dseg(qsiprep_dir, subject)
+    if not qsiprep_dseg_path:
+        return
+
+    # Tissue on truth grid
+    tissue_native = _load_img(qsiprep_dseg_path)
+    tissue_t1w = resample_to_img(tissue_native, t1w_img, interpolation="nearest")
+    tissue_t1w = _force_xform_like(tissue_t1w, t1w_img)
+
+    # ICVF on truth grid -> mask (used for all metrics)
+    icvf_path = noddi_filename(noddi_dir, subject, session, "icvf")
+    icvf_native = _load_img(icvf_path)
+    icvf_t1w = resample_to_img(icvf_native, t1w_img, interpolation="continuous")
+    icvf_t1w = _force_xform_like(icvf_t1w, t1w_img)
+
+    good = math_img(f"(img1 > 0) * (img1 < {float(icvf_thresh)})", img1=icvf_t1w)
+    good = _force_xform_like(good, t1w_img)
+
+    dseg_labels = {"CSF": 1, "GM": 2, "WM": 3}
+    df0 = []
+
+    for noddi_mdp in ["icvf", "od", "isovf"]:
+        noddi_path = noddi_filename(noddi_dir, subject, session, noddi_mdp)
+        noddi_native = _load_img(noddi_path)
+        noddi_t1w = resample_to_img(noddi_native, t1w_img, interpolation="continuous")
+        noddi_t1w = _force_xform_like(noddi_t1w, t1w_img)
+
+        for tissue, val in dseg_labels.items():
+            # (tissue == val) * good * noddi
+            tm = math_img(f"(img1 == {int(val)}) * img2 * img3", img1=tissue_t1w, img2=good, img3=noddi_t1w)
+            tm = _force_xform_like(tm, t1w_img)
+            flat = np.asarray(tm.get_fdata()).ravel()
+            flat = flat[flat > 0]
+            if flat.size == 0:
+                continue
+            df0.append(pd.DataFrame({"tissue": tissue, "noddi": noddi_mdp, "value": flat}))
+
+    if not df0:
+        return
+
+    df = pd.concat(df0, axis=0, ignore_index=True)
+    g = sns.FacetGrid(df, col="noddi", hue="tissue")
+    g.map_dataframe(sns.kdeplot, x="value", clip=[0, 1])
+    g.add_legend()
+    g.fig.subplots_adjust(top=0.88)
+    g.fig.suptitle(f"sub-{subject} ses-{session} NODDI values by tissue (QSIPrep T1w grid)")
+
+    os.makedirs(os.path.dirname(out_png), exist_ok=True)
+    g.savefig(out_png)
+
+
+# -----------------------------
+# Main
+# -----------------------------
+
+def main():
+    args = docopt(__doc__)
+    logging.basicConfig(level=logging.DEBUG if args["--debug"] else logging.WARNING)
+
+    parc_dir = args["--parc-dir"]
+    qsiprep_dir = args["--qsiprep-dir"]
+    noddi_dir = args["--amico-noddi-dir"]
+
+    subject = str(args["--subject"]).replace("sub-", "")
+    session = args["--session"]
+    icvf_thresh = float(args["--icvf-thresh"])
+    only_parc = args["--parcellation"]
+
+    # parcellations
+    if only_parc:
+        parc_list = [only_parc]
+        pf = parc_file_t1w(parc_dir, subject, only_parc)
+        if not os.path.exists(pf):
+            raise FileNotFoundError(f"Missing parcellation: {pf}")
+    else:
+        parc_files = find_parc_files_t1w(parc_dir, subject)
+        if not parc_files:
+            raise FileNotFoundError(f"No T1w parcellations found in {parc_dir}/sub-{subject}/anat")
+        parc_list = sorted({parse_file_entities(pf)["desc"] for pf in parc_files})
+
+    # sessions
+    if session:
+        session = str(session).replace("ses-", "")
+        sessions = [session]
+    else:
+        # infer sessions from files
+        blist = glob(f"{noddi_dir}/sub-{subject}/*/dwi/*.nii*")
+        ses_list = [parse_file_entities(bf).get("session") for bf in blist]
+        sessions = sorted({s for s in ses_list if s is not None}) or [None]
+
+    templates_dir = parc_dir  # you copy TSVs here in SLURM
+
+    for ses in sessions:
+        fig_dir = os.path.join(parc_dir, f"sub-{subject}", "figures")
+        os.makedirs(fig_dir, exist_ok=True)
+
+        density_out = os.path.join(
+            fig_dir,
+            f"sub-{subject}_ses-{ses}_desc-dsegtissue_model-noddi_density.png" if ses else
+            f"sub-{subject}_desc-dsegtissue_model-noddi_density.png"
+        )
+        make_noddi_3tissues_plot(subject, ses, noddi_dir, qsiprep_dir, density_out, icvf_thresh)
+
+        for parc in parc_list:
+            parc_path = parc_file_t1w(parc_dir, subject, parc)
+            label_tsv = _read_label_tsv(templates_dir, parc)
+
+            # QA overlays
+            for noddi_mdp in ["od", "icvf"]:
+                qa_out = os.path.join(
+                    fig_dir,
+                    f"sub-{subject}_ses-{ses}_desc-{parc}_model-noddi_mdp-{noddi_mdp}_qa.png" if ses else
+                    f"sub-{subject}_desc-{parc}_model-noddi_mdp-{noddi_mdp}_qa.png"
+                )
+                make_dseg_qsi_qa_image(subject, ses, noddi_mdp, noddi_dir, qsiprep_dir, parc_path, parc, qa_out)
+
+            # TSV out
+            out_dir = os.path.join(parc_dir, f"sub-{subject}", f"ses-{ses}", "dwi") if ses else os.path.join(parc_dir, f"sub-{subject}", "dwi")
+            os.makedirs(out_dir, exist_ok=True)
+            tsv_out = os.path.join(
+                out_dir,
+                f"sub-{subject}_ses-{ses}_desc-{parc}_model-noddi_results.tsv" if ses else
+                f"sub-{subject}_desc-{parc}_model-noddi_results.tsv"
+            )
+
+            extract_noddi_parc_results(
+                subject=subject,
+                session=ses,
+                parc_file=parc_path,
+                parc_tsv=label_tsv,
+                noddi_dir=noddi_dir,
+                qsiprep_dir=qsiprep_dir,
+                tsv_out=tsv_out,
+                icvf_max_threshold=icvf_thresh,
+            )
+
+
+if __name__ == "__main__":
+    main()
