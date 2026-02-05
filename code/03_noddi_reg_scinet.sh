@@ -144,9 +144,9 @@ for SUBJECT in ${SUBJECTS}; do
       /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics_v2.py \
         --subject "${SUBJECT}" \
         --session "${session}" \
-        --parc-dir "/parc" \
-        --qsiprep-dir "/qsiprep" \
-        --amico-noddi-dir "/noddi"
+        --parc-dir /parc \
+        --qsiprep-dir /qsiprep \
+        --amico-noddi-dir /noddi
   done
 done
 
