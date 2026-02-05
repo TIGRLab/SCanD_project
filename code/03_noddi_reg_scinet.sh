@@ -103,13 +103,14 @@ for SUBJECT in ${SUBJECTS}; do
     singularity exec --cleanenv \
       -B ${TEMPLATES_DIR}:/templates \
       -B ${CIFTIFY_DIR}:/out \
+      -B ${QSIPREP_DIR}:/qsiprep \
       -B ${OUTPUT_DIR}:/parc \
       -B ${BASEDIR}/code:/code \
       ${SING_CONTAINER} \
       /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
         --input-dlabel /templates/$(basename "$parc_file") \
         --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
-        --volume-template /out/ciftify/${subj_id}/T1w/T1w.nii.gz \
+        --volume-template /qsiprep/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii \
         --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
   done
 done
