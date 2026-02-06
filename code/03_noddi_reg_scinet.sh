@@ -83,43 +83,32 @@ for SUBJECT in ${SUBJECTS}; do
 done
 
 ############################
-# STEP 2: DLABEL → QSIPREP T1w 
+# STEP 2: DLABEL → T1w
 ############################
+
 for SUBJECT in ${SUBJECTS}; do
-  subj_id="sub-${SUBJECT}"
-  mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
-  echo "Mapping DLABEL to QSIPrep T1w for ${subj_id}"
+    subj_id="sub-${SUBJECT}"
+    mkdir -p ${OUTPUT_DIR}/${subj_id}/anat
 
-  # Ensure QSIPrep T1w is .nii.gz (ciftify script expects nii.gz)
-  T1_NII="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii"
-  T1_GZ="${QSIPREP_DIR}/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii.gz"
-  if [[ ! -f "${T1_GZ}" && -f "${T1_NII}" ]]; then
-    echo "[INFO] Creating ${T1_GZ}"
-    gzip -c "${T1_NII}" > "${T1_GZ}"
-  fi
-  [[ -f "${T1_GZ}" ]] || { echo "[ERROR] Missing QSIPrep T1w for ${subj_id}"; exit 1; }
+    for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
+        parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
 
-  for parc_file in ${TEMPLATES_DIR}/tpl-fsLR_res-91k_atlas-*_dseg.dlabel.nii; do
-    parc_name=$(basename "$parc_file" | sed -E 's/.*atlas-(.*)_dseg\.dlabel\.nii/\1/')
+        output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
+        [[ -f "$output_file" ]] && continue
 
-    output_file="${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-T1w_desc-${parc_name}_dseg.nii.gz"
-    [[ -f "$output_file" ]] && continue
-
-    singularity exec --cleanenv \
-      -B ${TEMPLATES_DIR}:/templates \
-      -B ${CIFTIFY_DIR}:/out \
-      -B ${QSIPREP_DIR}:/qsiprep \
-      -B ${OUTPUT_DIR}:/parc \
-      -B ${BASEDIR}/code:/code \
-      ${SING_CONTAINER} \
-      /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
-        --input-dlabel /templates/$(basename "$parc_file") \
-        --left-mid-surface /out/ciftify/${subj_id}/MNINonLinear/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
-        --volume-template /qsiprep/${subj_id}/anat/${subj_id}_desc-preproc_T1w.nii.gz \
-        --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
-  done
+        singularity exec --cleanenv \
+          -B ${TEMPLATES_DIR}:/templates \
+          -B ${CIFTIFY_DIR}:/out \
+          -B ${OUTPUT_DIR}:/parc \
+          -B ${BASEDIR}/code:/code \
+          ${SING_CONTAINER} \
+          /opt/conda/envs/fmriprep/bin/python /code/ciftify_dlabel_to_vol.py --cortex-only \
+            --input-dlabel /templates/$(basename "$parc_file") \
+            --left-mid-surface /out/ciftify/${subj_id}/T1w/fsaverage_LR32k/${subj_id}.L.midthickness.32k_fs_LR.surf.gii \
+            --volume-template /out/ciftify/${subj_id}/T1w/T1w.nii.gz \
+            --output-nifti /parc/${subj_id}/anat/$(basename "$output_file")
+    done
 done
-   
 
 ############################
 # STEP 3: RESAMPLE LABELS TO QSIPREP space-T1w_dwiref GRID (NEW; replaces ACPC transform)
