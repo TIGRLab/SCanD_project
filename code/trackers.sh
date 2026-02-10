@@ -10,15 +10,15 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/fmriprepfit/23.2.3/output/
-    ls -al derivatives/fmriprepfit/23.2.3/output
+    mkdir -p derivatives/fmriprepfit/25.2.4/output/
+    ls -al derivatives/fmriprepfit/25.2.4/output
 
-    ln -s "$BASEDIR/data/local/derivatives/fmriprep/23.2.3/"* derivatives/fmriprepfit/23.2.3/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/fmriprep/25.2.4/"* derivatives/fmriprepfit/25.2.4/output/ || true
 
    
       nipoppy track \
         --pipeline fmriprepfit \
-        --pipeline-version 23.2.3 \
+        --pipeline-version 25.2.4 \
        
   '
 
@@ -109,14 +109,14 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/smriprep/23.2.3/output/
-    ls -al derivatives/smriprep/23.2.3/output/
-    ln -s "$BASEDIR/data/local/derivatives/smriprep/23.2.3/smriprep/"* derivatives/smriprep/23.2.3/output/ || true
+    mkdir -p derivatives/smriprep/25.2.4/output/
+    ls -al derivatives/smriprep/25.2.4/output/
+    ln -s "$BASEDIR/data/local/derivatives/smriprep/25.2.4/smriprep/"* derivatives/smriprep/25.2.4/output/ || true
 
     
       nipoppy track \
         --pipeline smriprep \
-        --pipeline-version 23.2.3 \
+        --pipeline-version 25.2.4 \
   '
 
 singularity exec \
@@ -149,14 +149,14 @@ singularity exec \
 
     cd "$BASEDIR/Neurobagel"
     
-    mkdir -p derivatives/fmriprepapply/23.2.3/output/
-    ls -al derivatives/fmriprepapply/23.2.3/output/
+    mkdir -p derivatives/fmriprepapply/25.2.4/output/
+    ls -al derivatives/fmriprepapply/25.2.4/output/
 
-    ln -s "$BASEDIR/data/local/derivatives/fmriprep/23.2.3/"* derivatives/fmriprepapply/23.2.3/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/fmriprep/25.2.4/"* derivatives/fmriprepapply/25.2.4/output/ || true
 
       nipoppy track \
         --pipeline fmriprepapply \
-        --pipeline-version 23.2.3 \
+        --pipeline-version 25.2.4 \
   '
 
 
