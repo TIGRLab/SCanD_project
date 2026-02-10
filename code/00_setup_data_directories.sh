@@ -19,7 +19,7 @@ chmod +x code/*.py
 ## link the containers
 echo "linking singularity containers"
 CONTAINER_DIR=/scratch/arisvoin/shared/containers
-ln -s ${CONTAINER_DIR}/fmriprep-23.2.3.simg containers/fmriprep-23.2.3.simg
+ln -s ${CONTAINER_DIR}/fmriprep-25.2.4.simg containers/fmriprep-25.2.4.simg
 
 ln -s ${CONTAINER_DIR}/mriqc-24.0.0.simg containers/mriqc-24.0.0.simg
 
