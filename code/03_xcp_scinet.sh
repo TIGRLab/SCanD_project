@@ -35,7 +35,7 @@ export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 
 ## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.7.3
-export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3
+export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/xcp
 export LOGS_DIR=${BASEDIR}/logs
