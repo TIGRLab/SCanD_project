@@ -21,7 +21,7 @@ module load fsl
 # PATHS
 # =========================
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3/sourcedata/freesurfer
+export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export NODDI_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI
 export CIFTIFY_DIR=${BASEDIR}/data/local/derivatives/ciftify/ciftify_noddi_reg
@@ -29,7 +29,7 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/noddi_reg
 export TEMPLATES_DIR=${BASEDIR}/templates/parcellations
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SING_CONTAINER=${BASEDIR}/containers/noddi_postproc-v.1.0.simg
-export QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
+export QC_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
 mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
 
@@ -223,7 +223,7 @@ done
 ###############################################################################
 # STEP 5: TSV -> PSCALAR + QC PNG (OD / ICVF / ISOVF)
 ###############################################################################
-QC_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
+QC_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
 CIFTI_TMP_DIR="${OUTPUT_DIR}/_cifti_templates"
 mkdir -p "${CIFTI_TMP_DIR}"
