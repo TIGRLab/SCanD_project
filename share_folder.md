@@ -21,7 +21,7 @@ ${BASEDIR}/data/share
 │   ├── MDskel_qc_index.html
 │   ├── RDskel_qc_index.html
 │   └── each subject files
-├── fmriprep/23.2.3
+├── fmriprep/25.2.4
 │   └── qc images and meta data for each scan
 ├── freesurfer_group
 │   └── freesurfer group analysis tsv files, including thickness, euler and aseg. Also includes ENIGMA_extract csv files.
@@ -39,7 +39,7 @@ ${BASEDIR}/data/share
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
 │   └── qc images and meta data for each scan
-├── smriprep/23.2.3
+├── smriprep/25.2.4
 │   └── qc images and meta data for each scan
 ├── tractify
 │   └── connectivity.mat file           
