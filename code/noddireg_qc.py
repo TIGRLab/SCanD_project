@@ -68,8 +68,8 @@ def main():
     # -----------------------------
     # Surfaces
     # -----------------------------
-    lh_surf = os.path.join(args.surf_dir, f"{subj}.L.midthickness.32k_fs_LR.surf.gii")
-    rh_surf = os.path.join(args.surf_dir, f"{subj}.R.midthickness.32k_fs_LR.surf.gii")
+    lh_surf = os.path.join(args.surf_dir, f"{subj}.L.inflated.32k_fs_LR.surf.gii")
+    rh_surf = os.path.join(args.surf_dir, f"{subj}.R.inflated.32k_fs_LR.surf.gii")
 
     if not os.path.exists(lh_surf):
         raise FileNotFoundError(f"Missing LH surface: {lh_surf}")
