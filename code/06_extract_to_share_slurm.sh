@@ -15,8 +15,8 @@ BASEDIR=${SLURM_SUBMIT_DIR}
 
 module load apptainer/1.3.5
 
-FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/23.2.3
-FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/23.2.3
+FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/25.2.4
+FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
@@ -45,8 +45,8 @@ else
 fi
 
 
-SMRIPREP_SHARE_DIR=${BASEDIR}/data/share/smriprep/23.2.3/
-SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/23.2.3/smriprep
+SMRIPREP_SHARE_DIR=${BASEDIR}/data/share/smriprep/25.2.4/
+SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep
 
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
