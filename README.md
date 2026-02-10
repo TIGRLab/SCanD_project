@@ -11,7 +11,7 @@ ${BASEDIR}
 ├── code                         # a clone of this repo
 │   └── ...    
 ├── containers                   # the singularity images are copied or linked to here
-│   ├── fmriprep-23.2.3.simg
+│   ├── fmriprep-25.2.4.simg
 │   ├── mriqc-24.0.0.simg
 │   ├── qsiprep-0.22.0.sif
 │   ├── freesurfer-6.0.1.simg
@@ -612,7 +612,7 @@ When the fmriprep apply step is completed. You can run this script to check whic
 source ~/.virtualenvs/myenv/bin/activate
 python3 -m pip install pybids==0.15.6
 cd ${SCRATCH}/SCanD_project
-python get_fieldmap_method -i ./data/local/derivatives/fmriprep/23.2.3/ -o ./data/local/derivatives/fmriprep/23.3.2/fieldmap_methods.csv 
+python get_fieldmap_method -i ./data/local/derivatives/fmriprep/25.2.4/ -o ./data/local/derivatives/fmriprep/23.3.2/fieldmap_methods.csv 
 ```
 
 ## Running qsirecon FSL
