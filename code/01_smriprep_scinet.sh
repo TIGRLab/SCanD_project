@@ -36,11 +36,11 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 ## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export SMRIPREP_HOME=${BASEDIR}/templates
-export SING_CONTAINER=${BASEDIR}/containers/fmriprep-23.2.3.simg
+export SING_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
 
 ## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/smriprep/23.2.3 
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4 
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/smriprep
@@ -82,14 +82,14 @@ singularity exec \
     set -euo pipefail
 
     cd "${ROOT_DIR}/Neurobagel"
-    mkdir -p derivatives/smriprep/23.2.3/output/
-    ls -al derivatives/smriprep/23.2.3/output/
-    ln -s "${ROOT_DIR}/data/local/derivatives/smriprep/23.2.3/smriprep/"* derivatives/smriprep/23.2.3/output/ || true
+    mkdir -p derivatives/smriprep/25.2.4/output/
+    ls -al derivatives/smriprep/25.2.4/output/
+    ln -s "${ROOT_DIR}/data/local/derivatives/smriprep/25.2.4/smriprep/"* derivatives/smriprep/25.2.4/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
         --pipeline smriprep \
-        --pipeline-version 23.2.3 \
+        --pipeline-version 25.2.4 \
         --participant-id sub-$subject
     done
   '
