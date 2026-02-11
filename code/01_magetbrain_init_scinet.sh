@@ -5,6 +5,9 @@
 #SBATCH --cpus-per-task=192
 #SBATCH --time=03:00:00
 
+set -euo pipefail
+shopt -s nullglob
+
 BASEDIR=${SLURM_SUBMIT_DIR}
 
 # Copy container
@@ -81,8 +84,8 @@ for subject in $subjects; do
     echo "Processing subject: $subject"
 
     # Check for session directories
-    session_dirs=("$BIDS_DIR/$subject/ses-"*)
-    if [[ -d "${session_dirs[0]}" ]]; then
+    session_dirs=("$BIDS_DIR/$subject"/ses-*/)
+    if (( ${#session_dirs[@]} > 0 )); then
         # If session directories exist, process them
         for session in "${session_dirs[@]}"; do
             if [[ -d "$session" ]]; then
