@@ -7,7 +7,7 @@ from pathlib import Path
 
 import nibabel as nb
 from bids import BIDSLayout
-from bin import (
+from src.glm import (
     FirstLevelDesignMatrix,
     FirstLevelModelFit,
     LoadBidsModel,
