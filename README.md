@@ -252,7 +252,7 @@ sub-001/
       sub-001_ses-01_dwi.nii.gz
 ```
 ### 3. YAML Configuration File
-You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/ThomasHMAC/SCanD_project/tree/nibi/code/config/EPIPHANI_query_config.yaml)
+You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/ThomasHMAC/SCanD_project/tree/Fir/code/config/EPIPHANI_query_config.yaml)
 
 #### 3.1. Query blocks (how to find files)
 Each block describes how filenames are expected to look:
