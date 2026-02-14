@@ -228,7 +228,7 @@ python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/l
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
 2. Searches for fMRI and/or DWI data (/func, /dwi)
-3. Uses patterns defined in your YAML config to decide which files belong together
+3. Uses patterns defined in your YAML config to determine which fieldmap file should be used for functional or diffusion scans
 4. Writes a correct "IntendedFor" entry into each fieldmap JSON
 ```bash
 fmap/sub-001_ses-01_acq-rest_run-01_epi.json
@@ -251,7 +251,7 @@ sub-001/
       sub-001_ses-01_dwi.nii.gz
 ```
 ### 3. YAML Configuration File
-You customize how your dataset is structured by editing the YAML file.
+You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/ThomasHMAC/SCanD_project/tree/nibi/code/config/EPIPHANI_query_config.yaml)
 
 #### 3.1. Query blocks (how to find files)
 Each block describes how filenames are expected to look:
