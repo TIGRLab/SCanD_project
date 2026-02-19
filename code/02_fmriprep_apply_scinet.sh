@@ -66,28 +66,7 @@ export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 # done
 
 
-# --------------------------------------------
-# Detect functopup fieldmaps
-# --------------------------------------------
-HAS_FUNCTOPUP=0
 
-if find "${BIDS_DIR}/sub-${SUBJECTS}" \
-    \( -path "*/ses-*/fmap/*functopup*.nii.gz" -o -path "*/fmap/*functopup*.nii.gz" \) \
-    -print -quit | grep -q .; then
-    HAS_FUNCTOPUP=1
-fi
-
-SDC_ARGS="--use-syn-sdc"
-
-if [ "$HAS_FUNCTOPUP" -eq 0 ]; then
-    echo "No functopup found for sub-${SUBJECTS} → using SyN-SDC"
-    SDC_ARGS="--use-syn-sdc warn --force syn-sdc"
-else
-    echo "functopup found for sub-${SUBJECTS} → NOT forcing SyN"
-    SDC_ARGS="--use-syn-sdc warn"
-fi
-
-echo "SDC flags: ${SDC_ARGS}"
 
 
 singularity run --cleanenv \
@@ -102,9 +81,9 @@ singularity run --cleanenv \
     -w /work \
     --skip-bids-validation \
     --cifti-output 91k \
+    --use-syn-sdc \
     --ignore slicetiming \
-    --level full \
-    ${SDC_ARGS}
+    --level full 
 
 # note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
