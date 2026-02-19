@@ -70,6 +70,31 @@ export APPTAINERENV_FS_LICENSE=/home/fmriprep/.freesurfer.txt
 # done
 
 
+# --------------------------------------------
+# Detect functopup fieldmaps
+# --------------------------------------------
+HAS_FUNCTOPUP=0
+
+if find "${BIDS_DIR}/sub-${SUBJECTS}" \
+    \( -path "*/ses-*/fmap/*functopup*.nii.gz" -o -path "*/fmap/*functopup*.nii.gz" \) \
+    -print -quit | grep -q .; then
+    HAS_FUNCTOPUP=1
+fi
+
+SDC_ARGS="--use-syn-sdc"
+
+if [ "$HAS_FUNCTOPUP" -eq 0 ]; then
+    echo "No functopup found for sub-${SUBJECTS} → using --force-syn"
+    SDC_ARGS="${SDC_ARGS} --force-syn"
+else
+    echo "functopup found for sub-${SUBJECTS} → NOT forcing SyN"
+fi
+
+echo "SDC flags: ${SDC_ARGS}"
+
+
+
+
 singularity run --cleanenv \
     -B ${BASEDIR}/templates:/home/fmriprep --home /home/fmriprep \
     -B ${BIDS_DIR}:/bids \
@@ -85,10 +110,11 @@ singularity run --cleanenv \
     --mem-mb 15000 \
     --output-space anat MNI152NLin6Asym:res-2 \
     --cifti-output 91k\
-    --use-syn-sdc \
     --notrack \
     --ignore slicetiming \
-    --level resampling
+    --level resampling \
+    ${SDC_ARGS}
+
 
 # tip: add this line to the above command if skull stripping has already been done
 #   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
