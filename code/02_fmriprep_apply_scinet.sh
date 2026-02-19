@@ -81,7 +81,7 @@ SDC_ARGS="--use-syn-sdc"
 
 if [ "$HAS_FUNCTOPUP" -eq 0 ]; then
     echo "No functopup found for sub-${SUBJECTS} → using SyN-SDC"
-    SDC_ARGS="--use-syn-sdc warn --force-syn warn"
+    SDC_ARGS="--use-syn-sdc warn --force syn-sdc"
 else
     echo "functopup found for sub-${SUBJECTS} → NOT forcing SyN"
     SDC_ARGS="--use-syn-sdc warn"
