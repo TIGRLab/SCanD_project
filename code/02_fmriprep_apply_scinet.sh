@@ -101,7 +101,6 @@ singularity run --cleanenv \
     -w /work \
     --skip-bids-validation \
     --cifti-output 91k \
-    --use-syn-sdc \
     --ignore slicetiming \
     --level full \
     ${SDC_ARGS}
