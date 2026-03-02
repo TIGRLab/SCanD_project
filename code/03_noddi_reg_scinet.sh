@@ -33,6 +33,14 @@ export QC_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
 mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
 
+export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
+
+# Create subject-only symlinks (remove _ses* suffix)
+for d in ${FREESURFER_DIR}/sub-*_ses-*; do
+  subj="${d%%_ses-*}"      # strips _ses-XX
+  ln -sfn "$d" "$subj"
+done
+
 # =========================
 # SUBJECT SELECTION
 # =========================
