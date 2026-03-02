@@ -15,6 +15,13 @@ PROJECT_DIR=${SLURM_SUBMIT_DIR}
 
 FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/25.2.4
 FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/25.2.4
+FREESURFER_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
+
+# Create subject-only symlinks (remove _ses* suffix)
+for d in ${FREESURFER_DIR}/sub-*_ses-*; do
+  subj="${d%%_ses-*}"      # strips _ses-XX
+  ln -sfn "$d" "$subj"
+done
 
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
