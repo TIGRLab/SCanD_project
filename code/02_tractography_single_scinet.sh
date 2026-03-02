@@ -42,6 +42,11 @@ export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography 
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
 
+# Create subject-only symlinks (remove _ses* suffix)
+for d in ${FREESURFER_DIR}/sub-*_ses-*; do
+  subj="${d%%_ses-*}"      # strips _ses-XX
+  ln -sfn "$d" "$subj"
+done
 
 # export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/qsiprep
