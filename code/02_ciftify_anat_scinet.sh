@@ -31,7 +31,6 @@ module load apptainer/1.3.5
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
-#export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer/
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/ciftify
 export LOGS_DIR=${BASEDIR}/logs
