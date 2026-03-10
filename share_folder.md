@@ -36,6 +36,8 @@ ${BASEDIR}/data/share
 │   └── group_T2w.tsv
 ├── noddireg/0.22.0
 │   └── .tsv file: Parcel-wise summary statistics of NODDI microstructural metrics
+├── participants.tsv
+├── processing_status.tsv
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
 │   └── qc images and meta data for each scan
