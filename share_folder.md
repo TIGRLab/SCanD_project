@@ -24,7 +24,9 @@ ${BASEDIR}/data/share
 ├── fmriprep/25.2.4
 │   └── QC images and metadata for each scan
 ├── freesurfer_group
-│   └── group analysis TSV files (thickness, euler, aseg) and ENIGMA_extract CSV files
+│   ├── group-level FreeSurfer metrics (aseg, euler, aparc thickness)
+│   ├── Schaefer2018 parcellation metrics (100–1000 parcels: thickness, surfacearea, grayvol)
+│   └── ENIGMA_extract (ENIGMA formatted outputs)
 ├── magetbrain
 │   ├── fusion (output labels)
 │   ├── input (all subject brain files)
