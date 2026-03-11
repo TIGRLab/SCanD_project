@@ -219,7 +219,7 @@ for SUBJECT in ${SUBJECTS}; do
       -B "${NODDI_DIR}:/noddi" \
       -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
-      /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics_v2.py \
+      /opt/conda/envs/fmriprep/bin/python /code/extract_subject_noddi_metrics.py \
         --subject "${SUBJECT}" \
         --session "${session}" \
         --parc-dir "/parc" \
