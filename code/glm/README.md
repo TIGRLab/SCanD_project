@@ -1,12 +1,12 @@
 # SCanD First-level GLM Analysis Pipeline for fMRI
 
-This repository contains tools for running General Linear Model (GLM) analyses on functional MRI data from the Schizophrenia Canadian Neuroimaging Database (SCanD). It's designed to be forked/cloned for each SCanD dataset.
+This repository contains tools for running General Linear Model (GLM) analyses on task fMRI data from the Schizophrenia Canadian Neuroimaging Database (SCanD). It's designed to be forked/cloned for each SCanD dataset.
 
 # Repository Structure
 
 ```
 glm/
-├── bin/                  # Core pipeline scripts
+├── src/                  # Core pipeline scripts
 ├── config/               # Configuration files
 ├── examples/models/      # Example model specifications
 │   ├── OPT/
@@ -20,13 +20,13 @@ glm/
 
 Follow these three essential steps to run the pipeline successfully:
 
-## Step 1: Create Task Event Files
+## Step 1: Generate Task Event Files
 
-**Create `task-events.tsv` files** for each functional `run` in your BIDS dataset.
+**Generate `task-events.tsv` file** for each functional task fMRI that you have in your BIDS dataset.
 
 ### What are task events files?
 
-These tab-separated files document what happened during the task-fMRI scan
+Task event files capture the timing and relevant details of occurrences during task-based fMRI acquisition. These events can include presented stimuli, participant responses related to the task, or other notable occurrences during the experiment. A single file can contain any mix of these event types, and events are allowed to overlap in time.
 
 For Example:
 
@@ -37,6 +37,12 @@ For Example:
 | `trial_type` | REQUIRED | Label describing the event
 | `modulation` | OPTIONAL | Trial Intensity or Response Time
 <!-- | + Other columns | stim_file, accuracy, etc. | -->
+
+## Parametric modulation (optional)
+
+By default, a GLM assumes that the BOLD response has the same amplitude across all conditions or trial types. However, in many cases we may want the model to account for variations within events. This can be achieved through parametric modulation, where a specific expectation about how strong the BOLD response will for a given event.
+
+To implement this, you can add a “modulation” column to your events files. This allows the model to scale the BOLD response based on values such as trial intensity, response time, or other event-related features. Parametric modulation can both improve model fit and enable testing of hypotheses about how neural responses vary with these characteristics.
 
 <details>
 <summary> Example of task-events.tsv content </summary>
@@ -56,13 +62,15 @@ For Example:
 
 ### Where to save files
 
-All functional BOLD fMRI files and corresponding task events files should be saved in the ``func/`` directory inside each ``subject/session`` folder:
+All functional BOLD fMRI files and corresponding task events files should be saved in the BIDS dataset, specifically ``func/`` directory inside each ``subject/session`` folder:
 
 ```
-sub-<label>/ses-<label>/func/
+/scratch/ttan/RTMSWM/SCanD_project/data/local/bids/sub-<label>/ses-<label>/func/
 ```
 
-### Naming Convention 
+### Naming Convention
+To ensure consistency and reproducibility, follow the BIDS naming convention when creating files.
+
 1. Functional BOLD fMRI files 
 ```
 sub-<label>/ses-<label>/func/sub-<label>_ses-<label>_task-<taskname>_run-<index>_bold.nii.gz
@@ -73,7 +81,9 @@ sub-<label>/ses-<label>/func/sub-<label>_ses-<label>_task-<taskname>_run-<index>
 sub-<label>/ses-<label>/func/sub-<label>_ses-<label>_task-<taskname>_run-<index>_events.tsv
 ```
 > [!IMPORTANT]
-> Always keep the task, session, and run identifiers identical between the BOLD file and its events file
+> The task, session, and run identifiers in the events file must exactly match those in the corresponding BOLD fMRI file.
+
+In other words: for every functional scan, there should be a matching events file with the same subject, session, task, and run labels. This ensures each events file is correctly paired with its corresponding fMRI data.
 
 Example Directory Structure:
 ```
@@ -87,13 +97,11 @@ sub-CMHWM029/
 │       ├── sub-CMHWM029_ses-01_task-nbk_run-2_bold.json
 │       ├── sub-CMHWM029_ses-01_task-nbk_run-2_bold.nii.gz
 │       ├── sub-CMHWM029_ses-01_task-nbk_run-2_events.tsv
-│       ├── sub-CMHWM029_ses-01_task-rest_run-1_bold.json
-│       └── sub-CMHWM029_ses-01_task-rest_run-1_bold.nii.gz
 └── ses-02
 ```
+This structure illustrates how each BOLD file is paired with an events file using identical naming components.
 
-If you need more further details and instruction, visit this page
-> **Reference:** [BIDS Specification for Task Events](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/task-events.html)
+Further details and instructions are available at this page ([BIDS Specification for Task Events](https://bids-specification.readthedocs.io/en/stable/modality-specific-files/task-events.html)).
 
 ### Step 2: Verify fMRIPrep Outputs Are Available
 
@@ -104,7 +112,7 @@ After running fMRIPrep, verify that you have these required files:
 
 These outputs are placed in the SCanD_project ``derivatives`` directory:
 ```
-SCanD_project/data/local/derivatives/fmriprep/sub-<label>/ses-<label>/func/
+SCanD_project/data/local/derivatives/fmriprep/25.2.4/sub-<label>/ses-<label>/func/
 ```
  
 ## Step 3: Create BIDS Stats Model JSON File 📊
@@ -123,7 +131,7 @@ Each GLM model must be described in a JSON file. This file tells the analysis wh
 Save the model specification file here:
 
 ```
-/SCanD_project/code/glm/examples/models//<STUDY_NAME>_model-<number>_smdl.json
+/SCanD_project/code/glm/examples/models/<STUDY_NAME>_model-<number>_smdl.json
 ```
 - ``STUDY_NAME``: the short name of your study (e.g., MemoryStudy)
 - ``number``: version or index of your model (e.g., 01)
