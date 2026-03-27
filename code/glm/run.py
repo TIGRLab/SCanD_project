@@ -86,6 +86,7 @@ def model_fit(
     dense,
     specs,
     output_dir,
+    drop_duration
 ):
 
     # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
@@ -100,6 +101,7 @@ def model_fit(
         dense,
         specs,
         output_dir,
+        drop_duration
     )
 
     effect_maps, variance_maps, t_stat_maps = model_instance.process_and_fit_valid_run()
@@ -177,10 +179,12 @@ def main():
     )
 
     parser.add_argument(
-        "--drop-dummy-TRs",
-        type=int,
+        "--drop-duration",
+        type=float,
+        dest="drop_duration",
         required=False,
-        help="Discard the number of TR's from the begginning of the scan",
+        default=None,
+        help="Number of seconds to discard from the start of the scan (default: 4s)",
     )
     args = parser.parse_args()
     bids_dir = args.bids_dir
@@ -188,6 +192,7 @@ def main():
     cifti_dir = args.cifti_dir
     output_dir = args.output_dir
     model = args.model
+    drop_duration = args.drop_duration
 
     if not args.participant_label:
         layout = BIDSLayout(bids_dir, derivatives=fmriprep_dir, validate=False)
@@ -255,6 +260,7 @@ def main():
                     dense,
                     specs,
                     output_dir,
+                    drop_duration
                 )
 
                 logger.info("All the beta maps:\n%s", "\n".join(effect_maps))

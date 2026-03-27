@@ -39,6 +39,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         space_label,
         dense,
         model_spec,
+        drop_duration=None
     ):
         BIDSSelect.__init__(
             self,
@@ -51,6 +52,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             dense,
         )
         LoadBidsModel.__init__(self, model_spec)
+        self.drop_duration = drop_duration if drop_duration is not None else FirstLevelDesignMatrix.drop_duration
 
     def get_data_from_bids(self, run):
         """

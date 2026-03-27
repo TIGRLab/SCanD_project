@@ -51,6 +51,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         dense,
         model_spec,
         outputdir=None,
+        drop_duration=None,
     ):
         BoldEventsMatch.__init__(
             self,
@@ -72,8 +73,10 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             space_label,
             dense,
             model_spec,
+            drop_duration=drop_duration,
         )
         self.outputdir = outputdir
+        self.drop_duration = drop_duration
         self.cifti_dir = cifti_dir
 
     def dscalar_from_cifti(self, img, data, name):
