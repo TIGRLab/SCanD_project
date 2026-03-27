@@ -1,8 +1,10 @@
-# SCanD First-level GLM Analysis Pipeline for fMRI
+# 🧠 SCanD First-level GLM Analysis Pipeline for fMRI
 
 This repository contains tools for running General Linear Model (GLM) analyses on task fMRI data from the Schizophrenia Canadian Neuroimaging Database (SCanD). It's designed to be forked/cloned for each SCanD dataset.
 
-# Repository Structure
+![GLM Pipeline](glm_pipeline.png) 
+
+# 📁 Repository Structure
 
 ```
 glm/
@@ -16,11 +18,11 @@ glm/
 └── [Other files]         # Dockerfile, requirements, etc.
 ```
 
-# Getting Started
+# 🚀 Getting Started
 
 Follow these three essential steps to run the pipeline successfully:
 
-## Step 1: Generate Task Event Files
+## Step 1: Generate Task Event Files 📝
 
 **Generate `task-events.tsv` file** for each functional task fMRI that you have in your BIDS dataset.
 
@@ -32,10 +34,10 @@ For Example:
 
 | Column Name | Requirement <br> Level | Description |  
 |--------| ------------- | -------- |
-| `onset` | REQUIRED | Time when event starts (seconds)
-| `duration` | REQUIRED  | How long event lasts (seconds)
-| `trial_type` | REQUIRED | Label describing the event
-| `modulation` | OPTIONAL | Trial Intensity or Response Time
+| `onset` | ✅ REQUIRED | Time when event starts (seconds)
+| `duration` | ✅ REQUIRED  | How long event lasts (seconds)
+| `trial_type` | ✅ REQUIRED | Label describing the event
+| `modulation` | ⚡ OPTIONAL | Trial Intensity or Response Time
 <!-- | + Other columns | stim_file, accuracy, etc. | -->
 
 ## Parametric modulation (optional)
@@ -80,8 +82,8 @@ sub-<label>/ses-<label>/func/sub-<label>_ses-<label>_task-<taskname>_run-<index>
 ```
 sub-<label>/ses-<label>/func/sub-<label>_ses-<label>_task-<taskname>_run-<index>_events.tsv
 ```
-> [!IMPORTANT]
-> The task, session, and run identifiers in the events file must exactly match those in the corresponding BOLD fMRI file.
+> [IMPORTANT]
+> ⚠️ The task, session, and run identifiers in the events file must exactly match those in the corresponding BOLD fMRI file.
 
 In other words: for every functional scan, there should be a matching events file with the same subject, session, task, and run labels. This ensures each events file is correctly paired with its corresponding fMRI data.
 
@@ -214,7 +216,7 @@ Below is an example JSON file. It describes a task-based fMRI GLM with condition
 
 > **Reference:** [BIDS Stats-Models Documentation](https://bids-standard.github.io/stats-models/motivation.html)
 
-## Pipeline Outputs
+## 🗂 Pipeline Outputs
 
 The GLM pipeline produces these files:
 
