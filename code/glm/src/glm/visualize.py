@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from nilearn import plotting as nlp
 from nipype.utils.filemanip import fname_presuffix, split_filename
-
+from pathlib import Path
 
 def load_data(fname):
     _, _, ext = split_filename(fname)
@@ -46,8 +46,10 @@ def plot_dscalar(
     ax3 = plt.subplot2grid((2, 2), (1, 0), projection="3d")
     ax4 = plt.subplot2grid((2, 2), (1, 1), projection="3d")
     # ax5 = plt.subplot2grid((3, 2), (2, 0), colspan=2)
-    module_dir = os.path.dirname(os.path.abspath(__file__))
-    template_dir = os.path.join(module_dir, "..", "templates")
+    #module_dir = os.path.dirname(os.path.abspath(__file__))
+    module_dir = Path(__file__).resolve().parent
+    template_dir = module_dir.parent.parent / "templates"
+    # template_dir = os.path.join(module_dir, "..", "templates")
     surf_fmt = os.path.join(
         template_dir, "tpl-conte69_hemi-{hemi}_space-fsLR_den-32k_inflated.surf.gii"
     ).format
