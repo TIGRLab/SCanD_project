@@ -1,424 +1,141 @@
-BASEDIR=$PWD
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/fmriprepfit/25.2.4/output/
-    ls -al derivatives/fmriprepfit/25.2.4/output
-
-    ln -s "$BASEDIR/data/local/derivatives/fmriprep/25.2.4/"* derivatives/fmriprepfit/25.2.4/output/ || true
-
-   
-      nipoppy track \
-        --pipeline fmriprepfit \
-        --pipeline-version 25.2.4 \
-       
-  '
-
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/freesurferlong/7.4.1/output/
-    ls -al derivatives/freesurferlong/7.4.1/output/
-    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferlong/7.4.1/output/ || true
-
-   
-      nipoppy track \
-        --pipeline freesurferlong \
-        --pipeline-version 7.4.1 \
-      
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/magetbraininit/0.1.0/output/
-    ls -al derivatives/magetbraininit/0.1.0/output/
-    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
-
-    nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/mriqc/24.0.0/output/
-    ls -al derivatives/mriqc/24.0.0/output/
-    ln -s "$BASEDIR/data/local/derivatives/mriqc/24.0.0/"* derivatives/mriqc/24.0.0/output/ || true
-
-  
-      nipoppy track \
-        --pipeline mriqc \
-        --pipeline-version 24.0.0 \
-        
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-    
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/qsiprep/0.22.0/output/
-    ls -al derivatives/qsiprep/0.22.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsiprep/"* derivatives/qsiprep/0.22.0/output/ || true
-
-   
-      nipoppy track \
-        --pipeline qsiprep \
-        --pipeline-version 0.22.0
-        --debug        
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/smriprep/25.2.4/output/
-    ls -al derivatives/smriprep/25.2.4/output/
-    ln -s "$BASEDIR/data/local/derivatives/smriprep/25.2.4/smriprep/"* derivatives/smriprep/25.2.4/output/ || true
-
-    
-      nipoppy track \
-        --pipeline smriprep \
-        --pipeline-version 25.2.4 \
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/qsireconfsl/0.22.0/output/
-    ls -al derivatives/qsireconfsl/0.22.0/output/
-
-    ln -s "$BASEDIR/data/local/qsirecon-FSL/" derivatives/qsireconfsl/0.22.0/output/ || true
-
-   
-      nipoppy track \
-        --pipeline qsireconfsl \
-        --pipeline-version 0.22.0 \
-  '
-
-
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/fmriprepapply/25.2.4/output/
-    ls -al derivatives/fmriprepapply/25.2.4/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/fmriprep/25.2.4/"* derivatives/fmriprepapply/25.2.4/output/ || true
-
-      nipoppy track \
-        --pipeline fmriprepapply \
-        --pipeline-version 25.2.4 \
-  '
-  
-python "$BASEDIR/code/fmriprep_method_tsv.py" \
-  --fmriprep-root "$BASEDIR/data/local/derivatives/fmriprep/25.2.4" \
-  --output-tsv "$BASEDIR/Neurobagel/derivatives/processing_status_fmriprep.tsv"
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-    
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/amiconoddi/0.22.0/output/
-    ls -al derivatives/amiconoddi/0.22.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/amico_noddi/"* derivatives/amiconoddi/0.22.0/output/ || true
-
-   
-      nipoppy track \
-        --pipeline amiconoddi \
-        --pipeline-version 0.22.0 \
-        
-  '
-
-
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SELECTED_SUBJECT" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/ciftify/1.3.2/output/
-    ls -al derivatives/ciftify/1.3.2/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
-
-
-   
-      nipoppy track \
-        --pipeline ciftify \
-        --pipeline-version 1.3.2 \
-        
-  '
-
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/freesurferparcellate/7.4.1/output/
-    ls -al derivatives/freesurferparcellate/7.4.1/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
-
-      nipoppy track \
-        --pipeline freesurferparcellate \
-        --pipeline-version 7.4.1 \
-        
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-    
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/magetbrainregister/0.1.0/output/
-    ls -al derivatives/magetbrainregister/0.1.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbrainregister/0.1.0/output/ || true
-
-    nipoppy track  --pipeline magetbrainregister  --pipeline-version 0.1.0
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/tractographymulti/0.22.0/output/
-    ls -al derivatives/tractographymulti/0.22.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_act-HSVS/" derivatives/tractographymulti/0.22.0/output/ || true
-
-      nipoppy track \
-        --pipeline tractographymulti \
-        --pipeline-version 0.22.0 \
-       
-  '
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/tractographysingle/0.22.0/output/
-    ls -al derivatives/tractographysingle/0.22.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS/" derivatives/tractographysingle/0.22.0/output/ || true
-
-      nipoppy track \
-        --pipeline tractographysingle \
-        --pipeline-version 0.22.0 \
-     
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/xcpnogsr/0.7.3/output/
-    ls -al derivatives/xcpnogsr/0.7.3/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/xcp_noGSR/"* derivatives/xcpnogsr/0.7.3/output/ || true
-
-   
-      nipoppy track \
-        --pipeline xcpnogsr \
-        --pipeline-version 0.7.3  \
-       
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/xcpd/0.7.3/output/
-    ls -al derivatives/xcpd/0.7.3/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/xcp_d/0.7.3/"* derivatives/xcpd/0.7.3/output/ || true
-
-      nipoppy track \
-        --pipeline xcpd \
-        --pipeline-version 0.7.3  \
-  '
-
-
-singularity exec \
-  	--env BASEDIR="$BASEDIR" \
-    --bind $BASEDIR:$BASEDIR \
-  	--env SUBJECTS="$SUBJECTS" \
-  	${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    	set -euo pipefail
-
-    	cd "$BASEDIR/Neurobagel"
-    
-    	mkdir -p derivatives/qsirecondtifit/0.22.0/output/
-    	ls -al derivatives/qsirecondtifit/0.22.0/output/
-
-    	ln -s "$BASEDIR/data/local/dtifit/" derivatives/qsirecondtifit/0.22.0/output/ || true
-        ls -al derivatives/qsirecondtifit/0.22.0/output/
-    	ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/qsirecondtifit/0.22.0/output/ || true
-
-    	
-      	nipoppy track \
-        	--pipeline qsirecondtifit \
-        	--pipeline-version 0.22.0 \
-        	
-  	'
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/magetbrainvote/0.1.0/output/
-    ls -al derivatives/magetbrainvote/0.1.0/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/output/"* derivatives/magetbrainvote/0.1.0/output/ || true
-
-      nipoppy track \
-        --pipeline magetbrainvote \
-        --pipeline-version 0.1.0 \
-      
-  '
-
-
- singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/noddireg/0.22.0/output/
-    ls -al derivatives/noddireg/0.22.0/output/
-
-
-    ln -s "${BASEDIR}/data/local/derivatives/noddi_reg" \
-      derivatives/noddireg/0.22.0/output/ || true
-
-      nipoppy track \
-        --pipeline noddireg \
-        --pipeline-version 0.22.0 \
-       
-  '
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/enigmadti/0.1.1/output/
-    ls -al derivatives/enigmadti/0.1.1/output/
-
-    ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
-
-    nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
-  '
-
-
-singularity exec \
-  --env BASEDIR="$BASEDIR" \
-  --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
-  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
-    set -euo pipefail
-
-    cd "$BASEDIR/Neurobagel"
-    
-    mkdir -p derivatives/extractnoddi/0.1.1/output/
-    ls -al derivatives/extractnoddi/0.1.1/output/
-
-    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
-
-    nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1 
-  '
+#!/usr/bin/env python3
+
+import argparse
+import csv
+import json
+import shutil
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+
+
+def detect_method_for_session(session_dir: Path) -> str:
+    json_files = sorted(session_dir.glob("fmap/*desc-preproc_fieldmap.json"))
+
+    if not json_files:
+        return "no sdc done"
+
+    methods = set()
+
+    for json_file in json_files:
+        try:
+            with open(json_file, "r") as f:
+                data = json.load(f)
+        except Exception as e:
+            print(f"Warning: could not read {json_file}: {e}")
+            continue
+
+        raw_sources = data.get("RawSources", [])
+        if isinstance(raw_sources, str):
+            raw_sources = [raw_sources]
+
+        for src in raw_sources:
+            src = str(src).lower()
+
+            if "/fmap/" in src:
+                methods.add("topup fieldmaps")
+
+            if "/func/" in src:
+                methods.add("synthetic fieldmaps")
+
+    if not methods:
+        return "unknown"
+
+    ordered = [m for m in ["topup fieldmaps", "synthetic fieldmaps"] if m in methods]
+    return ";".join(ordered)
+
+
+def load_existing(output_tsv: Path) -> dict:
+    data = {}
+
+    if not output_tsv.exists():
+        return data
+
+    with open(output_tsv, "r", newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
+        for row in reader:
+            pid = row.get("participant_id", "").strip()
+            ses = row.get("session_id", "").strip()
+            method = row.get("fmriprep_method", "").strip()
+
+            if pid and ses:
+                data[(pid, ses)] = method
+
+    return data
+
+
+def write_output(output_tsv: Path, data: dict):
+    output_tsv.parent.mkdir(parents=True, exist_ok=True)
+
+    tmp = NamedTemporaryFile("w", delete=False, newline="", dir=output_tsv.parent)
+    tmp_path = Path(tmp.name)
+
+    try:
+        with tmp as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["participant_id", "session_id", "fmriprep_method"],
+                delimiter="\t",
+            )
+            writer.writeheader()
+
+            for pid, ses in sorted(data):
+                writer.writerow(
+                    {
+                        "participant_id": pid,
+                        "session_id": ses,
+                        "fmriprep_method": data[(pid, ses)],
+                    }
+                )
+
+        shutil.move(tmp_path, output_tsv)
+
+    finally:
+        if tmp_path.exists():
+            tmp_path.unlink(missing_ok=True)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fmriprep-root", required=True)
+    parser.add_argument("--output-tsv", required=True)
+    parser.add_argument("--participant-ids", nargs="*", default=None)
+
+    args = parser.parse_args()
+
+    fmriprep_root = Path(args.fmriprep_root)
+    output_tsv = Path(args.output_tsv)
+
+    existing = load_existing(output_tsv)
+
+    if args.participant_ids:
+        subjects = [fmriprep_root / pid for pid in args.participant_ids]
+    else:
+        subjects = [p for p in fmriprep_root.iterdir() if p.is_dir() and p.name.startswith("sub-")]
+
+    updated = 0
+
+    for subject_dir in subjects:
+        if not subject_dir.exists():
+            continue
+
+        pid = subject_dir.name
+        session_dirs = [
+            p for p in subject_dir.iterdir()
+            if p.is_dir()
+            and p.name.startswith("ses-")
+            and "-" not in p.name[4:]
+        ]
+
+        for session_dir in session_dirs:
+            ses = session_dir.name
+            existing[(pid, ses)] = detect_method_for_session(session_dir)
+            updated += 1
+
+    write_output(output_tsv, existing)
+
+    print(f"Updated {updated} subject/session rows")
+    print(f"Saved to: {output_tsv}")
+
+
+if __name__ == "__main__":
+    main()
