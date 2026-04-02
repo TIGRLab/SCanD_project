@@ -8,8 +8,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 
-def detect_method_for_subject(subject_dir: Path) -> str:
-    json_files = sorted(subject_dir.glob("ses-*/fmap/*desc-preproc_fieldmap.json"))
+def detect_method_for_session(session_dir: Path) -> str:
+    json_files = sorted(session_dir.glob("fmap/*desc-preproc_fieldmap.json"))
 
     if not json_files:
         return "no sdc done"
@@ -54,9 +54,11 @@ def load_existing(output_tsv: Path) -> dict:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
             pid = row.get("participant_id", "").strip()
+            ses = row.get("session_id", "").strip()
             method = row.get("fmriprep_method", "").strip()
-            if pid:
-                data[pid] = method
+
+            if pid and ses:
+                data[(pid, ses)] = method
 
     return data
 
@@ -71,16 +73,19 @@ def write_output(output_tsv: Path, data: dict):
         with tmp as f:
             writer = csv.DictWriter(
                 f,
-                fieldnames=["participant_id", "fmriprep_method"],
+                fieldnames=["participant_id", "session_id", "fmriprep_method"],
                 delimiter="\t",
             )
             writer.writeheader()
 
-            for pid in sorted(data):
-                writer.writerow({
-                    "participant_id": pid,
-                    "fmriprep_method": data[pid],
-                })
+            for pid, ses in sorted(data):
+                writer.writerow(
+                    {
+                        "participant_id": pid,
+                        "session_id": ses,
+                        "fmriprep_method": data[(pid, ses)],
+                    }
+                )
 
         shutil.move(tmp_path, output_tsv)
 
@@ -114,12 +119,16 @@ def main():
             continue
 
         pid = subject_dir.name
-        existing[pid] = detect_method_for_subject(subject_dir)
-        updated += 1
+        session_dirs = [p for p in subject_dir.iterdir() if p.is_dir() and p.name.startswith("ses-")]
+
+        for session_dir in session_dirs:
+            ses = session_dir.name
+            existing[(pid, ses)] = detect_method_for_session(session_dir)
+            updated += 1
 
     write_output(output_tsv, existing)
 
-    print(f"Updated {updated} subjects")
+    print(f"Updated {updated} subject/session rows")
     print(f"Saved to: {output_tsv}")
 
 
