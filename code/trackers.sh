@@ -157,7 +157,10 @@ singularity exec \
         --pipeline fmriprepapply \
         --pipeline-version 25.2.4 \
   '
-
+  
+python "$BASEDIR/code/fmriprep_method_tsv.py" \
+  --fmriprep-root "$BASEDIR/data/local/derivatives/fmriprep/25.2.4" \
+  --output-tsv "$BASEDIR/Neurobagel/derivatives/processing_status_fmriprep.tsv"
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
