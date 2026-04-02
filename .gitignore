@@ -8,4 +8,4 @@ templates/.fontconfig/
 templates/.freesurfer.txt
 templates/.keras/
 Neurobagel/
-containers
+containers/
