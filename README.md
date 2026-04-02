@@ -606,14 +606,15 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
 ```
 
-When the fmriprep apply step is completed. You can run this script to check which fieldmap method was being used.
+After the fMRIPrep apply step is completed, the fieldmap method used for each subject can be found in:
 
-```bash
-source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.15.6
-cd ${SCRATCH}/SCanD_project
-python get_fieldmap_method -i ./data/local/derivatives/fmriprep/25.2.4/ -o ./data/local/derivatives/fmriprep/23.3.2/fieldmap_methods.csv 
+```sh
+./Neurobagel/derivatives/processing_status_fmriprep.tsv
 ```
+
+This TSV file is automatically updated during the pipeline and contains:
+- participant_id
+- fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
 ## Running qsirecon FSL
 
