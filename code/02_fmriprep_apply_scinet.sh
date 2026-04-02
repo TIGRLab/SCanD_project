@@ -109,6 +109,12 @@ singularity exec \
         --pipeline fmriprepapply \
         --pipeline-version 25.2.4 \
         --participant-id sub-$subject
+
+      python "${ROOT_DIR}/code/fmriprep_method_tsv.py" \
+         --fmriprep-root "${ROOT_DIR}/data/local/derivatives/fmriprep/25.2.4" \
+         --output-tsv "${ROOT_DIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv" \
+         --participant-ids "sub-$subject"
+
     done
   '
 unset APPTAINERENV_ROOT_DIR
