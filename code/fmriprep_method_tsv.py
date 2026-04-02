@@ -119,7 +119,12 @@ def main():
             continue
 
         pid = subject_dir.name
-        session_dirs = [p for p in subject_dir.iterdir() if p.is_dir() and p.name.startswith("ses-")]
+        session_dirs = [
+            p for p in subject_dir.iterdir()
+            if p.is_dir()
+            and p.name.startswith("ses-")
+            and "-" not in p.name[4:]
+        ]
 
         for session_dir in session_dirs:
             ses = session_dir.name
