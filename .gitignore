@@ -2,4 +2,10 @@
 logs/*
 data/*
 work/*
-
+templates/.cache/
+templates/.afni.log
+templates/.fontconfig/
+templates/.freesurfer.txt
+templates/.keras/
+Neurobagel/
+containers/
