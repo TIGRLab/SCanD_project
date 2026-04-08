@@ -12,7 +12,7 @@ def detect_method_for_session(session_dir: Path) -> str:
     json_files = sorted(session_dir.glob("fmap/*desc-preproc_fieldmap.json"))
 
     if not json_files:
-        return "no sdc done"
+        return "no fmriprep done"
 
     methods = set()
 
@@ -32,7 +32,7 @@ def detect_method_for_session(session_dir: Path) -> str:
             src = str(src).lower()
 
             if "/fmap/" in src:
-                methods.add("topup fieldmaps")
+                methods.add("PEPOLAR (TOPUP)")
 
             if "/func/" in src:
                 methods.add("synthetic fieldmaps")
