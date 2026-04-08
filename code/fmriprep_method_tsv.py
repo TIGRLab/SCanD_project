@@ -40,7 +40,7 @@ def detect_method_for_session(session_dir: Path) -> str:
     if not methods:
         return "unknown"
 
-    ordered = [m for m in ["topup fieldmaps", "synthetic fieldmaps"] if m in methods]
+    ordered = [m for m in ["PEPOLAR (TOPUP)", "synthetic fieldmaps"] if m in methods]
     return ";".join(ordered)
 
 
