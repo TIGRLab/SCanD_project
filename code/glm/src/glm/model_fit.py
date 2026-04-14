@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import re
@@ -14,6 +13,13 @@ from .bids_util import LoadBidsModel
 from .cifti_smooth import get_cifti_surf, wb_smooth
 from .design_matrix import FirstLevelDesignMatrix
 from .run_match import BoldEventsMatch
+from .model_report import (
+    build_fixed_effects_sidecar,
+    build_run_level_sidecar,
+    finalize_run_level_sidecar,
+    update_run_level_sidecar,
+    write_sidecar,
+)
 from .visualize import load_data, plot_dscalar
 
 # Configure module logger
@@ -31,12 +37,16 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
     Attributes:
         bids_dir (str): Path to the root BIDS dataset.
         derivatives_dir (str): Path to the derivatives directory containing preprocessed data.
+        cifti_dir (str): Path to the root folder of Ciftify preprocessing derivatives.
         task_label (str): The task label corresponding to the fMRI task being analyzed.
         participant_label (str): Subject ID (e.g., "CMHWM01").
         space_label (str): The anatomical or functional space of the images (e.g., "MNI152NLin2009cAsym", "fsLR").
         session (str): Session identifier (e.g., "01").
         dense (str): Numbers of vertices on CIFTI surfaces (e.g., 91k).
-        model_spec (str): Path to a BIDS Stat Model json
+        model_spec (str): Path to a BIDS Stat Model json.
+        outputdir (str): Path to the output directory.
+        drop_duration (int): Number of seconds to discard from the start of the scan.
+        fwhm (int): Smoothing kernel size in mm FWHM.
     """
 
     def __init__(
@@ -52,6 +62,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         model_spec,
         outputdir=None,
         drop_duration=None,
+        fwhm=6,
     ):
         BoldEventsMatch.__init__(
             self,
@@ -76,8 +87,20 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             drop_duration=drop_duration,
         )
         self.outputdir = outputdir
-        self.drop_duration = drop_duration
         self.cifti_dir = cifti_dir
+        self.fwhm = fwhm
+
+    def __repr__(self):
+        return (
+            f"FirstLevelModelFit("
+            f"sub-{self.participant_label}, "
+            f"ses-{self.session}, "
+            f"task-{self.task_label}, "
+            f"space-{self.space_label}, "
+            f"den-{self.dense}, "
+            f"fwhm={self.fwhm}, "
+            f"matched_runs={[r['run'] for r in self.match_runs]})"
+        )
 
     def dscalar_from_cifti(self, img, data, name):
 
@@ -188,6 +211,16 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         all_effect_maps = []
         all_variance_maps = []
         all_t_maps = []
+        pipeline_sidecar = build_run_level_sidecar(
+            participant_label=self.participant_label,
+            task_label=self.task_label,
+            space_label=self.space_label,
+            dense=self.dense,
+            model_spec_name=self.specs.get("Name", None),
+            hrf_model=self.hrf_model,
+            high_pass=self.high_pass,
+            drift_model=self.drift_model,
+        )
         for entry in self._iter_valid_runs():
             ses = entry["session"]
             task = entry["task"]
@@ -206,7 +239,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 self.cifti_dir, self.participant_label, session=ses
             )
             logger.info(
-                f"Smoothing data before fitting model:{wb_smooth(cifti_in, l_surf, r_surf)}"
+                f"Smoothing data by {self.fwhm} mm before fitting model:{wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)}"
             )
 
             logger.info(
@@ -285,11 +318,11 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             logger.info(f"Saving the {fname_dm_fig}")
             plot_design_matrix(dm, output_file=fname_dm_fig)
 
-            # Save model level images
-            model_metadata = []
+            # Accumulate run info for subject-level sidecar
+            t_r = sub_run_imgs[0].get_metadata()["RepetitionTime"]
+            update_run_level_sidecar(pipeline_sidecar, run, dm.columns.tolist(), t_r)
 
             # for attr, img in model_attr.items():
-            #     model_metadata.append({"stat": attr})
             #     fname = os.path.join(
             #         glm_dir,
             #         self._format_filename(
@@ -377,6 +410,21 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             all_effect_maps.extend(effect_maps)
             all_variance_maps.extend(variance_maps)
             all_t_maps.extend(stat_maps)
+
+        finalize_run_level_sidecar(
+            pipeline_sidecar, contrasts, all_effect_maps, all_variance_maps, all_t_maps
+        )
+        fname_sidecar = os.path.join(
+            glm_dir,
+            self._format_filename(
+                participant_label=self.participant_label,
+                ses=ses,
+                task_label=task,
+                suffix="_glm",
+                ext="json",
+            ),
+        )
+        write_sidecar(fname_sidecar, pipeline_sidecar)
 
         return all_effect_maps, all_variance_maps, all_t_maps
 
@@ -489,6 +537,15 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 if isinstance(self.task_label, list)
                 else self.task_label
             )
+            ffx_sidecar = build_fixed_effects_sidecar(
+                participant_label=self.participant_label,
+                session=session,
+                task_label=task_label,
+                contrast=contrast,
+                n_runs=n_runs,
+                contrast_imgs=contrast_imgs,
+                variance_imgs=variance_imgs,
+            )
             for map_type, cifti_img in maps.items():
                 stat_label = (
                     "fixed_effect_t" if map_type == "fixed_effect_stat" else map_type
@@ -506,7 +563,21 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 )
                 logger.info(f"Saving {map_type} to: {fname}")
                 maps[map_type].to_filename(fname)
+                ffx_sidecar["outputs"][map_type] = fname
                 logger.info(f"Plotting the computed fix-effect contrast: {map_type}")
                 outname = fname.replace("dscalar.nii", "png")
                 if map_type == "fixed_effect_stat" and isinstance(maps[map_type], nb.Cifti2Image):
                     plot_dscalar(maps[map_type], colorbar=False, output_file=outname)
+
+            fname_sidecar = os.path.join(
+                glm_dir,
+                self._format_filename(
+                    participant_label=self.participant_label,
+                    ses=session,
+                    task_label=task_label,
+                    contrast=contrast,
+                    suffix="_fixedeffects",
+                    ext="json",
+                ),
+            )
+            write_sidecar(fname_sidecar, ffx_sidecar)
