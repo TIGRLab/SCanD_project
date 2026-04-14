@@ -23,7 +23,7 @@ cd ${BASEDIR}
 python3 ${BASEDIR}/code/gen_qsiprep_motion_metrics.py
 
 
-if [ -d "${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv" ];
+if [ -f "${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/qsiprep_metrics.csv" ];
 then
 
 echo "copying over qsiprep_metrics.csv"
