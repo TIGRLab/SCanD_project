@@ -17,10 +17,6 @@
     {
       "Level": "Run",
       "Name": "run_level",
-      "GroupBy": [
-        "run",
-        "subject"
-      ],
       "Model": {
         "X": [
           "threebackblock",
