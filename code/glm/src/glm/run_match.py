@@ -1,21 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
-# vi: set ft=python sts=4 ts=4 sw=4 et:
 """
 Validate fMRI BOLD and task events at run-level for a BIDS dataset.
 """
 
 import logging
-import re
-from warnings import warn
 
 from .bids_util import BIDSSelect
 
-# Configure logging
-# logger = logging.getLogger("bin.run_match")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class BoldEventsMatch(BIDSSelect):
@@ -33,7 +26,6 @@ class BoldEventsMatch(BIDSSelect):
         session,
         space_label,
         dense,
-        verbose=True,
     ):
         BIDSSelect.__init__(
             self,
@@ -45,89 +37,74 @@ class BoldEventsMatch(BIDSSelect):
             space_label,
             dense,
         )
-        self.verbose = verbose
         self.match_runs = self._find_matching_runs()
 
     def __repr__(self):
-        # Detailed string for debugging or logging
-        params = "\n".join(f"  {key}: {value}" for key, value in self.__dict__.items())
-        return f"Input Parameters(\n{params}\n)"
+        return (
+            f"BoldEventsMatch("
+            f"sub-{self.participant_label}, "
+            f"ses-{self.session}, "
+            f"task-{self.task_label}, "
+            f"matched_runs={[r['run'] for r in self.match_runs]})"
+        )
 
     @staticmethod
     def get_task_run_id(file):
-        """Return a tuple identifying a task/run combination.
-        Runless tasks return a single-element tuple.
-        """
-        run = file.entities.get("run")
+        """Return a (task, run) tuple identifying a run, or (task,) for runless tasks."""
         task = file.entities.get("task")
-        if run is None:
-            return (task,)  # single-element tuple
-        return (task, int(run))
+        run = file.entities.get("run")
+        return (task, int(run)) if run is not None else (task,)
 
-    def _find_matching_runs(self, verbose=True):
-        """Return a list of runs that have both BOLD images and events files for a single session."""
+    @staticmethod
+    def _format_pair(pair):
+        """Format a (task,) or (task, run) tuple into a readable string."""
+        if len(pair) == 2:
+            task, run = pair
+            return f"task-{task} run-{run}"
+        return f"task-{pair[0]}"
 
-        # Work only for one session
-        session_label = f"{self.session}" if self.session else None
+    def _find_matching_runs(self):
+        """Return runs that have both a BOLD image and an events file."""
+        session_str = f"ses-{self.session}" if self.session else "no session"
+
         sub_imgs = self._get_func_img()
         sub_events = self._get_events_files()
 
         if not sub_imgs:
             raise ValueError(
-                f"No functional images found for {self.participant_label} {session_label}"
+                f"No functional images found for sub-{self.participant_label} {session_str}"
             )
         if not sub_events:
             raise ValueError(
-                f"No task events found for {self.participant_label} {session_label}"
+                f"No task events found for sub-{self.participant_label} {session_str}"
             )
 
-        # Collect task/run tuples
-        task_run_pairs_img = {self.get_task_run_id(img) for img in sub_imgs}
-        task_run_pairs_events = {self.get_task_run_id(ev) for ev in sub_events}
+        img_pairs = {self.get_task_run_id(f) for f in sub_imgs}
+        event_pairs = {self.get_task_run_id(f) for f in sub_events}
 
-        # Find matches and missing files
-        matching_pairs = task_run_pairs_img.intersection(task_run_pairs_events)
-        missing_imgs = task_run_pairs_events - task_run_pairs_img
-        missing_events = task_run_pairs_img - task_run_pairs_events
+        matching_pairs = img_pairs & event_pairs
+        missing_imgs = event_pairs - img_pairs
+        missing_events = img_pairs - event_pairs
 
-        # Verbose warnings
-        if verbose:
-            session_str = f" | ses-{self.session}" if self.session else ""
-            if missing_imgs:
-                for pair in missing_imgs:
-                    message = []
-                    if len(pair) == 2:
-                        task, run = pair
-                        message.append(f"{task} | run-{run} ")
-                    else:
-                        (task,) = pair
-                        message.append(task)
+        for pair in missing_imgs:
+            logger.warning(
+                f"sub-{self.participant_label} {session_str}: "
+                f"events file found but no BOLD image for {self._format_pair(pair)}"
+            )
+        for pair in missing_events:
+            logger.warning(
+                f"sub-{self.participant_label} {session_str}: "
+                f"BOLD image found but no events file for {self._format_pair(pair)}"
+            )
 
-                    logger.warning(
-                        f"{self.participant_label} missing BOLD files for: "
-                        f"{', '.join(message)} {session_str}"
-                    )
-            if missing_events:
-                for pair in missing_events:
-                    message = []
-                    if len(pair) == 2:
-                        task, run = pair
-                        message.append(f"{task} | run-{run} ")
-                    else:
-                        (task,) = pair
-                        message.append(task)
-                logger.warning(
-                    f"{self.participant_label} missing events files for: "
-                    f"{', '.join(message)} {session_str}"
-                )
+        if not matching_pairs:
+            raise ValueError(
+                f"No runs with both BOLD and events found for "
+                f"sub-{self.participant_label} {session_str}"
+            )
 
-        # Prepare result list
         result = []
         for pair in sorted(matching_pairs):
-            if len(pair) == 2:
-                task, run = pair
-            else:
-                (task,) = pair
-                run = None
+            task, run = pair if len(pair) == 2 else (pair[0], None)
             result.append({"session": self.session, "task": task, "run": run})
         return result
