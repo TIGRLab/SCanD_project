@@ -86,7 +86,8 @@ def model_fit(
     dense,
     specs,
     output_dir,
-    drop_duration
+    drop_duration,
+    fwhm=6,
 ):
 
     # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
@@ -101,7 +102,8 @@ def model_fit(
         dense,
         specs,
         output_dir,
-        drop_duration
+        drop_duration,
+        fwhm=fwhm,
     )
 
     effect_maps, variance_maps, t_stat_maps = model_instance.process_and_fit_valid_run()
@@ -183,8 +185,16 @@ def main():
         type=float,
         dest="drop_duration",
         required=False,
-        default=None,
+        default=4,
         help="Number of seconds to discard from the start of the scan (default: 4s)",
+    )
+    parser.add_argument(
+        "--fwhm",
+        type=float,
+        dest="fwhm",
+        required=False,
+        default=6,
+        help="Smoothing kernel size in mm FWHM applied before GLM fitting (default: 6mm)",
     )
     args = parser.parse_args()
     bids_dir = args.bids_dir
@@ -193,6 +203,7 @@ def main():
     output_dir = args.output_dir
     model = args.model
     drop_duration = args.drop_duration
+    fwhm = args.fwhm
 
     if not args.participant_label:
         layout = BIDSLayout(bids_dir, derivatives=fmriprep_dir, validate=False)
@@ -260,7 +271,8 @@ def main():
                     dense,
                     specs,
                     output_dir,
-                    drop_duration
+                    drop_duration,
+                    fwhm=fwhm,
                 )
 
                 logger.info("All the beta maps:\n%s", "\n".join(effect_maps))

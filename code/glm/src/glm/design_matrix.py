@@ -27,7 +27,6 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
     drift_model = "cosine"
     mask_img = False
     minimize_memory = False
-    drop_duration = 4  # in seconds use to adjust for the first few the non-steady scans
 
     def __init__(
         self,
@@ -39,7 +38,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         space_label,
         dense,
         model_spec,
-        drop_duration=None
+        drop_duration,
     ):
         BIDSSelect.__init__(
             self,
@@ -52,7 +51,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             dense,
         )
         LoadBidsModel.__init__(self, model_spec)
-        self.drop_duration = drop_duration if drop_duration is not None else FirstLevelDesignMatrix.drop_duration
+        self.drop_duration = drop_duration
 
     def get_data_from_bids(self, run):
         """
@@ -125,7 +124,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
     # I have to add a function to calculate the TR drop and actually drop them and edit the onset in the events dataframe
 
     def drop_non_steady_scans(self, sub_run_img, sub_run_smoothed_img):
-        "Calculate the number of non steady scans using the drop duration of 4 seconds and RepetitionTime"
+        "Calculate the number of non steady scans using the drop duration seconds and RepetitionTime"
         cifti_img = nib.load(sub_run_smoothed_img)
         is_cifti = isinstance(cifti_img, nib.Cifti2Image)
         if isinstance(cifti_img, nib.dataobj_images.DataobjImage):
@@ -203,7 +202,9 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             return None
 
     def get_design_matrix(self, run, model_spec):
-
+        """
+        Make design matrix by run-specific" 
+        """
         sub_run_imgs, sub_run_smoothed_imgs, sub_run_events, sub_run_confounds = (
             self.get_data_from_bids(run)
         )
@@ -242,6 +243,13 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         # Demean the regressors but we have the constant in the deisgn-matrix already so no need
         # for col in confounds_df.columns:
         #     confounds_df.loc[:, col] = confounds_df[col].sub(confounds_df[col].mean())
+
+        if sub_run_events_df["onset"].max() > frame_times[-1]:
+            raise ValueError(
+                f"Events extend beyond scan duration ({frame_times[-1]:.1f}s). "
+                f"Last event onset: {sub_run_events_df['onset'].max():.1f}s. "
+                f"Scan may be truncated or the wrong run was matched to the events file."
+            )
 
         dm = make_first_level_design_matrix(
             frame_times,

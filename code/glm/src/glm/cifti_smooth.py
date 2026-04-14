@@ -32,7 +32,7 @@ def get_cifti_surf(ciftify_dir, participant_label, session=None):
     return str(l_surf), str(r_surf)
 
 
-def wb_smooth(in_cifti, l_surf, r_surf, fwhm=6):
+def wb_smooth(in_cifti, l_surf, r_surf, fwhm):
     import logging
 
     logger = logging.getLogger(__name__)
@@ -40,10 +40,7 @@ def wb_smooth(in_cifti, l_surf, r_surf, fwhm=6):
     Smooth a CIFTI dtseries file using Connectome-Workbench-1.4.2 via Nipype
     Return the smoothed file
     """
-    # module_dir = os.path.dirname(os.path.abspath(__file__))
-    # template_dir = os.path.join(module_dir, "..", "templates")
-    # left_surf = os.path.join(template_dir, "L.midthickness.32k_fs_LR.surf.gii").format
-    # right_surf = os.path.join(template_dir, "L.midthickness.32k_fs_LR.surf.gii").format
+
     base, ext = os.path.splitext(in_cifti)
     out_file = base.replace("_bold", f"_desc-Smoothed_bold") + ext
     json_out = base.replace("_bold.dtseries", f"_desc-Smoothed_bold.json")
