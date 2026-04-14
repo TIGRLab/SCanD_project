@@ -51,12 +51,12 @@ To implement this, you can add a “modulation” column to your events files. T
 
 | onset  | duration | trial_type        | modulation | correct_response | participant_response |  block    |
 |--------|----------|-------------------|------------|------------------|----------------------|-----------|
-| 7.000  | 60.000   | onebackblock      |   n/a      |     n/a          |     n/a              |    1      |
+| 7.000  | 60.000   | onebackblock      |            |                  |                      |    1      |
 | 7.000  | 0.000    | oneback           |   0.000    |      0           |      0               |    1      |
 | 10.009 | 0.000    | oneback           |   0.702    |      0           |      1               |    1      |
 | 13.018 | 0.000    | oneback           |   1.186    |      1           |      1               |    1      |
 | ...    | ...      | ...               |   ...      |     ...          |      ...             |   ...     |
-| 74.185 | 60.000   | threebackblock    |   n/a      |     n/a          |      n/a             |    1      |
+| 74.185 | 60.000   | threebackblock    |            |                  |                      |    1      |
 | 74.185 | 0.000    | threeback         |   0.000    |      0           |      0               |    1      |
 | 77.194 | 0.000    | threeback         |   0.000    |      0           |      0               |    1      |
 | ...    | ...      | ...               |   ...      |     ...          |      ...             |   ...     |
