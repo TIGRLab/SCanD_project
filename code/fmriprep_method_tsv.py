@@ -12,7 +12,7 @@ def detect_method_for_session(session_dir: Path) -> str:
     json_files = sorted(session_dir.glob("fmap/*desc-preproc_fieldmap.json"))
 
     if not json_files:
-        return "no fmriprep done"
+        return "no fmri"
 
     methods = set()
 
