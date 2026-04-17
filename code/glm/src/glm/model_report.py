@@ -19,7 +19,8 @@ def build_run_level_sidecar(
     hrf_model,
     high_pass,
     drift_model,
-    smoothing_fwhm=6,
+    drop_duration,
+    smoothing_fwhm,
 ):
     return {
         "subject_label": participant_label,
@@ -32,6 +33,7 @@ def build_run_level_sidecar(
             "high_pass (Hz)": high_pass,
             "drift_model": drift_model,
             "noise_model": "ar1",
+            "drop_duration": drop_duration,
             "smoothing_fwhm (mm)": smoothing_fwhm,
             "t_r (seconds)": None,
         },

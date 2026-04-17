@@ -220,6 +220,8 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             hrf_model=self.hrf_model,
             high_pass=self.high_pass,
             drift_model=self.drift_model,
+            drop_duration=self.drop_duration,
+            smoothing_fwhm=self.fwhm
         )
         for entry in self._iter_valid_runs():
             ses = entry["session"]
