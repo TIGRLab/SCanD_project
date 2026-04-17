@@ -150,17 +150,28 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             if node["Level"] == "Run":
                 for contrast_info in node["Contrasts"]:
                     conds = contrast_info["ConditionList"]
-                    # logger.info(f"Contrast info: {contrast_info}")
                     in_weights = np.atleast_2d(contrast_info["Weights"])
-                    # logger.info(f"Weights shape: {in_weights.shape[0]}")
-                    missing = len(conds) != in_weights.shape[1] or any(
-                        cond not in dm.columns for cond in conds
-                    )
-                    if missing:
-                        continue
+                    # missing = len(conds) != in_weights.shape[1] or any(
+                    #     cond not in dm.columns for cond in conds
+                    # )
+                    # if missing:
+                    #     continue
+                    if len(conds) != in_weights.shape[1]:
+                        raise ValueError(
+                            f"Contrast '{contrast_info['Name']}': ConditionList has {len(conds)} "
+                            f"conditions but Weights has {in_weights.shape[1]} columns."
+                        )
+                    missing_conds = [cond for cond in conds if cond not in dm.columns]
+                    if missing_conds:
+                        raise ValueError(
+                            f"Contrast '{contrast_info['Name']}': {missing_conds} not found in "
+                            f"design matrix. This usually means the trial_type was absent from "
+                            f"the events file. Available columns: {list(dm.columns)}"
+                        )
                     weights = np.zeros(
                         (in_weights.shape[0], len(dm.columns)), dtype=in_weights.dtype
                     )
+                    
                     # Find indices of input conditions in all_regressors list
                     sorter = np.argsort(dm.columns)
                     indices = sorter[np.searchsorted(dm.columns, conds, sorter=sorter)]

@@ -78,7 +78,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
     def _load_run_level_events(self, sub_run_events, model_spec):
         try:
             events_df = pd.read_csv(sub_run_events[0].path, sep=None, engine="python")
-        except pd.errors.ParserErro as e:
+        except pd.errors.ParserError as e:
             raise ValueError(f"Could not parse {sub_run_events[0].path}: {e}")
 
         if "modulation" in events_df.columns:
