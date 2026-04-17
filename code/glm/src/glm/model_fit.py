@@ -266,6 +266,14 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             new_cifti_img, _, _ = self.drop_non_steady_scans(
                 sub_run_imgs, sub_run_smoothed_imgs
             )
+            # Delete smoothed file and its json sidecar from fmriprep dir after loading to avoid interfering with XCP-D
+            smoothed_path = Path(sub_run_smoothed_imgs)
+            smoothed_json = smoothed_path.with_name(smoothed_path.name.replace("_bold.dtseries.nii", "_bold.json"))
+            for tmp_file in [smoothed_path, smoothed_json]:
+                if tmp_file.exists():
+                    tmp_file.unlink()
+                    logger.info(f"Deleted temporary smoothed file from fmriprep: {tmp_file}")
+                    
             is_cifti = isinstance(new_cifti_img, nb.Cifti2Image)
             if is_cifti:
                 # Set up output directory
