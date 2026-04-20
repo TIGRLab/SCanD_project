@@ -9,3 +9,5 @@ templates/.freesurfer.txt
 templates/.keras/
 Neurobagel/
 containers/
+**/__pycache__
+**/.ipynb_checkpoints/
