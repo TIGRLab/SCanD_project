@@ -493,46 +493,6 @@ echo "number of array is: ${array_job_length}"
 sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
 ```
 
-## Running First-Level General Linear Model (GLM)
-
-**Note:** To run the GLM script correctly, you need:
-1) Task **events files**  
-2) A **study-specific model JSON**
-
-👉 **IMPORTANT:**  
-You **must provide a valid path to your MODEL file**.  
-This file defines the regressors in your design matrix and contrasts — the GLM **will not run correctly** if this path is missing or incorrect.
-
-- Use an absolute path (recommended)
-- Ensure all of the requirement files exists before submitting the job
-- Example models are available in: `code/glm/examples/models/`
-
-For proper set-up, please read these instructions carefully which can be found in [here](code/glm/README.md)
-
-```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-## Provide a path to STUDY-specific model 
-MODEL=${PWD}/code/glm/examples/models/model-003_smdl.json
-
-## sanity check (recommended)
-if [ ! -f "$MODEL" ]; then
-    echo "ERROR: MODEL file not found at $MODEL"
-    exit 1
-fi
-
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue, passing your task-specific model JSON as an argument
-sbatch --array=0-${array_job_length} ./code/02_glm_surface_scinet.sh ${MODEL}
-```
-
 ## Running qsiprep
 
 ```sh
@@ -629,6 +589,46 @@ After the fMRIPrep apply step is completed, the fieldmap method used for each su
 This TSV file is automatically updated during the pipeline and contains:
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
+
+## Running First-Level General Linear Model (GLM)
+
+**Note:** To run the GLM script correctly, you need:
+1) Task **events files**  
+2) A **study-specific model JSON**
+
+👉 **IMPORTANT:**  
+You **must provide a valid path to your MODEL file**.  
+This file defines the regressors in your design matrix and contrasts — the GLM **will not run correctly** if this path is missing or incorrect.
+
+- Use an absolute path (recommended)
+- Ensure all of the requirement files exists before submitting the job
+- Example models are available in: `code/glm/examples/models/`
+
+For proper set-up, please read these instructions carefully which can be found in [here](code/glm/README.md)
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+## Provide a path to STUDY-specific model 
+MODEL=${PWD}/code/glm/examples/models/model-003_smdl.json
+
+## sanity check (recommended)
+if [ ! -f "$MODEL" ]; then
+    echo "ERROR: MODEL file not found at $MODEL"
+    exit 1
+fi
+
+## calculate the length of the array-job given
+SUB_SIZE=1
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue, passing your task-specific model JSON as an argument
+sbatch --array=0-${array_job_length} ./code/02_glm_surface_scinet.sh ${MODEL}
+```
 
 ## Running qsirecon FSL
 
