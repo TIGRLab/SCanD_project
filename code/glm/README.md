@@ -49,17 +49,17 @@ To implement this, you can add a “modulation” column to your events files. T
 <details>
 <summary> Example of task-events.tsv content </summary>
 
-| onset  | duration | trial_type        | modulation | correct_response | participant_response |  block    |
-|--------|----------|-------------------|------------|------------------|----------------------|-----------|
-| 7.000  | 60.000   | onebackblock      |            |                  |                      |    1      |
-| 7.000  | 0.000    | oneback           |   0.000    |      0           |      0               |    1      |
-| 10.009 | 0.000    | oneback           |   0.702    |      0           |      1               |    1      |
-| 13.018 | 0.000    | oneback           |   1.186    |      1           |      1               |    1      |
-| ...    | ...      | ...               |   ...      |     ...          |      ...             |   ...     |
-| 74.185 | 60.000   | threebackblock    |            |                  |                      |    1      |
-| 74.185 | 0.000    | threeback         |   0.000    |      0           |      0               |    1      |
-| 77.194 | 0.000    | threeback         |   0.000    |      0           |      0               |    1      |
-| ...    | ...      | ...               |   ...      |     ...          |      ...             |   ...     |
+| onset  | duration | trial_type     | modulation |
+|--------|----------|----------------|------------|
+| 7.000  | 60.000   | onebackblock   |            |
+| 7.000  | 0.000    | oneback        | 0.000      |
+| 10.009 | 0.000    | oneback        | 0.702      |
+| 13.018 | 0.000    | oneback        | 1.186      |
+| ...    | ...      | ...            | ...        |
+| 74.185 | 60.000   | threebackblock |            |
+| 74.185 | 0.000    | threeback      | 0.000      |
+| 77.194 | 0.000    | threeback      | 0.000      |
+| ...    | ...      | ...            | ...        |
 </details>
 
 ### Where to save files
@@ -156,7 +156,6 @@ Below is an example JSON file. It describes a task-based fMRI GLM with condition
     {
       "Level": "Run",
       "Name": "run_level",
-      "GroupBy": ["run", "subject"],
       "Model": {
         "X": [
           "threebackblock",
@@ -198,17 +197,20 @@ Below is an example JSON file. It describes a task-based fMRI GLM with condition
 | `"X"`       | Trial types from events.tsv  | `["threebackblock","onebackblock"]` |
 | `"Type"`    | Model type                   | `"glm"`                             |
 
+**Notes**:
+ The additional regressors are included in the model is white matter, csf, framewise-displacement (FD), and the 6 motions parameters from the confounds file from **fMRIPREP**. 
+
 ### Contrast
 | Key / Field        | Description                         | Value                               | 
 |--------------------|-------------------------------------|-------------------------------------|
-| `"Name"`           | Name of the contrast                | `"threeback_vs_oneback"`            |
+| `"Name"`           | Name of the contrast                | `"threebackblockminusonebackblock"`            |
 | `"ConditionList"`  | Conditions included in contrast     | `["threebackblock","onebackblock"]` |
 | `"Weights"`        | Numeric weights for each condition  | `[1,-1]`                            |
 | `"Test"`           | Type of statistical test            | `"t"`                               |
 
 **Key Tips**:
 
-- Keep the task and session identifiers consistent with your task events & BOLD fMRI filenames.
+- Keep the task and session identifiers exactly the same with your task events & BOLD fMRI filenames.
 
 - The trial types (X) must exactly match the labels used in your events.tsv files.
 
@@ -222,13 +224,13 @@ The GLM pipeline produces these files:
 
 | Category | Files | Description |
 |----------|-------|-------------|
-| **Model Metadata** | `dataset_description.json`<br>`statmap.json` | Information about modeling software and parameters. |
+| **Model Metadata** | `glm.json`| Information about modeling parameters. |
 | **Design Matrix** | `design.tsv`<br>`design.svg` | The model design in tabular and visual formats. |
-| **Model Fit** | `stat-mean_square_error_statmap.dscalar.nii`<br>`stat-r_square_statmap.dscalar.nii` | Model performance metrics. |
-| **Run-level Contrast Results** | `contrast-[name]_stat-effect_size_statmap.dscalar.nii`<br>`contrast-[name]_stat-t_statmap.nii.gz`<br>`contrast-[name]_stat-p_statmap.nii.gz`<br>`contrast-[name]_stat-z_statmap.nii.gz` | Statistical maps for each contrast at the **run level**. |
+| **Run-level Contrast Results** | `contrast-[name]_stat-effect_size_statmap.dscalar.nii`<br>`contrast-[name]_stat-t_statmap.nii.gz`<br>`contrast-[name]_stat-effect_variance_statmap.nii.gz` | Statistical maps for each contrast at the **run level**. |
 | **Fixed-effects Contrast Results** | `contrast-[name]_stat-fixed_effect_size.dscalar.nii`<br>`contrast-[name]_stat-fixed_t_statmap.nii.gz` | Statistical maps summarizing multiple runs using **fixed-effects analysis**. |
-| **Visualizations** | `contrast-[name]_stat-effect_size_statmap.png`<br>`contrast-[name]_design.svg` | Figures showing beta-coefficient results and contrast design. |
+| **Visualizations** | `contrast-[name]_stat-t_statmap.png`<br>`contrast-[name]_design.svg` | Figures showing statistical t-map results and contrast design. |
 
+When there are multiple runs for a functional task, the Fixed-effects(FFX) will be applied to combine multiple runs for a session by averaging contrast effect sizes, weighted by their variance. The outputs are label with **fixed_effect**
 
 ## Technical Notes
 
