@@ -28,7 +28,6 @@ module load apptainer/1.3.5
 # Set-up inputs
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export FMRIPREP_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
-export CIFTI_DIR=${BASEDIR}/data/local/derivatives/ciftify/
 export OUT_DIR=${BASEDIR}/data/local/derivatives/glm/0.0.1
 if [ -z "$1" ]; then
     echo "ERROR: No model file specified. Pass the absolute path to your task-specific model JSON as the first argument."
@@ -59,11 +58,10 @@ fi
 echo singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${FMRIPREP_DIR}:/fmriprep \
-    -B ${CIFTI_DIR}:/cifti \
     -B ${OUT_DIR}:/outdir \
     -B ${MODEL}:/model \
     ${SCRATCH}/RTMSWM/SCanD_project/containers/glm-0.0.1.sif \
-    /bids /fmriprep /cifti \
+    /bids /fmriprep \
     --output_dir /outdir \
     --participant-label ${SUBJECTS} \
     --model /model \
@@ -72,11 +70,10 @@ echo singularity run --cleanenv \
 singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
     -B ${FMRIPREP_DIR}:/fmriprep \
-    -B ${CIFTI_DIR}:/cifti \
     -B ${OUT_DIR}:/outdir \
     -B ${MODEL}:/model \
     ${SCRATCH}/RTMSWM/SCanD_project/containers/glm-0.0.1.sif \
-    /bids /fmriprep /cifti \
+    /bids /fmriprep \
     --output_dir /outdir \
     --participant-label ${SUBJECTS} \
     --model /model \
