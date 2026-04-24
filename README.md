@@ -107,8 +107,9 @@ Currently this repo is going to be set up for running things on SciNet Fir clust
 |^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
 |^ |   03c  |   [Run qsirecon dtifit](#Running-qsirecon-dtifit) 	|  1 hour of slurm 	|
 |^ |   03d	|  [Run noddi-registration](#Running-noddi-registration) 	|  4 hours on slurm 	|
-|^ |   03e	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
-|^ |   03f	|  [Check tsv file](#Check-tsv-file) 	|    	|
+|^ |   03e	|  [Run glm-surface](#Running-GLM) 	|  30 mins on slurm 	|
+|^ |   03f	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
+|^ |   03g	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
 |^ |   04b	|  [Check tsv file](#Check-tsv-file) 	|    	|
 |stage 5 |  05a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
@@ -781,45 +782,6 @@ This TSV file is automatically updated during the pipeline and contains:
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
-## Running First-Level General Linear Model (GLM)
-
-**Note:** To run the GLM script correctly, you need:
-1) Task **events files**  
-2) A **study-specific model JSON**
-
-👉 **IMPORTANT:**  
-You **must provide a valid path to your MODEL file**.  
-This file defines the regressors in your design matrix and contrasts — the GLM **will not run correctly** if this path is missing or incorrect.
-
-- Use an absolute path (recommended)
-- Ensure all of the requirement files exists before submitting the job
-- Example models are available in: `code/glm/examples/models/`
-
-For proper set-up, please read these instructions carefully which can be found in [here](code/glm/README.md)
-
-```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-## Provide a path to STUDY-specific model 
-MODEL=${PWD}/code/glm/examples/models/model-003_smdl.json
-
-## sanity check (recommended)
-if [ ! -f "$MODEL" ]; then
-    echo "ERROR: MODEL file not found at $MODEL"
-    exit 1
-fi
-
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue, passing your task-specific model JSON as an argument
-sbatch --array=0-${array_job_length} ./code/02_glm_surface_scinet.sh ${MODEL}
-```
 
 ## Running qsirecon FSL
 
@@ -1054,6 +1016,46 @@ echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/03_noddi_reg_scinet.sh
+```
+
+## Running GLM
+
+**Note:** To run the GLM script correctly, you need:
+1) Task **events files**  
+2) A **study-specific model JSON**
+
+👉 **IMPORTANT:**  
+You **must provide a valid path to your MODEL file**.  
+This file defines the regressors in your design matrix and contrasts — the GLM **will not run correctly** if this path is missing or incorrect.
+
+- Use an absolute path (recommended)
+- Ensure all of the requirement files exists before submitting the job
+- Example models are available in: `code/glm/examples/models/`
+
+For proper set-up, please read these instructions carefully which can be found in [here](code/glm/README.md)
+
+```sh
+## go to the repo and pull new changes
+cd ${SCRATCH}/SCanD_project
+git pull         #in case you need to pull new code
+
+## Provide a path to STUDY-specific model 
+MODEL=${PWD}/code/glm/examples/models/model-003_smdl.json
+
+## sanity check (recommended)
+if [ ! -f "$MODEL" ]; then
+    echo "ERROR: MODEL file not found at $MODEL"
+    exit 1
+fi
+
+## calculate the length of the array-job given
+SUB_SIZE=1
+N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+echo "number of array is: ${array_job_length}"
+
+## submit the array job to the queue, passing your task-specific model JSON as an argument
+sbatch --array=0-${array_job_length} ./code/03_glm_surface_scinet.sh ${MODEL}
 ```
 
 ## Running magetbrain vote
