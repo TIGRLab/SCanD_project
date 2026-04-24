@@ -78,7 +78,6 @@ def get_value(field, field_name):
 def model_fit(
     bids_dir,
     fmriprep_dir,
-    cifti_dir,
     sub,
     task_label,
     session,
@@ -94,7 +93,6 @@ def model_fit(
     model_instance = FirstLevelModelFit(
         bids_dir,
         fmriprep_dir,
-        cifti_dir,
         sub,
         task_label,
         session,
@@ -142,16 +140,6 @@ def main():
             "For example, '/path/to/local/data/derivatives/fmriprep'"
         ),
     )
-
-    parser.add_argument(
-        "cifti_dir",
-        type=PathExists,
-        help=(
-            "The root folder of Ciftify preprocessing derivatives. "
-            "For example, '/path/to/local/data/derivatives/ciftify'"
-        ),
-    )
-
     parser.add_argument(
         "--output_dir",
         dest="output_dir",
@@ -179,7 +167,6 @@ def main():
         required=True,
         help="Path to the BIDS Stats Model JSON file",
     )
-
     parser.add_argument(
         "--drop-duration",
         type=float,
@@ -199,7 +186,6 @@ def main():
     args = parser.parse_args()
     bids_dir = args.bids_dir
     fmriprep_dir = args.fmriprep_dir
-    cifti_dir = args.cifti_dir
     output_dir = args.output_dir
     model = args.model
     drop_duration = args.drop_duration
@@ -233,7 +219,6 @@ def main():
     logger.info("Analysis parameters:")
     logger.info(f"  BIDS directory: {bids_dir}")
     logger.info(f"  FMRIPREP directory: {fmriprep_dir}")
-    logger.info(f"  CIFTIFY directory: {cifti_dir}")
     logger.info(f"  Participant ID: {participant_label}")
     logger.info(f"  Task label: {task_label}")
     logger.info(f"  Space label: {space_label}")
@@ -263,7 +248,6 @@ def main():
                 model_instance, effect_maps, variance_maps, _ = model_fit(
                     bids_dir,
                     fmriprep_dir,
-                    cifti_dir,
                     sub,
                     task_label,
                     session,

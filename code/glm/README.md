@@ -227,6 +227,7 @@ The GLM pipeline produces these files:
 | **Model Metadata** | `glm.json`| Information about modeling parameters. |
 | **Design Matrix** | `design.tsv`<br>`design.svg` | The model design in tabular and visual formats. |
 | **Run-level Contrast Results** | `contrast-[name]_stat-effect_size_statmap.dscalar.nii`<br>`contrast-[name]_stat-t_statmap.nii.gz`<br>`contrast-[name]_stat-effect_variance_statmap.nii.gz` | Statistical maps for each contrast at the **run level**. |
+| **Residuals** | `*_residuals.dtseries.nii` | Run-level GLM residuals (timeseries of unexplained variance) in fsLR 91k CIFTI format. |
 | **Fixed-effects Contrast Results** | `contrast-[name]_stat-fixed_effect_size.dscalar.nii`<br>`contrast-[name]_stat-fixed_t_statmap.nii.gz` | Statistical maps summarizing multiple runs using **fixed-effects analysis**. |
 | **Visualizations** | `contrast-[name]_stat-t_statmap.png`<br>`contrast-[name]_design.svg` | Figures showing statistical t-map results and contrast design. |
 
