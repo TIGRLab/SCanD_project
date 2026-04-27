@@ -5,30 +5,39 @@ from pathlib import Path
 from nipype.interfaces.workbench import CiftiSmooth
 
 
-def get_cifti_surf(ciftify_dir, participant_label, session=None):
-    if session:
-        sub_ses_prefix = f"sub-{participant_label}_ses-{session}"
-        dir_name = f"{sub_ses_prefix}.long.sub-{participant_label}"
-        file_prefix = dir_name
-    else:
-        sub_ses_prefix = f"sub-{participant_label}"
-        dir_name = sub_ses_prefix
-        file_prefix = sub_ses_prefix
+def get_cifti_surf(fmriprep_dir, participant_label, session=None):
+    sub_dir = Path(fmriprep_dir) / f"sub-{participant_label}"
 
-    # Build the path    
-    subj_dir = (
-        Path(ciftify_dir)
-        / dir_name
-        / "MNINonLinear"
-        / "fsaverage_LR32k"
-    )
-    # left/right surfaces
-    l_surf = subj_dir / f"{file_prefix}.L.midthickness.32k_fs_LR.surf.gii"
-    r_surf = subj_dir / f"{file_prefix}.R.midthickness.32k_fs_LR.surf.gii"
-    if not l_surf.exists():
-        raise FileNotFoundError(f"Missing left surface file: {l_surf}")
-    if not r_surf.exists():
-        raise FileNotFoundError(f"Missing left surface file: {l_surf}")
+    # Multi-session: surfaces at top-level anat/
+    # Single-session: surfaces at ses-{session}/anat/
+    search_dirs = [sub_dir / "anat"]
+    if session:
+        search_dirs.append(sub_dir / f"ses-{session}" / "anat")
+
+    pattern_l = f"sub-{participant_label}_*hemi-L_space-fsLR_den-32k_midthickness.surf.gii"
+    pattern_r = f"sub-{participant_label}_*hemi-R_space-fsLR_den-32k_midthickness.surf.gii"
+
+    l_surf = r_surf = None
+    for anat_dir in search_dirs:
+        if not anat_dir.exists():
+            continue
+        l_candidates = sorted(anat_dir.glob(pattern_l))
+        r_candidates = sorted(anat_dir.glob(pattern_r))
+        if l_candidates and r_candidates:
+            l_surf = l_candidates[0]
+            r_surf = r_candidates[0]
+            break
+
+    if l_surf is None:
+        raise FileNotFoundError(
+            f"Missing left fsLR 32k midthickness surface for sub-{participant_label} "
+            f"(searched: {[str(d) for d in search_dirs]})"
+        )
+    if r_surf is None:
+        raise FileNotFoundError(
+            f"Missing right fsLR 32k midthickness surface for sub-{participant_label} "
+            f"(searched: {[str(d) for d in search_dirs]})"
+        )
     return str(l_surf), str(r_surf)
 
 

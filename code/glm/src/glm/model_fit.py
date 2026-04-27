@@ -37,7 +37,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
     Attributes:
         bids_dir (str): Path to the root BIDS dataset.
         derivatives_dir (str): Path to the derivatives directory containing preprocessed data.
-        cifti_dir (str): Path to the root folder of Ciftify preprocessing derivatives.
         task_label (str): The task label corresponding to the fMRI task being analyzed.
         participant_label (str): Subject ID (e.g., "CMHWM01").
         space_label (str): The anatomical or functional space of the images (e.g., "MNI152NLin2009cAsym", "fsLR").
@@ -53,7 +52,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         self,
         bids_dir,
         derivatives_dir,
-        cifti_dir,
         participant_label,
         task_label,
         session,
@@ -87,7 +85,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             drop_duration=drop_duration,
         )
         self.outputdir = outputdir
-        self.cifti_dir = cifti_dir
         self.fwhm = fwhm
 
     def __repr__(self):
@@ -131,7 +128,10 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         return new_img
 
     def _get_voxelwise_stat(self, labels, results, stat):
-        voxelwise_attribute = np.zeros((1, len(labels)))
+        first = getattr(results[list(results.keys())[0]], stat)
+        n_rows = first.shape[0] if np.ndim(first) > 1 else 1
+        # voxelwise_attribute = np.zeros((1, len(labels)))
+        voxelwise_attribute = np.zeros((n_rows, len(labels)), dtype="f4")
 
         for label_ in results:
             label_mask = labels == label_
@@ -249,11 +249,11 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 f"The input dtseries for smoothing before model fitting is: {cifti_in}"
             )
             l_surf, r_surf = get_cifti_surf(
-                self.cifti_dir, self.participant_label, session=ses
+                self.derivatives_dir, self.participant_label, session=ses
             )
-            logger.info(
-                f"Smoothing data by {self.fwhm} mm before fitting model:{wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)}"
-            )
+            if self.fwhm:
+                smoothed = wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)
+                logger.info(f"Smoothing data by {self.fwhm} mm before fitting model: {smoothed}")
 
             logger.info(
                 f"Generating design matrix for: {self.participant_label} {ses_str}{task_str}{run_str}"
@@ -266,13 +266,6 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             new_cifti_img, _, _ = self.drop_non_steady_scans(
                 sub_run_imgs, sub_run_smoothed_imgs
             )
-            # Delete smoothed file and its json sidecar from fmriprep dir after loading to avoid interfering with XCP-D
-            smoothed_path = Path(sub_run_smoothed_imgs)
-            smoothed_json = smoothed_path.with_name(smoothed_path.name.replace("_bold.dtseries.nii", "_bold.json"))
-            for tmp_file in [smoothed_path, smoothed_json]:
-                if tmp_file.exists():
-                    tmp_file.unlink()
-                    logger.info(f"Deleted temporary smoothed file from fmriprep: {tmp_file}")
                     
             is_cifti = isinstance(new_cifti_img, nb.Cifti2Image)
             if is_cifti:
@@ -311,6 +304,27 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
                 #     ),
                 # }
 
+                # Extract residuals (timepoints x grayordinates)
+                residuals = self._get_voxelwise_stat(labels, estimates, "residuals")
+                residual_img = nb.Cifti2Image(
+                    residuals,
+                    header=new_cifti_img.header,
+                    nifti_header=new_cifti_img.nifti_header,
+                )
+                fname_residuals = os.path.join(
+                    glm_dir,
+                    self._format_filename(
+                        participant_label=self.participant_label,
+                        ses=ses,
+                        task_label=task,
+                        run=run,
+                        suffix="_residuals",
+                        ext="dtseries.nii",
+                    ),
+                )
+                logger.info(f"Saving residuals: {fname_residuals}")
+                residual_img.to_filename(fname_residuals)
+            
             # save design matrix
             fname_dm = os.path.join(
                 glm_dir,
@@ -446,7 +460,13 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             ),
         )
         write_sidecar(fname_sidecar, pipeline_sidecar)
-
+        # Remove smoothed file and its json sidecar from fmriprep dir
+        smoothed_path = Path(sub_run_smoothed_imgs)
+        smoothed_json = smoothed_path.with_name(smoothed_path.name.replace("_bold.dtseries.nii", "_bold.json"))
+        for tmp_file in [smoothed_path, smoothed_json]:
+            if tmp_file.exists():
+                tmp_file.unlink()
+                logger.info(f"Deleted temporary smoothed file from fmriprep: {tmp_file}")
         return all_effect_maps, all_variance_maps, all_t_maps
 
     def compute_fix_effect(self, effect_maps, variance_maps):
