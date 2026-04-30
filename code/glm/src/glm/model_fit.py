@@ -60,7 +60,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         model_spec,
         outputdir=None,
         drop_duration=None,
-        fwhm=6,
+        fwhm=None,
     ):
         BoldEventsMatch.__init__(
             self,
@@ -243,17 +243,18 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             run_str = f"| run-{run}" if run else ""
             task_str = f"| task-{task} "
 
-            # Smooth the data using the _iter_valid_runs then the down stream can grab the smoothed data
-            cifti_in = self._get_func_img(run=run)[0].path
-            logger.info(
-                f"The input dtseries for smoothing before model fitting is: {cifti_in}"
-            )
+            sub_run_imgs = self._get_func_img(run=run)
+            cifti_in = sub_run_imgs[0].path
+            
             l_surf, r_surf = get_cifti_surf(
                 self.derivatives_dir, self.participant_label, session=ses
             )
             if self.fwhm:
-                smoothed = wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)
-                logger.info(f"Smoothing data by {self.fwhm} mm before fitting model: {smoothed}")
+                input_img = wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)
+                logger.info(f"Smoothing input data by {self.fwhm} mm FWHM for fitting model -> {input_img}")
+            else:
+                input_img = cifti_in
+                logger.info(f"The input data for model fitting -> {input_img}")
 
             logger.info(
                 f"Generating design matrix for: {self.participant_label} {ses_str}{task_str}{run_str}"
@@ -261,10 +262,9 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
             dm = self.get_design_matrix(run, self.specs)
             logger.info(f"Columns of the convolved design matrix: {dm.columns}")
             logger.info(f"{'='*40}")
-            sub_run_imgs, sub_run_smoothed_imgs, _, _ = self.get_data_from_bids(run)
-            logger.info(f"The functional image for GLM fit : {sub_run_smoothed_imgs}")
+            logger.info(f"The functional image for GLM fit : {input_img}")
             new_cifti_img, _, _ = self.drop_non_steady_scans(
-                sub_run_imgs, sub_run_smoothed_imgs
+                sub_run_imgs, input_img
             )
                     
             is_cifti = isinstance(new_cifti_img, nb.Cifti2Image)
@@ -461,12 +461,13 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         )
         write_sidecar(fname_sidecar, pipeline_sidecar)
         # Remove smoothed file and its json sidecar from fmriprep dir
-        smoothed_path = Path(sub_run_smoothed_imgs)
-        smoothed_json = smoothed_path.with_name(smoothed_path.name.replace("_bold.dtseries.nii", "_bold.json"))
-        for tmp_file in [smoothed_path, smoothed_json]:
-            if tmp_file.exists():
-                tmp_file.unlink()
-                logger.info(f"Deleted temporary smoothed file from fmriprep: {tmp_file}")
+        if self.fwhm:
+            smoothed_path = Path(input_img)
+            smoothed_json = smoothed_path.with_name(smoothed_path.name.replace("_bold.dtseries.nii", "_bold.json"))
+            for tmp_file in [smoothed_path, smoothed_json]:
+                if tmp_file.exists():
+                    tmp_file.unlink()
+                    logger.info(f"Deleted temporary smoothed file from fmriprep: {tmp_file}")
         return all_effect_maps, all_variance_maps, all_t_maps
 
     def compute_fix_effect(self, effect_maps, variance_maps):
