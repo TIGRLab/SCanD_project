@@ -500,6 +500,16 @@ echo "number of array is: ${array_job_length}"
 ## submit the array job to the queue
 sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
 ```
+After the qsiprep step is completed, the fieldmap method used for each subject can be found in:
+
+```sh
+./Neurobagel/derivatives/processing_status_qsiprep.tsv
+```
+
+This TSV file is automatically updated during the pipeline and contains:
+- participant_id
+- qsiprep_method 
+
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
 
