@@ -55,16 +55,14 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
     def get_data_from_bids(self, run):
         """
-        Collect the BIDS-formatted task events, smoothed CIFTI dtseries files, and associated confound
+        Collect the BIDS-formatted task events, CIFTI dtseries files, and associated confound
         regressor TSVs for each matched run within a specific subject and session.
 
         Returns:
-            sub_run_smoothed_imgs (list): List of BIDSFile object corresponding to run-level smoothed CIFTI dtseries.
             sub_run_imgs (list): List of BIDSFile object corresponding to run-level CIFTI dtseries.
             sub_run_events (list): List of BIDSFile object corresponding to run-level task event TSV files.
             sub_run_confounds (list): List of BIDSFile object corresponding to run-level confound regressor TSV files.
         """
-        sub_run_smoothed_imgs = self._get_smoothed_func_img(run)
         sub_run_imgs = self._get_func_img(run)
         sub_run_events = self._get_events_files(run)
         sub_run_confounds = self._get_confounds_files(run)
@@ -73,7 +71,7 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
             raise ValueError(
                 f"Expected 3 files for sub-{self.participant_label}, only getting {len(sub_run_imgs) + len(sub_run_events) + len(sub_run_confounds)}"
             )
-        return sub_run_imgs, sub_run_smoothed_imgs, sub_run_events, sub_run_confounds
+        return sub_run_imgs, sub_run_events, sub_run_confounds
 
     def _load_run_level_events(self, sub_run_events, model_spec):
         try:
@@ -123,9 +121,9 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
 
     # I have to add a function to calculate the TR drop and actually drop them and edit the onset in the events dataframe
 
-    def drop_non_steady_scans(self, sub_run_img, sub_run_smoothed_img):
+    def drop_non_steady_scans(self, sub_run_img, img_path):
         "Calculate the number of non steady scans using the drop duration seconds and RepetitionTime"
-        cifti_img = nib.load(sub_run_smoothed_img)
+        cifti_img = nib.load(img_path)
         is_cifti = isinstance(cifti_img, nib.Cifti2Image)
         if isinstance(cifti_img, nib.dataobj_images.DataobjImage):
             # Ugly hack to ensure that retrieved data isn't cast to float64 unless
@@ -205,12 +203,10 @@ class FirstLevelDesignMatrix(BIDSSelect, LoadBidsModel):
         """
         Make design matrix by run-specific" 
         """
-        sub_run_imgs, sub_run_smoothed_imgs, sub_run_events, sub_run_confounds = (
-            self.get_data_from_bids(run)
-        )
+        sub_run_imgs, sub_run_events, sub_run_confounds = self.get_data_from_bids(run)
         sub_run_events_df = self._load_run_level_events(sub_run_events, model_spec)
         _, frame_times, non_steady_scans = self.drop_non_steady_scans(
-            sub_run_img=sub_run_imgs, sub_run_smoothed_img=sub_run_smoothed_imgs
+            sub_run_img=sub_run_imgs, img_path=sub_run_imgs[0].path
         )
 
         # Confound regressors

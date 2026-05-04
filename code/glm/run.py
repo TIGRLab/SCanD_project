@@ -241,6 +241,7 @@ def main():
 
         if not sessions:
             # No sessions — run once with session=None
+            logger.info("No sessions found — running GLM without session entity.")
             sessions = [None]
 
         for session in sessions:
