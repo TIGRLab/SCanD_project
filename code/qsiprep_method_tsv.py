@@ -3,7 +3,17 @@ import argparse
 from pathlib import Path
 import re
 import csv
-from bs4 import BeautifulSoup
+import html
+
+
+def html_to_text(raw_html):
+    raw_html = re.sub(r"<script.*?</script>", " ", raw_html, flags=re.I | re.S)
+    raw_html = re.sub(r"<style.*?</style>", " ", raw_html, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", " ", raw_html)
+    text = html.unescape(text)
+    text = " ".join(text.split())
+    return text
+
 
 def extract_sdc(qsiprep_root, participants):
     rows = []
@@ -13,43 +23,29 @@ def extract_sdc(qsiprep_root, participants):
         html_file = Path(qsiprep_root) / f"{sub}.html"
 
         if not html_file.exists():
-            rows.append({
-                "participant_id": sub,
-                "session_id": "",
-                "qsiprep_sdc_method": "NOT_FOUND",
-            })
+            rows.append([sub, "", "NOT_FOUND"])
             continue
 
-        text = BeautifulSoup(
-            html_file.read_text(errors="ignore"),
-            "html.parser"
-        ).get_text(" ")
-
-        text = " ".join(text.split())
+        text = html_to_text(html_file.read_text(errors="ignore"))
 
         sdc_matches = list(re.finditer(
             r"Susceptibility\s+distortion\s+correction:\s*(.+?)(?:\s+Coregistration|\s+Denoising|\s+HMC|\s+DWI|\s+Confounds|\s+Impute|$)",
             text,
-            flags=re.IGNORECASE,
+            flags=re.I,
         ))
 
         if not sdc_matches:
-            rows.append({
-                "participant_id": sub,
-                "session_id": "",
-                "qsiprep_sdc_method": "NOT_FOUND",
-            })
+            rows.append([sub, "", "NOT_FOUND"])
             continue
 
         for sdc_match in sdc_matches:
             method = sdc_match.group(1).strip().replace('"', "")
 
-            # find closest previous session
-            prev_text = text[:sdc_match.start()]
+            previous_text = text[:sdc_match.start()]
             session_matches = list(re.finditer(
                 r"Reports\s+for\s+Session:\s*([A-Za-z0-9]+)",
-                prev_text,
-                flags=re.IGNORECASE,
+                previous_text,
+                flags=re.I,
             ))
 
             session_id = ""
@@ -61,12 +57,7 @@ def extract_sdc(qsiprep_root, participants):
                 continue
 
             seen.add(key)
-
-            rows.append({
-                "participant_id": sub,
-                "session_id": session_id,
-                "qsiprep_sdc_method": method,
-            })
+            rows.append([sub, session_id, method])
 
     return rows
 
@@ -76,7 +67,6 @@ def main():
     parser.add_argument("--qsiprep-root", required=True)
     parser.add_argument("--output-tsv", required=True)
     parser.add_argument("--participant-ids", nargs="+", required=True)
-
     args = parser.parse_args()
 
     rows = extract_sdc(args.qsiprep_root, args.participant_ids)
@@ -85,14 +75,10 @@ def main():
     write_header = not out_path.exists()
 
     with out_path.open("a", newline="") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=["participant_id", "session_id", "qsiprep_sdc_method"],
-            delimiter="\t",
-        )
+        writer = csv.writer(f, delimiter="\t")
 
         if write_header:
-            writer.writeheader()
+            writer.writerow(["participant_id", "session_id", "qsiprep_sdc_method"])
 
         writer.writerows(rows)
 
