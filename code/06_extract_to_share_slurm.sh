@@ -394,6 +394,7 @@ fi
 cp "$(ls -t ${PROJECT_DIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
 cp "$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv | head -n 1)" data/share/manifest.tsv
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv  ${BASEDIR}/data/share
+cp ${BASEDIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv  ${BASEDIR}/data/share
 
 cp ${PROJECT_DIR}/data/local/bids/participants.tsv ${PROJECT_DIR}/data/share
 
