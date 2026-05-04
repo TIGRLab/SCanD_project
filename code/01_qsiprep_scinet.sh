@@ -153,6 +153,11 @@ singularity exec \
         --pipeline qsiprep \
         --pipeline-version 0.22.0 \
         --participant-id sub-$subject
+
+      python "${ROOT_DIR}/code/qsiprep_sdc_method_tsv.py" \
+        --qsiprep-root "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
+        --output-tsv "${ROOT_DIR}/Neurobagel/derivatives/processing_status_qsiprep_sdc.tsv" \
+        --participant-ids "sub-$subject"
     done
   '
 unset APPTAINERENV_ROOT_DIR
