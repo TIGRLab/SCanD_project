@@ -1,0 +1,7 @@
+{
+    "hrf_model": "spm + derivative + dispersion",
+    "high_pass": 0.01,
+    "drift_model": "cosine",
+    "mask_img": false,
+    "minimize_memory": false
+}
