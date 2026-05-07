@@ -25,6 +25,7 @@ for d in ${FREESURFER_DIR}/sub-*_ses-*; do
   ln -sfn "$d" "$subj"
 done
 
+
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
 
@@ -41,7 +42,7 @@ subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${FMRIPREP_LOCAL_DIR}/*html ${FMRIPREP_SHARE_DIR}/
 for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
- rsync -zarv ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
+ rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
  rsync -zarvR ${FMRIPREP_LOCAL_DIR}/./sourcedata/freesurfer/${subject}/scripts/recon-all-status.log ${FMRIPREP_SHARE_DIR}/
 done
 
@@ -418,6 +419,7 @@ else
     echo "No noddireg outputs found."
 fi
 
+
 # sharing nipoppy trackers
 cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
 cp "$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv | head -n 1)" data/share/manifest.tsv
@@ -425,3 +427,35 @@ cp ${BASEDIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv  ${BASEDIR}/
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv  ${BASEDIR}/data/share
 
 cp ${BASEDIR}/data/local/bids/participants.tsv ${BASEDIR}/data/share
+
+# Copy GLM outputs to shared folder
+GLM_SHARE_DIR=${BASEDIR}/data/share/glm/0.0.1
+GLM_LOCAL_DIR=${BASEDIR}/data/local/derivatives/glm/0.0.1
+mkdir -p ${GLM_SHARE_DIR}
+if [ -d "$GLM_LOCAL_DIR" ];
+then
+    echo "Copying GLM outputs, metadata, and QC images"
+    # Copying the metadata json
+    subjects=`cd ${GLM_LOCAL_DIR}; ls -1d sub-*`
+    
+    echo for subject in ${subjects}; do
+        GLM_SUB_SHARE_DIR=${GLM_SHARE_DIR}/${subject}
+        GLM_SUB_LOCAL_DIR=${GLM_LOCAL_DIR}/${subject}
+        mkdir -p ${GLM_SUB_SHARE_DIR}
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*glm.json ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.svg ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.tsv ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*contrast-*_stat-*statmap.dscalar.nii ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*contrast-*_stat-*statmap.png ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*residuals.dtseries.nii ${GLM_SUB_SHARE_DIR}/
+
+        if compgen -G "${GLM_SUB_LOCAL_DIR}/*fixedeffects.json" > /dev/null; then
+        echo "Copying fixed-effect outputs"
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixedeffects.json ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.dscalar.nii ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.png ${GLM_SUB_SHARE_DIR}/
+        fi
+    done
+else
+    echo "GLM outputs not found."
+fi
