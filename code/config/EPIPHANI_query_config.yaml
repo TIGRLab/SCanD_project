@@ -35,11 +35,45 @@ dwi_query:
 # -----------------------------
 # Mapping fmap to target files
 fmap_to_bold:
-  - fmap: "acq-rest_dir-*_run-01"
-    bold_keys: ["task-rest_run-01","task-rest_run-02"]
-  - fmap: "acq-rest_dir-*_run-02"
-    bold_keys: ["task-rest_run-03"]  
+  ses-01:
+    - fmap: "acq-rest_dir-AP_run-01"
+      bold_keys: ["task-rest_run-01","task-rest_run-02"]
+    - fmap: "acq-rest_dir-AP_run-02"
+      bold_keys: ["task-rest_run-03"]
+    - fmap: "acq-rest_dir-PA_run-01"
+      bold_keys: ["task-rest_run-01","task-rest_run-02"]
+    - fmap: "acq-rest_dir-PA_run-02"
+      bold_keys: ["task-rest_run-03"]
+
+fmap_to_bold:
+  ses-02:
+    - fmap: "acq-rest_dir-AP_run-01"
+      bold_keys: ["task-rest_run-01","task-rest_run-02"]
+    - fmap: "acq-rest_dir-AP_run-02"
+      bold_keys: ["task-rest_run-03"]
+    - fmap: "acq-rest_dir-PA_run-01"
+      bold_keys: ["task-rest_run-01","task-rest_run-02"]
+    - fmap: "acq-rest_dir-PA_run-02"
+      bold_keys: ["task-rest_run-03"]    
 
 fmap_to_dwi:
-  - fmap: "acq-dwi_dir-AP"
-    dwi_keys: "dwi" 
+  ses-01:
+  - fmap: "acq-dwi_dir-AP_run-01"
+    dwi_keys: "run-01_dwi"
+  - fmap: "acq-dwi_dir-PA_run-01"
+    dwi_keys: "run-01_dwi"
+  - fmap: "acq-dwi_dir-AP_run-02"
+    dwi_keys: "run-02_dwi"
+  - fmap: "acq-dwi_dir-PA_run-02"
+    dwi_keys: "run-02_dwi"
+
+fmap_to_dwi:
+  ses-02:
+  - fmap: "acq-dwi_dir-AP_run-01"
+    dwi_keys: "run-01_dwi"
+  - fmap: "acq-dwi_dir-PA_run-01"
+    dwi_keys: "run-01_dwi"
+  - fmap: "acq-dwi_dir-AP_run-02"
+    dwi_keys: "run-02_dwi"
+  - fmap: "acq-dwi_dir-PA_run-02"
+    dwi_keys: "run-02_dwi"
