@@ -663,7 +663,7 @@ array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_amico_noddi.sh
+sbatch --array=0-${array_job_length} ./code/02_amico_noddi_scinet.sh
 ```
 
 To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
