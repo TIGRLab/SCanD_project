@@ -11,11 +11,11 @@
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
 
-PROJECT_DIR=${SLURM_SUBMIT_DIR}
+BASEDIR=${SLURM_SUBMIT_DIR}
 
-FMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/fmriprep/25.2.4
-FMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/25.2.4
-FREESURFER_DIR=${PROJECT_DIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
+FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/25.2.4
+FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
+FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
 
 # Create subject-only symlinks (remove _ses* suffix)
 for d in ${FREESURFER_DIR}/sub-*_ses-*; do
@@ -50,8 +50,8 @@ else
 fi
 
 
-SMRIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/smriprep/25.2.4/
-SMRIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/smriprep/25.2.4/smriprep
+SMRIPREP_SHARE_DIR=${BASEDIR}/data/share/smriprep/25.2.4/
+SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep
 
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
@@ -79,8 +79,8 @@ fi
 
 
 ## copy over the qsiprep json files (for https://www.nipreps.org/dmriprep-viewer/#/)
-QSIPREP_SHARE_DIR=${PROJECT_DIR}/data/share/qsiprep/0.22.0
-QSIPREP_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
+QSIPREP_SHARE_DIR=${BASEDIR}/data/share/qsiprep/0.22.0
+QSIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 
 if [ -d "$QSIPREP_LOCAL_DIR" ];
 then
@@ -106,8 +106,8 @@ fi
 
 
 ## run the mriqc group step and copy over all outputs
-MRIQC_SHARE_DIR=${PROJECT_DIR}/data/share/mriqc/24.0.0
-MRIQC_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/mriqc/24.0.0
+MRIQC_SHARE_DIR=${BASEDIR}/data/share/mriqc/24.0.0
+MRIQC_LOCAL_DIR=${BASEDIR}/data/local/derivatives/mriqc/24.0.0
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/mriqc
 mkdir -vp ${WORK_DIR}
 
@@ -116,11 +116,11 @@ then
 
 echo "running mriqc group and copying files"
 singularity run --cleanenv \
-    -B ${PROJECT_DIR}/templates:/home/mriqc --home /home/mriqc \
-    -B ${PROJECT_DIR}/data/local/bids:/bids \
+    -B ${BASEDIR}/templates:/home/mriqc --home /home/mriqc \
+    -B ${BASEDIR}/data/local/bids:/bids \
     -B ${MRIQC_LOCAL_DIR}:/derived \
     -B ${WORK_DIR}:/work \
-    ${PROJECT_DIR}/containers/mriqc-24.0.0.simg \
+    ${BASEDIR}/containers/mriqc-24.0.0.simg \
     /bids /derived group \
     -w /work
 
@@ -135,7 +135,7 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
+if [ -d "${BASEDIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
     echo "Copying over the xcp_d folder"
 
     rsync -a \
@@ -146,11 +146,11 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_d/0.7.3" ]; then
         --exclude '*/sub-*/func/*pearsoncorrelation*' \
         --exclude '*/atlases/' \
         --exclude '*/logs/' \
-        ${PROJECT_DIR}/data/local/derivatives/xcp_d ${PROJECT_DIR}/data/share
+        ${BASEDIR}/data/local/derivatives/xcp_d ${BASEDIR}/data/share
 
-    mkdir -p ${PROJECT_DIR}/data/share/xcp_d/0.7.3/dtseries
+    mkdir -p ${BASEDIR}/data/share/xcp_d/0.7.3/dtseries
 
-    BASE="${PROJECT_DIR}/data/share/xcp_d/0.7.3"
+    BASE="${BASEDIR}/data/share/xcp_d/0.7.3"
 
     for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
@@ -184,7 +184,7 @@ else
 fi
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
+if [ -d "${BASEDIR}/data/local/derivatives/xcp_noGSR/" ]; then
     echo "Copying over the xcp_noGSR folder"
 
     rsync -a \
@@ -195,11 +195,11 @@ if [ -d "${PROJECT_DIR}/data/local/derivatives/xcp_noGSR/" ]; then
         --exclude '*/sub-*/func/*pearsoncorrelation*' \
         --exclude '*/atlases/' \
         --exclude '*/logs/' \
-        ${PROJECT_DIR}/data/local/derivatives/xcp_noGSR ${PROJECT_DIR}/data/share
+        ${BASEDIR}/data/local/derivatives/xcp_noGSR ${BASEDIR}/data/share
 
-    mkdir -p ${PROJECT_DIR}/data/share/xcp_noGSR/dtseries
+    mkdir -p ${BASEDIR}/data/share/xcp_noGSR/dtseries
 
-    BASE="${PROJECT_DIR}/data/share/xcp_noGSR"
+    BASE="${BASEDIR}/data/share/xcp_noGSR"
 
     for sub_dir in ${BASE}/sub-*; do
         if [ -d "$sub_dir" ]; then
@@ -234,23 +234,23 @@ fi
 
 
 
-if [ -d "${PROJECT_DIR}/data/local/derivatives/ciftify" ];
+if [ -d "${BASEDIR}/data/local/derivatives/ciftify" ];
 then
 
 ## also run ciftify group step
 echo "copying over the ciftify qc images"
 
-mkdir ${PROJECT_DIR}/data/share/ciftify
+mkdir ${BASEDIR}/data/share/ciftify
 
 singularity exec --cleanenv \
-  -B ${PROJECT_DIR}/data/local/bids:/bids \
-  -B ${PROJECT_DIR}/data/local/derivatives/ciftify:/derived \
-  ${PROJECT_DIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
+  -B ${BASEDIR}/data/local/bids:/bids \
+  -B ${BASEDIR}/data/local/derivatives/ciftify:/derived \
+  ${BASEDIR}/containers/fmriprep_ciftity-v1.3.2-2.3.3.simg \
   cifti_vis_recon_all index --ciftify-work-dir /derived
 
 
 ## copy over the ciftify QC outputs
-rsync -a ${PROJECT_DIR}/data/local/derivatives/ciftify/qc_recon_all  ${PROJECT_DIR}/data/share/ciftify/
+rsync -a ${BASEDIR}/data/local/derivatives/ciftify/qc_recon_all  ${BASEDIR}/data/share/ciftify/
 
 else
 
@@ -261,20 +261,20 @@ fi
 
 
 ## copy over the enigmaDTI files
-if [ -d "${PROJECT_DIR}/data/local/enigmaDTI" ];
+if [ -d "${BASEDIR}/data/local/enigmaDTI" ];
 then
 echo "copying over the enigmaDTI files"
-mkdir ${PROJECT_DIR}/data/share/enigmaDTI
-rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/group*  ${PROJECT_DIR}/data/share/enigmaDTI
-rsync -a ${PROJECT_DIR}/data/local/enigmaDTI/*.html  ${PROJECT_DIR}/data/share/enigmaDTI
+mkdir ${BASEDIR}/data/share/enigmaDTI
+rsync -a ${BASEDIR}/data/local/enigmaDTI/group*  ${BASEDIR}/data/share/enigmaDTI
+rsync -a ${BASEDIR}/data/local/enigmaDTI/*.html  ${BASEDIR}/data/share/enigmaDTI
 
-rsync -a --include "*/" --include "*.png" --exclude "*" ${PROJECT_DIR}/data/local/enigmaDTI/ ${PROJECT_DIR}/data/share/enigmaDTI
+rsync -a --include "*/" --include "*.png" --exclude "*" ${BASEDIR}/data/local/enigmaDTI/ ${BASEDIR}/data/share/enigmaDTI
 fi
 
 
 
-AMICO_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
-AMICO_SHARE_DIR=${PROJECT_DIR}/data/share/amico_noddi
+AMICO_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
+AMICO_SHARE_DIR=${BASEDIR}/data/share/amico_noddi
 
 if [ -d "${AMICO_LOCAL_DIR}" ];
 then
@@ -297,8 +297,8 @@ fi
 
 
 
-TRACTIFY_MULTI_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_act-HSVS
-TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+TRACTIFY_MULTI_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_act-HSVS
+TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_MULTI_LOCAL_DIR}" ];
 then
@@ -320,8 +320,8 @@ fi
 
 
 
-TRACTIFY_SINGLE_LOCAL_DIR=${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS
-TRACTIFY_SHARE_DIR=${PROJECT_DIR}/data/share/tractify
+TRACTIFY_SINGLE_LOCAL_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/tractography/qsirecon-MRtrix3_fork-SS3T_act-HSVS
+TRACTIFY_SHARE_DIR=${BASEDIR}/data/share/tractify
 
 if [ -d "${TRACTIFY_SINGLE_LOCAL_DIR}" ];
 then
@@ -343,28 +343,28 @@ fi
 
 
 #running freesurfer group merge
-source ${PROJECT_DIR}/code/freesurfer_group_merge.sh
+source ${BASEDIR}/code/freesurfer_group_merge.sh
 
 ## copy over freesurfer group tsv files
 echo "copying over freesurfer group files"
-mkdir ${PROJECT_DIR}/data/share/freesurfer_group
-rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${PROJECT_DIR}/data/share/freesurfer_group
+mkdir ${BASEDIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
 
 #running Enigma_extract
 echo "Running Enigma Extract"
-source ${PROJECT_DIR}/code/ENIGMA_ExtractCortical.sh
+source ${BASEDIR}/code/ENIGMA_ExtractCortical.sh
 
 ## copy over the Enigma_extract outputs
-if [ -d "${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
+if [ -d "${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract" ];
 then
 echo "copying over the ENIGMA extracted cortical and subcortical files"
-rsync -a ${PROJECT_DIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${PROJECT_DIR}/data/share/freesurfer_group
+rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract ${BASEDIR}/data/share/freesurfer_group
 fi
 
 
 rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/**/*.png' --include='noddi_roi/**/*.csv' --exclude='noddi_roi/**' \
-    ${PROJECT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
-    ${PROJECT_DIR}/data/share/amico_noddi
+    ${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/ \
+    ${BASEDIR}/data/share/amico_noddi
 
 
 #running Noddi-registration
@@ -391,10 +391,41 @@ else
 fi
 
 # sharing nipoppy trackers
-cp "$(ls -t ${PROJECT_DIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
+cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
 cp "$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv | head -n 1)" data/share/manifest.tsv
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv  ${BASEDIR}/data/share
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv  ${BASEDIR}/data/share
 
-cp ${PROJECT_DIR}/data/local/bids/participants.tsv ${PROJECT_DIR}/data/share
+cp ${BASEDIR}/data/local/bids/participants.tsv ${BASEDIR}/data/share
 
+# Copy GLM outputs to shared folder
+GLM_SHARE_DIR=${BASEDIR}/data/share/glm/0.0.1
+GLM_LOCAL_DIR=${BASEDIR}/data/local/derivatives/glm/0.0.1
+mkdir -p ${GLM_SHARE_DIR}
+if [ -d "$GLM_LOCAL_DIR" ];
+then
+    echo "Copying GLM outputs, metadata, and QC images"
+    # Copying the metadata json
+    subjects=`cd ${GLM_LOCAL_DIR}; ls -1d sub-*`
+    
+    echo for subject in ${subjects}; do
+        GLM_SUB_SHARE_DIR=${GLM_SHARE_DIR}/${subject}
+        GLM_SUB_LOCAL_DIR=${GLM_LOCAL_DIR}/${subject}
+        mkdir -p ${GLM_SUB_SHARE_DIR}
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*glm.json ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.svg ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.tsv ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*contrast-*_stat-*statmap.dscalar.nii ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*contrast-*_stat-*statmap.png ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*residuals.dtseries.nii ${GLM_SUB_SHARE_DIR}/
+
+        if compgen -G "${GLM_SUB_LOCAL_DIR}/*fixedeffects.json" > /dev/null; then
+        echo "Copying fixed-effect outputs"
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixedeffects.json ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.dscalar.nii ${GLM_SUB_SHARE_DIR}/
+        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.png ${GLM_SUB_SHARE_DIR}/
+        fi
+    done
+else
+    echo "GLM outputs not found."
+fi
