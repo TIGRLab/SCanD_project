@@ -128,7 +128,8 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
         find "${NODDIREG_LOCAL_DIR}/${subject}" \
             -type f \( \
                 -path "*/ses-*/dwi/*" -o \
-                -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" \
+                -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" -o \
+                -path "*/figures/*_desc-4S1056Parcels_model-noddi_mdp-*_qa.png" \
             \) \
             -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
     done
