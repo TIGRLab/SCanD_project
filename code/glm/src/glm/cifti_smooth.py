@@ -4,8 +4,14 @@ from pathlib import Path
 
 from nipype.interfaces.workbench import CiftiSmooth
 
+_TEMPLATES_DIR = Path(__file__).parents[2] / "templates"
+
 
 def get_cifti_surf(fmriprep_dir, participant_label, session=None):
+    import logging
+
+    logger = logging.getLogger(__name__)
+
     sub_dir = Path(fmriprep_dir) / f"sub-{participant_label}"
 
     # Multi-session: surfaces at top-level anat/
@@ -28,16 +34,20 @@ def get_cifti_surf(fmriprep_dir, participant_label, session=None):
             r_surf = r_candidates[0]
             break
 
-    if l_surf is None:
-        raise FileNotFoundError(
-            f"Missing left fsLR 32k midthickness surface for sub-{participant_label} "
-            f"(searched: {[str(d) for d in search_dirs]})"
+    if l_surf is None or r_surf is None:
+        tpl_l = _TEMPLATES_DIR / "tpl-fsLR_den-32k_hemi-L_midthickness.surf.gii"
+        tpl_r = _TEMPLATES_DIR / "tpl-fsLR_den-32k_hemi-R_midthickness.surf.gii"
+        if not tpl_l.exists() or not tpl_r.exists():
+            raise FileNotFoundError(
+                f"Missing fsLR 32k midthickness surface for sub-{participant_label} "
+                f"(searched: {[str(d) for d in search_dirs]}) and template fallback not found in {_TEMPLATES_DIR}."
+            )
+        logger.warning(
+            f"sub-{participant_label}: individual fsLR 32k midthickness not found, "
+            f"falling back to template surfaces in {_TEMPLATES_DIR}"
         )
-    if r_surf is None:
-        raise FileNotFoundError(
-            f"Missing right fsLR 32k midthickness surface for sub-{participant_label} "
-            f"(searched: {[str(d) for d in search_dirs]})"
-        )
+        l_surf, r_surf = tpl_l, tpl_r
+
     return str(l_surf), str(r_surf)
 
 

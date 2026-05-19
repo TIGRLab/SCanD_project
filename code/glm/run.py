@@ -172,7 +172,7 @@ def main():
         type=float,
         dest="drop_duration",
         required=False,
-        default=4,
+        default=None,
         help="Number of seconds to discard from the start of the scan (default: 4s)",
     )
     parser.add_argument(
@@ -180,7 +180,7 @@ def main():
         type=float,
         dest="fwhm",
         required=False,
-        default=6,
+        default=None,
         help="Smoothing kernel size in mm FWHM applied before GLM fitting (default: 6mm)",
     )
     args = parser.parse_args()
