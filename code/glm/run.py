@@ -172,16 +172,16 @@ def main():
         type=float,
         dest="drop_duration",
         required=False,
-        default=4,
-        help="Number of seconds to discard from the start of the scan (default: 4s)",
+        default=None,
+        help="Number of seconds to discard from the start of the scan",
     )
     parser.add_argument(
         "--fwhm",
         type=float,
         dest="fwhm",
         required=False,
-        default=6,
-        help="Smoothing kernel size in mm FWHM applied before GLM fitting (default: 6mm)",
+        default=None,
+        help="Smoothing kernel size in mm FWHM applied before GLM fitting",
     )
     args = parser.parse_args()
     bids_dir = args.bids_dir
