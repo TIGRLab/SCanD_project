@@ -203,12 +203,12 @@ def update_intendedfor_from_yaml(fmap_files, img_files, fmap_to_img_map, bids_di
 				continue
 
 			fmap_json_path = Path(fmap_file.path)
-			# with open(fmap_json_path, "r+") as f:
-			# 	fmap_json = json.load(f)
-			# 	fmap_json["IntendedFor"] = intended_for
-			# 	f.seek(0)
-			# 	json.dump(fmap_json, f, indent=4)
-			# 	f.truncate()
+			with open(fmap_json_path, "r+") as f:
+				fmap_json = json.load(f)
+				fmap_json["IntendedFor"] = intended_for
+				f.seek(0)
+				json.dump(fmap_json, f, indent=4)
+				f.truncate()
 
 			fmap_short = _short_name(fmap_json_path.name)
 			tree = "\n".join(
