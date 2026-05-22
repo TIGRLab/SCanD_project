@@ -3,10 +3,8 @@ from pathlib import Path
 
 from nipype.interfaces.workbench import CiftiSmooth
 
-_TEMPLATES_DIR = Path(__file__).parents[2] / "templates"
 
-
-def get_cifti_surf(fmriprep_dir, participant_label, session=None):
+def get_cifti_surf(fmriprep_dir, participant_label, session=None, ciftify_dir=None):
     import logging
 
     logger = logging.getLogger(__name__)
@@ -34,18 +32,28 @@ def get_cifti_surf(fmriprep_dir, participant_label, session=None):
             break
 
     if l_surf is None or r_surf is None:
-        tpl_l = _TEMPLATES_DIR / "tpl-fsLR_den-32k_hemi-L_midthickness.surf.gii"
-        tpl_r = _TEMPLATES_DIR / "tpl-fsLR_den-32k_hemi-R_midthickness.surf.gii"
-        if not tpl_l.exists() or not tpl_r.exists():
-            raise FileNotFoundError(
-                f"Missing fsLR 32k midthickness surface for sub-{participant_label} "
-                f"(searched: {[str(d) for d in search_dirs]}) and template fallback not found in {_TEMPLATES_DIR}."
+        if ciftify_dir:
+            ciftify_sub = (
+                f"sub-{participant_label}_ses-{session}.long.sub-{participant_label}"
+                if session
+                else f"sub-{participant_label}"
             )
-        logger.warning(
-            f"sub-{participant_label}: individual fsLR 32k midthickness not found, "
-            f"falling back to template surfaces in {_TEMPLATES_DIR}"
+            ciftify_surf_dir = Path(ciftify_dir) / ciftify_sub / "MNINonLinear" / "fsaverage_LR32k"
+            surf_l = ciftify_surf_dir / f"{ciftify_sub}.L.midthickness.32k_fs_LR.surf.gii"
+            surf_r = ciftify_surf_dir / f"{ciftify_sub}.R.midthickness.32k_fs_LR.surf.gii"
+            if surf_l.exists() and surf_r.exists():
+                logger.info(
+                    f"sub-{participant_label}: using ciftify surfaces from {ciftify_surf_dir}"
+                )
+                return str(surf_l), str(surf_r)
+            logger.warning(
+                f"sub-{participant_label}: ciftify surfaces not found at {ciftify_surf_dir}"
+            )
+        raise FileNotFoundError(
+            f"No fsLR 32k midthickness surface found for sub-{participant_label}. "
+            f"Searched fMRIPrep: {[str(d) for d in search_dirs]}. "
+            f"Searched ciftify: {ciftify_surf_dir if ciftify_dir else 'not provided'}."
         )
-        l_surf, r_surf = tpl_l, tpl_r
 
     return str(l_surf), str(r_surf)
 
