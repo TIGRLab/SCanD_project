@@ -61,6 +61,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         outputdir=None,
         drop_duration=None,
         fwhm=None,
+        ciftify_dir=None
     ):
         BoldEventsMatch.__init__(
             self,
@@ -86,6 +87,7 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
         )
         self.outputdir = outputdir
         self.fwhm = fwhm
+        self.ciftify_dir = ciftify_dir
 
     def __repr__(self):
         return (
@@ -245,10 +247,13 @@ class FirstLevelModelFit(BoldEventsMatch, FirstLevelDesignMatrix):
 
             sub_run_imgs = self._get_func_img(run=run)
             cifti_in = sub_run_imgs[0].path
-            
+
+            logger.info(f"{'='*60}")
+            logger.info(f"START sub-{self.participant_label} {ses_str}{task_str}{run_str}")
+            logger.info(f"{'='*60}")
+
             if self.fwhm:
-                l_surf, r_surf = get_cifti_surf(
-                self.derivatives_dir, self.participant_label, session=ses)
+                l_surf, r_surf = get_cifti_surf(self.derivatives_dir, self.participant_label, session=ses, ciftify_dir=self.ciftify_dir)
                 input_img = wb_smooth(cifti_in, l_surf, r_surf, fwhm=self.fwhm)
                 logger.info(f"Smoothing input data by {self.fwhm} mm FWHM for fitting model -> {input_img}")
             else:

@@ -87,6 +87,7 @@ def model_fit(
     output_dir,
     drop_duration,
     fwhm=6,
+    ciftify_dir=None
 ):
 
     # logger.info(f"Running model_fit for {sub} | task: {task_label} | session: {session}")
@@ -102,6 +103,7 @@ def model_fit(
         output_dir,
         drop_duration,
         fwhm=fwhm,
+        ciftify_dir=ciftify_dir,
     )
 
     effect_maps, variance_maps, t_stat_maps = model_instance.process_and_fit_valid_run()
@@ -183,6 +185,18 @@ def main():
         default=None,
         help="Smoothing kernel size in mm FWHM applied before GLM fitting (default: 6mm)",
     )
+    parser.add_argument(
+        "--ciftify-dir",
+        "--ciftify_dir",
+        dest="ciftify_dir",
+        type=Path,
+        default=None,
+        help=(
+            "Optional: path to ciftify derivatives. Used as fallback to find "
+            "subject-specific fsLR 32k midthickness surfaces when not available in fMRIPrep output."
+        ),
+    )
+
     args = parser.parse_args()
     bids_dir = args.bids_dir
     fmriprep_dir = args.fmriprep_dir
@@ -190,6 +204,7 @@ def main():
     model = args.model
     drop_duration = args.drop_duration
     fwhm = args.fwhm
+    ciftify_dir = args.ciftify_dir
 
     if not args.participant_label:
         layout = BIDSLayout(bids_dir, derivatives=fmriprep_dir, validate=False)
@@ -224,6 +239,8 @@ def main():
     logger.info(f"  Space label: {space_label}")
     logger.info(f"  Sessions: {input_sessions}")
     logger.info(f"  Dense: {dense}")
+    if ciftify_dir:
+        logger.info(f"  Ciftify directory: {ciftify_dir}")
     logger.info(f"  Model specifications: {json.dumps(specs, indent=2)}")
 
     for sub in participant_label:
@@ -258,6 +275,7 @@ def main():
                     output_dir,
                     drop_duration,
                     fwhm=fwhm,
+                    ciftify_dir=ciftify_dir
                 )
 
                 logger.info("All the beta maps:\n%s", "\n".join(effect_maps))
