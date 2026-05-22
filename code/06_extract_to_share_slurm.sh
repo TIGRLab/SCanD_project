@@ -439,7 +439,7 @@ then
     # Copying the metadata json
     subjects=`cd ${GLM_LOCAL_DIR}; ls -1d sub-*`
     
-    echo for subject in ${subjects}; do
+    echo "for subject in ${subjects}; do
         GLM_SUB_SHARE_DIR=${GLM_SHARE_DIR}/${subject}
         GLM_SUB_LOCAL_DIR=${GLM_LOCAL_DIR}/${subject}
         mkdir -p ${GLM_SUB_SHARE_DIR}
@@ -460,3 +460,4 @@ then
 else
     echo "GLM outputs not found."
 fi
+"
