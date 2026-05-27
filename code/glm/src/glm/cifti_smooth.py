@@ -19,8 +19,8 @@ def get_cifti_surf(fmriprep_dir, participant_label, session=None, ciftify_dir=No
     if session:
         search_dirs.append(sub_dir / f"ses-{session}" / "anat")
 
-    pattern_l = f"sub-{participant_label}_*hemi-L_space-fsLR_den-32k_midthickness.surf.gii"
-    pattern_r = f"sub-{participant_label}_*hemi-R_space-fsLR_den-32k_midthickness.surf.gii"
+    pattern_l = f"sub-{participant_label}_*hemi-L_space-fsLR_den-32k*_midthickness.surf.gii"
+    pattern_r = f"sub-{participant_label}_*hemi-R_space-fsLR_den-32k*_midthickness.surf.gii"
 
     l_surf = r_surf = None
     for anat_dir in search_dirs:
