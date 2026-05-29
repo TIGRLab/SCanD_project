@@ -1058,8 +1058,9 @@ fi
 
 ## calculate the length of the array-job given
 SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+# N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
+N_SUBJECTS=$(grep -c '^sub-' ./data/local/bids/participants.tsv)
+array_job_length=$(( N_SUBJECTS - 1))
 echo "number of array is: ${array_job_length}"
 
 ## submit the array job to the queue, passing your task-specific model JSON as an argument
