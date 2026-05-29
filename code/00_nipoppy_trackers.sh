@@ -48,7 +48,9 @@ done
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
+  --env SSL_CERT_FILE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem \
   --bind /scratch/arisvoin/mlepage/:/scratch/arisvoin/mlepage/ \
+  --bind /etc/pki/ca-trust:/etc/pki/ca-trust \
   containers/nipoppy.sif /bin/bash -c '
     set -e
 
