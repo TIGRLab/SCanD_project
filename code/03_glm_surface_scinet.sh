@@ -46,8 +46,10 @@ mkdir -p $OUT_DIR
 # SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv \
 #     | sed -n "${start},${end}p")
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
+# N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+N_SUBJECTS=$(grep -c '^sub-' ./data/local/bids/participants.tsv)
+array_job_length=$(( N_SUBJECTS - 1))
+# array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
 
 if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
