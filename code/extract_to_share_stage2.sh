@@ -25,7 +25,7 @@ FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying FMRIPREP metatdata and QC images"
+  echo "Copying FMRIPREP metadata and QC images"
 
 
 mkdir -p ${FMRIPREP_SHARE_DIR}

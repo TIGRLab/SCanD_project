@@ -13,11 +13,11 @@ export WORK_DIR=${SLURM_TMPDIR}/SCanD/amico
 export LOGS_DIR=${BASEDIR}/logs
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
-PARTICIPANTS=$(tail -n +2 "${BASEDIR}/data/local/bids/participants.tsv" | cut -f1)
+PARTICIPANTS=$(tail -n +2 "${BASEDIR}/data/local/bids/participants.tsv" | sed -n -E 's/sub-(\S*).*/\1/p')
 
-# Loop through each participant ID
+# Loop through each participant ID (bare ID, without sub- prefix)
 for SUBJECT in $PARTICIPANTS; do
-  echo "Processing participant: $SUBJECT"
+  echo "Processing participant: sub-${SUBJECT}"
    singularity run\
     -H ${TMP_DIR} \
     -B ${BIDS_DIR}:/bids \
