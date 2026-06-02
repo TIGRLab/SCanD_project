@@ -33,4 +33,4 @@ else
 
 fi
 
-cp  ${BASEDIR}/Neurobagel/derivatives/processing_status.tsv ${BASEDIR}/data/share/
+cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" ${BASEDIR}/data/share/processing_status.tsv

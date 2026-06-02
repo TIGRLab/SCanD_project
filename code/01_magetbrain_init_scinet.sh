@@ -177,19 +177,18 @@ cp -r /scratch/arisvoin/shared/templateflow/atlases  "$INPUT_DIR/"
 
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/magetbraininit/0.1.0/output/
     ls -al derivatives/magetbraininit/0.1.0/output/
-    ln -s "${ROOT_DIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
 
     nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
   '
-unset APPTAINERENV_ROOT_DIR

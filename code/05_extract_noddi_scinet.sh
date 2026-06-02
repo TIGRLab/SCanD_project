@@ -43,21 +43,20 @@ done
 
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/extractnoddi/0.1.1/output/
     ls -al derivatives/extractnoddi/0.1.1/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/amico_noddi/qsirecon-NODDI/" derivatives/extractnoddi/0.1.1/output/ || true
 
     nipoppy track  --pipeline extractnoddi  --pipeline-version 0.1.1 
   '
-unset APPTAINERENV_ROOT_DIR

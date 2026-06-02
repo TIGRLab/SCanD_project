@@ -25,22 +25,19 @@ fi
 
 echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > ${ROOT_DIR}/data/local/bids/dataset_description.json
 
-# === Check if any *bold.json files exist ===
-if ls ${ROOT_DIR}/data/local/bids/*bold.json 1> /dev/null 2>&1; then
-    # Loop through each file
-    for file in ${ROOT_DIR}/data/local/bids/*bold.json; do
-        # Check if "TotalReadoutTime" is not already in the file
-        if ! grep -q "TotalReadoutTime" "$file"; then
-            # Add the "TotalReadoutTime" before the last closing brace
-            sed -i'' '$ s/}/     "TotalReadoutTime": 0.05\n}/' "$file"
+# === Patch TotalReadoutTime into BOLD JSON sidecars (func/ and legacy root paths) ===
+bold_json_found=0
+while IFS= read -r -d '' file; do
+    bold_json_found=1
+    if ! grep -q "TotalReadoutTime" "$file"; then
+        sed -i'' '$ s/}/     "TotalReadoutTime": 0.05\n}/' "$file"
+        awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
+        mv -f temp.json "$file"
+    fi
+done < <(find "${ROOT_DIR}/data/local/bids" -name '*bold.json' -print0 2>/dev/null)
 
-            # Add a comma to the second-to-last line if necessary
-            awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
-            mv -f temp.json "$file"
-        fi
-    done
-else
-    echo -e "${YELLOW}WARNING: ${NC} No bold.json files found in ${ROOT_DIR}/data/local/bids/"
+if [ "$bold_json_found" -eq 0 ]; then
+    echo -e "${YELLOW}WARNING: ${NC} No bold.json files found under ${ROOT_DIR}/data/local/bids/"
 fi
 
 ## check for multiple T1w files for freesurfer
