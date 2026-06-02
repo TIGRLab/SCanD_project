@@ -1,7 +1,12 @@
 # Share folder
 
-Here is a checklist for the share folder results.
+Use this checklist to verify `data/share` after stage 6, before copying results to the consortium shared space. For visual QC of pipeline HTML reports and figures, see [QC_guide.md](QC_guide.md).
 
+**How to use this checklist**
+
+1. Confirm each top-level folder below exists under `${BASEDIR}/data/share`.
+2. Spot-check one or two subjects per pipeline for expected QC images and metadata.
+3. Confirm root-level TSV files (`participants.tsv`, `manifest.tsv`, `processing_status.tsv`, and the fmriprep/qsiprep method sidecars) are present and non-empty.
 
 ```
 ${BASEDIR}/data/share
@@ -58,3 +63,6 @@ ${BASEDIR}/data/share
 │   └── QC images and metadata for each scan
 └── xcp_noGSR
     └── QC images and metadata for each scan
+```
+
+After the checklist passes, follow the consortium handoff steps in [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) or the README stage 6 section.

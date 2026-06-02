@@ -37,14 +37,14 @@ submit_magetbrain_job() {
     fi
 
     echo "Submitting MAGeTbrain Vote job with array 0-${max_task} (${n_subjects} subjects)"
-    sbatch --array=0-"${max_task}" code/03_magetbrain_vote_scinet.sh
+    sbatch --array=0-"${max_task}" ./code/03_magetbrain_vote_scinet.sh
 }
 
 # Prompt user for each pipeline
-run_pipeline "xcp-d" "code/03_xcp_scinet.sh" 1
-run_pipeline "xcp-noGSR" "code/03_xcp_noGSR_scinet.sh" 1
+run_pipeline "xcp-d" "./code/03_xcp_scinet.sh" 1
+run_pipeline "xcp-noGSR" "./code/03_xcp_noGSR_scinet.sh" 1
 run_pipeline "qsirecon_dtifit" "./code/03_qsirecon_dtifit_scinet.sh" 1
-run_pipeline "noddi-registration" "code/03_noddi_reg_scinet.sh" 1
+run_pipeline "noddi-registration" "./code/03_noddi_reg_scinet.sh" 1
 
 read -p "Do you want to run the glm_surface pipeline? (yes/no): " run_glm
 if [[ "$run_glm" =~ ^(yes|y)$ ]]; then
