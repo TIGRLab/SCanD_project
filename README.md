@@ -95,6 +95,8 @@ ${BASEDIR}
 
 Currently this repo is going to be set up for running things on SciNet Nibi cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
+<a id="the-general-overview-of-what-to-do"></a>
+
 # 🗺️ The general overview of what to do
 
 | stage |  #	| Step	|   Estimated runtime 	|
