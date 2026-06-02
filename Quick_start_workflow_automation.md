@@ -1,4 +1,4 @@
-# Workflow automation (stage scripts)
+# Workflow automation (stage scripts) 🚀
 
 Use the `stage_*.sh` scripts at the repository root to run pipelines one stage at a time. Each script prompts you for which pipelines to submit, so you can skip diffusion or functional steps when they do not apply to your dataset.
 
