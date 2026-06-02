@@ -58,7 +58,7 @@ ${BASEDIR}
 ├── logs               # logs from jobs run on cluster           
 |── Neurobagel
 |── project_id
-|── QC guide.md
+|── QC_guide.md
 |── Quick_start_workflow automation.md
 |── README.md
 |── share_folder.md
@@ -84,7 +84,7 @@ Currently this repo is going to be set up for running things on SciNet Nibi clus
 | stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment-and-prepare-dataset)	| 30 minutes in terminal 	|
 |^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
+|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
 |^ |   0e	|  [Initializing nipoppy trackers](#Initializing-nipoppy-trackers)	| 2 minutes in terminal 	|
 |^ |   0f	|  [Edit TOP-UP fmap files ONLY](#1-edit-top-up-fmap-files-only)	| 2 minutes in terminal 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
@@ -708,13 +708,13 @@ scand_submit_participant_array ./code/01_smriprep_scinet.sh 1
 
 #### Adding Age and Gender for Template Selection
 
-The `01_magetbrain_init_scinet.sh` script selects **20 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
+The `01_magetbrain_init_scinet.sh` script selects **21 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
 
 To customize the selection, create a new TSV file named `participants_demographic.tsv`, which is a copy of `participants.tsv` but with two additional columns:  
 - **Column 2:** Age  
 - **Column 3:** Gender  
 
-If `participants_demographic.tsv` is not provided, the script will randomly select 20 subjects.  
+If `participants_demographic.tsv` is not provided, the script will randomly select 21 subjects.  
 
 #### Changing Atlas Labels  
 By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels` are based on **hippocampus** segmentation.  
@@ -1059,7 +1059,7 @@ If any participant has failed, amend `data/local/bids/participants.tsv` by **exc
 
 This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
 
-It takes about 10 minutes to run (depending on how much data you are synching). It could also be submitted.
+The Slurm extract job takes up to 8 hours on slurm (depending on how much data you are syncing). Run `06_extract_to_share_terminal.sh` after that job completes.
 
 ```sh
 ## go to the repo and pull new changes
