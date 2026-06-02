@@ -221,11 +221,11 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
-python3 -m pip install pybids=0.15.6
+python3 -m pip install pybids==0.15.6
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./EPIPHANI_query_config.yaml
+python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
 ```
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
@@ -583,7 +583,7 @@ python3 -m pip install pybids==0.15.6
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
-python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
+python3 code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
 ```
 **3. Interpret the output**
 
@@ -866,7 +866,7 @@ If you do not plan to run stage 6 (data sharing) and only wish to obtain the Fre
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/freesurfer_group_merge_scinet.sh
+bash ./code/freesurfer_group_merge.sh
 ```
 
 ## Running tractography
