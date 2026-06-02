@@ -23,6 +23,8 @@ ${BASEDIR}/data/share
 │   └── files for each subject
 ├── fmriprep/25.2.4
 │   └── QC images and metadata for each scan
+├── glm/0.0.1
+│   └── GLM model outputs, contrasts, and QC images per subject
 ├── freesurfer_group
 │   ├── group-level FreeSurfer metrics (aseg, euler, aparc thickness)
 │   ├── Schaefer2018 parcellation metrics (100–1000 parcels: thickness, surfacearea, grayvol)
@@ -39,7 +41,10 @@ ${BASEDIR}/data/share
 ├── noddireg
 │   └── .tsv file: parcel-wise summary statistics of NODDI microstructural metrics
 ├── participants.tsv
+├── manifest.tsv
 ├── processing_status.tsv
+├── processing_status_fmriprep.tsv
+├── processing_status_qsiprep.tsv
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
 │   └── QC images and metadata for each scan

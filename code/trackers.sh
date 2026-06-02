@@ -1,11 +1,17 @@
 #!/bin/bash
-BASEDIR=$PWD
+# Manual nipoppy tracker re-run utility (development/debug).
+# Run from the SCanD project root:
+#   cd ${SCRATCH}/SCanD_project && bash code/trackers.sh
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASEDIR="${SCRIPT_DIR}/.."
+cd "$BASEDIR" || exit 1
+
 module load apptainer/1.3.5
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -27,7 +33,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -47,7 +52,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -63,7 +67,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -83,7 +86,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
     
@@ -104,7 +106,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -144,7 +145,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -167,7 +167,6 @@ python "$BASEDIR/code/fmriprep_method_tsv.py" \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
     
@@ -250,7 +249,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -269,7 +267,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -328,7 +325,6 @@ singularity exec \
 singularity exec \
   	--env BASEDIR="$BASEDIR" \
     --bind $BASEDIR:$BASEDIR \
-  	--env SUBJECTS="$SUBJECTS" \
   	${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     	set -euo pipefail
 
@@ -351,7 +347,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -392,7 +387,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -410,7 +404,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
