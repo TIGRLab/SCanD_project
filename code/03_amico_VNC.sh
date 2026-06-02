@@ -13,7 +13,7 @@ export WORK_DIR=${SLURM_TMPDIR}/SCanD/amico
 export LOGS_DIR=${BASEDIR}/logs
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 
-PARTICIPANTS=$(tail -n +2 data/local/bids/participants.tsv | cut -f1)
+PARTICIPANTS=$(tail -n +2 "${BASEDIR}/data/local/bids/participants.tsv" | cut -f1)
 
 # Loop through each participant ID
 for SUBJECT in $PARTICIPANTS; do
