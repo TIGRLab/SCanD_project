@@ -1,29 +1,23 @@
 ## hold many of the scripts needed to set-up the repo for the first time..
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASEDIR=$(dirname "$SCRIPT_DIR")
 
 # ----------- Color codes ------------
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 YELLOW='\033[1;33m'
 
-# === Logging Setup ===
-timestamp=$(date +"%Y%m%d_%H%M%S")
-
-# === Get the root of the SCanD_project repo ===
-ROOT_DIR=$(dirname "$SCRIPT_DIR")
 echo "🔧 Starting script at $(date)"
-echo "🔧 ROOT_DIR          : $ROOT_DIR"
+echo "🔧 BASEDIR           : $BASEDIR"
 
-# === Define TSV path ===
-tsv_f="${ROOT_DIR}/data/local/bids/participants.tsv"
+tsv_f="${BASEDIR}/data/local/bids/participants.tsv"
 
-# === Create participants.tsv if not already exist ===
 if [ ! -f "${tsv_f}" ]; then
     echo "Creating a new participants.tsv file at ${tsv_f}"
     echo 'participant_id' > "${tsv_f}"
 fi
 
-echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > ${ROOT_DIR}/data/local/bids/dataset_description.json
+echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > "${BASEDIR}/data/local/bids/dataset_description.json"
 
 # === Patch TotalReadoutTime into BOLD JSON sidecars (func/ and legacy root paths) ===
 bold_json_found=0
@@ -34,14 +28,14 @@ while IFS= read -r -d '' file; do
         awk 'NR==FNR { count++; next } FNR==count-2 && $0 !~ /,$/ { print $0 ","; next }1' "$file" "$file" > temp.json
         mv -f temp.json "$file"
     fi
-done < <(find "${ROOT_DIR}/data/local/bids" -name '*bold.json' -print0 2>/dev/null)
+done < <(find "${BASEDIR}/data/local/bids" -name '*bold.json' -print0 2>/dev/null)
 
 if [ "$bold_json_found" -eq 0 ]; then
-    echo -e "${YELLOW}WARNING: ${NC} No bold.json files found under ${ROOT_DIR}/data/local/bids/"
+    echo -e "${YELLOW}WARNING: ${NC} No bold.json files found under ${BASEDIR}/data/local/bids/"
 fi
 
 ## check for multiple T1w files for freesurfer
-find "${ROOT_DIR}/data/local/bids"/sub-* -type d -name "anat" | while read -r anat_dir; do
+find "${BASEDIR}/data/local/bids"/sub-* -type d -name "anat" | while read -r anat_dir; do
     t1_files=("$anat_dir"/*T1w*.nii.gz)
     t1_count=${#t1_files[@]}
 
@@ -58,19 +52,19 @@ done
 
 # === nipoppy tracker init ===
 module load apptainer/1.3.5
-export APPTAINERENV_ROOT_DIR=$ROOT_DIR
 
 singularity exec \
-  --bind ${ROOT_DIR}:${ROOT_DIR} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   --bind /scratch/arisvoin/shared:/scratch/arisvoin/shared \
-  ${ROOT_DIR}/containers/nipoppy.sif /bin/bash -c '
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -e
-    mkdir -p $ROOT_DIR/Neurobagel
+    mkdir -p $BASEDIR/Neurobagel
     unset SSL_CERT_FILE
-    nipoppy init --bids-source $ROOT_DIR/data/local/bids/ $ROOT_DIR/Neurobagel
+    nipoppy init --bids-source $BASEDIR/data/local/bids/ $BASEDIR/Neurobagel
 
-    NB_DIR="$ROOT_DIR/Neurobagel"
-    BIDS_DIR="$ROOT_DIR/data/local/bids"
+    NB_DIR="$BASEDIR/Neurobagel"
+    BIDS_DIR="$BASEDIR/data/local/bids"
 
     rm -rf "$NB_DIR/pipelines/processing"/*
 
@@ -88,4 +82,3 @@ singularity exec \
       echo "No sub-* folder found in $BIDS_DIR."
     fi
   '
-unset APPTAINERENV_ROOT_DIR
