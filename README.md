@@ -4,7 +4,7 @@ This is the base repository for the **Schizophrenia Canadian Neuroimaging Databa
 
 ## Pipeline overview
 
-The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Quick Start — Workflow Automation](Quick_start_workflow_automation.md).
+The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](Quick_start_workflow_automation.md).
 
 ![SCanD / TIGRBIDS preprocessing workflow](tigrbids_flow.png)
 
@@ -12,7 +12,7 @@ The diagram below shows how major pipelines are grouped across stages (structura
 
 | Resource | Purpose |
 |----------|---------|
-| [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Run whole stages with `stage_*.sh` |
+| [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Workflow automation with `stage_*.sh` |
 | [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
 | [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
 
@@ -96,46 +96,46 @@ Currently this repo is going to be set up for running things on SciNet Trillium 
 
 # The general overview of what to do
 
-| stage |  #	| Step	|   How Long Does it take to run? 	|
+| stage |  #	| Step	|   Estimated runtime 	|
 |---    |---	|---	|---	|
-| stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment-and-prepare-dataset)	| 30 minutes in terminal 	|
-|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
+| stage 0|   0a	|  [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-dataset)	| ~30 minutes in terminal 	|
+|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   Varies by dataset size	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
-|^ |   0e	|  [Initializing nipoppy trackers](#Initializing-nipoppy-trackers)	| 2 minutes in terminal 	|
-|^ |   0f	|  [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
-|stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
-|^ |  01b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|^|   01c	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
-|^|   01d	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
-|^ |  01f	|  [Run magetbrain-init](#Running-magetbrain-init) 	|   1 hours on slurm	|
-|^ |  01g	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
-|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#Running-freesurfer-atlas-parcellate-analysis) 	|  6 hour of slurm 	|
-|^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02d	|  [Run qsirecon FSL](#Running-qsirecon-FSL) 	|  20 min of slurm 	|
-|^ |   02e  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
-|^ |   02f	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
-|^ |   02g	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
-|^ |   02h  |  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
-|^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
-|^ |   03c |  [Run qsirecon dtifit](#Running-qsirecon-dtifit) 	|  1 hour of slurm 	|
-|^ |   03d	|  [Run noddi-registration](#Running-noddi-registration) 	|  2 hours on slurm 	|
-|^ |   03e	|  [Run glm-surface](#Running-GLM) 	|  30 mins on slurm 	|
-|^ |   03f	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
-|^ |   03g	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
-|^ |   04b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 5 |  05a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
-|^ |   05b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
+|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| Depends on data transfer time | 
+|^ |   0e	|  [Initializing nipoppy trackers](#initializing-nipoppy-trackers)	| ~2 minutes in terminal 	|
+|^ |   0f	|  [Edit fmap files](#edit-fmap-files)	| ~2 minutes in terminal 	|
+|stage 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  ~8 hours on Slurm 	|
+|^ |  01b	|  [Run QSIprep](#running-qsiprep) 	|   ~6 hours on Slurm	|
+|^|   01c	|  [Run freesurfer](#running-freesurfer) 	|   ~23 hours on Slurm	|
+|^|   01d	|  [Run fMRIprep fit](#running-fmriprep-fit-includes-freesurfer) 	|   ~16 hours on Slurm	|
+|^ |  01e	|  [Run smriprep](#running-smriprep) 	|   ~10 hours on Slurm	|
+|^ |  01f	|  [Run magetbrain-init](#running-magetbrain-init) 	|   ~1 hour on Slurm	|
+|^ |  01g	|  [Check tsv file](#check-tsv-file) 	|    	|
+|stage 2|   02a	|  [Run fMRIprep apply](#running-fmriprep-apply) 	|  ~3 hours on Slurm 	|
+|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#running-freesurfer-atlas-parcellate-analysis) 	|  ~6 hours on Slurm 	|
+|^ |   02c	|  [Run ciftify-anat](#running-ciftify-anat) 	|  ~3 hours on Slurm 	|
+|^ |   02d	|  [Run qsirecon FSL](#running-qsirecon-fsl) 	|  ~20 minutes on Slurm 	|
+|^ |   02e  |  [Run amico noddi](#running-amico-noddi) | ~2 hours on Slurm |
+|^ |   02f	|  [Run tractography](#running-tractography) 	|  ~12 hours on Slurm 	|
+|^ |   02g	|  [Run magetbrain-register](#running-magetbrain-register) 	|  ~24 hours on Slurm 	|
+|^ |   02h  |  [Check tsv file](#check-tsv-file) 	|    	|
+|stage 3 |  03a	|  [Run xcp-d](#running-xcp-d) 	|  ~5 hours on Slurm  |
+|^ |   03b  |  [Run xcp-noGSR](#running-xcp-nogsr) 	|  ~5 hours on Slurm  |
+|^ |   03c  |   [Run qsirecon dtifit](#running-qsirecon-dtifit) 	|  ~1 hour on Slurm 	|
+|^ |   03d	|  [Run noddi-registration](#running-noddi-registration) 	|  ~2 hours on Slurm 	|
+|^ |   03e	|  [Run glm-surface](#running-glm) 	|  ~30 minutes on Slurm 	|
+|^ |   03f	|  [Run magetbrain-vote](#running-magetbrain-vote) 	|  ~10 hours on Slurm 	|
+|^ |   03g	|  [Check tsv file](#check-tsv-file) 	|    	|
+|stage 4 |  04a |  [Run enigma-dti](#running-enigma-dti) 	|  ~1 hour on Slurm	| 
+|^ |   04b	|  [Check tsv file](#check-tsv-file) 	|    	|
+|stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
+|^ |   05b	|  [Check tsv file](#check-tsv-file) 	|    	|
+|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (plus terminal steps after the job completes)	|
 
 
 # Setting your SciNet environment and prepare dataset
 
-## Setting Scinet Environment
+## Setting SciNet environment
 
 ### Cloning this Repo
 
@@ -154,7 +154,7 @@ git clone -b trillium --single-branch https://github.com/TIGRLab/SCanD_project.g
 
 ```sh
 cd ${SCRATCH}/SCanD_project
-source code/00_setup_data_directories.sh
+source ./code/00_setup_data_directories.sh
 ```
 
 ## Organize your data into BIDS
@@ -191,7 +191,7 @@ To link existing data from another location on SciNet Trillium to this folder:
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participant_id" and then you have all the subject ids in the other rows.
+After organizing the BIDS folder, populate participant labels (for example, `sub-CMH0047`) in `${SCRATCH}/SCanD_project/data/local/bids/participants.tsv`. The first row must be `participant_id`; list one subject ID per row below it.
 
 For example:
 ```bash
@@ -208,7 +208,7 @@ In this step, we initialize the [nipoppy trackers](https://nipoppy.readthedocs.i
 
 ```sh
 cd ${SCRATCH}/SCanD_project
-source code/00_nipoppy_trackers.sh
+source ./code/00_nipoppy_trackers.sh
 ```
 
 ### 1. Edit TOP-UP fmap files ONLY.
@@ -242,7 +242,7 @@ python3 -m pip install pybids==0.15.6
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
+python3 ./code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
 ```
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
@@ -598,7 +598,7 @@ python3 -m pip install pybids==0.15.6 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
-python3 code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
+python3 ./code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
 ```
 
 **3. Interpret the output**
@@ -637,7 +637,7 @@ cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 
 # Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your BIDS folder and `participants.tsv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
+After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](Quick_start_workflow_automation.md), or run individual pipelines as described below.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
 
@@ -698,7 +698,7 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./code/lib/slurm_array.sh
-scand_submit_participant_array code/01_fmriprep_fit_scinet.sh 1
+scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ```
 
 
@@ -743,15 +743,19 @@ scand_submit_participant_array ./code/01_smriprep_scinet.sh 1
 
 ## Running magetbrain init
 
-#### Adding Age and Gender for Template Selection
+#### Age and gender for template selection
 
-The `01_magetbrain_init_scinet.sh` script selects **21 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
+The `01_magetbrain_init_scinet.sh` script selects **21 template brains** for MAGeTbrain registration. When possible, provide a demographic file so templates match your cohort by age and sex.
 
-To customize the selection, create a new TSV file named `participants_demographic.tsv`, which is a copy of `participants.tsv` but with two additional columns:  
-- **Column 2:** Age  
-- **Column 3:** Gender  
+**Recommended:** Create `data/local/bids/participants_demographic.tsv` with the same subjects as `participants.tsv` plus two extra columns:
 
-If `participants_demographic.tsv` is not provided, the script will randomly select 21 subjects.  
+| Column | Header | Example |
+|--------|--------|---------|
+| 1 | `participant_id` | `sub-CMH00000005` |
+| 2 | `age` | `32` |
+| 3 | `sex` | `M` or `F` |
+
+The script selects 10 male and 11 female templates stratified by age. If `participants_demographic.tsv` is missing, it randomly selects 21 subjects from `participants.tsv` and prints a warning in the job log.
 
 #### Changing Atlas Labels  
 By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels` are based on **hippocampus** segmentation.  
@@ -863,7 +867,7 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 source ./code/lib/slurm_array.sh
-scand_submit_participant_array code/02_freesurfer_atlas_parcellate_scinet.sh 1
+scand_submit_participant_array ./code/02_freesurfer_atlas_parcellate_scinet.sh 1
 ```
 
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
@@ -1164,13 +1168,11 @@ sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
 
-Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/trillium/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
-
-You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
+When all pipelines are complete, verify `data/share` against [share_folder.md](share_folder.md). Use [QC_guide.md](QC_guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/arisvoin/mlepage/groupName_studyName
-cp -r data/share  /scratch/arisvoin/mlepage/groupName_studyName/
+mkdir /scratch/arisvoin/mlepage/<groupName_studyName>
+cp -r data/share /scratch/arisvoin/mlepage/<groupName_studyName>/
 ```
