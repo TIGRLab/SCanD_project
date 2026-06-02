@@ -6,5 +6,5 @@ if [[ "$run_share" =~ ^(yes|y)$ ]]; then
     sbatch ./code/06_extract_to_share_slurm.sh
     source ./code/06_extract_to_share_terminal.sh
 else
-    echo "Skipping enigma_extract."
+    echo "Skipping extract and share."
 fi

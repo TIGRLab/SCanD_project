@@ -70,20 +70,20 @@ fi
 
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   --env SUBJECTS="$SELECTED_SUBJECT" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/ciftify/1.3.2/output/
     ls -al derivatives/ciftify/1.3.2/output/
 
-    ln -s "$ROOT_DIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
 
     SUBJECTS=$(echo "$SELECTED_SUBJECT" | cut -d'_' -f1)
 
@@ -94,4 +94,3 @@ singularity exec \
         --participant-id $subject
     done
   '
-unset APPTAINERENV_ROOT_DIR

@@ -1,3 +1,4 @@
+#!/bin/bash
 BASEDIR=$PWD
 module load apptainer/1.3.5
 
