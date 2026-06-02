@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ## stage 6 (extract and share files):
 
 read -p "Do you want to extract and share data? (yes/no): " run_share
