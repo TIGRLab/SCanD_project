@@ -8,7 +8,7 @@
 
 
 
-# A script to extract the bits that we want to share back with the corsotium
+# A script to extract the bits that we want to share back with the consortium
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
