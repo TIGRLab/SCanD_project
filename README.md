@@ -2,8 +2,6 @@
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
 
-![](tigrbids_flow.png)
-
 General folder structure for the repo (when all is run):
 
 ```
@@ -14,7 +12,7 @@ ${BASEDIR}
 │   ├── fmriprep-25.2.4.simg
 │   ├── mriqc-24.0.0.simg
 │   ├── qsiprep-0.22.0.sif
-│   ├── freesurfer-6.0.1.simg
+│   ├── freesurfer-7.4.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
 │   ├── magetbrain.sif
 │   ├── nipoppy.sif
@@ -623,7 +621,7 @@ cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 
 # Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your BIDS folder and `participants.csv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
+After setting up the scinet environment and organizing your BIDS folder and `participants.tsv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
 
@@ -1107,7 +1105,7 @@ cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
 ## Provide a path to STUDY-specific model 
-MODEL=${PWD}/code/glm/examples/models/model-003_smdl.json
+MODEL=${PWD}/code/glm/examples/models/RTMSWM/model-001_smdl.json
 
 ## sanity check (recommended)
 if [ ! -f "$MODEL" ]; then
@@ -1213,9 +1211,9 @@ sbatch  ./code/05_extract_noddi_scinet.sh
 
 ## Check tsv file
 
-At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the Neurobagel/derivatives/processing_status.tsv and review the file for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing_status.tsv for all the pipelins in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review.
+At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review.
 
-If any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
+If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
 ## Syncing the data to the share directory
@@ -1236,7 +1234,7 @@ sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
 
-Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/trillium/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
 

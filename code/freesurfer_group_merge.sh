@@ -31,9 +31,7 @@ OUTPUT_MERGE_DIR=${SUBJECTS_DIR}/00_group2_stats_tables
 mkdir -p ${OUTPUT_MERGE_DIR}
 
 SUBJECTS_FILE=${BIDS_DIR}/participants.tsv
-SUBJECTS=$(tail -n +2 $SUBJECTS_FILE | cut -f1)
-
-#!/bin/bash
+SUBJECTS=$(tail -n +2 "$SUBJECTS_FILE" | cut -f1)
 
 types=("thickness" "grayvol" "surfacearea")
 
