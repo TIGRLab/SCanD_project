@@ -1,6 +1,23 @@
 # SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
+This is the base repository for the **Schizophrenia Canadian Neuroimaging Database ([SCanD](https://tigrlab.github.io/))** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
+
+## Pipeline overview
+
+The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Quick Start — Workflow Automation](Quick_start_workflow_automation.md).
+
+![SCanD / TIGRBIDS preprocessing workflow](tigrbids_flow.png)
+
+## Key documentation
+
+| Resource | Purpose |
+|----------|---------|
+| [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Run whole stages with `stage_*.sh` |
+| [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
+| [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
+| [code/config/EPIPHANI_query_config.yaml](code/config/EPIPHANI_query_config.yaml) | Example BIDS layout config for `fmap_intended_for.py` |
+
+## Repository layout
 
 General folder structure for the repo (when all is run):
 
@@ -690,6 +707,7 @@ After QSIPrep completes, a per-pipeline sidecar with the distortion-correction m
 
 This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
+- session_id
 - qsiprep_sdc_method
 
 ## Running smriprep

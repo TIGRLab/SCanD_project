@@ -6,7 +6,7 @@
 #SBATCH --time=08:00:00
 #SBATCH --mem-per-cpu=4000
 
-# A script to extract the bits that we want to share back with the corsotium
+# A script to extract the bits that we want to share back with the consortium
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
@@ -372,7 +372,7 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
     ${BASEDIR}/data/share/amico_noddi
 
 
-## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
+## Running aparc, aparc2009s section from freesurfer group merge code, cause it doesn't end
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt

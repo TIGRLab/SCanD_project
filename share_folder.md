@@ -39,12 +39,14 @@ ${BASEDIR}/data/share
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
 ├── noddireg
-│   └── .tsv file: parcel-wise summary statistics of NODDI microstructural metrics
+│   └── per-subject folders (NODDI QC PNGs and selected DWI sidecars)
 ├── participants.tsv
 ├── manifest.tsv
 ├── processing_status.tsv
 ├── processing_status_fmriprep.tsv
+│   └── participant_id, session_id, fmriprep_method columns
 ├── processing_status_qsiprep.tsv
+│   └── participant_id, session_id, qsiprep_sdc_method columns
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
 │   └── QC images and metadata for each scan
