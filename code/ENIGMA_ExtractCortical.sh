@@ -1,12 +1,13 @@
 #!/bin/bash
-
+# ENIGMA consortium cortical/subcortical tables (Desikan-Killiany aparc stats).
+# Schaefer parcellation group tables are merged separately under 00_group2_stats_tables/.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 BASEDIR=${SCRIPT_DIR}/..
 
 SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 PREFIX=sub-
 
-mkdir ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract
+mkdir -p ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract
 
 
 echo 'SubjID,L_bankssts_thickavg,L_caudalanteriorcingulate_thickavg,L_caudalmiddlefrontal_thickavg,L_cuneus_thickavg,L_entorhinal_thickavg,L_fusiform_thickavg,L_inferiorparietal_thickavg,L_inferiortemporal_thickavg,L_isthmuscingulate_thickavg,L_lateraloccipital_thickavg,L_lateralorbitofrontal_thickavg,L_lingual_thickavg,L_medialorbitofrontal_thickavg,L_middletemporal_thickavg,L_parahippocampal_thickavg,L_paracentral_thickavg,L_parsopercularis_thickavg,L_parsorbitalis_thickavg,L_parstriangularis_thickavg,L_pericalcarine_thickavg,L_postcentral_thickavg,L_posteriorcingulate_thickavg,L_precentral_thickavg,L_precuneus_thickavg,L_rostralanteriorcingulate_thickavg,L_rostralmiddlefrontal_thickavg,L_superiorfrontal_thickavg,L_superiorparietal_thickavg,L_superiortemporal_thickavg,L_supramarginal_thickavg,L_frontalpole_thickavg,L_temporalpole_thickavg,L_transversetemporal_thickavg,L_insula_thickavg,R_bankssts_thickavg,R_caudalanteriorcingulate_thickavg,R_caudalmiddlefrontal_thickavg,R_cuneus_thickavg,R_entorhinal_thickavg,R_fusiform_thickavg,R_inferiorparietal_thickavg,R_inferiortemporal_thickavg,R_isthmuscingulate_thickavg,R_lateraloccipital_thickavg,R_lateralorbitofrontal_thickavg,R_lingual_thickavg,R_medialorbitofrontal_thickavg,R_middletemporal_thickavg,R_parahippocampal_thickavg,R_paracentral_thickavg,R_parsopercularis_thickavg,R_parsorbitalis_thickavg,R_parstriangularis_thickavg,R_pericalcarine_thickavg,R_postcentral_thickavg,R_posteriorcingulate_thickavg,R_precentral_thickavg,R_precuneus_thickavg,R_rostralanteriorcingulate_thickavg,R_rostralmiddlefrontal_thickavg,R_superiorfrontal_thickavg,R_superiorparietal_thickavg,R_superiortemporal_thickavg,R_supramarginal_thickavg,R_frontalpole_thickavg,R_temporalpole_thickavg,R_transversetemporal_thickavg,R_insula_thickavg,LThickness,RThickness,LSurfArea,RSurfArea,ICV' > ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/CorticalMeasuresENIGMA_ThickAvg.csv
@@ -14,8 +15,9 @@ echo 'SubjID,L_bankssts_surfavg,L_caudalanteriorcingulate_surfavg,L_caudalmiddle
 
 for subj_id in `ls -d ${SUBJECTS_DIR}/${PREFIX}*`; do #may need to change this so that it selects subjects with FS output
 
-  printf "%s,"  "${subj_id}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/CorticalMeasuresENIGMA_ThickAvg.csv
-  printf "%s,"  "${subj_id}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/CorticalMeasuresENIGMA_SurfAvg.csv
+  subj_label=$(basename "${subj_id}")
+  printf "%s,"  "${subj_label}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/CorticalMeasuresENIGMA_ThickAvg.csv
+  printf "%s,"  "${subj_label}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/CorticalMeasuresENIGMA_SurfAvg.csv
 
   for side in lh.aparc.stats rh.aparc.stats; do
 
@@ -51,7 +53,8 @@ echo "SubjID, LLatVent,RLatVent,Lthal,Rthal,Lcaud,Rcaud,Lput,Rput,\
 for subj_id in `ls -d ${SUBJECTS_DIR}/${PREFIX}*`;
 do #may need to change this so that is selects subjects with FS output
 
-  printf "%s,"  "${subj_id}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/LandRvolumes.csv
+  subj_label=$(basename "${subj_id}")
+  printf "%s,"  "${subj_label}" >> ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/ENIGMA_extract/LandRvolumes.csv
 
   for x in Left-Lateral-Ventricle Right-Lateral-Ventricle Left-Thalamus-Proper Right-Thalamus-Proper Left-Caudate Right-Caudate Left-Putamen Right-Putamen Left-Pallidum Right-Pallidum Left-Hippocampus Right-Hippocampus Left-Amygdala Right-Amygdala Left-Accumbens-area Right-Accumbens-area;
   do
