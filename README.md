@@ -83,7 +83,7 @@ Currently this repo is going to be set up for running things on SciNet Fir clust
 | stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment-and-prepare-dataset)	| 30 minutes in terminal 	|
 |^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0d	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
+|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 
 |^ |   0e	|  [Initializing nipoppy trackers](#Initializing-nipoppy-trackers)	| 2 minutes in terminal 	|
 |^ |   0f	|  [Edit fmap files](#1-edit-top-up-fmap-files-only)	| 2 minutes in terminal 	|
 |stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
@@ -724,9 +724,11 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 1. Remove existing labels:  
    ```bash
    rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/*
+   ```
 2. Copy the desired labels from the shared directory:
    ```bash
    cp /scratch/arisvoin/shared/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/
+   ```
 
 ### Run the pipeline:
 ```sh
@@ -742,7 +744,7 @@ sbatch  ./code/01_magetbrain_init_scinet.sh
 
 Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## go to the repo and pull new changes
