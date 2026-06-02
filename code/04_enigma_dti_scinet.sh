@@ -62,7 +62,6 @@ singularity exec \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    BASEDIR="$SCRATCH/SCanD_project"
     cd "${ROOT_DIR}/Neurobagel"
     
     mkdir -p derivatives/enigmadti/0.1.1/output/
