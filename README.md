@@ -15,7 +15,6 @@ The diagram below shows how major pipelines are grouped across stages (structura
 | [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Run whole stages with `stage_*.sh` |
 | [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
 | [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
-| [code/config/EPIPHANI_query_config.yaml](code/config/EPIPHANI_query_config.yaml) | Example BIDS layout config for `fmap_intended_for.py` |
 
 ## Repository layout
 
