@@ -733,7 +733,7 @@ The `01_magetbrain_init_scinet.sh` script selects **21 template brains** for MAG
 |--------|--------|---------|
 | 1 | `participant_id` | `sub-CMH00000005` |
 | 2 | `age` | `32` |
-| 3 | `sex` | `M` or `F` |
+| 3 | `sex` | `Male` or `Female` |
 
 The script selects 10 male and 11 female templates stratified by age. If `participants_demographic.tsv` is missing, it randomly selects 21 subjects from `participants.tsv` and prints a warning in the job log.
 
