@@ -70,6 +70,8 @@ source ./stage_5.sh
 
 ## Stage 6 (extract data to share folder)
 
+Submit the Slurm extract job and run the login-node terminal script together (`stage_6.sh` does both in one step).
+
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
@@ -78,6 +80,16 @@ cd ${SCRATCH}/SCanD_project
 git pull
 
 source ./stage_6.sh
+```
+
+Or run the commands directly:
+
+```sh
+cd ${SCRATCH}/SCanD_project
+git pull
+
+sbatch ./code/06_extract_to_share_slurm.sh
+source ./code/06_extract_to_share_terminal.sh
 ```
 
 ## Consortium handoff
