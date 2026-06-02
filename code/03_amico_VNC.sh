@@ -3,9 +3,9 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 BASEDIR=${SCRIPT_DIR}/..
 
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.4/qsiprep
+export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.4/amico_noddi
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi
 export TMP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/amico_noddi/tmp
 
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/amico

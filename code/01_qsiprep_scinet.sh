@@ -153,9 +153,9 @@ singularity exec \
         --pipeline-version 0.22.0 \
         --participant-id sub-$subject
 
-      python "${ROOT_DIR}/code/qsiprep_method_tsv.py" \
-        --qsiprep-root "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
-        --output-tsv "${ROOT_DIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv" \
+      python "$BASEDIR/code/qsiprep_method_tsv.py" \
+        --qsiprep-root "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
+        --output-tsv "$BASEDIR/Neurobagel/derivatives/processing_status_qsiprep.tsv" \
         --participant-ids "sub-$subject" 
     done
   '
