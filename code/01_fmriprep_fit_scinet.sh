@@ -94,7 +94,7 @@ singularity run --cleanenv \
 
 
 # tip: add this line to the above command if skull stripping has already been done
-#   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
+#   --skull-strip-t1w force \ # uncomment this line if skull stripping has already been done
 
 ## nipoppy trackers 
 

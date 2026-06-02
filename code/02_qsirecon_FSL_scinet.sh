@@ -3,8 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
-#SBATCH --time=01:0:00
-
+#SBATCH --time=01:00:00
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 export THREADS_PER_COMMAND=2

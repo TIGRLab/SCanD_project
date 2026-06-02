@@ -82,7 +82,7 @@ singularity run --cleanenv \
     --n_cpus 80  
 
 # tip: add this line to the above command if skull stripping has already been done
-#   --skull-strip-t1w force \ # uncomment this line if skull stripping has aleady been done
+#   --skull-strip-t1w force \ # uncomment this line if skull stripping has already been done
 
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -type d -name "*.long.*" | head -n 1)
