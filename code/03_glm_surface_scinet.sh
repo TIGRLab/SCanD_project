@@ -82,7 +82,6 @@ singularity run --cleanenv \
     --fwhm 6
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -90,11 +89,11 @@ singularity exec \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
    set -euo pipefail
-   cd "${ROOT_DIR}/Neurobagel"
+   cd "$BASEDIR/Neurobagel"
    mkdir -p derivatives/glm/0.0.1/output/
 
    shopt -s nullglob
-   ln -s "${ROOT_DIR}/data/local/derivatives/glm/0.0.1/"* derivatives/glm/0.0.1/output/ 2>/dev/null || true
+   ln -s "$BASEDIR/data/local/derivatives/glm/0.0.1/"* derivatives/glm/0.0.1/output/ 2>/dev/null || true
    shopt -u nullglob
 
    for subject in $SUBJECTS; do
@@ -104,4 +103,3 @@ singularity exec \
         --participant-id sub-$subject
     done
  '
-unset APPTAINERENV_ROOT_DIR
