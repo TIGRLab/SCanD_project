@@ -2,8 +2,6 @@
 
 Here is a checklist for the share folder results.
 
-Stage 6 uses `code/06_extract_to_share_slurm.sh` and `code/06_extract_to_share_terminal.sh`. The `code/extract_to_share_stage*.sh` scripts are legacy stage-split Slurm jobs and are not invoked by `stage_6.sh`.
-
 
 ```
 ${BASEDIR}/data/share
