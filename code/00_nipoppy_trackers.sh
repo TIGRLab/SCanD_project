@@ -11,7 +11,9 @@ if [ ! -f "${tsv_f}" ]; then
     echo 'participant_id' > "${tsv_f}"
 fi
 
-echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > "${BASEDIR}/data/local/bids/dataset_description.json"
+if [ ! -f "${BASEDIR}/data/local/bids/dataset_description.json" ]; then
+    echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > "${BASEDIR}/data/local/bids/dataset_description.json"
+fi
 
 # === Patch TotalReadoutTime into BOLD JSON sidecars (func/ and legacy root paths) ===
 bold_json_found=0
