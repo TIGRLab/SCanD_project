@@ -29,24 +29,18 @@ export SING_CONTAINER=${BASEDIR}/containers/glm-0.0.1.sif
 
 if [ -z "$1" ]; then
     echo "ERROR: No model file specified. Pass the absolute path to your task-specific model JSON as the first argument."
-    echo "  sbatch --array=0-\${array_job_length} code/03_glm_surface_scinet.sh \$PWD/code/glm/examples/models/your-model.json"
+    echo "  source ./code/lib/slurm_array.sh"
+    echo "  scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 \"\$PWD/code/glm/examples/models/your-model.json\""
     exit 1
 fi
 export MODEL=$1
 
 mkdir -p $OUT_DIR
 
-# Parsing subject
-# start=$(($SLURM_ARRAY_TASK_ID * SUB_SIZE + 1))
-# end=$((start + SUB_SIZE - 1))
-
-# SUBJECTS=$(sed -n -E "s/sub-(\S*).*/\1/p" ${BIDS_DIR}/participants.tsv \
-#     | sed -n "${start},${end}p")
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
-# N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
-N_SUBJECTS=$(grep -c '^sub-' ./data/local/bids/participants.tsv)
-# array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-array_job_length=$(( N_SUBJECTS - 1))
+
+N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
+array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
 Tail=$((N_SUBJECTS-(array_job_length*SUB_SIZE)))
 
 if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then

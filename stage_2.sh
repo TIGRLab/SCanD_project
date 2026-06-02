@@ -53,9 +53,9 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     if [[ "$N_SUBJECTS" -eq 0 ]]; then
         echo "No subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
     else
-        ARRAY_JOB_LENGTH=$((N_SUBJECTS - 1))
-        echo "Submitting ciftify_anat job array with indices 0 to ${ARRAY_JOB_LENGTH}"
-        sbatch --array=0-${ARRAY_JOB_LENGTH} ./code/02_ciftify_anat_scinet.sh
+        max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+        echo "Submitting ciftify_anat job array with indices 0 to ${max_task}"
+        sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
     fi
 else
     echo "Skipping ciftify_anat."
