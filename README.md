@@ -254,7 +254,7 @@ sub-001/
       sub-001_ses-01_dwi.nii.gz
 ```
 ### 3. YAML Configuration File
-You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/ThomasHMAC/SCanD_project/tree/Fir/code/config/EPIPHANI_query_config.yaml)
+You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/TIGRLab/SCanD_project/blob/trillium/code/config/EPIPHANI_query_config.yaml)
 
 #### 3.1. Query blocks (how to find files)
 
@@ -542,7 +542,7 @@ The script updates each fieldmap JSON like:
 
 ### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](##Running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](#running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
 
 If IntendedFor is missing, QSIprep and fMRIPrep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
 
@@ -609,7 +609,7 @@ You will see a summary table like this in the terminal:
 - ❌ Failed: 8 
 - Total: 8
 
-> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPREPQSIprep.
+> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPrep and QSIPrep.
 
 **Log File**: 
 
@@ -628,6 +628,16 @@ After setting up the scinet environment and organizing your BIDS folder and `par
 
 # Running Pipelines and sharing results
 
+Participant-array pipelines chunk `participants.tsv` the same way as the `stage_*.sh` scripts. When submitting manually, source the shared helper first:
+
+```sh
+cd ${SCRATCH}/SCanD_project
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
+```
+
+The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless noted otherwise.
+
 ## Running mriqc
 
 ```sh
@@ -638,15 +648,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ```
 
 ## Running freesurfer
@@ -659,15 +662,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_freesurfer_long_scinet.sh 1
 ```
 
 ## Running fmriprep fit (includes freesurfer)
@@ -685,14 +681,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array code/01_fmriprep_fit_scinet.sh 1
 ```
 
 
@@ -706,24 +696,18 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_qsiprep_scinet.sh 1
 ```
-After the qsiprep step is completed, the fieldmap method used for each subject can be found in:
+After QSIPrep completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
 ./Neurobagel/derivatives/processing_status_qsiprep.tsv
 ```
 
-This TSV file is automatically updated during the pipeline and contains:
+This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
-- qsiprep_method 
+- qsiprep_method
 
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
@@ -736,14 +720,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_smriprep_scinet.sh 1
 ```
 
 ## Running magetbrain init
@@ -797,23 +775,16 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_fmriprep_apply_scinet.sh 1
 ```
-
-After the fMRIPrep apply step is completed, the fieldmap method used for each subject can be found in:
+After fMRIPrep apply completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
 ./Neurobagel/derivatives/processing_status_fmriprep.tsv
 ```
 
-This TSV file is automatically updated during the pipeline and contains:
+This file is updated by the fMRIPrep apply nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
@@ -827,14 +798,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_FSL_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
 ```
 ## Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
@@ -847,14 +812,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_amico_noddi_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
 ```
 
 To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
@@ -884,14 +843,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/02_freesurfer_atlas_parcellate_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array code/02_freesurfer_atlas_parcellate_scinet.sh 1
 ```
 
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
@@ -922,14 +875,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_tractography_multi_scinet.sh 1
 
 ```
 Singleshell:
@@ -941,14 +888,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_tractography_single_scinet.sh 1
 
 ```
 
@@ -962,14 +903,16 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
+source ./code/lib/slurm_array.sh
 SUBJECTS_DIR=./data/local/derivatives/freesurfer/7.4.1
-N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/*long* | wc -l)
-array_job_length=$((N_SUBJECTS - 1))
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
+if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
+  N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/*long* | wc -l)
+else
+  N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/sub-* | wc -l)
+fi
+max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+echo "Submitting ciftify_anat with array 0-${max_task}"
+sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ```
 
 ## Running magetbrain register
@@ -1035,14 +978,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 ```
 
 ## Running xcp-noGSR
@@ -1055,14 +992,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_xcp_noGSR_scinet.sh 1
 ```
 
 ## Running noddi-registration
@@ -1072,14 +1003,8 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_noddi_reg_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_noddi_reg_scinet.sh 1
 ```
 
 
@@ -1113,16 +1038,10 @@ if [ ! -f "$MODEL" ]; then
     exit 1
 fi
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-# N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-N_SUBJECTS=$(grep -c '^sub-' ./data/local/bids/participants.tsv)
-array_job_length=$(( N_SUBJECTS - 1))
-# array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
+source ./code/lib/slurm_array.sh
 
 ## submit the array job to the queue, passing your task-specific model JSON as an argument
-sbatch --array=0-${array_job_length} ./code/03_glm_surface_scinet.sh ${MODEL}
+scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
 ```
 
 
@@ -1133,14 +1052,12 @@ sbatch --array=0-${array_job_length} ./code/03_glm_surface_scinet.sh ${MODEL}
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## calculate the length of the array-job given
-SUB_SIZE=1
+source ./code/lib/slurm_array.sh
 N_SUBJECTS=$(ls ./data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_magetbrain_vote_scinet.sh
+max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+echo "Submitting MAGeTbrain vote with array 0-${max_task}"
+sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
+```
 
 
 
@@ -1170,14 +1087,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_qsirecon_dtifit_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
 ```
 
 ## Running enigma-dti

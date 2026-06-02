@@ -392,7 +392,12 @@ else
 fi
 
 # sharing nipoppy trackers
-cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
+latest_status="$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv 2>/dev/null | head -n 1)"
+if [ -n "$latest_status" ]; then
+    cp "$latest_status" data/share/processing_status.tsv
+else
+    echo "WARNING: No Neurobagel processing_status file found; skipping copy to data/share."
+fi
 cp "$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv | head -n 1)" data/share/manifest.tsv
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv  ${BASEDIR}/data/share
 cp ${BASEDIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv  ${BASEDIR}/data/share

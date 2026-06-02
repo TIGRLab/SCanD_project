@@ -30,4 +30,9 @@ else
 
 fi
 
-cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" ${BASEDIR}/data/share/processing_status.tsv
+latest_status="$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv 2>/dev/null | head -n 1)"
+if [ -n "$latest_status" ]; then
+    cp "$latest_status" ${BASEDIR}/data/share/processing_status.tsv
+else
+    echo "WARNING: No Neurobagel processing_status file found; skipping copy to data/share."
+fi

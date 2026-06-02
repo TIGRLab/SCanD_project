@@ -4,9 +4,14 @@ BASEDIR=${SCRIPT_DIR}/..
 
 cd ${BASEDIR}
 
-## edit dataset_description and bold.json files in bids
-echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > data/local/bids/dataset_description.json
-echo 'participant_id' > data/local/bids/participants.tsv
+tsv_f="${BASEDIR}/data/local/bids/participants.tsv"
+
+if [ ! -f "${tsv_f}" ]; then
+    echo "Creating a new participants.tsv file at ${tsv_f}"
+    echo 'participant_id' > "${tsv_f}"
+fi
+
+echo '{ "Name": "ScanD", "BIDSVersion": "1.0.2" }' > "${BASEDIR}/data/local/bids/dataset_description.json"
 
 # === Patch TotalReadoutTime into BOLD JSON sidecars (func/ and legacy root paths) ===
 bold_json_found=0
