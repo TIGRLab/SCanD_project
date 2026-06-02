@@ -1,22 +1,24 @@
-# SCanD_project
+# 🧠 SCanD_project
 
 This is the base repository for the **Schizophrenia Canadian Neuroimaging Database** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
 
-## Pipeline overview
+> **New here?** Start with the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](Quick_start_workflow_automation.md).
+
+## 📊 Pipeline overview
 
 The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](Quick_start_workflow_automation.md).
 
 ![SCanD / TIGRBIDS preprocessing workflow](tigrbids_flow.png)
 
-## Key documentation
+## 📚 Key documentation
 
-| Resource | Purpose |
-|----------|---------|
-| [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Workflow automation with `stage_*.sh` |
-| [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
-| [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
+| | Resource | Purpose |
+|---|----------|---------|
+| 🚀 | [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Workflow automation with `stage_*.sh` |
+| 🔍 | [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
+| ✅ | [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
 
-## Repository layout
+## 📁 Repository layout
 
 General folder structure for the repo (when all is run):
 
@@ -93,24 +95,24 @@ ${BASEDIR}
 
 Currently this repo is going to be set up for running things on SciNet Nibi cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
-# The general overview of what to do
+# 🗺️ The general overview of what to do
 
 | stage |  #	| Step	|   Estimated runtime 	|
 |---    |---	|---	|---	|
-| stage 0|   0a	|  [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-dataset)	| ~30 minutes in terminal 	|
+| 🛠️ stage 0|   0a	|  [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-dataset)	| ~30 minutes in terminal 	|
 |^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   Varies by dataset size	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
 |^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| Depends on data transfer time | 
 |^ |   0e	|  [Initializing nipoppy trackers](#initializing-nipoppy-trackers)	| ~2 minutes in terminal 	|
 |^ |   0f	|  [Edit fmap files](#1-edit-top-up-fmap-files-only)	| ~2 minutes in terminal 	|
-|stage 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  ~8 hours on Slurm 	|
+| 1️⃣ stage 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  ~8 hours on Slurm 	|
 |^ |  01b	|  [Run QSIprep](#running-qsiprep) 	|   ~6 hours on Slurm	|
 |^|   01c	|  [Run freesurfer](#running-freesurfer) 	|   ~23 hours on Slurm	|
 |^|   01d	|  [Run fMRIprep fit](#running-fmriprep-fit-includes-freesurfer) 	|   ~16 hours on Slurm	|
 |^ |  01e	|  [Run smriprep](#running-smriprep) 	|   ~10 hours on Slurm	|
 |^ |  01f	|  [Run magetbrain-init](#running-magetbrain-init) 	|   ~1 hour on Slurm	|
 |^ |  01g	|  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 2|   02a	|  [Run fMRIprep apply](#running-fmriprep-apply) 	|  ~3 hours on Slurm 	|
+| 2️⃣ stage 2|   02a	|  [Run fMRIprep apply](#running-fmriprep-apply) 	|  ~3 hours on Slurm 	|
 |^ |   02b	|  [Run freesurfer atlas parcellate analysis](#running-freesurfer-atlas-parcellate-analysis) 	|  ~6 hours on Slurm 	|
 |^ |   02c	|  [Run ciftify-anat](#running-ciftify-anat) 	|  ~3 hours on Slurm 	|
 |^ |   02d	|  [Run qsirecon FSL](#running-qsirecon-fsl) 	|  ~20 minutes on Slurm 	|
@@ -118,20 +120,20 @@ Currently this repo is going to be set up for running things on SciNet Nibi clus
 |^ |   02f	|  [Run tractography](#running-tractography) 	|  ~12 hours on Slurm 	|
 |^ |   02g	|  [Run magetbrain-register](#running-magetbrain-register) 	|  ~24 hours on Slurm 	|
 |^ |   02h  |  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 3 |  03a	|  [Run xcp-d](#running-xcp-d) 	|  ~5 hours on Slurm  |
+| 3️⃣ stage 3 |  03a	|  [Run xcp-d](#running-xcp-d) 	|  ~5 hours on Slurm  |
 |^ |   03b  |  [Run xcp-noGSR](#running-xcp-nogsr) 	|  ~5 hours on Slurm  |
 |^ |   03c  |   [Run qsirecon dtifit](#running-qsirecon-dtifit) 	|  ~1 hour on Slurm 	|
 |^ |   03d	|  [Run noddi-registration](#running-noddi-registration) 	|  ~4 hours on Slurm 	|
 |^ |   03e	|  [Run glm-surface](#running-glm) 	|  ~30 minutes on Slurm 	|
 |^ |   03f	|  [Run magetbrain-vote](#running-magetbrain-vote) 	|  ~10 hours on Slurm 	|
 |^ |   03g	|  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 4 |  04a |  [Run enigma-dti](#running-enigma-dti) 	|  ~1 hour on Slurm	| 
+| 4️⃣ stage 4 |  04a |  [Run enigma-dti](#running-enigma-dti) 	|  ~1 hour on Slurm	| 
 |^ |   04b	|  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
+| 5️⃣ stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
 |^ |   05b	|  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 6 |   06a	|  [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (Slurm job and login-node terminal script run together)	|
+| 📤 stage 6 |   06a	|  [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (Slurm job and login-node terminal script run together)	|
 
-# Setting your SciNet environment and prepare dataset
+# ⚙️ Setting your SciNet environment and prepare dataset
 
 ## Setting SciNet environment
 
@@ -633,14 +635,14 @@ The same summary is saved in a log file for later reference:
 cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 ```
 
-# Quick Start - Workflow Automation
+# 🚀 Quick Start — Workflow Automation
 
 After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](Quick_start_workflow_automation.md), or run individual pipelines as described below.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#running-xcp-d) section.
 
 
-# Running Pipelines and sharing results
+# 🔬 Running Pipelines and sharing results
 
 Participant-array pipelines chunk `participants.tsv` the same way as the `stage_*.sh` scripts. When submitting manually, source the shared helper first:
 
@@ -1069,14 +1071,14 @@ sbatch  ./code/05_extract_noddi_scinet.sh
 ```
 
 
-## Check tsv file
+## ✅ Check tsv file
 
 At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review.
 
 If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
-## Syncing the data to the share directory
+## 📤 Syncing the data to the share directory
 
 This step calls group-level BIDS apps to build summary sheets and HTML index pages. It also copies metadata, QC pages, and a smaller subset of summary results into `data/share`.
 
@@ -1092,6 +1094,8 @@ source ./code/06_extract_to_share_terminal.sh
 ```
 
 When all pipelines are complete, verify `data/share` against [share_folder.md](share_folder.md). Use [QC_guide.md](QC_guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
+
+🎉 **You're done!** Hand off your `data/share` folder to the consortium.
 
 ```sh
 cd ${SCRATCH}/SCanD_project
