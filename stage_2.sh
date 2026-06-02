@@ -2,16 +2,12 @@
 
 # Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 
-#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# shellcheck source=code/lib/slurm_array.sh
+source "${SCRIPT_DIR}/code/lib/slurm_array.sh"
 
-# Function to calculate and submit array jobs
 submit_array_job() {
-    local script=$1
-    local sub_size=$2
-    local n_subjects=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-    local array_job_length=$(( n_subjects / sub_size ))
-    echo "Submitting job for $script with array size: ${array_job_length}"
-    sbatch --array=0-${array_job_length} $script
+    scand_submit_participant_array "$1" "$2"
 }
 
 # Function to prompt user and run selected pipeline
@@ -23,7 +19,7 @@ run_pipeline() {
     
     if [[ "$run_pipeline" =~ ^(yes|y)$ ]]; then
         echo "Running $pipeline_name..."
-        submit_array_job $script_path $sub_size
+        submit_array_job "$script_path" "$sub_size"
     else
         echo "Skipping $pipeline_name."
     fi
