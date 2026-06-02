@@ -52,7 +52,7 @@ ${BASEDIR}/data/share
 │   └── QC images and metadata for each scan
 ├── tractify
 │   └── connectivity.mat file for each scan         
-├── xcp-d/0.7.3
+├── xcp_d/0.7.3
 │   └── QC images and metadata for each scan
-└── xcp-noGSR
+└── xcp_noGSR
     └── QC images and metadata for each scan

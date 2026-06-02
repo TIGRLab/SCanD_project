@@ -43,7 +43,7 @@ ln -s ${CONTAINER_DIR}/nipoppy.sif  containers/nipoppy.sif
 
 
 ## copy freesurfer licence
-cp /scratch//arisvoin/shared/fs_license/license.txt templates/.freesurfer.txt
+cp /scratch/arisvoin/shared/fs_license/license.txt templates/.freesurfer.txt
 
 
 ## copy templates

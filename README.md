@@ -51,22 +51,22 @@ ${BASEDIR}
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── smriprep             # contains only qc images and metadata
 │       ├── tractify             # contains connectivity.mat file
-│       ├── xcp-d                # contains xcp results with GSR
+│       ├── xcp_d                # contains xcp results with GSR
 │       └── xcp_noGSR            # contains xcp results with GSR              
-|── LICENSE
+├── LICENSE
 ├── logs               # logs from jobs run on cluster           
-|── Neurobagel
-|── project_id
-|── QC_guide.md
-|── Quick_start_workflow automation.md
-|── README.md
-|── share_folder.md
-|──stage_1.sh
-|──stage_2.sh
-|──stage_3.sh
-|──stage_4.sh
-|──stage_5.sh
-|──stage_6.sh
+├── Neurobagel
+├── project_id
+├── QC_guide.md
+├── Quick_start_workflow_automation.md
+├── README.md
+├── share_folder.md
+├── stage_1.sh
+├── stage_2.sh
+├── stage_3.sh
+├── stage_4.sh
+├── stage_5.sh
+├── stage_6.sh
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
@@ -691,7 +691,7 @@ After QSIPrep completes, a per-pipeline sidecar with the distortion-correction m
 
 This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
-- qsiprep_method
+- qsiprep_sdc_method
 
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.

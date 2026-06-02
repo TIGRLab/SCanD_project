@@ -19,7 +19,7 @@ git pull         #in case you need to pull new code
 source ./stage_1.sh
 ```
 
-## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsireconfsl, amico_noddi, tractography):
+## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 ```sh
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
