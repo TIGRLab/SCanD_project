@@ -424,13 +424,13 @@ fi
 # sharing nipoppy trackers
 latest_status="$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv 2>/dev/null | head -n 1)"
 if [ -n "$latest_status" ]; then
-    cp "$latest_status" data/share/processing_status.tsv
+    cp "$latest_status" "${BASEDIR}/data/share/processing_status.tsv"
 else
     echo "WARNING: No Neurobagel processing_status file found; skipping copy to data/share."
 fi
 latest_manifest="$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv 2>/dev/null | head -n 1)"
 if [ -n "$latest_manifest" ]; then
-    cp "$latest_manifest" data/share/manifest.tsv
+    cp "$latest_manifest" "${BASEDIR}/data/share/manifest.tsv"
 else
     echo "WARNING: No Neurobagel manifest file found; skipping copy to data/share."
 fi
