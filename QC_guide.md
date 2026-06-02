@@ -1,14 +1,6 @@
 # QC Guide
 
-Visual quality criteria for pipeline HTML reports under `data/local/derivatives/` and QC images copied to `data/share`. Use this guide alongside the [share folder checklist](share_folder.md) before consortium handoff.
-
-**Where to find reports**
-
-| Pipeline | Typical report location |
-|----------|-------------------------|
-| fMRIPrep, sMRIPrep, MRIQC, QSIprep, XCP-D | Subject HTML under each derivative folder; group summaries in `data/share` after stage 6 |
-| Ciftify | `data/local/derivatives/ciftify/qc_recon_all/` |
-| MAGeTbrain | `data/share/magetbrain/QC/` after stage 6 |
+Here are guidelines to QC each pipeline results.
 
 ---
 
