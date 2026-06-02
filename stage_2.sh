@@ -2,16 +2,12 @@
 
 # Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 
-#!/bin/bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# shellcheck source=code/lib/slurm_array.sh
+source "${SCRIPT_DIR}/code/lib/slurm_array.sh"
 
-# Function to calculate and submit array jobs
 submit_array_job() {
-    local script=$1
-    local sub_size=$2
-    local n_subjects=$(( $(wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ') - 1 ))
-    local array_job_length=$(( n_subjects / sub_size ))
-    echo "Submitting job for $script with array size: ${array_job_length}"
-    sbatch --array=0-${array_job_length} $script
+    scand_submit_participant_array "$1" "$2"
 }
 
 # Function to prompt user and run selected pipeline
@@ -23,11 +19,12 @@ run_pipeline() {
     
     if [[ "$run_pipeline" =~ ^(yes|y)$ ]]; then
         echo "Running $pipeline_name..."
-        submit_array_job $script_path $sub_size
+        submit_array_job "$script_path" "$sub_size"
     else
         echo "Skipping $pipeline_name."
     fi
 }
+
 
 # Prompt user for each pipeline in stage 2
 run_pipeline "fmriprep_apply" "./code/02_fmriprep_apply_scinet.sh" 1
@@ -54,7 +51,7 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     N_SUBJECTS=${#SUBJECT_FOLDERS[@]}
 
     if [[ "$N_SUBJECTS" -eq 0 ]]; then
-        echo "No *long* subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
+        echo "No subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
     else
         ARRAY_JOB_LENGTH=$((N_SUBJECTS - 1))
         echo "Submitting ciftify_anat job array with indices 0 to ${ARRAY_JOB_LENGTH}"

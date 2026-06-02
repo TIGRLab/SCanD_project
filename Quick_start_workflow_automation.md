@@ -4,11 +4,11 @@ In this project, we have devised a streamlined solution for managing multiple pi
 
 The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
 
-**Note:** At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, it's crucial to navigate to the Neurobagel/derivatives/processing_status.tsv and review the file for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing_status.tsv for all the pipelins in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review. If any participant has failed, you need to first amend the data/local/bids/participants.tsv file by including the IDs of the failed participants. After rectifying the errors, rerun the pipeline with the updated participant list.
+**Note:** At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review. If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
 
 ## stage 0 (setup bids folder and SciNet environment)
 
-After setting up the SciNet environment and organizing your BIDS folder and participants.csv file, you can run the codes for each stage.
+After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run the codes for each stage.
 
 ## stage 1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
 ```sh
@@ -36,7 +36,7 @@ git pull         #in case you need to pull new code
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecondtifit, noddireg):
+## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit, noddireg, glm_surface):
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
@@ -88,7 +88,7 @@ git pull         #in case you need to pull new code
 source ./stage_6.sh
 ```
 
-After you are done with stage 6, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/main/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+After you are done with stage 6, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/trillium/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "your_group_name" and put your group name there and then run the code!
 
