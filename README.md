@@ -186,7 +186,6 @@ sub-CMH00000005
 sub-CMH00000007
 sub-CMH00000012
 ```
-
 Also, make sure dataset_description.json exists inside your bids folder.
 
 ### Initializing nipoppy trackers
@@ -194,7 +193,7 @@ Also, make sure dataset_description.json exists inside your bids folder.
 In this step, we initialize the [nipoppy trackers](https://nipoppy.readthedocs.io/en/0.2.1/index.html) and set up a folder structure based on the nipoppy directory specification:
 
 ```sh
-cd ${SCRATCH}/SCanD_project
+cd ${SCRATCH}/SCanD_project   # or your study project root on scratch
 source code/00_nipoppy_trackers.sh
 ```
 
@@ -225,11 +224,11 @@ virtualenv --system-site-packages ~/.virtualenvs/myenv
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate 
 
-python3 -m pip install pybids=0.15.6
+python3 -m pip install pybids==0.15.6
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./EPIPHANI_query_config.yaml
+python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
 ```
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
@@ -585,7 +584,7 @@ python3 -m pip install pybids==0.15.6 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
-python3 code/check_fmap_json.py ./data/local/bids/participants.tsv
+python3 code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
 ```
 
 **3. Interpret the output**
@@ -907,7 +906,7 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-source ./code/freesurfer_group_merge_scinet.sh
+bash ./code/freesurfer_group_merge.sh
 ```
 
 ## Running tractography
