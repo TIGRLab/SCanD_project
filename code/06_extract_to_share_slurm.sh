@@ -26,7 +26,7 @@ done
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying FMRIPREP metatdata and QC images"
+  echo "Copying FMRIPREP metadata and QC images"
 
 
 mkdir -p ${FMRIPREP_SHARE_DIR}
@@ -56,7 +56,7 @@ SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying SMRIPREP metatdata and QC images"
+  echo "Copying SMRIPREP metadata and QC images"
 
 
 mkdir -p ${SMRIPREP_SHARE_DIR}

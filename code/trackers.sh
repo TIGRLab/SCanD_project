@@ -99,8 +99,8 @@ singularity exec \
    
       nipoppy track \
         --pipeline qsiprep \
-        --pipeline-version 0.22.0
-        --debug        
+        --pipeline-version 0.22.0 \
+        --debug
   '
 
 singularity exec \
@@ -189,7 +189,6 @@ singularity exec \
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SELECTED_SUBJECT" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
@@ -200,12 +199,9 @@ singularity exec \
 
     ln -s "$BASEDIR/data/local/derivatives/ciftify/"* derivatives/ciftify/1.3.2/output/ || true
 
-
-   
       nipoppy track \
         --pipeline ciftify \
-        --pipeline-version 1.3.2 \
-        
+        --pipeline-version 1.3.2
   '
 
 
