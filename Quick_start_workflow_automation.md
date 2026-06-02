@@ -1,99 +1,92 @@
-# Automated Pipeline Coordination and Code Integration for Efficient Workflow Execution
+# Workflow automation (stage scripts)
 
-In this project, we have devised a streamlined solution for managing multiple pipelines with a focus on seamless coordination and code integration. Our approach involves the creation of an automated system that orchestrates the execution of diverse pipelines each stage. By combining and organizing the necessary codes for each stage's tasks, we aim to optimize workflow efficiency.
+Use the `stage_*.sh` scripts at the repository root to run pipelines one stage at a time. Each script prompts you for which pipelines to submit, so you can skip diffusion or functional steps when they do not apply to your dataset.
 
-The script will prompt you at each stage to ask if you want to run only the functional pipelines. This allows you to skip the diffusion pipelines if you don't want to run them or if you don't have diffusion scans.
+**Before the next stage:** Review the latest Neurobagel processing status under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For example, before stage 3, confirm stage 2 pipelines completed successfully. You can upload the status file to [Neurobagel Digest](https://digest.neurobagel.org/) for filtering and summary views. If any participant failed, remove those IDs from `data/local/bids/participants.tsv` (keep only subjects you want to rerun), fix the underlying issue, and resubmit the affected pipeline.
 
-**Note:** At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review. If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
+## Stage 0 (setup BIDS folder and SciNet environment)
 
-## stage 0 (setup bids folder and SciNet environment)
+After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, run the stage scripts below.
 
-After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run the codes for each stage.
+## Stage 1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init)
 
-## stage 1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_1.sh
 ```
 
-## stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
+## Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography)
+
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_2.sh
 ```
 
-## stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit, noddireg, glm_surface):
+## Stage 3 (xcp_d, xcp_noGSR, magetbrain_vote, qsirecon_dtifit, noddireg, glm_surface)
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_3.sh
 ```
 
-## stage 4 (enigma_dti):
+## Stage 4 (enigma_dti)
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_4.sh
 ```
 
-## stage 5 (noddi_extract):
+## Stage 5 (noddi_extract)
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_5.sh
 ```
 
-## stage 6 (extract data to share folder):
+## Stage 6 (extract data to share folder)
 
 ```sh
 # note step one is to make sure you are on one of the login nodes
 ssh nia-login07
 
-## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
+git pull
 
 source ./stage_6.sh
 ```
 
-After you are done with stage 6, verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/trillium/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+## Consortium handoff
 
-You need to change the "your_group_name" and put your group name there and then run the code!
+After stage 6, verify `data/share` against [share_folder.md](share_folder.md). Once the checklist passes, copy results to the shared space. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`):
 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/arisvoin/shared/your_group_name
-cp -r data/share  /scratch/arisvoin/shared/your_group_name/
+mkdir /scratch/arisvoin/mlepage/<groupName_studyName>
+cp -r data/share /scratch/arisvoin/mlepage/<groupName_studyName>/
 ```
-
