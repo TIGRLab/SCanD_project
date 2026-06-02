@@ -33,7 +33,6 @@ module load apptainer/1.3.5
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
 ## these folders envs need to be set up for this script to run properly 
-## see notebooks/00_setting_up_envs.md for the set up instructions
 export FMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
