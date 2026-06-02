@@ -132,20 +132,20 @@ singularity run --cleanenv \
     ${SDC_ARGS}
 
 ## nipoppy trackers 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/qsiprep/0.22.0/output/
     ls -al derivatives/qsiprep/0.22.0/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep/"* derivatives/qsiprep/0.22.0/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsiprep/"* derivatives/qsiprep/0.22.0/output/ || true
 
     for subject in $SUBJECTS; do
       nipoppy track \
@@ -153,10 +153,9 @@ singularity exec \
         --pipeline-version 0.22.0 \
         --participant-id sub-$subject
 
-      python "${ROOT_DIR}/code/qsiprep_method_tsv.py" \
-        --qsiprep-root "${ROOT_DIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
-        --output-tsv "${ROOT_DIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv" \
+      python "$BASEDIR/code/qsiprep_method_tsv.py" \
+        --qsiprep-root "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
+        --output-tsv "$BASEDIR/Neurobagel/derivatives/processing_status_qsiprep.tsv" \
         --participant-ids "sub-$subject"
     done
   '
-unset APPTAINERENV_ROOT_DIR

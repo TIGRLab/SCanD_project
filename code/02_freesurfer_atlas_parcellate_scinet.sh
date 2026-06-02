@@ -161,20 +161,20 @@ else
           Neurobagel/pipelines/processing/freesurferparcellate-7.4.1/
 fi
 
-export APPTAINERENV_ROOT_DIR=${BASEDIR}
 
 singularity exec \
-  --bind ${SCRATCH}:${SCRATCH} \
+  --env BASEDIR="$BASEDIR" \
+  --bind ${BASEDIR}:${BASEDIR} \
   --env SUBJECTS_BATCH="$SUBJECTS_BATCH" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 
-    cd "${ROOT_DIR}/Neurobagel"
+    cd "$BASEDIR/Neurobagel"
     
     mkdir -p derivatives/freesurferparcellate/7.4.1/output/
     ls -al derivatives/freesurferparcellate/7.4.1/output/
 
-    ln -s "${ROOT_DIR}/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
+    ln -s "$BASEDIR/data/local/derivatives/freesurfer/7.4.1/"* derivatives/freesurferparcellate/7.4.1/output/ || true
 
     for subject in $SUBJECTS_BATCH; do
       nipoppy track \
@@ -183,4 +183,3 @@ singularity exec \
         --participant-id $subject
     done
   '
-unset APPTAINERENV_ROOT_DIR
