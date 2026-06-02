@@ -1,6 +1,6 @@
 # SCanD_project
 
-This is the base repository for the **Schizophrenia Canadian Neuroimaging Database ([SCanD](https://tigrlab.github.io/))** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
+This is the base repository for the **Schizophrenia Canadian Neuroimaging Database** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
 
 ## Pipeline overview
 
