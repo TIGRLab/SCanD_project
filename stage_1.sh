@@ -3,6 +3,7 @@
 #stage1 (mriqc, qsiprep, fmriprep_fit, freesurfer, smriprep, magetbrain_init):
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR" || exit 1
 # shellcheck source=code/lib/slurm_array.sh
 source "${SCRIPT_DIR}/code/lib/slurm_array.sh"
 

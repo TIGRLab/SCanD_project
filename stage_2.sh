@@ -3,6 +3,7 @@
 # Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR" || exit 1
 # shellcheck source=code/lib/slurm_array.sh
 source "${SCRIPT_DIR}/code/lib/slurm_array.sh"
 
