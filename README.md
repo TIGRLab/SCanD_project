@@ -34,6 +34,7 @@ ${BASEDIR}
 │   ├── nipoppy.sif
 │   ├── noddi_postproc-v.1.0.simg
 │   ├── tbss_2023-10-10.simg
+│   ├── glm-0.0.1.simg
 │   └── xcp_d-0.7.3.simg
 ├── data
 │   ├── local                    # folder for the "local" dataset
@@ -128,7 +129,7 @@ Currently this repo is going to be set up for running things on SciNet Fir clust
 |^ |   04b	|  [Check tsv file](#check-tsv-file) 	|    	|
 |stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
 |^ |   05b	|  [Check tsv file](#check-tsv-file) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (plus terminal steps after the job completes)	|
+|stage 6 |   06a	|  [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (Slurm job and login-node terminal script run together)	|
 
 # Setting your SciNet environment and prepare dataset
 
@@ -217,7 +218,7 @@ mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run the following python code with a specific configuration depend on each dataset.
+In some cases, dcm2niix conversion fails to add the BIDS ``IntendedFor`` field in fmap JSON files, which causes errors in the fmriprep_apply step. Edit those fieldmaps (or run the script below) using a YAML configuration that matches your dataset naming.
 
 This script automatically fills the ``"IntendedFor"`` field in BIDS fieldmap JSON files. It reads a YAML configuration file that describes your dataset's naming patterns, then links each fieldmap to correct fMRI or DWI files.
 
@@ -555,7 +556,7 @@ The script updates each fieldmap JSON like:
 
 ### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](#running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](#running-fmriprep-apply), and [Run QSIprep](#running-qsiprep).
 
 If IntendedFor is missing, fMRIPREP and QSIprep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
 
@@ -637,7 +638,7 @@ cat ${SCRATCH}/SCanD_project/logs/fieldmaps_qc_summary.log
 
 After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](Quick_start_workflow_automation.md), or run individual pipelines as described below.
 
-* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
+* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#running-xcp-d) section.
 
 
 # Running Pipelines and sharing results
@@ -909,7 +910,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 
 ```sh
-#First load a python module
+# First load a python module
 module load python/3.10
 
 # Create a directory for virtual environments if it doesn't exist
@@ -926,7 +927,7 @@ python3 -m pip install -U templateflow
 python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
 ```
 ```sh
-#First load a python module
+# First load a python module
 module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
@@ -1080,9 +1081,9 @@ If any participant has failed, amend `data/local/bids/participants.tsv` by **exc
 
 ## Syncing the data to the share directory
 
-This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
+This step calls group-level BIDS apps to build summary sheets and HTML index pages. It also copies metadata, QC pages, and a smaller subset of summary results into `data/share`.
 
-The Slurm extract job takes up to 8 hours on slurm (depending on how much data you are syncing). Run `06_extract_to_share_terminal.sh` after that job completes.
+Submit the Slurm extract job and run the login-node terminal script **together** (as in `stage_6.sh` and the commands below). The Slurm job may take up to ~8 hours on Slurm depending on dataset size; the terminal script runs immediately on the login node for MAGeTbrain QC, qsiprep metrics, and related steps.
 
 ```sh
 ## go to the repo and pull new changes
