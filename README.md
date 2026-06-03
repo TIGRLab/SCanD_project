@@ -2,6 +2,8 @@
 
 This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
 
+Workflow automation: [docs/quick-start-workflow.md](docs/quick-start-workflow.md) · QC guide: [docs/qc-guide.md](docs/qc-guide.md) · Share checklist: [docs/share-folder-checklist.md](docs/share-folder-checklist.md)
+
 General folder structure for the repo (when all is run):
 
 ```
@@ -56,18 +58,22 @@ ${BASEDIR}
 │       └── xcp_noGSR            # contains xcp results with GSR              
 |── LICENSE
 ├── logs               # logs from jobs run on cluster           
-|── Neurobagel
-|── project_id
-|── QC guide.md
-|── Quick_start_workflow automation.md
-|── README.md
-|── share_folder.md
-|──stage_1.sh
-|──stage_2.sh
-|──stage_3.sh
-|──stage_4.sh
-|──stage_5.sh
-|──stage_6.sh
+├── Neurobagel
+├── project_id
+├── assets
+│   ├── pipeline-overview.png
+│   └── figures/
+├── docs
+│   ├── qc-guide.md
+│   ├── quick-start-workflow.md
+│   └── share-folder-checklist.md
+├── README.md
+├── stage_1.sh
+├── stage_2.sh
+├── stage_3.sh
+├── stage_4.sh
+├── stage_5.sh
+├── stage_6.sh
 └── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
     └── parcellations
         ├── README.md
@@ -619,7 +625,7 @@ cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 
 # Quick Start - Workflow Automation
 
-After setting up the scinet environment and organizing your BIDS folder and `participants.tsv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [Quick start workflow automation.md](Quick_start_workflow_automation.md) document and proceed accordingly. Otherwise, run pipelines separately.
+After setting up the scinet environment and organizing your BIDS folder and `participants.tsv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [docs/quick-start-workflow.md](docs/quick-start-workflow.md) document and proceed accordingly. Otherwise, run pipelines separately.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
 
@@ -1155,7 +1161,7 @@ git pull
 sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
-Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [share_folder.md](https://github.com/TIGRLab/SCanD_project/blob/nibi/share_folder.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
 
 You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
 
