@@ -1,6 +1,6 @@
 # Share folder
 
-Here is a checklist for the share folder results.
+Here is a checklist for the share folder results. For visual QC of pipeline HTML reports and figures, see [qc-guide.md](qc-guide.md).
 
 
 ```
@@ -51,3 +51,6 @@ ${BASEDIR}/data/share
 │   └── QC images and metadata for each scan
 └── xcp-noGSR
     └── QC images and metadata for each scan
+```
+
+After the checklist passes, follow the consortium handoff steps in [quick-start-workflow.md](quick-start-workflow.md) or the README stage 6 section.
