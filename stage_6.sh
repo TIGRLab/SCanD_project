@@ -1,4 +1,9 @@
+#!/bin/bash
+
 ## stage 6 (extract and share files):
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR" || exit 1
 
 read -p "Do you want to extract and share data? (yes/no): " run_share
 if [[ "$run_share" =~ ^(yes|y)$ ]]; then

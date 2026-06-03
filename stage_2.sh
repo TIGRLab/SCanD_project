@@ -3,6 +3,7 @@
 # Stage 2 (ciftify_anat, fmriprep_apply, freesurfer_parcellate, magetbrain_register, qsirecon_FSL, amico_noddi, tractography):
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR" || exit 1
 # shellcheck source=code/lib/slurm_array.sh
 source "${SCRIPT_DIR}/code/lib/slurm_array.sh"
 
@@ -53,9 +54,9 @@ if [[ "$run_ciftify" =~ ^(yes|y)$ ]]; then
     if [[ "$N_SUBJECTS" -eq 0 ]]; then
         echo "No subject folders found in ${SUBJECTS_DIR}. Skipping ciftify_anat."
     else
-        ARRAY_JOB_LENGTH=$((N_SUBJECTS - 1))
-        echo "Submitting ciftify_anat job array with indices 0 to ${ARRAY_JOB_LENGTH}"
-        sbatch --array=0-${ARRAY_JOB_LENGTH} ./code/02_ciftify_anat_scinet.sh
+        max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+        echo "Submitting ciftify_anat job array with indices 0 to ${max_task}"
+        sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
     fi
 else
     echo "Skipping ciftify_anat."

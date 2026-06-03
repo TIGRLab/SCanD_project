@@ -6,7 +6,7 @@
 #SBATCH --time=01:00:00
 
 
-# A script to extract the bits that we want to share back with the corsotium
+# A script to extract the bits that we want to share back with the consortium
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata 
@@ -22,7 +22,7 @@ FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying FMRIPREP metatdata and QC images"
+  echo "Copying FMRIPREP metadata and QC images"
 
 
 mkdir -p ${FMRIPREP_SHARE_DIR}
@@ -172,3 +172,4 @@ else
 echo "No NODDI outputs found."
 
 fi
+

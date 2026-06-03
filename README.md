@@ -1,8 +1,24 @@
-# SCanD_project
+# 🧠 SCanD_project
 
-This is a base repo for the Schizophrenia Canadian Neuroimaging Database (SCanD) codebase. It is meant to be forked/cloned for every SCanD dataset.
+This is the base repository for the **Schizophrenia Canadian Neuroimaging Database** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
 
-Workflow automation: [docs/quick-start-workflow.md](docs/quick-start-workflow.md) · QC guide: [docs/qc-guide.md](docs/qc-guide.md) · Share checklist: [docs/share-folder-checklist.md](docs/share-folder-checklist.md)
+> **New here?** Start with the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](docs/quick-start-workflow.md).
+
+## 📊 Pipeline overview
+
+The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](docs/quick-start-workflow.md).
+
+![SCanD / TIGRBIDS preprocessing workflow](assets/pipeline-overview.png)
+
+## 📚 Key documentation
+
+| | Resource | Purpose |
+|---|----------|---------|
+| 🚀 | [docs/quick-start-workflow.md](docs/quick-start-workflow.md) | Workflow automation with `stage_*.sh` |
+| 🔍 | [docs/qc-guide.md](docs/qc-guide.md) | Visual QC criteria for pipeline HTML reports |
+| ✅ | [docs/share-folder-checklist.md](docs/share-folder-checklist.md) | Checklist for `data/share` before consortium handoff |
+
+## 📁 Repository layout
 
 General folder structure for the repo (when all is run):
 
@@ -54,9 +70,9 @@ ${BASEDIR}
 │       ├── qsiprep              # contains only qc images and metadata
 │       ├── smriprep             # contains only qc images and metadata
 │       ├── tractify             # contains connectivity.mat file
-│       ├── xcp-d                # contains xcp results with GSR
+│       ├── xcp_d                # contains xcp results with GSR
 │       └── xcp_noGSR            # contains xcp results with GSR              
-|── LICENSE
+├── LICENSE
 ├── logs               # logs from jobs run on cluster           
 ├── Neurobagel
 ├── project_id
@@ -84,48 +100,49 @@ ${BASEDIR}
 
 Currently this repo is going to be set up for running things on SciNet Trillium cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
 
-# The general overview of what to do
+<a id="the-general-overview-of-what-to-do"></a>
 
-| stage |  #	| Step	|   How Long Does it take to run? 	|
+# 🗺️ The general overview of what to do
+
+| stage |  #	| Step	|   Estimated runtime 	|
 |---    |---	|---	|---	|
-| stage 0|   0a	|  [Setting up the SciNet environment](#Setting-your-scinet-environment-and-prepare-dataset)	| 30 minutes in terminal 	|
-|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   As long as it takes	|
+| 🛠️ stage 0|   0a	|  [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-dataset)	| ~30 minutes in terminal 	|
+|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   Varies by dataset size	|
 |^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0d	|  [Move you bids data to the correct place and add lables to participants.tsv file](#Put-your-bids-data-into-the-datalocal-folder-and-add-lables-to-participantstsv-file)	| depends on time to transfer data to SciNet | 	
-|^ |   0e	|  [Initializing nipoppy trackers](#Initializing-nipoppy-trackers)	| 2 minutes in terminal 	|
-|^ |   0f	|  [Edit fmap files](#Edit-fmap-files)	| 2 minutes in terminal 	|
-|stage 1|   01a	|  [Run MRIQC](#Running-mriqc) 	|  8 hours on slurm 	|
-|^ |  01b	|  [Run QSIprep](#Running-qsiprep) 	|   6 hours on slurm	|
-|^|   01c	|  [Run freesurfer](#Running-freesurfer) 	|   23 hours on slurm	|
-|^|   01d	|  [Run fMRIprep fit](#Running-fmriprep-fit-includes-freesurfer) 	|   16 hours on slurm	|
-|^ |  01e	|  [Run smriprep](#Running-smriprep) 	|   10 hours on slurm	|
-|^ |  01f	|  [Run magetbrain-init](#Running-magetbrain-init) 	|   1 hours on slurm	|
-|^ |  01g	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 2|   02a	|  [Run fMRIprep apply](#Running-fmriprep-apply) 	|  3 hours of slurm 	|
-|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#Running-freesurfer-atlas-parcellate-analysis) 	|  6 hour of slurm 	|
-|^ |   02c	|  [Run ciftify-anat](#Running-ciftify-anat) 	|  3 hours on slurm 	|
-|^ |   02d	|  [Run qsirecon FSL](#Running-qsirecon-FSL) 	|  20 min of slurm 	|
-|^ |   02e  |  [Run amico noddi](#Running-amico-noddi) | 2 hours of slurm |
-|^ |   02f	|  [Run tractography](#Running-tractography) 	|  12 hour of slurm 	|
-|^ |   02g	|  [Run magetbrain-register](#Running-magetbrain-register) 	|  24 hours on slurm 	|
-|^ |   02h  |  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 3 |  03a	|  [Run xcp-d](#Running-xcp-d) 	|  5 hours on slurm  |
-|^ |   03b  |  [Run xcp-noGSR](#Running-xcp-noGSR) 	|  5 hours on slurm  |
-|^ |   03c |  [Run qsirecon dtifit](#Running-qsirecon-dtifit) 	|  1 hour of slurm 	|
-|^ |   03d	|  [Run noddi-registration](#Running-noddi-registration) 	|  2 hours on slurm 	|
-|^ |   03e	|  [Run glm-surface](#Running-GLM) 	|  30 mins on slurm 	|
-|^ |   03f	|  [Run magetbrain-vote](#Running-magetbrain-vote) 	|  10 hours on slurm 	|
-|^ |   03g	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 4 |  04a |  [Run enigma-dti](#Running-enigma-dti) 	|  1 hours on slurm	| 
-|^ |   04b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 5 |  05a |  [Run extract-noddi](#Running-extract-noddi) 	|  3 hours on slurm	|
-|^ |   05b	|  [Check tsv file](#Check-tsv-file) 	|    	|
-|stage 6 |   06a	|  [Run extract and share to move to data to sharable folder](#Syncing-the-data-to-the-share-directory) 	|   8 hours on slurm	|
+|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| Depends on data transfer time | 
+|^ |   0e	|  [Initializing nipoppy trackers](#initializing-nipoppy-trackers)	| ~2 minutes in terminal 	|
+|^ |   0f	|  [Edit fmap files](#edit-fmap-files)	| ~2 minutes in terminal 	|
+| 1️⃣ stage 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  ~8 hours on Slurm 	|
+|^ |  01b	|  [Run QSIprep](#running-qsiprep) 	|   ~6 hours on Slurm	|
+|^|   01c	|  [Run freesurfer](#running-freesurfer) 	|   ~23 hours on Slurm	|
+|^|   01d	|  [Run fMRIprep fit](#running-fmriprep-fit-includes-freesurfer) 	|   ~16 hours on Slurm	|
+|^ |  01e	|  [Run smriprep](#running-smriprep) 	|   ~10 hours on Slurm	|
+|^ |  01f	|  [Run magetbrain-init](#running-magetbrain-init) 	|   ~1 hour on Slurm	|
+|^ |  01g	|  [Check tsv file](#check-tsv-file) 	|    	|
+| 2️⃣ stage 2|   02a	|  [Run fMRIprep apply](#running-fmriprep-apply) 	|  ~3 hours on Slurm 	|
+|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#running-freesurfer-atlas-parcellate-analysis) 	|  ~6 hours on Slurm 	|
+|^ |   02c	|  [Run ciftify-anat](#running-ciftify-anat) 	|  ~3 hours on Slurm 	|
+|^ |   02d	|  [Run qsirecon FSL](#running-qsirecon-fsl) 	|  ~20 minutes on Slurm 	|
+|^ |   02e  |  [Run amico noddi](#running-amico-noddi) | ~2 hours on Slurm |
+|^ |   02f	|  [Run tractography](#running-tractography) 	|  ~12 hours on Slurm 	|
+|^ |   02g	|  [Run magetbrain-register](#running-magetbrain-register) 	|  ~24 hours on Slurm 	|
+|^ |   02h  |  [Check tsv file](#check-tsv-file) 	|    	|
+| 3️⃣ stage 3 |  03a	|  [Run xcp-d](#running-xcp-d) 	|  ~5 hours on Slurm  |
+|^ |   03b  |  [Run xcp-noGSR](#running-xcp-nogsr) 	|  ~5 hours on Slurm  |
+|^ |   03c  |   [Run qsirecon dtifit](#running-qsirecon-dtifit) 	|  ~1 hour on Slurm 	|
+|^ |   03d	|  [Run noddi-registration](#running-noddi-registration) 	|  ~2 hours on Slurm 	|
+|^ |   03e	|  [Run glm-surface](#running-glm) 	|  ~30 minutes on Slurm 	|
+|^ |   03f	|  [Run magetbrain-vote](#running-magetbrain-vote) 	|  ~10 hours on Slurm 	|
+|^ |   03g	|  [Check tsv file](#check-tsv-file) 	|    	|
+| 4️⃣ stage 4 |  04a |  [Run enigma-dti](#running-enigma-dti) 	|  ~1 hour on Slurm	| 
+|^ |   04b	|  [Check tsv file](#check-tsv-file) 	|    	|
+| 5️⃣ stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
+|^ |   05b	|  [Check tsv file](#check-tsv-file) 	|    	|
+| 📤 stage 6 |   06a	|  [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (Slurm job and login-node terminal script run together)	|
 
+# ⚙️ Setting your SciNet environment and prepare dataset
 
-# Setting your SciNet environment and prepare dataset
-
-## Setting Scinet Environment
+## Setting SciNet environment
 
 ### Cloning this Repo
 
@@ -144,7 +161,7 @@ git clone -b trillium --single-branch https://github.com/TIGRLab/SCanD_project.g
 
 ```sh
 cd ${SCRATCH}/SCanD_project
-source code/00_setup_data_directories.sh
+source ./code/00_setup_data_directories.sh
 ```
 
 ## Organize your data into BIDS
@@ -181,7 +198,7 @@ To link existing data from another location on SciNet Trillium to this folder:
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 
-After organizing the bids folder, proceed to populate the participant labels, such as 'sub-CMH0047' within the 'ScanD_project/data/local/bids/participants.tsv' file. First row should be "participant_id" and then you have all the subject ids in the other rows.
+After organizing the BIDS folder, populate participant labels (for example, `sub-CMH0047`) in `${SCRATCH}/SCanD_project/data/local/bids/participants.tsv`. The first row must be `participant_id`; list one subject ID per row below it.
 
 For example:
 ```bash
@@ -198,7 +215,7 @@ In this step, we initialize the [nipoppy trackers](https://nipoppy.readthedocs.i
 
 ```sh
 cd ${SCRATCH}/SCanD_project
-source code/00_nipoppy_trackers.sh
+source ./code/00_nipoppy_trackers.sh
 ```
 
 ### 1. Edit TOP-UP fmap files ONLY.
@@ -210,7 +227,7 @@ mkdir bidsbackup_json
 rsync -zarv  --include "*/" --include="*.json" --exclude="*"  data/local/bids  bidsbackup_json
 ```
 
-In some cases dcm2niix conversion fails to add "IntendedFor" in the fmap files which causes errors in fmriprep_apply step. Therefore, we need to edit fmap file in the bids folder and add "intendedFor"s. In order to edit these files we need to run the following python code with a specific configuration depend on each dataset.
+In some cases, dcm2niix conversion fails to add the BIDS ``IntendedFor`` field in fmap JSON files, which causes errors in the fmriprep_apply step. Edit those fieldmaps (or run the script below) using a YAML configuration that matches your dataset naming.
 
 This script automatically fills the ``"IntendedFor"`` field in BIDS fieldmap JSON files. It reads a YAML configuration file that describes your dataset's naming patterns, then links each fieldmap to correct fMRI or DWI files.
 
@@ -232,7 +249,7 @@ python3 -m pip install pybids==0.15.6
 
 cd $SCRATCH/SCanD_project
 
-python3 code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
+python3 ./code/fmap_intended_for.py ./data/local/bids --participant-label ./data/local/bids/participants.tsv --config ./code/config/EPIPHANI_query_config.yaml
 ```
 ### 2. What the script does
 1. Searches your BIDS dataset for fieldmaps (/fmap)
@@ -260,7 +277,7 @@ sub-001/
       sub-001_ses-01_dwi.nii.gz
 ```
 ### 3. YAML Configuration File
-You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/ThomasHMAC/SCanD_project/tree/Fir/code/config/EPIPHANI_query_config.yaml)
+You customize how your dataset is structured by editing the YAML file. An example of the config file can be found [here](https://github.com/TIGRLab/SCanD_project/blob/trillium/code/config/EPIPHANI_query_config.yaml)
 
 #### 3.1. Query blocks (how to find files)
 
@@ -548,7 +565,7 @@ The script updates each fieldmap JSON like:
 
 ### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#Running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](##Running-fmriprep-apply), and [Run QSIprep](#Running-qsiprep).
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](#running-fmriprep-apply), and [Run QSIprep](#running-qsiprep).
 
 If IntendedFor is missing, QSIprep and fMRIPrep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
 
@@ -588,7 +605,7 @@ python3 -m pip install pybids==0.15.6 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
-python3 code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
+python3 ./code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
 ```
 
 **3. Interpret the output**
@@ -615,7 +632,7 @@ You will see a summary table like this in the terminal:
 - ❌ Failed: 8 
 - Total: 8
 
-> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPREPQSIprep.
+> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPrep and QSIPrep.
 
 **Log File**: 
 
@@ -625,14 +642,24 @@ The same summary is saved in a log file for later reference:
 cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 ```
 
-# Quick Start - Workflow Automation
+# 🚀 Quick Start — Workflow Automation
 
-After setting up the scinet environment and organizing your BIDS folder and `participants.tsv` file, instead of running each pipeline separately, you can run the codes for each stage simultaneously. For a streamlined approach to running pipelines by stages, please refer to the [docs/quick-start-workflow.md](docs/quick-start-workflow.md) document and proceed accordingly. Otherwise, run pipelines separately.
+After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](docs/quick-start-workflow.md), or run individual pipelines as described below.
 
-* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#Running-xcp-d) section.
+* Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#running-xcp-d) section.
 
 
-# Running Pipelines and sharing results
+# 🔬 Running Pipelines and sharing results
+
+Participant-array pipelines chunk `participants.tsv` the same way as the `stage_*.sh` scripts. When submitting manually, source the shared helper first:
+
+```sh
+cd ${SCRATCH}/SCanD_project
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
+```
+
+The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless noted otherwise.
 
 ## Running mriqc
 
@@ -644,15 +671,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_mriqc_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ```
 
 ## Running freesurfer
@@ -665,15 +685,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_freesurfer_long_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_freesurfer_long_scinet.sh 1
 ```
 
 ## Running fmriprep fit (includes freesurfer)
@@ -691,14 +704,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/01_fmriprep_fit_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ```
 
 
@@ -712,24 +719,19 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_qsiprep_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_qsiprep_scinet.sh 1
 ```
-After the qsiprep step is completed, the fieldmap method used for each subject can be found in:
+After QSIPrep completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
 ./Neurobagel/derivatives/processing_status_qsiprep.tsv
 ```
 
-This TSV file is automatically updated during the pipeline and contains:
+This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
-- qsiprep_method 
+- session_id
+- qsiprep_sdc_method
 
 ## Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
@@ -742,27 +744,25 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/01_smriprep_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/01_smriprep_scinet.sh 1
 ```
 
 ## Running magetbrain init
 
-#### Adding Age and Gender for Template Selection
+#### Age and gender for template selection
 
-The `01_magetbrain_init_scinet.sh` script selects **20 template files** based on the `data/local/bids/participants_demographic.tsv` file.  
+The `01_magetbrain_init_scinet.sh` script selects **21 template brains** for MAGeTbrain registration. When possible, provide a demographic file so templates match your cohort by age and sex.
 
-To customize the selection, create a new TSV file named `participants_demographic.tsv`, which is a copy of `participants.tsv` but with two additional columns:  
-- **Column 2:** Age  
-- **Column 3:** Gender  
+**Recommended:** Create `data/local/bids/participants_demographic.tsv` with the same subjects as `participants.tsv` plus two extra columns:
 
-If `participants_demographic.tsv` is not provided, the script will randomly select 20 subjects.  
+| Column | Header | Example |
+|--------|--------|---------|
+| 1 | `participant_id` | `sub-CMH00000005` |
+| 2 | `age` | `32` |
+| 3 | `sex` | `Male` or `Female` |
+
+The script selects 10 male and 11 female templates stratified by age. If `participants_demographic.tsv` is missing, it randomly selects 21 subjects from `participants.tsv` and prints a warning in the job log.
 
 #### Changing Atlas Labels  
 By default, the labels in `data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels` are based on **hippocampus** segmentation.  
@@ -771,9 +771,11 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 1. Remove existing labels:  
    ```bash
    rm data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/*
+   ```
 2. Copy the desired labels from the shared directory:
    ```bash
    cp /scratch/arisvoin/mlepage/templateflow/atlases_all4/labels/* data/local/derivatives/MAGeTbrain/magetbrain_data/input/atlases/labels/
+   ```
 
 ### Run the pipeline:
 
@@ -793,7 +795,7 @@ sbatch  ./code/01_magetbrain_init_scinet.sh
 
 Note -  the script enclosed uses some interesting extra options:
  - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specificed in the json files (for example `"PhaseEncodingDirection": "j-"`).
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -803,23 +805,16 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_fmriprep_apply_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_fmriprep_apply_scinet.sh 1
 ```
-
-After the fMRIPrep apply step is completed, the fieldmap method used for each subject can be found in:
+After fMRIPrep apply completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
 ./Neurobagel/derivatives/processing_status_fmriprep.tsv
 ```
 
-This TSV file is automatically updated during the pipeline and contains:
+This file is updated by the fMRIPrep apply nipoppy tracker block (not the main Neurobagel status under `.processing_statuses/`). It contains:
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
@@ -833,14 +828,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_qsirecon_FSL_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
 ```
 ## Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
@@ -853,14 +842,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_amico_noddi_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
 ```
 
 To complete the final step for amico noddi, you need a graphical user interface like VNC to connect to a remote desktop. This interface allows you to create the necessary figures and HTML files for QC purposes. To connect to the remote desktop, follow these steps:
@@ -890,14 +873,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} code/02_freesurfer_atlas_parcellate_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_freesurfer_atlas_parcellate_scinet.sh 1
 ```
 
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
@@ -928,14 +905,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_multi_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_tractography_multi_scinet.sh 1
 
 ```
 Singleshell:
@@ -947,14 +918,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_tractography_single_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/02_tractography_single_scinet.sh 1
 
 ```
 
@@ -968,14 +933,16 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
+source ./code/lib/slurm_array.sh
 SUBJECTS_DIR=./data/local/derivatives/freesurfer/7.4.1
-N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/*long* | wc -l)
-array_job_length=$((N_SUBJECTS - 1))
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/02_ciftify_anat_scinet.sh
+if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
+  N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/*long* | wc -l)
+else
+  N_SUBJECTS=$(ls -d ${SUBJECTS_DIR}/sub-* | wc -l)
+fi
+max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+echo "Submitting ciftify_anat with array 0-${max_task}"
+sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ```
 
 ## Running magetbrain register
@@ -998,7 +965,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 
 ```sh
-#First load a python module
+# First load a python module
 module load python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
@@ -1015,7 +982,7 @@ python3 -m pip install -U templateflow
 python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
 ```
 ```sh
-#First load a python module
+# First load a python module
 module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
@@ -1041,14 +1008,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_xcp_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 ```
 
 ## Running xcp-noGSR
@@ -1061,14 +1022,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_xcp_noGSR_scinet.sh 1
 ```
 
 ## Running noddi-registration
@@ -1078,14 +1033,8 @@ sbatch --array=0-${array_job_length} ./code/03_xcp_noGSR_scinet.sh
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_noddi_reg_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_noddi_reg_scinet.sh 1
 ```
 
 
@@ -1119,16 +1068,10 @@ if [ ! -f "$MODEL" ]; then
     exit 1
 fi
 
-## calculate the length of the array-job given
-SUB_SIZE=1
-# N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-N_SUBJECTS=$(grep -c '^sub-' ./data/local/bids/participants.tsv)
-array_job_length=$(( N_SUBJECTS - 1))
-# array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
+source ./code/lib/slurm_array.sh
 
 ## submit the array job to the queue, passing your task-specific model JSON as an argument
-sbatch --array=0-${array_job_length} ./code/03_glm_surface_scinet.sh ${MODEL}
+scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
 ```
 
 
@@ -1139,14 +1082,12 @@ sbatch --array=0-${array_job_length} ./code/03_glm_surface_scinet.sh ${MODEL}
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## calculate the length of the array-job given
-SUB_SIZE=1
+source ./code/lib/slurm_array.sh
 N_SUBJECTS=$(ls ./data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_magetbrain_vote_scinet.sh
+max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
+echo "Submitting MAGeTbrain vote with array 0-${max_task}"
+sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
+```
 
 
 
@@ -1176,14 +1117,8 @@ ssh tri-login01
 cd ${SCRATCH}/SCanD_project
 git pull
 
-## figuring out appropriate array-job size
-SUB_SIZE=1 
-N_SUBJECTS=$(( $( wc -l ./data/local/bids/participants.tsv | cut -f1 -d' ' ) - 1 ))
-array_job_length=$(echo "$N_SUBJECTS/${SUB_SIZE}" | bc)
-echo "number of array is: ${array_job_length}"
-
-## submit the array job to the queue
-sbatch --array=0-${array_job_length} ./code/03_qsirecon_dtifit_scinet.sh
+source ./code/lib/slurm_array.sh
+scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
 ```
 
 ## Running enigma-dti
@@ -1215,18 +1150,18 @@ sbatch  ./code/05_extract_noddi_scinet.sh
 ```
 
 
-## Check tsv file
+## ✅ Check tsv file
 
 At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review.
 
 If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
-## Syncing the data to the share directory
+## 📤 Syncing the data to the share directory
 
-This step calls some "group" level bids apps to build summary sheets and html index pages. It also moves a meta data, qc pages and a smaller subset of summary results into the data/share folder.
+This step calls group-level BIDS apps to build summary sheets and HTML index pages. It also copies metadata, QC pages, and a smaller subset of summary results into `data/share`.
 
-It takes about 10 minutes to run (depending on how much data you are synching). It could also be submitted.
+Submit the Slurm extract job and run the login-node terminal script **together** (as in `stage_6.sh` and the commands below). The Slurm job may take up to ~8 hours on Slurm depending on dataset size; the terminal script runs immediately on the login node for MAGeTbrain QC, qsiprep metrics, and related steps.
 
 ```sh
 ## note step one is to make sure you are on one of the login nodes
@@ -1240,13 +1175,13 @@ sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
 
-Great job finishing all the pipelines! 🎉 Now, just verify your data/share folder using [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Ensure all folders and files match the checklist. Once confirmed, copy your folder into the shared space.
+When all pipelines are complete, verify `data/share` against [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Use [docs/qc-guide.md](docs/qc-guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
 
-You need to change the "groupName_studyName" in the code below and put your groupName_studyName there and then run the code!
+🎉 **You're done!** Hand off your `data/share` folder to the consortium.
 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/arisvoin/mlepage/groupName_studyName
-cp -r data/share  /scratch/arisvoin/mlepage/groupName_studyName/
+mkdir /scratch/arisvoin/mlepage/<groupName_studyName>
+cp -r data/share /scratch/arisvoin/mlepage/<groupName_studyName>/
 ```

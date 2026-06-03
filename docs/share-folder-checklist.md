@@ -1,7 +1,12 @@
 # Share folder
 
-Here is a checklist for the share folder results. For visual QC of pipeline HTML reports and figures, see [qc-guide.md](qc-guide.md).
+Use this checklist to verify `data/share` after stage 6, before copying results to the consortium shared space. For visual QC of pipeline HTML reports and figures, see [qc-guide.md](qc-guide.md).
 
+**How to use this checklist**
+
+1. Confirm each top-level folder below exists under `${BASEDIR}/data/share`.
+2. Spot-check one or two subjects per pipeline for expected QC images and metadata.
+3. Confirm root-level TSV files (`participants.tsv`, `manifest.tsv`, `processing_status.tsv`, and the fmriprep/qsiprep method sidecars) are present and non-empty.
 
 ```
 ${BASEDIR}/data/share
@@ -23,6 +28,8 @@ ${BASEDIR}/data/share
 │   └── files for each subject
 ├── fmriprep/25.2.4
 │   └── QC images and metadata for each scan
+├── glm/0.0.1
+│   └── GLM model outputs, contrasts, and QC images per subject
 ├── freesurfer_group
 │   ├── group-level FreeSurfer metrics (aseg, euler, aparc thickness)
 │   ├── Schaefer2018 parcellation metrics (100–1000 parcels: thickness, surfacearea, grayvol)
@@ -37,9 +44,14 @@ ${BASEDIR}/data/share
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
 ├── noddireg
-│   └── .tsv file: parcel-wise summary statistics of NODDI microstructural metrics
+│   └── per-subject folders (NODDI QC PNGs and selected DWI sidecars)
 ├── participants.tsv
+├── manifest.tsv
 ├── processing_status.tsv
+├── processing_status_fmriprep.tsv
+│   └── participant_id, session_id, fmriprep_method columns
+├── processing_status_qsiprep.tsv
+│   └── participant_id, session_id, qsiprep_sdc_method columns
 ├── qsiprep/0.22.0
 │   ├── qsiprep_metrics.csv
 │   └── QC images and metadata for each scan
@@ -47,9 +59,9 @@ ${BASEDIR}/data/share
 │   └── QC images and metadata for each scan
 ├── tractify
 │   └── connectivity.mat file for each scan         
-├── xcp-d/0.7.3
+├── xcp_d/0.7.3
 │   └── QC images and metadata for each scan
-└── xcp-noGSR
+└── xcp_noGSR
     └── QC images and metadata for each scan
 ```
 

@@ -43,7 +43,7 @@ for metric in FA MD RD AD; do
 done
 
 ${ENIGMA_DTI_CODES}/run_group_enigma_concat.py --output-nVox \
-  ${OUT_DIR} FA ${OUT_DIR}/group_engimaDTI_nvoxels.csv
+  ${OUT_DIR} FA ${OUT_DIR}/group_enigmaDTI_nvoxels.csv
 
 ${ENIGMA_DTI_CODES}/run_group_dtifit_qc.py --debug /dtifit_dir
 
@@ -55,7 +55,6 @@ EOF
 singularity exec \
   --env BASEDIR="$BASEDIR" \
   --bind $BASEDIR:$BASEDIR \
-  --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
 

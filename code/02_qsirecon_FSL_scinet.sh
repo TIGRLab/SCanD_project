@@ -3,8 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
-#SBATCH --time=01:0:00
-
+#SBATCH --time=01:00:00
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
 export THREADS_PER_COMMAND=2
@@ -31,7 +30,6 @@ trap "cleanup_ramdisk" TERM
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
 ## these folders envs need to be set up for this script to run properly 
-## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 
