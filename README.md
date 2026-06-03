@@ -20,126 +20,124 @@ The diagram below shows how major pipelines are grouped across stages (structura
 
 ## 📁 Repository layout
 
-General folder structure for the repo (when all is run):
+`${BASEDIR}` is your study workspace on SciNet. Clone this repository into `${BASEDIR}/code` (the tree below shows both workspace folders and paths inside the repo clone).
 
 ```
 ${BASEDIR}
-├── code                         # a clone of this repo
-│   └── ...    
-├── containers                   # the singularity images are copied or linked to here
+├── code/                        # clone of this repository
+│   ├── assets/
+│   │   ├── figures/             # QC reference images for docs/qc-guide.md
+│   │   └── pipeline-overview.png
+│   ├── docs/
+│   │   ├── qc-guide.md
+│   │   ├── quick-start-workflow.md
+│   │   └── share-folder-checklist.md
+│   ├── LICENSE
+│   ├── README.md
+│   ├── stage_1.sh … stage_6.sh
+│   ├── templates/
+│   │   └── parcellations/       # pre-downloaded fMRIPrep templates (see setup)
+│   └── code/                    # pipeline scripts and configs
+├── containers/                  # Singularity images (alphabetical)
 │   ├── fmriprep-25.2.4.simg
-│   ├── mriqc-24.0.0.simg
-│   ├── qsiprep-0.22.0.sif
-│   ├── freesurfer-7.4.1.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
+│   ├── freesurfer-7.4.1.simg
+│   ├── glm-0.0.1.simg
 │   ├── magetbrain.sif
+│   ├── mriqc-24.0.0.simg
 │   ├── nipoppy.sif
 │   ├── noddi_postproc-v.1.0.simg
+│   ├── qsiprep-0.22.0.sif
 │   ├── tbss_2023-10-10.simg
-│   ├── glm-0.0.1.simg
 │   └── xcp_d-0.7.3.simg
-├── data
-│   ├── local                    # folder for the "local" dataset
-│   │   ├── bids                 # the defaced BIDS dataset
-│   │   ├── derivatives
-│   │   │   ├── ciftify          # ciftify derivatives
-│   │   │   ├── fmriprep         # fmriprep derivatives
-│   │   │   ├── freesurfer       # freesurfer derivative
-│   │   │   ├── MAGeTbrain       # MAGETbrain input and output folders
-│   │   │   ├── mriqc            # mriqc derivatives
-│   │   │   ├── qsiprep          # qsiprep derivatives
-│   │   │   ├── smriprep         # smriprep derivatives
-│   │   │   ├── xcp_d            # xcp with GSR
-│   │   │   └── xcp_noGSR        # xcp with GSR removed
-│   │   │  
-│   │   ├── dtifit               # dtifit
-│   │   ├── enigmaDTI            # enigmadti
-│   │   ├── qsiprep            
-│   │   ├── qsirecon             # qsirecon derivatives
-│   │   └── qsirecon-FSL         # qsirecon FSL
-│   |
-│   └── share                    # folder with a smaller subset ready to share
-│       ├── amico_noddi          # contains only qc images and metadata
-│       ├── ciftify              # contains only qc images and metadata
-│       ├── enigmaDTI            # enigmaDTI
-│       ├── fmriprep             # contains only qc images and metadata
-│       ├── freesurfer_group     # contains tsv files of group data
-│       ├── magetbrain           # fusion folder
-│       ├── mriqc                # contains only qc images and metadata
-│       ├── noddireg             # Parcel-wise summary statistics of NODDI microstructural metrics
-│       ├── qsiprep              # contains only qc images and metadata
-│       ├── smriprep             # contains only qc images and metadata
-│       ├── tractify             # contains connectivity.mat file
-│       ├── xcp_d                # contains xcp results with GSR
-│       └── xcp_noGSR            # contains xcp results with GSR              
-├── LICENSE
-├── logs               # logs from jobs run on cluster           
-├── Neurobagel
-├── project_id
-├── assets
-│   ├── pipeline-overview.png
-│   └── figures/
-├── docs
-│   ├── qc-guide.md
-│   ├── quick-start-workflow.md
-│   └── share-folder-checklist.md
-├── README.md
-├── stage_1.sh
-├── stage_2.sh
-├── stage_3.sh
-├── stage_4.sh
-├── stage_5.sh
-├── stage_6.sh
-└── templates                  # an extra folder with pre-downloaded fmriprep templates (see setup section)
-    └── parcellations
-        ├── README.md
-        |── tpl-fsLR_res-91k_atlas-Glasser_dseg.dlabel.nii
-        └── ...  #and 13 other atlases
+├── data/
+│   ├── local/
+│   │   ├── bids/                # defaced BIDS dataset
+│   │   ├── derivatives/         # pipeline outputs (alphabetical)
+│   │   │   ├── ciftify/
+│   │   │   ├── fmriprep/
+│   │   │   ├── freesurfer/
+│   │   │   ├── MAGeTbrain/
+│   │   │   ├── mriqc/
+│   │   │   ├── qsiprep/
+│   │   │   ├── smriprep/
+│   │   │   ├── xcp_d/
+│   │   │   └── xcp_noGSR/
+│   │   ├── dtifit/
+│   │   ├── enigmaDTI/
+│   │   ├── qsirecon/
+│   │   └── qsirecon-FSL/
+│   └── share/                   # consortium handoff subset (see docs/share-folder-checklist.md)
+│       ├── amico_noddi/
+│       ├── ciftify/
+│       ├── enigmaDTI/
+│       ├── fmriprep/25.2.4/
+│       ├── freesurfer_group/
+│       ├── glm/0.0.1/
+│       ├── magetbrain/
+│       ├── manifest.tsv
+│       ├── mriqc/24.0.0/
+│       ├── noddireg/
+│       ├── participants.tsv
+│       ├── processing_status.tsv
+│       ├── processing_status_fmriprep.tsv
+│       ├── processing_status_qsiprep.tsv
+│       ├── qsiprep/0.22.0/
+│       ├── smriprep/25.2.4/
+│       ├── tractify/
+│       ├── xcp_d/0.7.3/
+│       └── xcp_noGSR/
+├── logs/                        # cluster job logs
+├── Neurobagel/
+└── project_id/
 ```
 
-Currently this repo is going to be set up for running things on SciNet Fir cluster - but we can adapt later to create local set-ups behind hospital firewalls if needed.
+This branch targets the **SciNet Fir** cluster. Use the matching git branch when cloning (`Fir`, `nibi`, or `trillium` for other clusters).
 
 <a id="the-general-overview-of-what-to-do"></a>
 
 # 🗺️ The general overview of what to do
 
-| stage |  #	| Step	|   Estimated runtime 	|
-|---    |---	|---	|---	|
-| 🛠️ stage 0|   0a	|  [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-dataset)	| ~30 minutes in terminal 	|
-|^ |  0b	|  [Organize your data into BIDS](#organize-your-data-into-bids) 	|   Varies by dataset size	|
-|^ |  0c	|  [Deface the BIDS data (if not done during step 1)](#deface-the-bids-data-if-not-done-during-step-1) 	|   	|
-|^ |  0d	|  [Move your BIDS data to the correct place and add labels to participants.tsv file](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file)	| Depends on data transfer time | 
-|^ |   0e	|  [Initializing nipoppy trackers](#initializing-nipoppy-trackers)	| ~2 minutes in terminal 	|
-|^ |   0f	|  [Edit fmap files](#1-edit-top-up-fmap-files-only)	| ~2 minutes in terminal 	|
-| 1️⃣ stage 1|   01a	|  [Run MRIQC](#running-mriqc) 	|  ~8 hours on Slurm 	|
-|^ |  01b	|  [Run QSIprep](#running-qsiprep) 	|   ~6 hours on Slurm	|
-|^|   01c	|  [Run freesurfer](#running-freesurfer) 	|   ~23 hours on Slurm	|
-|^|   01d	|  [Run fMRIprep fit](#running-fmriprep-fit-includes-freesurfer) 	|   ~16 hours on Slurm	|
-|^ |  01e	|  [Run smriprep](#running-smriprep) 	|   ~10 hours on Slurm	|
-|^ |  01f	|  [Run magetbrain-init](#running-magetbrain-init) 	|   ~1 hour on Slurm	|
-|^ |  01g	|  [Check tsv file](#check-tsv-file) 	|    	|
-| 2️⃣ stage 2|   02a	|  [Run fMRIprep apply](#running-fmriprep-apply) 	|  ~3 hours on Slurm 	|
-|^ |   02b	|  [Run freesurfer atlas parcellate analysis](#running-freesurfer-atlas-parcellate-analysis) 	|  ~6 hours on Slurm 	|
-|^ |   02c	|  [Run ciftify-anat](#running-ciftify-anat) 	|  ~3 hours on Slurm 	|
-|^ |   02d	|  [Run qsirecon FSL](#running-qsirecon-fsl) 	|  ~20 minutes on Slurm 	|
-|^ |   02e  |  [Run amico noddi](#running-amico-noddi) | ~2 hours on Slurm |
-|^ |   02f	|  [Run tractography](#running-tractography) 	|  ~12 hours on Slurm 	|
-|^ |   02g	|  [Run magetbrain-register](#running-magetbrain-register) 	|  ~24 hours on Slurm 	|
-|^ |   02h  |  [Check tsv file](#check-tsv-file) 	|    	|
-| 3️⃣ stage 3 |  03a	|  [Run xcp-d](#running-xcp-d) 	|  ~5 hours on Slurm  |
-|^ |   03b  |  [Run xcp-noGSR](#running-xcp-nogsr) 	|  ~5 hours on Slurm  |
-|^ |   03c  |   [Run qsirecon dtifit](#running-qsirecon-dtifit) 	|  ~1 hour on Slurm 	|
-|^ |   03d	|  [Run noddi-registration](#running-noddi-registration) 	|  ~4 hours on Slurm 	|
-|^ |   03e	|  [Run glm-surface](#running-glm) 	|  ~30 minutes on Slurm 	|
-|^ |   03f	|  [Run magetbrain-vote](#running-magetbrain-vote) 	|  ~10 hours on Slurm 	|
-|^ |   03g	|  [Check tsv file](#check-tsv-file) 	|    	|
-| 4️⃣ stage 4 |  04a |  [Run enigma-dti](#running-enigma-dti) 	|  ~1 hour on Slurm	| 
-|^ |   04b	|  [Check tsv file](#check-tsv-file) 	|    	|
-| 5️⃣ stage 5 |  05a |  [Run extract-noddi](#running-extract-noddi) 	|  ~3 hours on Slurm	|
-|^ |   05b	|  [Check tsv file](#check-tsv-file) 	|    	|
-| 📤 stage 6 |   06a	|  [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) 	|   ~8 hours on Slurm (Slurm job and login-node terminal script run together)	|
+| Stage | Step | Task | Estimated runtime |
+|-------|------|------|-------------------|
+| 🛠️ **Stage 0** | 0a | [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-your-dataset) | ~30 minutes |
+| | 0b | [Organize your data into BIDS](#organize-your-data-into-bids) | Varies |
+| | 0c | [Deface the BIDS data (if not done during BIDS conversion)](#deface-the-bids-data-if-not-done-during-bids-conversion) | — |
+| | 0d | [Move BIDS data and label participants.tsv](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file) | Varies |
+| | 0e | [Initializing nipoppy trackers](#initializing-nipoppy-trackers) | ~2 minutes |
+| | 0f | [Edit fmap files](#edit-fmap-files) | ~2 minutes |
+| 1️⃣ **Stage 1** | 01a | [Run MRIQC](#running-mriqc) | ~8 hours on Slurm |
+| | 01b | [Run QSIPrep](#running-qsiprep) | ~6 hours on Slurm |
+| | 01c | [Run fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer) | ~16 hours on Slurm |
+| | 01d | [Run FreeSurfer](#running-freesurfer) | ~23 hours on Slurm |
+| | 01e | [Run smriprep](#running-smriprep) | ~10 hours on Slurm |
+| | 01f | [Run MAGeTbrain init](#running-magetbrain-init) | ~1 hour on Slurm |
+| | 01g | [Check TSV file](#check-tsv-file) | — |
+| 2️⃣ **Stage 2** | 02a | [Run fMRIPrep apply](#running-fmriprep-apply) | ~3 hours on Slurm |
+| | 02b | [Run FreeSurfer atlas parcellation](#running-freesurfer-atlas-parcellate-analysis) | ~6 hours on Slurm |
+| | 02c | [Run qsirecon FSL](#running-qsirecon-fsl) | ~20 minutes on Slurm |
+| | 02d | [Run AMICO NODDI](#running-amico-noddi) | ~2 hours on Slurm |
+| | 02e | [Run tractography](#running-tractography) | ~12 hours on Slurm |
+| | 02f | [Run ciftify-anat](#running-ciftify-anat) | ~3 hours on Slurm |
+| | 02g | [Run MAGeTbrain register](#running-magetbrain-register) | ~24 hours on Slurm |
+| | 02h | [Check TSV file](#check-tsv-file) | — |
+| 3️⃣ **Stage 3** | 03a | [Run xcp-d](#running-xcp-d) | ~5 hours on Slurm |
+| | 03b | [Run xcp-noGSR](#running-xcp-nogsr) | ~5 hours on Slurm |
+| | 03c | [Run qsirecon dtifit](#running-qsirecon-dtifit) | ~1 hour on Slurm |
+| | 03d | [Run noddi-registration](#running-noddi-registration) | ~2 hours on Slurm |
+| | 03e | [Run GLM surface](#running-glm) | ~30 minutes on Slurm |
+| | 03f | [Run MAGeTbrain vote](#running-magetbrain-vote) | ~10 hours on Slurm |
+| | 03g | [Check TSV file](#check-tsv-file) | — |
+| 4️⃣ **Stage 4** | 04a | [Run ENIGMA-DTI](#running-enigma-dti) | ~1 hour on Slurm |
+| | 04b | [Check TSV file](#check-tsv-file) | — |
+| 5️⃣ **Stage 5** | 05a | [Run extract-NODDI](#running-extract-noddi) | ~3 hours on Slurm |
+| | 05b | [Check TSV file](#check-tsv-file) | — |
+| 📤 **Stage 6** | 06a | [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) | ~8 hours on Slurm (Slurm + login-node scripts together) |
 
-# ⚙️ Setting your SciNet environment and prepare dataset
+> **Note:** Steps **01a–02g** follow the prompt order in `stage_1.sh` and `stage_2.sh` (ciftify-anat runs after tractography in stage 2).
+
+<a id="setting-your-scinet-environment-and-prepare-your-dataset"></a>
+# ⚙️ Setting your SciNet environment and preparing your dataset
 
 ## Setting SciNet environment
 
@@ -153,7 +151,10 @@ Before starting a new study:
 
 ```sh
 cd $SCRATCH
-git clone -b Fir --single-branch https://github.com/TIGRLab/SCanD_project.git
+# Use the branch that matches your SciNet cluster:
+git clone -b Fir --single-branch https://github.com/TIGRLab/SCanD_project.git      # Fir
+# git clone -b nibi --single-branch https://github.com/TIGRLab/SCanD_project.git   # Nibi
+# git clone -b trillium --single-branch https://github.com/TIGRLab/SCanD_project.git # Trillium
 ```
 
 ### Run the software set-up script
@@ -170,19 +171,20 @@ This is the longest - most human intensive - step. But it will make everything e
 For amazing tools and tutorials for learning how to BIDS convert your data, check out the [BIDS starter kit](https://bids-standard.github.io/bids-starter-kit/).
 
 
-### Deface the BIDS data (if not done during step 1)
+<a id="deface-the-bids-data-if-not-done-during-bids-conversion"></a>
+### Deface the BIDS data (if not done during BIDS conversion)
 
 A useful tool is [this BIDSonym BIDS app](https://peerherholz.github.io/BIDSonym/).
 
 
-### Put your bids data into the data/local folder and add labels to participants.tsv file
+### Put your BIDS data into the data/local folder and add labels to participants.tsv file
 
 We want to put your data into:
 
 ```
 ./data/local/bids
 ```
-You can do this by either copying "scp -r", linking `ln -s` or moving the data to this place - it's your choice.
+You can copy (`scp -r`), link (`ln -s`), or move the data to this location — your choice.
 If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!
 
 To switch into the dm node: 
@@ -206,7 +208,7 @@ sub-CMH00000005
 sub-CMH00000007
 sub-CMH00000012
 ```
-Also, make sure dataset_description.json exists inside your bids folder.
+Also, make sure `dataset_description.json` exists inside your BIDS folder.
 
 ### Initializing nipoppy trackers
 
@@ -217,6 +219,7 @@ cd ${SCRATCH}/SCanD_project
 source ./code/00_nipoppy_trackers.sh
 ```
 
+<a id="edit-fmap-files"></a>
 ### 1. Edit TOP-UP fmap files ONLY.
 
 #### In case you want to backup your json files before editing them:
@@ -230,7 +233,7 @@ In some cases, dcm2niix conversion fails to add the BIDS ``IntendedFor`` field i
 
 This script automatically fills the ``"IntendedFor"`` field in BIDS fieldmap JSON files. It reads a YAML configuration file that describes your dataset's naming patterns, then links each fieldmap to correct fMRI or DWI files.
 
-This helps make your dataset ready for tools like fMRIPrep, QSIPrep, and other BIDS-app pipelines
+This helps make your dataset ready for tools like fMRIPrep, QSIPrep, and other BIDS-app pipelines.
 
 ```sh
 ## First load a python module
@@ -564,19 +567,19 @@ The script updates each fieldmap JSON like:
 
 ### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPREP Fit](#running-fmriprep-fit-includes-freesurfer), [Run fMRIPREP apply](#running-fmriprep-apply), and [Run QSIprep](#running-qsiprep).
+If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer), [Run fMRIPrep apply](#running-fmriprep-apply), and [Run QSIPrep](#running-qsiprep).
 
-If IntendedFor is missing, fMRIPREP and QSIprep will still run, but it will **ignore** your fieldmap and apply ``synthetic fieldmap`` instead.
+If IntendedFor is missing, QSIPrep and fMRIPrep will still run, but they will **ignore** your fieldmap and apply a ``synthetic fieldmap`` instead.
 
-This guide shows 
-   1. A correct example of fieldmap file with ``IntendedFor`` field
-   2. how check all participants before running QSIprep.
+This guide shows:
+1. A correct example of a fieldmap file with an ``IntendedFor`` field
+2. How to check all participants before running QSIPrep
 
 **1. Verify a fieldmap manually**
 
 ```bash
 cd ${SCRATCH}/SCanD_project
-grep "IntendedFor" -A 10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000027_ses-01_acq-dwi_dir-AP_epi.json # Replace this with actual path
+grep "IntendedFor" -A10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000027_ses-01_acq-dwi_dir-AP_epi.json # Replace this with actual path
 ```
 You should see something like 
 ```json
@@ -596,18 +599,17 @@ git pull         #in case you need to pull new code
 ## Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
-module load python
-pip install rich
 virtualenv --system-site-packages ~/.virtualenvs/myenv
 
 ## Activate the virtual environment
 source ~/.virtualenvs/myenv/bin/activate
-python3 -m pip install pybids==0.15.6
+python3 -m pip install pybids==0.15.6 rich
 
 ## Go to the repo 
 cd ${SCRATCH}/SCanD_project
 python3 ./code/check_fmap_json.py ./data/local/bids ./data/local/bids/participants.tsv
 ```
+
 **3. Interpret the output**
 
 You will see a summary table like this in the terminal:
@@ -639,7 +641,7 @@ You will see a summary table like this in the terminal:
 The same summary is saved in a log file for later reference: 
 
 ```bash
-cat ${SCRATCH}/SCanD_project/logs/fieldmaps_qc_summary.log
+cat ${SCRATCH}/SCanD_project/logs/fieldmap_qc_summary.log
 ```
 
 # 🚀 Quick Start — Workflow Automation
@@ -664,6 +666,7 @@ The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless
 ## Running mriqc
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -675,6 +678,7 @@ scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ## Running freesurfer
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -690,6 +694,8 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
+# module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull         #in case you need to pull new code
@@ -698,9 +704,11 @@ source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ```
 
+
 ## Running qsiprep
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -723,6 +731,7 @@ This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobag
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -761,7 +770,9 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
    ```
 
 ### Run the pipeline:
+
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -777,6 +788,7 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -794,10 +806,10 @@ This file is updated by the fMRIPrep apply nipoppy tracker block (not the main N
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
-
 ## Running qsirecon FSL
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -809,6 +821,7 @@ scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -834,6 +847,7 @@ source ./code/03_amico_VNC.sh
 
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 # module load singularity/3.8.0 - singularity already on most nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
@@ -846,6 +860,7 @@ scand_submit_participant_array ./code/02_freesurfer_atlas_parcellate_scinet.sh 1
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -859,9 +874,9 @@ For multi-shell data, run the following code. For single-shell data, use the sin
 ### tractography output (.mat file)
 The final output for the tractography pipeline will be a **.mat** file containing various brain connectivity matrices and associated metadata for different parcellation schemes. The variables include region IDs (e.g., aal116_region_ids), region labels (aal116_region_labels), and multiple connectivity matrices such as aal116_radius2_count_connectivity and aal116_sift_radius2_count_connectivity. These matrices represent connectivity values between brain regions, measured using different methods or preprocessing steps. Similar sets of variables exist for other parcellations, including AAL116, AICHA384, Brainnetome246, Gordon333, and Schaefer100/200/400. If you want to inspect the contents further, you can use the scipy.io library in Python to load and analyze the data, or you can load the file directly in MATLAB.
 
-
 Multishell:
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -872,6 +887,7 @@ scand_submit_participant_array ./code/02_tractography_multi_scinet.sh 1
 ```
 Singleshell:
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -884,6 +900,7 @@ scand_submit_participant_array ./code/02_tractography_single_scinet.sh 1
 ## Running ciftify-anat
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -903,6 +920,7 @@ sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ## Running magetbrain register
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -911,7 +929,6 @@ git pull
 sbatch  ./code/02_magetbrain_register_scinet.sh
 ```
 
-
 ## Running xcp-d
 
 If you're initiating the pipeline for the first time, it's crucial to acquire specific files from templateflow. Keep in mind that login nodes have internet access, while compute nodes operate in isolation. Therefore, make sure to download the required files as compute nodes lack direct internet connectivity. Here are the steps for pre-download:
@@ -919,7 +936,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 ```sh
 # First load a python module
-module load python/3.10
+module load python/3.6.8
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ~/.virtualenvs
@@ -954,6 +971,7 @@ python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Li
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -965,6 +983,7 @@ scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 ## Running xcp-noGSR
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -983,6 +1002,7 @@ git pull
 source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_noddi_reg_scinet.sh 1
 ```
+
 
 ## Running GLM
 
@@ -1020,6 +1040,7 @@ source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
 ```
 
+
 ## Running magetbrain vote
 
 ```sh
@@ -1035,10 +1056,14 @@ sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
 ```
 
 
+
+```
+
 ## Running enigma extract
 
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -1049,6 +1074,7 @@ source ./code/ENIGMA_ExtractCortical.sh
 ## Running qsirecon dtifit
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -1060,6 +1086,7 @@ scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
 ## Running enigma-dti
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -1071,6 +1098,7 @@ sbatch  ./code/04_enigma_dti_scinet.sh
 ## Running extract-noddi
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
@@ -1080,13 +1108,15 @@ sbatch  ./code/05_extract_noddi_scinet.sh
 ```
 
 
-## ✅ Check tsv file
+<a id="check-tsv-file"></a>
+## ✅ Check TSV file
 
 At any stage, before proceeding to the next stage and executing the codes for the subsequent phase, review the latest Neurobagel processing status file under `Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv` (or the copy in `data/share/processing_status.tsv` after stage 6) for all pipelines from the previous stage. For instance, if you intend to execute stage 3 code, you must examine the processing status for all the pipelines in stage 2. If no participants have encountered failures, you may proceed with running the next stage. You can also upload your file to [Neurobagel Digest](https://digest.neurobagel.org/) to gain more insight into the status of your pipelines and to filter them for easier review.
 
 If any participant has failed, amend `data/local/bids/participants.tsv` by **excluding** the IDs of failed participants (keep only subjects you want to rerun). After rectifying the errors, rerun the pipeline with the updated participant list.
 
 
+<a id="syncing-the-data-to-the-share-directory"></a>
 ## 📤 Syncing the data to the share directory
 
 This step calls group-level BIDS apps to build summary sheets and HTML index pages. It also copies metadata, QC pages, and a smaller subset of summary results into `data/share`.
@@ -1094,6 +1124,7 @@ This step calls group-level BIDS apps to build summary sheets and HTML index pag
 Submit the Slurm extract job and run the login-node terminal script **together** (as in `stage_6.sh` and the commands below). The Slurm job may take up to ~8 hours on Slurm depending on dataset size; the terminal script runs immediately on the login node for MAGeTbrain QC, qsiprep metrics, and related steps.
 
 ```sh
+## note step one is to make sure you are on one of the login nodes
 ## go to the repo and pull new changes
 cd ${SCRATCH}/SCanD_project
 git pull
