@@ -20,24 +20,25 @@ The diagram below shows how major pipelines are grouped across stages (structura
 
 ## 📁 Repository layout
 
-`${BASEDIR}` is your study workspace on SciNet. Clone this repository into `${BASEDIR}/code` (the tree below shows both workspace folders and paths inside the repo clone).
+After [cloning](#cloning-this-repo), your study workspace is the **`SCanD_project` folder** (repo root). In commands below, `${SCRATCH}/SCanD_project` is this root. The setup script sets `BASEDIR` to the same path (parent of the inner `code/` pipeline folder).
+
+Do not clone into a path named only `code/` — `code/` inside the repo is a **subfolder** for pipeline scripts (`./code/01_mriqc_scinet.sh`, etc.), not the repository itself.
 
 ```
-${BASEDIR}
-├── code/                        # clone of this repository
-│   ├── assets/
-│   │   ├── figures/             # QC reference images for docs/qc-guide.md
-│   │   └── pipeline-overview.png
-│   ├── docs/
-│   │   ├── qc-guide.md
-│   │   ├── quick-start-workflow.md
-│   │   └── share-folder-checklist.md
-│   ├── LICENSE
-│   ├── README.md
-│   ├── stage_1.sh … stage_6.sh
-│   ├── templates/
-│   │   └── parcellations/       # pre-downloaded fMRIPrep templates (see setup)
-│   └── code/                    # pipeline scripts and configs
+${SCRATCH}/SCanD_project/        # repo root (clone destination; BASEDIR in setup scripts)
+├── assets/
+│   ├── figures/                 # QC reference images for docs/qc-guide.md
+│   └── pipeline-overview.png
+├── docs/
+│   ├── qc-guide.md
+│   ├── quick-start-workflow.md
+│   └── share-folder-checklist.md
+├── LICENSE
+├── README.md
+├── stage_1.sh … stage_6.sh
+├── templates/
+│   └── parcellations/           # pre-downloaded fMRIPrep templates (see setup)
+├── code/                        # pipeline scripts and configs (not the git clone path)
 ├── containers/                  # Singularity images (alphabetical)
 │   ├── fmriprep-25.2.4.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
@@ -142,6 +143,8 @@ This branch targets the **SciNet Fir** cluster. Use the matching git branch when
 ## Setting SciNet environment
 
 ### Cloning this Repo
+
+Clone creates a folder named **`SCanD_project`** in `$SCRATCH`. That folder is the repository root — run all `stage_*.sh` and `./code/...` commands from there.
 
 Each study should be kept in a **separate `SCanD_project` folder** to prevent overwriting or mixing data between studies.
 
