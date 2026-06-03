@@ -76,7 +76,7 @@ source ./code/06_extract_to_share_terminal.sh
 
 ## Consortium handoff
 
-After stage 6, verify `data/share` against [share_folder.md](share_folder.md). Once the checklist passes, copy results to the shared space. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`):
+After stage 6, verify `data/share` against [share-folder-checklist.md](share-folder-checklist.md). Once the checklist passes, copy results to the shared space. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`):
 
 ```sh
 cd ${SCRATCH}/SCanD_project

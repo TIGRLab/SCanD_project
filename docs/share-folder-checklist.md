@@ -1,6 +1,6 @@
 # Share folder
 
-Use this checklist to verify `data/share` after stage 6, before copying results to the consortium shared space. For visual QC of pipeline HTML reports and figures, see [QC_guide.md](QC_guide.md).
+Use this checklist to verify `data/share` after stage 6, before copying results to the consortium shared space. For visual QC of pipeline HTML reports and figures, see [qc-guide.md](qc-guide.md).
 
 **How to use this checklist**
 
@@ -65,4 +65,4 @@ ${BASEDIR}/data/share
     └── QC images and metadata for each scan
 ```
 
-After the checklist passes, follow the consortium handoff steps in [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) or the README stage 6 section.
+After the checklist passes, follow the consortium handoff steps in [quick-start-workflow.md](quick-start-workflow.md) or the README stage 6 section.

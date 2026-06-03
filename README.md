@@ -2,21 +2,21 @@
 
 This is the base repository for the **Schizophrenia Canadian Neuroimaging Database** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
 
-> **New here?** Start with the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](Quick_start_workflow_automation.md).
+> **New here?** Start with the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](docs/quick-start-workflow.md).
 
 ## 📊 Pipeline overview
 
-The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](Quick_start_workflow_automation.md).
+The diagram below shows how major pipelines are grouped across stages (structural, functional, diffusion, and share/export). For step-by-step commands, use the [stage overview table](#the-general-overview-of-what-to-do) or [Workflow automation (stage scripts)](docs/quick-start-workflow.md).
 
-![SCanD / TIGRBIDS preprocessing workflow](tigrbids_flow.png)
+![SCanD / TIGRBIDS preprocessing workflow](assets/pipeline-overview.png)
 
 ## 📚 Key documentation
 
 | | Resource | Purpose |
 |---|----------|---------|
-| 🚀 | [Quick_start_workflow_automation.md](Quick_start_workflow_automation.md) | Workflow automation with `stage_*.sh` |
-| 🔍 | [QC_guide.md](QC_guide.md) | Visual QC criteria for pipeline HTML reports |
-| ✅ | [share_folder.md](share_folder.md) | Checklist for `data/share` before consortium handoff |
+| 🚀 | [docs/quick-start-workflow.md](docs/quick-start-workflow.md) | Workflow automation with `stage_*.sh` |
+| 🔍 | [docs/qc-guide.md](docs/qc-guide.md) | Visual QC criteria for pipeline HTML reports |
+| ✅ | [docs/share-folder-checklist.md](docs/share-folder-checklist.md) | Checklist for `data/share` before consortium handoff |
 
 ## 📁 Repository layout
 
@@ -76,10 +76,14 @@ ${BASEDIR}
 ├── logs               # logs from jobs run on cluster           
 ├── Neurobagel
 ├── project_id
-├── QC_guide.md
-├── Quick_start_workflow_automation.md
+├── assets
+│   ├── pipeline-overview.png
+│   └── figures/
+├── docs
+│   ├── qc-guide.md
+│   ├── quick-start-workflow.md
+│   └── share-folder-checklist.md
 ├── README.md
-├── share_folder.md
 ├── stage_1.sh
 ├── stage_2.sh
 ├── stage_3.sh
@@ -640,7 +644,7 @@ cat ${SCRATCH}/SCanD_project/logs/fieldmaps_qc_summary.log
 
 # 🚀 Quick Start — Workflow Automation
 
-After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](Quick_start_workflow_automation.md), or run individual pipelines as described below.
+After setting up the SciNet environment and organizing your BIDS folder and `participants.tsv` file, you can run pipelines by stage using [Workflow automation (stage scripts)](docs/quick-start-workflow.md), or run individual pipelines as described below.
 
 * Note: if you are running xcp-d pipeline (stage 3) for the first time, just make sure to run the codes to download the templateflow files before running the automated codes. You can find these codes below in [xcp-d](#running-xcp-d) section.
 
@@ -1098,7 +1102,7 @@ sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
 
-When all pipelines are complete, verify `data/share` against [share_folder.md](share_folder.md). Use [QC_guide.md](QC_guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
+When all pipelines are complete, verify `data/share` against [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Use [docs/qc-guide.md](docs/qc-guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
 
 🎉 **You're done!** Hand off your `data/share` folder to the consortium.
 
