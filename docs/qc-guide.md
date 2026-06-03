@@ -1,6 +1,6 @@
 # QC Guide
 
-Here are guidelines to QC each pipeline results.
+Here are guidelines to QC each pipeline's results.
 
 ---
 

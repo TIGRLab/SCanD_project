@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu=2000
 
 
-# A script to extract the bits that we want to share back with the corsotium
+# A script to extract the bits that we want to share back with the consortium
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata 
@@ -27,7 +27,7 @@ SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying SMRIPREP metatdata and QC images"
+  echo "Copying SMRIPREP metadata and QC images"
 
 
 mkdir -p ${SMRIPREP_SHARE_DIR}

@@ -6,7 +6,7 @@
 #SBATCH --time=08:00:00
 #SBATCH --mem-per-cpu=4000
 
-# A script to extract the bits that we want to share back with the corsotium
+# A script to extract the bits that we want to share back with the consortium
 # meant to just be run one time after the other pipelines are run
 
 ## copying the fmriprep QA files and figures plus logs and metadata to
@@ -29,7 +29,7 @@ done
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying FMRIPREP metatdata and QC images"
+  echo "Copying FMRIPREP metadata and QC images"
 
 
 mkdir -p ${FMRIPREP_SHARE_DIR}
@@ -59,7 +59,7 @@ SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep
 if [ -d "$SMRIPREP_LOCAL_DIR" ];
 then
 
-  echo "Copying SMRIPREP metatdata and QC images"
+  echo "Copying SMRIPREP metadata and QC images"
 
 
 mkdir -p ${SMRIPREP_SHARE_DIR}
@@ -372,7 +372,7 @@ rsync -a --include='noddi_roi/' --include='noddi_roi/**/' --include='noddi_roi/*
     ${BASEDIR}/data/share/amico_noddi
 
 
-## Running aparc, aparc2009s sesction from freesurfer group merge code, cause it doesn't end
+## Running aparc, aparc2009s section from freesurfer group merge code, cause it doesn't end
 export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
@@ -422,10 +422,26 @@ fi
 
 
 # sharing nipoppy trackers
-cp "$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv | head -n 1)" data/share/processing_status.tsv
-cp "$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv | head -n 1)" data/share/manifest.tsv
-cp ${BASEDIR}/Neurobagel/derivatives/processing_status_fmriprep.tsv  ${BASEDIR}/data/share
-cp ${BASEDIR}/Neurobagel/derivatives/processing_status_qsiprep.tsv  ${BASEDIR}/data/share
+latest_status="$(ls -t ${BASEDIR}/Neurobagel/derivatives/.processing_statuses/processing_status-*.tsv 2>/dev/null | head -n 1)"
+if [ -n "$latest_status" ]; then
+    cp "$latest_status" "${BASEDIR}/data/share/processing_status.tsv"
+else
+    echo "WARNING: No Neurobagel processing_status file found; skipping copy to data/share."
+fi
+latest_manifest="$(ls -t ${BASEDIR}/Neurobagel/.manifests/manifest*.tsv 2>/dev/null | head -n 1)"
+if [ -n "$latest_manifest" ]; then
+    cp "$latest_manifest" "${BASEDIR}/data/share/manifest.tsv"
+else
+    echo "WARNING: No Neurobagel manifest file found; skipping copy to data/share."
+fi
+
+for sidecar in processing_status_fmriprep.tsv processing_status_qsiprep.tsv; do
+    if [ -f "${BASEDIR}/Neurobagel/derivatives/${sidecar}" ]; then
+        cp "${BASEDIR}/Neurobagel/derivatives/${sidecar}" "${BASEDIR}/data/share/"
+    else
+        echo "WARNING: Missing Neurobagel/derivatives/${sidecar}; skipping."
+    fi
+done
 
 cp ${BASEDIR}/data/local/bids/participants.tsv ${BASEDIR}/data/share
 
@@ -433,16 +449,12 @@ cp ${BASEDIR}/data/local/bids/participants.tsv ${BASEDIR}/data/share
 GLM_SHARE_DIR=${BASEDIR}/data/share/glm/0.0.1
 GLM_LOCAL_DIR=${BASEDIR}/data/local/derivatives/glm/0.0.1
 mkdir -p ${GLM_SHARE_DIR}
-if [ -d "$GLM_LOCAL_DIR" ];
-then
+if [ -d "$GLM_LOCAL_DIR" ]; then
     echo "Copying GLM outputs, metadata, and QC images"
-    # Copying the metadata json
-    subjects=`cd ${GLM_LOCAL_DIR}; ls -1d sub-*`
-    
-    for subject in ${subjects}; do
+    for subject in $(cd "${GLM_LOCAL_DIR}" && ls -1d sub-* 2>/dev/null); do
         GLM_SUB_SHARE_DIR=${GLM_SHARE_DIR}/${subject}
         GLM_SUB_LOCAL_DIR=${GLM_LOCAL_DIR}/${subject}
-        mkdir -p ${GLM_SUB_SHARE_DIR}
+        mkdir -p "${GLM_SUB_SHARE_DIR}"
         rsync -zarv ${GLM_SUB_LOCAL_DIR}/*glm.json ${GLM_SUB_SHARE_DIR}/
         rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.svg ${GLM_SUB_SHARE_DIR}/
         rsync -zarv ${GLM_SUB_LOCAL_DIR}/*design.tsv ${GLM_SUB_SHARE_DIR}/
@@ -451,10 +463,10 @@ then
         rsync -zarv ${GLM_SUB_LOCAL_DIR}/*residuals.dtseries.nii ${GLM_SUB_SHARE_DIR}/
 
         if compgen -G "${GLM_SUB_LOCAL_DIR}/*fixedeffects.json" > /dev/null; then
-        echo "Copying fixed-effect outputs"
-        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixedeffects.json ${GLM_SUB_SHARE_DIR}/
-        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.dscalar.nii ${GLM_SUB_SHARE_DIR}/
-        rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.png ${GLM_SUB_SHARE_DIR}/
+            echo "Copying fixed-effect outputs for ${subject}"
+            rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixedeffects.json ${GLM_SUB_SHARE_DIR}/
+            rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.dscalar.nii ${GLM_SUB_SHARE_DIR}/
+            rsync -zarv ${GLM_SUB_LOCAL_DIR}/*fixed*.png ${GLM_SUB_SHARE_DIR}/
         fi
     done
 else

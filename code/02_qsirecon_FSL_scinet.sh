@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out 
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=01:0:00
+#SBATCH --time=01:00:00
 #SBATCH --mem-per-cpu=4000
 
 SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
@@ -32,7 +32,6 @@ module load apptainer/1.3.5
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
 ## these folders envs need to be set up for this script to run properly 
-## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 

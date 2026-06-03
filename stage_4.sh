@@ -2,6 +2,9 @@
 
 ## stage 4 (enigma_dti)
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR" || exit 1
+
 # Function to calculate and submit array jobs
 submit_array_job() {
     local script=$1
