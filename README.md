@@ -99,20 +99,20 @@ This branch targets the **SciNet Trillium** cluster. Use the matching git branch
 
 | Stage | Step | Task | Estimated runtime |
 |-------|------|------|-------------------|
-| 🛠️ **Stage 0** | 0a | [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-your-dataset) | ~30 minutes |
+| **Stage 0** | 0a | [Setting up the SciNet environment](#setting-your-scinet-environment-and-prepare-your-dataset) | ~30 minutes |
 | | 0b | [Organize your data into BIDS](#organize-your-data-into-bids) | Varies |
 | | 0c | [Deface the BIDS data (if not done during BIDS conversion)](#deface-the-bids-data-if-not-done-during-bids-conversion) | — |
 | | 0d | [Move BIDS data and label participants.tsv](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file) | Varies |
 | | 0e | [Initializing nipoppy trackers](#initializing-nipoppy-trackers) | ~2 minutes |
 | | 0f | [Edit fmap files](#edit-fmap-files) | ~2 minutes |
-| 1️⃣ **Stage 1** | 01a | [Run MRIQC](#running-mriqc) | ~8 hours on Slurm |
+| **Stage 1** | 01a | [Run MRIQC](#running-mriqc) | ~8 hours on Slurm |
 | | 01b | [Run QSIPrep](#running-qsiprep) | ~6 hours on Slurm |
 | | 01c | [Run fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer) | ~16 hours on Slurm |
 | | 01d | [Run FreeSurfer](#running-freesurfer) | ~23 hours on Slurm |
 | | 01e | [Run smriprep](#running-smriprep) | ~10 hours on Slurm |
 | | 01f | [Run MAGeTbrain init](#running-magetbrain-init) | ~1 hour on Slurm |
 | | 01g | [Check TSV file](#check-tsv-file) | — |
-| 2️⃣ **Stage 2** | 02a | [Run fMRIPrep apply](#running-fmriprep-apply) | ~3 hours on Slurm |
+| **Stage 2** | 02a | [Run fMRIPrep apply](#running-fmriprep-apply) | ~3 hours on Slurm |
 | | 02b | [Run FreeSurfer atlas parcellation](#running-freesurfer-atlas-parcellate-analysis) | ~6 hours on Slurm |
 | | 02c | [Run qsirecon FSL](#running-qsirecon-fsl) | ~20 minutes on Slurm |
 | | 02d | [Run AMICO NODDI](#running-amico-noddi) | ~2 hours on Slurm |
@@ -120,18 +120,18 @@ This branch targets the **SciNet Trillium** cluster. Use the matching git branch
 | | 02f | [Run ciftify-anat](#running-ciftify-anat) | ~3 hours on Slurm |
 | | 02g | [Run MAGeTbrain register](#running-magetbrain-register) | ~24 hours on Slurm |
 | | 02h | [Check TSV file](#check-tsv-file) | — |
-| 3️⃣ **Stage 3** | 03a | [Run xcp-d](#running-xcp-d) | ~5 hours on Slurm |
+| **Stage 3** | 03a | [Run xcp-d](#running-xcp-d) | ~5 hours on Slurm |
 | | 03b | [Run xcp-noGSR](#running-xcp-nogsr) | ~5 hours on Slurm |
 | | 03c | [Run qsirecon dtifit](#running-qsirecon-dtifit) | ~1 hour on Slurm |
 | | 03d | [Run noddi-registration](#running-noddi-registration) | ~2 hours on Slurm |
 | | 03e | [Run GLM surface](#running-glm) | ~30 minutes on Slurm |
 | | 03f | [Run MAGeTbrain vote](#running-magetbrain-vote) | ~10 hours on Slurm |
 | | 03g | [Check TSV file](#check-tsv-file) | — |
-| 4️⃣ **Stage 4** | 04a | [Run ENIGMA-DTI](#running-enigma-dti) | ~1 hour on Slurm |
+| **Stage 4** | 04a | [Run ENIGMA-DTI](#running-enigma-dti) | ~1 hour on Slurm |
 | | 04b | [Check TSV file](#check-tsv-file) | — |
-| 5️⃣ **Stage 5** | 05a | [Run extract-NODDI](#running-extract-noddi) | ~3 hours on Slurm |
+| **Stage 5** | 05a | [Run extract-NODDI](#running-extract-noddi) | ~3 hours on Slurm |
 | | 05b | [Check TSV file](#check-tsv-file) | — |
-| 📤 **Stage 6** | 06a | [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) | ~8 hours on Slurm (Slurm + login-node scripts together) |
+| **Stage 6** | 06a | [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) | ~8 hours on Slurm (Slurm + login-node scripts together) |
 
 > **Note:** Steps **01a–02g** follow the prompt order in `stage_1.sh` and `stage_2.sh` (ciftify-anat runs after tractography in stage 2).
 
