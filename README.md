@@ -20,12 +20,10 @@ The diagram below shows how major pipelines are grouped across stages (structura
 
 ## 📁 Repository layout
 
-After [cloning](#cloning-this-repo), your study workspace is the **`SCanD_project` folder** (repo root). In commands below, `${SCRATCH}/SCanD_project` is this root. The setup script sets `BASEDIR` to the same path (parent of the inner `code/` pipeline folder).
-
-Do not clone into a path named only `code/` — `code/` inside the repo is a **subfolder** for pipeline scripts (`./code/01_mriqc_scinet.sh`, etc.), not the repository itself.
+After [cloning](#cloning-this-repo), your study workspace is the **`SCanD_project` folder** (repo root).
 
 ```
-${SCRATCH}/SCanD_project/        # repo root (clone destination; BASEDIR in setup scripts)
+${SCRATCH}/SCanD_project/
 ├── assets/
 │   ├── figures/                 # QC reference images for docs/qc-guide.md
 │   └── pipeline-overview.png
@@ -38,7 +36,7 @@ ${SCRATCH}/SCanD_project/        # repo root (clone destination; BASEDIR in setu
 ├── stage_1.sh … stage_6.sh
 ├── templates/
 │   └── parcellations/           # pre-downloaded fMRIPrep templates (see setup)
-├── code/                        # pipeline scripts and configs (not the git clone path)
+├── code/                        # pipeline scripts and configs
 ├── containers/                  # Singularity images (alphabetical)
 │   ├── fmriprep-25.2.4.simg
 │   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
@@ -669,7 +667,6 @@ The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless
 ## Running mriqc
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -683,7 +680,6 @@ scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ## Running freesurfer
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -701,7 +697,6 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 # module load singularity/3.8.0 - singularity already on most nodes
@@ -717,7 +712,6 @@ scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ## Running qsiprep
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -742,7 +736,6 @@ This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobag
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -785,7 +778,6 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 ### Run the pipeline:
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -803,7 +795,6 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -826,7 +817,6 @@ This file is updated by the fMRIPrep apply nipoppy tracker block (not the main N
 ## Running qsirecon FSL
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -840,7 +830,6 @@ scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -870,7 +859,6 @@ source ./code/03_amico_VNC.sh
 
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 # module load singularity/3.8.0 - singularity already on most nodes
@@ -885,7 +873,6 @@ scand_submit_participant_array ./code/02_freesurfer_atlas_parcellate_scinet.sh 1
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -903,7 +890,6 @@ The final output for the tractography pipeline will be a **.mat** file containin
 
 Multishell:
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -916,7 +902,6 @@ scand_submit_participant_array ./code/02_tractography_multi_scinet.sh 1
 ```
 Singleshell:
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -931,7 +916,6 @@ scand_submit_participant_array ./code/02_tractography_single_scinet.sh 1
 ## Running ciftify-anat
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -953,7 +937,6 @@ sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ## Running magetbrain register
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1006,7 +989,6 @@ python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Li
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1020,7 +1002,6 @@ scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 ## Running xcp-noGSR
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1102,7 +1083,6 @@ sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
 
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1115,7 +1095,6 @@ source ./code/ENIGMA_ExtractCortical.sh
 ## Running qsirecon dtifit
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1129,7 +1108,6 @@ scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
 ## Running enigma-dti
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1143,7 +1121,6 @@ sbatch  ./code/04_enigma_dti_scinet.sh
 ## Running extract-noddi
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
@@ -1171,7 +1148,6 @@ This step calls group-level BIDS apps to build summary sheets and HTML index pag
 Submit the Slurm extract job and run the login-node terminal script **together** (as in `stage_6.sh` and the commands below). The Slurm job may take up to ~8 hours on Slurm depending on dataset size; the terminal script runs immediately on the login node for MAGeTbrain QC, qsiprep metrics, and related steps.
 
 ```sh
-## note step one is to make sure you are on one of the login nodes
 ssh tri-login01
 
 ## go to the repo and pull new changes
