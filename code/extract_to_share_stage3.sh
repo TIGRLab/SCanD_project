@@ -116,6 +116,8 @@ fi
 
 NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/noddi_reg"
 NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
+QSIPREP_LOCAL_DIR="${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep"
+NODDI_QC_PARC="4S1056Parcels"
 
 if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
     echo "Copying noddireg files"
@@ -129,9 +131,28 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
             -type f \( \
                 -path "*/ses-*/dwi/*" -o \
                 -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" -o \
-                -path "*/figures/*_desc-4S1056Parcels_model-noddi_mdp-*_qa.png" \
+                -path "*/figures/*_desc-${NODDI_QC_PARC}_model-noddi_mdp-*_qa.png" \
             \) \
             -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
+
+        LAST_SES_DIR=$(find "${QSIPREP_LOCAL_DIR}/${subject}" -maxdepth 1 -type d -name "ses-*" | sort -V | tail -n 1)
+        if [ -n "${LAST_SES_DIR}" ]; then
+            DWIREF=$(find "${LAST_SES_DIR}/dwi" -maxdepth 1 -type f -name "*_space-T1w_dwiref.nii.gz" | head -n 1)
+            if [ -f "${DWIREF}" ]; then
+                rsync -a "${DWIREF}" "${NODDIREG_SHARE_DIR}/${subject}/"
+            else
+                echo "[WARN] Missing dwiref for ${subject} in ${LAST_SES_DIR}"
+            fi
+        else
+            echo "[WARN] No qsiprep sessions found for ${subject}"
+        fi
+
+        PARC_FILE="${NODDIREG_LOCAL_DIR}/${subject}/anat/${subject}_space-T1w_ref-dwiref_desc-${NODDI_QC_PARC}_dseg.nii.gz"
+        if [ -f "${PARC_FILE}" ]; then
+            rsync -a "${PARC_FILE}" "${NODDIREG_SHARE_DIR}/${subject}/"
+        else
+            echo "[WARN] Missing parcellation ${PARC_FILE}"
+        fi
     done
 else
     echo "No noddireg outputs found."
