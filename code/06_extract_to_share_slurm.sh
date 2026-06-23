@@ -41,6 +41,11 @@ for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
  rsync -zarv ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
  rsync -zarvR ${FMRIPREP_LOCAL_DIR}/./sourcedata/freesurfer/${subject}/scripts/recon-all-status.log ${FMRIPREP_SHARE_DIR}/
+
+ preproc_t1=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-preproc_T1w.nii.gz" | head -n 1)
+ brain_mask=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-brain_mask.nii.gz" | head -n 1)
+ [ -n "${preproc_t1}" ] && rsync -a "${preproc_t1}" ${FMRIPREP_SHARE_DIR}/${subject}/
+ [ -n "${brain_mask}" ] && rsync -a "${brain_mask}" ${FMRIPREP_SHARE_DIR}/${subject}/
 done
 
 else

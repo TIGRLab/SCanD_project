@@ -15,7 +15,6 @@
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-
 ## run the smriprep sharing step
 SMRIPREP_SHARE_DIR=${BASEDIR}/data/share/smriprep/25.2.4/
 SMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4/smriprep

@@ -15,7 +15,6 @@
 
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-
 FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/25.2.4
 FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 
@@ -35,7 +34,13 @@ subjects=`cd ${FMRIPREP_LOCAL_DIR}; ls -1d sub-* | grep -v html`
 cp ${FMRIPREP_LOCAL_DIR}/*html ${FMRIPREP_SHARE_DIR}/
 for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
- rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
+ rsync -zarv ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
+ rsync -zarvR ${FMRIPREP_LOCAL_DIR}/./sourcedata/freesurfer/${subject}/scripts/recon-all-status.log ${FMRIPREP_SHARE_DIR}/
+
+ preproc_t1=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-preproc_T1w.nii.gz" | head -n 1)
+ brain_mask=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-brain_mask.nii.gz" | head -n 1)
+ [ -n "${preproc_t1}" ] && rsync -a "${preproc_t1}" ${FMRIPREP_SHARE_DIR}/${subject}/
+ [ -n "${brain_mask}" ] && rsync -a "${brain_mask}" ${FMRIPREP_SHARE_DIR}/${subject}/
 done
 
 else
