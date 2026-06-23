@@ -17,14 +17,6 @@ module load apptainer/1.3.5
 
 FMRIPREP_SHARE_DIR=${BASEDIR}/data/share/fmriprep/25.2.4
 FMRIPREP_LOCAL_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
-FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
-
-# Create subject-only symlinks (remove _ses* suffix)
-for d in ${FREESURFER_DIR}/sub-*_ses-*; do
-  subj="${d%%_ses-*}"      # strips _ses-XX
-  ln -sfn "$d" "$subj"
-done
-
 
 if [ -d "$FMRIPREP_LOCAL_DIR" ];
 then
@@ -44,6 +36,11 @@ for subject in ${subjects}; do
  mkdir -p ${FMRIPREP_SHARE_DIR}/${subject}/figures
  rsync -a ${FMRIPREP_LOCAL_DIR}/${subject}/figures ${FMRIPREP_SHARE_DIR}/${subject}/
  rsync -zarvR ${FMRIPREP_LOCAL_DIR}/./sourcedata/freesurfer/${subject}/scripts/recon-all-status.log ${FMRIPREP_SHARE_DIR}/
+
+ preproc_t1=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-preproc_T1w.nii.gz" | head -n 1)
+ brain_mask=$(find ${FMRIPREP_LOCAL_DIR}/${subject} -maxdepth 3 -type f -name "${subject}_run-*_desc-brain_mask.nii.gz" | head -n 1)
+ [ -n "${preproc_t1}" ] && rsync -a "${preproc_t1}" ${FMRIPREP_SHARE_DIR}/${subject}/
+ [ -n "${brain_mask}" ] && rsync -a "${brain_mask}" ${FMRIPREP_SHARE_DIR}/${subject}/
 done
 
 else
@@ -396,7 +393,6 @@ singularity run --cleanenv \
 
 rsync -a ${BASEDIR}/data/local/derivatives/freesurfer/7.4.1/00_group2_stats_tables/*  ${BASEDIR}/data/share/freesurfer_group
 
-#running Noddi-registration
 NODDIREG_LOCAL_DIR="${BASEDIR}/data/local/derivatives/noddi_reg"
 NODDIREG_SHARE_DIR="${BASEDIR}/data/share/noddireg"
 QSIPREP_LOCAL_DIR="${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep"
