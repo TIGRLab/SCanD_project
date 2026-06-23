@@ -384,15 +384,20 @@ if [ -d "${NODDIREG_LOCAL_DIR}" ]; then
     mkdir -p "${NODDIREG_SHARE_DIR}"
 
     for subject in $(cd "${NODDIREG_LOCAL_DIR}" && ls -1d sub-*); do
-        mkdir -p "${NODDIREG_SHARE_DIR}/${subject}"
+        mkdir -p "${NODDIREG_SHARE_DIR}/${subject}/figures"
 
         find "${NODDIREG_LOCAL_DIR}/${subject}" \
             -type f \( \
                 -path "*/ses-*/dwi/*" -o \
                 -path "*/figures/*_desc-dsegtissue_model-noddi_density.png" -o \
                 -path "*/figures/*_desc-${NODDI_QC_PARC}_model-noddi_mdp-*_qa.png" \
-            \) \
-            -exec rsync -a {} "${NODDIREG_SHARE_DIR}/${subject}/" \;
+            \) | while IFS= read -r qc_file; do
+            if [[ "${qc_file}" == *.png ]]; then
+                rsync -a "${qc_file}" "${NODDIREG_SHARE_DIR}/${subject}/figures/"
+            else
+                rsync -a "${qc_file}" "${NODDIREG_SHARE_DIR}/${subject}/"
+            fi
+        done
 
         LAST_SES_DIR=$(find "${QSIPREP_LOCAL_DIR}/${subject}" -maxdepth 1 -type d -name "ses-*" | sort -V | tail -n 1)
         if [ -n "${LAST_SES_DIR}" ]; then
