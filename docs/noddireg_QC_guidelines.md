@@ -1,6 +1,6 @@
 # NODDIreg QC
 
-**Location (repo sample):** `sample_data/noddireg/<subject>/` — PNGs under `figures/`; subject-level NIfTIs (`*_dwiref.nii.gz`, `*_dseg.nii.gz`) at the subject root. In production, point `--dataset_dir` at your NODDIreg share (same flat layout per subject).
+**Location (repo sample):** `sample_data/noddireg/<subject>/` — PNGs under `figures/`; subject-level NIfTIs (`*_dwiref.nii.gz`, `*_dseg.nii.gz`) at the subject root. In production, point `--dataset_dir` at your NODDIreg share (`data/share/noddireg`, same layout per subject).
 
 **In QC-Studio:** `noddireg_od_icvf_isovf`, `noddireg_parcellation_overlay`, `noddireg_density`.
 
