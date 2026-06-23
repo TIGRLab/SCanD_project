@@ -54,13 +54,14 @@ ${BASEDIR}/data/share
 │   ├── group_T1w.tsv
 │   └── group_T2w.tsv
 ├── noddireg
-│   └── sub-<label>/                    # files copied flat per subject
-│       ├── sub-<label>_ses-<session>_icvf_mean_qc.png
-│       ├── sub-<label>_ses-<session>_od_mean_qc.png
-│       ├── sub-<label>_ses-<session>_isovf_mean_qc.png
-│       ├── sub-<label>_ses-<session>_desc-4S1056Parcels_model-noddi_mdp-icvf_qa.png
-│       ├── sub-<label>_ses-<session>_desc-4S1056Parcels_model-noddi_mdp-od_qa.png
-│       ├── sub-<label>_ses-<session>_desc-dsegtissue_model-noddi_density.png
+│   └── sub-<label>/
+│       ├── figures/
+│       │   ├── sub-<label>_ses-<session>_icvf_mean_qc.png
+│       │   ├── sub-<label>_ses-<session>_od_mean_qc.png
+│       │   ├── sub-<label>_ses-<session>_isovf_mean_qc.png
+│       │   ├── sub-<label>_ses-<session>_desc-4S1056Parcels_model-noddi_mdp-icvf_qa.png
+│       │   ├── sub-<label>_ses-<session>_desc-4S1056Parcels_model-noddi_mdp-od_qa.png
+│       │   └── sub-<label>_ses-<session>_desc-dsegtissue_model-noddi_density.png
 │       ├── sub-<label>_ses-<session>_desc-4S1056Parcels_model-noddi_results.tsv
 │       ├── sub-<label>_ses-<session>_acq-multishelldir92_run-1_space-T1w_dwiref.nii.gz
 │       └── sub-<label>_space-T1w_ref-dwiref_desc-4S1056Parcels_dseg.nii.gz
