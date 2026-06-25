@@ -1158,13 +1158,13 @@ sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
 
-When all pipelines are complete, verify `data/share` against [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Use [docs/qc-guide.md](docs/qc-guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then copy results to the shared space:
+When all pipelines are complete, verify `data/share` against [docs/share-folder-checklist.md](docs/share-folder-checklist.md). Use [docs/qc-guide.md](docs/qc-guide.md) for visual review of HTML QC reports before handoff. Replace `<groupName_studyName>` with your consortium group and study identifier (for example, `CMH_study2024`), then sync results to the shared space:
 
 🎉 **You're done!** Hand off your `data/share` folder to the consortium.
 
 ```sh
 cd ${SCRATCH}/SCanD_project
 
-mkdir /scratch/arisvoin/mlepage/<groupName_studyName>
-cp -r data/share /scratch/arisvoin/mlepage/<groupName_studyName>/
+mkdir -p /scratch/arisvoin/mlepage/<groupName_studyName>
+rsync -av data/share /scratch/arisvoin/mlepage/<groupName_studyName>/
 ```
