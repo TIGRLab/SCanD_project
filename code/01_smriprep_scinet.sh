@@ -1,20 +1,17 @@
 #!/bin/bash
 #SBATCH --job-name=smriprep
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
 #SBATCH --time=10:00:00
 
 
-SUB_SIZE=1 ## number of subjects to run
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -23,28 +20,21 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
 
-# input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-## these folders envs need to be set up for this script to run properly 
 export SMRIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/fmriprep-25.2.4.simg
 
 
-## setting up the output folders
-export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4 
+export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/smriprep/25.2.4
 
-# export LOCAL_FREESURFER_DIR=${SCRATCH}/${STUDY}/data/derived/freesurfer-6.0.1
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/smriprep
 export LOGS_DIR=${BASEDIR}/logs
-mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
+mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -69,7 +59,7 @@ singularity exec --cleanenv \
     smriprep /bids /derived participant --participant_label ${SUBJECTS} -w /work  --omp-nthreads 8  --nthreads 40  --notrack --fs-license-file /li
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -79,7 +69,7 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/smriprep/25.2.4/output/
     ls -al derivatives/smriprep/25.2.4/output/
     ln -s "$BASEDIR/data/local/derivatives/smriprep/25.2.4/smriprep/"* derivatives/smriprep/25.2.4/output/ || true

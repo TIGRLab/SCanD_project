@@ -43,7 +43,7 @@ singularity run \
        --stage-voting-walltime 24:00:00
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -53,7 +53,7 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/magetbrainvote/0.1.0/output/
     ls -al derivatives/magetbrainvote/0.1.0/output/
 

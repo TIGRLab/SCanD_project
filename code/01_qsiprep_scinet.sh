@@ -1,20 +1,17 @@
 #!/bin/bash
 #SBATCH --job-name=qsiprep
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
 #SBATCH --time=06:00:00
 
 
-SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -23,25 +20,19 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
-# input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 
-## these folders envs need to be set up for this script to run properly 
 ## see notebooks/00_setting_up_envs.md for the set up instructions
 export QSIPREP_HOME=${BASEDIR}/templates
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
 
-## setting up the output folders
-# export OUTPUT_DIR=${BASEDIR}/data/local/fmriprep  # use if version of fmriprep >=20.2
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0 # use if version of fmriprep <=20.1
 
 export WORK_DIR=${SLURM_TMPDIR}/SCanD/qsiprep
 export LOGS_DIR=${BASEDIR}/logs
-mkdir -vp ${OUTPUT_DIR} ${WORK_DIR} # ${LOCAL_FREESURFER_DIR}
+mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
@@ -105,9 +96,6 @@ fi
 echo "SDC flags: ${SDC_ARGS}"
 
 
-
-## set singularity environment variables that will point to the freesurfer license and the templateflow bits
-# Make sure FS_LICENSE is defined in the container.
 export SINGULARITYENV_FS_LICENSE=/home/qsiprep/.freesurfer.txt
 
 singularity run --cleanenv \
@@ -131,7 +119,7 @@ singularity run --cleanenv \
     ${SDC_ARGS}
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -139,9 +127,9 @@ singularity exec \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
-    
+
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/qsiprep/0.22.0/output/
     ls -al derivatives/qsiprep/0.22.0/output/
 
@@ -156,6 +144,6 @@ singularity exec \
       python "$BASEDIR/code/qsiprep_method_tsv.py" \
         --qsiprep-root "$BASEDIR/data/local/derivatives/qsiprep/0.22.0/qsiprep" \
         --output-tsv "$BASEDIR/Neurobagel/derivatives/processing_status_qsiprep.tsv" \
-        --participant-ids "sub-$subject" 
+        --participant-ids "sub-$subject"
     done
   '

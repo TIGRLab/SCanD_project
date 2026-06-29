@@ -1,19 +1,16 @@
 #!/bin/bash
 #SBATCH --job-name=amico_noddi
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
 #SBATCH --time=02:00:00
 
-SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -22,12 +19,9 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
 
-# input is BIDS_DIR this is where the data downloaded from openneuro went
 export BIDS_DIR=${BASEDIR}/data/local/bids
 export QSIPREP_DIR=${BASEDIR}/data/local/derivatives/qsiprep/0.22.0/qsiprep
 export SING_CONTAINER=${BASEDIR}/containers/qsiprep-0.22.0.sif
@@ -50,7 +44,6 @@ if [ "$SLURM_ARRAY_TASK_ID" -eq "$array_job_length" ]; then
 else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
-
 
 
 export SINGULARITYENV_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
@@ -76,7 +69,7 @@ singularity run --cleanenv \
   --notrack
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -84,9 +77,9 @@ singularity exec \
   --env SUBJECTS="$SUBJECTS" \
   ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
     set -euo pipefail
-    
+
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/amiconoddi/0.22.0/output/
     ls -al derivatives/amiconoddi/0.22.0/output/
 
