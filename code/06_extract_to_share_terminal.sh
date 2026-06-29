@@ -18,7 +18,7 @@ rsync -a ${BASEDIR}/data/local/derivatives/MAGeTbrain/magetbrain_data/QC ${BASED
 
 
 ## Generate qsiprep motion metrics and extract NODDI indices
-module load  python/3.10
+module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ${BASEDIR}/../.virtualenvs
