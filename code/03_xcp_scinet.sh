@@ -6,15 +6,12 @@
 #SBATCH --time=04:00:00
 #SBATCH --mem-per-cpu=4000
 
-SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -23,8 +20,6 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 module load apptainer/1.3.5
 
@@ -33,7 +28,6 @@ export BIDS_DIR=${BASEDIR}/data/local/bids
 export SING_CONTAINER=${BASEDIR}/containers/xcp_d-0.7.3.simg
 
 
-## setting up the output folders
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/xcp_d/0.7.3
 export FMRI_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4
 
@@ -41,7 +35,6 @@ export WORK_DIR=${SLURM_TMPDIR}/SCanD/xcp
 export LOGS_DIR=${BASEDIR}/logs
 mkdir -vp ${OUTPUT_DIR} ${WORK_DIR}
 
-## get the subject list from a combo of the array id, the participants.tsv and the chunk size
 bigger_bit=`echo "($SLURM_ARRAY_TASK_ID + 1) * ${SUB_SIZE}" | bc`
 
 N_SUBJECTS=$(( $( wc -l ${BIDS_DIR}/participants.tsv | cut -f1 -d' ' ) - 1 ))
@@ -75,9 +68,8 @@ ${SING_CONTAINER} \
     --dummy-scans 3 \
     --notrack
 
-# note, if you have top-up fieldmaps than you can uncomment the last two lines of the above script
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -87,7 +79,7 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/xcpd/0.7.3/output/
     ls -al derivatives/xcpd/0.7.3/output/
 
