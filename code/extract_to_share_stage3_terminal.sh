@@ -8,7 +8,7 @@ BASEDIR=${SCRIPT_DIR}/..
 echo "Running qsiprep_metrics.csv"
 
 ## Generate qsiprep motion metrics and magetbrain
-module load python/3.10
+module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
 mkdir ${BASEDIR}/../.virtualenvs
