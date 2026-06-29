@@ -50,7 +50,7 @@ ${ENIGMA_DTI_CODES}/run_group_dtifit_qc.py --debug /dtifit_dir
 EOF
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -59,11 +59,11 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/enigmadti/0.1.1/output/
     ls -al derivatives/enigmadti/0.1.1/output/
 
     ln -s "$BASEDIR/data/local/enigmaDTI/" derivatives/enigmadti/0.1.1/output/ || true
 
-    nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1 
+    nipoppy track  --pipeline enigmadti  --pipeline-version 0.1.1
   '

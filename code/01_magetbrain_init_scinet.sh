@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=magetbrain_init
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
 #SBATCH --time=03:00:00
@@ -64,7 +64,7 @@ if [[ -f "$DEMOGRAPHIC_FILE" ]]; then
 
     # Combine males and females into one array
     selected_subjects=("${selected_males_for_templates[@]}" "${selected_females_for_templates[@]}")
-    
+
    else
     selected_subjects=($(tail -n +2 "$BIDS_DIR/participants.tsv" | cut -f1 | shuf -n 21))
 fi
@@ -73,7 +73,7 @@ fi
 for template in "${selected_subjects[@]}"; do
 
     echo $template
-    
+
 done
 
 
@@ -179,7 +179,7 @@ rm -rf ${INPUT_DIR}/templates/brains/*T1w.mnc
 # Copy atlas data
 cp -r /scratch/arisvoin/mlepage/templateflow/atlases "$INPUT_DIR/"
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -188,10 +188,10 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/magetbraininit/0.1.0/output/
     ls -al derivatives/magetbraininit/0.1.0/output/
     ln -s "$BASEDIR/data/local/derivatives/MAGeTbrain/magetbrain_data/"* derivatives/magetbraininit/0.1.0/output/ || true
 
-    nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0 
+    nipoppy track  --pipeline magetbraininit   --pipeline-version 0.1.0
   '

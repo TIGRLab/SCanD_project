@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=qsirecon_dtifit
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=192
 #SBATCH --time=02:00:00
 
 
-SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel 
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
 BASEDIR=${SLURM_SUBMIT_DIR}

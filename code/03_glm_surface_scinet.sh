@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=192
 #SBATCH --time=02:00:00
 
-SUB_SIZE=1 ## number of subjects to run is 1 because there are multiple tasks/run that will run in parallel
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 BASEDIR=${SLURM_SUBMIT_DIR}
 
@@ -17,8 +17,6 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
 # Set-up inputs
@@ -60,7 +58,7 @@ echo singularity run --cleanenv \
     --participant-label ${SUBJECTS} \
     --model /model \
     --drop-duration 4 \
-    --fwhm 6 
+    --fwhm 6
 
 singularity run --cleanenv \
     -B ${BIDS_DIR}:/bids \
@@ -75,7 +73,7 @@ singularity run --cleanenv \
     --drop-duration 4 \
     --fwhm 6
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
