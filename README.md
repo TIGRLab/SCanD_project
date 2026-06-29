@@ -954,23 +954,6 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 ```sh
 # First load a python module
-module load python/3.6.8
-
-# Create a directory for virtual environments if it doesn't exist
-mkdir ~/.virtualenvs
-cd ~/.virtualenvs
-virtualenv --system-site-packages ~/.virtualenvs/myenv
-
-# Activate the virtual environment
-source ~/.virtualenvs/myenv/bin/activate 
-
-python3 -m pip install -U templateflow
-
-# Run a Python script to import specified templates using the 'templateflow' package
-python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
-```
-```sh
-# First load a python module
 module load python/3.11.5
 
 # Create a directory for virtual environments if it doesn't exist
@@ -983,8 +966,12 @@ source ~/.virtualenvs/myenv/bin/activate
 
 python3 -m pip install -U templateflow
 
+# Download templates into the project cache used by xcp-d on compute nodes
+mkdir -p ${SCRATCH}/SCanD_project/templates/.cache/templateflow
+export TEMPLATEFLOW_HOME=${SCRATCH}/SCanD_project/templates/.cache/templateflow
+
 # Run a Python script to import specified templates using the 'templateflow' package
-python -c "from templateflow.api import get; get(['fsLR', 'Fischer344','MNI152Lin'])"
+python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer344','MNI152Lin','MNI152NLin2009aAsym','MNI152NLin2009aSym','MNI152NLin2009bAsym','MNI152NLin2009bSym','MNI152NLin2009cAsym','MNI152NLin2009cSym','MNI152NLin6Asym','MNI152NLin6Sym'])"
 ```
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
