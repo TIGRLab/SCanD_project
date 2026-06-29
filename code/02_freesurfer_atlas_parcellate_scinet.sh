@@ -1,15 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=freesurfer_parcellate
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=06:00:00
 #SBATCH --mem-per-cpu=4000
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -18,13 +16,11 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 
 module load apptainer/1.3.5
 export BIDS_DIR=${BASEDIR}/data/local/bids
-export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg 
+export SING_CONTAINER=${BASEDIR}/containers/freesurfer-7.4.1.simg
 export LOGS_DIR=${BASEDIR}/logs
 export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
@@ -64,7 +60,7 @@ singularity exec \
     for SUBJECT in $SUBJECT_BATCH; do
 
       SUBJECT_LONG_DIRS=$(find $SUBJECTS_DIR -maxdepth 1 -name "${SUBJECT}*.long.${SUBJECT}" -type d)
-      
+
       if [[ -z "$SUBJECT_LONG_DIRS" ]]; then
         SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -name "${SUBJECT}*" -type d)
       fi
@@ -145,7 +141,7 @@ singularity exec \
 EOF
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 SUBJECT_LONG_DIRS=$(find "$SUBJECTS_DIR" -maxdepth 1 -type d -name "*.long.*" | head -n 1)
 
@@ -170,7 +166,7 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/freesurferparcellate/7.4.1/output/
     ls -al derivatives/freesurferparcellate/7.4.1/output/
 
