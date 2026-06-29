@@ -1,20 +1,17 @@
 #!/bin/bash
 #SBATCH --job-name=ciftify
-#SBATCH --output=logs/%x_%j.out 
+#SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
 #SBATCH --time=08:00:00
 #SBATCH --mem-per-cpu=4000
 
-SUB_SIZE=1 ## number of subjects to run
+SUB_SIZE=1
 export THREADS_PER_COMMAND=2
 
-####----### the next bit only works IF this script is submitted from the $BASEDIR/$OPENNEURO_DS folder...
 
-## set the second environment variable to get the base directory
 BASEDIR=${SLURM_SUBMIT_DIR}
 
-## set up a trap that will clear the ramdisk if it is not cleared
 function cleanup_ramdisk {
     echo -n "Cleaning up ramdisk directory /$SLURM_TMPDIR/ on "
     date
@@ -23,8 +20,6 @@ function cleanup_ramdisk {
     date
 }
 
-#trap the termination signal, and call the function 'trap_term' when
-# that happens, so results may be saved.
 trap "cleanup_ramdisk" TERM
 module load apptainer/1.3.5
 
@@ -34,7 +29,7 @@ export ORIG_FS_LICENSE=${BASEDIR}/templates/.freesurfer.txt
 export SUBJECTS_DIR=${BASEDIR}/data/local/derivatives/freesurfer/7.4.1
 export OUTPUT_DIR=${BASEDIR}/data/local/derivatives/ciftify
 export LOGS_DIR=${BASEDIR}/logs
-mkdir -vp ${OUTPUT_DIR} 
+mkdir -vp ${OUTPUT_DIR}
 
 
 if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
@@ -47,7 +42,7 @@ SUBJECTS=("${SUBJECT_FOLDERS[@]##*/}")  # Just the folder names, like sub-CMH000
 
 SUBJECT_INDEX=${SLURM_ARRAY_TASK_ID}
 SELECTED_SUBJECT=${SUBJECTS[$SUBJECT_INDEX]}
- 
+
 singularity exec --cleanenv \
     -B ${SUBJECTS_DIR}:/freesurfer \
     -B ${OUTPUT_DIR}:/out \
@@ -69,7 +64,7 @@ else
 fi
 
 
-## nipoppy trackers 
+## nipoppy trackers
 
 singularity exec \
   --env BASEDIR="$BASEDIR" \
@@ -79,7 +74,7 @@ singularity exec \
     set -euo pipefail
 
     cd "$BASEDIR/Neurobagel"
-    
+
     mkdir -p derivatives/ciftify/1.3.2/output/
     ls -al derivatives/ciftify/1.3.2/output/
 
