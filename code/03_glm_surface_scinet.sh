@@ -50,7 +50,7 @@ else
     SUBJECTS=`sed -n -E "s/sub-(\S*)\>.*/\1/gp" ${BIDS_DIR}/participants.tsv | head -n ${bigger_bit} | tail -n ${SUB_SIZE}`
 fi
 
-echo singularity run --cleanenv \
+echo singularity run --cleanenv --no-home \
     -B ${BIDS_DIR}:/bids \
     -B ${FMRIPREP_DIR}:/fmriprep \
     -B ${OUT_DIR}:/outdir \
@@ -63,7 +63,7 @@ echo singularity run --cleanenv \
     --drop-duration 4 \
     --fwhm 6
 
-singularity run --cleanenv \
+singularity run --cleanenv --no-home \
     -B ${BIDS_DIR}:/bids \
     -B ${FMRIPREP_DIR}:/fmriprep \
     -B ${OUT_DIR}:/outdir \
