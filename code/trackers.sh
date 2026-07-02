@@ -100,7 +100,6 @@ singularity exec \
       nipoppy track \
         --pipeline qsiprep \
         --pipeline-version 0.22.0 \
-        --debug
   '
 
 singularity exec \
