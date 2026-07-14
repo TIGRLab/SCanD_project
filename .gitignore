@@ -9,5 +9,6 @@ templates/.freesurfer.txt
 templates/.keras/
 Neurobagel/
 containers/
+code/glm/examples/models/SPINS/
 **/__pycache__
 **/.ipynb_checkpoints/
