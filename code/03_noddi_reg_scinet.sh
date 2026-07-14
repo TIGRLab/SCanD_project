@@ -35,12 +35,6 @@ mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
 
 export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
 
-# Create subject-only symlinks (remove _ses* suffix)
-for d in ${FREESURFER_DIR}/sub-*_ses-*; do
-  subj="${d%%_ses-*}"      # strips _ses-XX
-  ln -sfn "$d" "$subj"
-done
-
 # =========================
 # SUBJECT SELECTION
 # =========================
@@ -55,11 +49,27 @@ else
   SUBJECTS=$(sed -n -E "s/sub-(\S*)\>.*/\1/gp" "${BIDS_DIR}/participants.tsv" | head -n "${bigger_bit}" | tail -n "${SUB_SIZE}")
 fi
 
-# Fix FS surf naming if needed
-for subj in "${SUBJECTS_DIR}"/sub-*; do
-  surfdir="${subj}/surf"
-  [[ -f "${surfdir}/lh.pial.T1" ]] && mv "${surfdir}/lh.pial.T1" "${surfdir}/lh.pial"
-  [[ -f "${surfdir}/rh.pial.T1" ]] && mv "${surfdir}/rh.pial.T1" "${surfdir}/rh.pial"
+fix_fs_surf_names() {
+  local subj_id="sub-${1}"
+  local surfdir="${SUBJECTS_DIR}/${subj_id}/surf"
+
+  [[ -d "${surfdir}" ]] || return 0
+
+  if [[ -f "${surfdir}/lh.pial.T1" && ! -e "${surfdir}/lh.pial" ]]; then
+    mv "${surfdir}/lh.pial.T1" "${surfdir}/lh.pial"
+  fi
+  if [[ -f "${surfdir}/rh.pial.T1" && ! -e "${surfdir}/rh.pial" ]]; then
+    mv "${surfdir}/rh.pial.T1" "${surfdir}/rh.pial"
+  fi
+}
+
+for SUBJECT in ${SUBJECTS}; do
+  for d in ${FREESURFER_DIR}/sub-${SUBJECT}_ses-*; do
+    [[ -e "${d}" ]] || continue
+    subj="${d%%_ses-*}"
+    ln -sfn "${d}" "${subj}"
+  done
+  fix_fs_surf_names "${SUBJECT}"
 done
 
 ############################
