@@ -48,7 +48,14 @@ run_pipeline "noddi-registration" "./code/03_noddi_reg_scinet.sh" 1
 
 read -p "Do you want to run the glm_surface pipeline? (yes/no): " run_glm
 if [[ "$run_glm" =~ ^(yes|y)$ ]]; then
-    MODEL="${SCRIPT_DIR}/code/glm/examples/models/RTMSWM/model-001_smdl.json"
+    echo "Provide the path to your study-specific BIDS Stats Model JSON."
+    echo "Example: code/glm/examples/models/<STUDY_NAME>/model-001_smdl.json"
+    read -p "Model path: " MODEL
+    # Expand ~ and allow relative paths from the project root
+    MODEL="${MODEL/#\~/$HOME}"
+    if [[ "$MODEL" != /* ]]; then
+        MODEL="${SCRIPT_DIR}/${MODEL}"
+    fi
     if [ ! -f "$MODEL" ]; then
         echo "ERROR: MODEL file not found at $MODEL"
         exit 1

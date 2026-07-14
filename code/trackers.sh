@@ -100,7 +100,6 @@ singularity exec \
       nipoppy track \
         --pipeline qsiprep \
         --pipeline-version 0.22.0 \
-        --debug
   '
 
 singularity exec \
@@ -275,6 +274,24 @@ singularity exec \
         --pipeline tractographysingle \
         --pipeline-version 0.22.0 \
      
+  '
+
+singularity exec \
+  --env BASEDIR="$BASEDIR" \
+  --bind $BASEDIR:$BASEDIR \
+  ${BASEDIR}/containers/nipoppy.sif /bin/bash -c '
+    set -euo pipefail
+
+    cd "$BASEDIR/Neurobagel"
+
+    mkdir -p derivatives/glm/0.0.1/output/
+    shopt -s nullglob
+    for sub in "$BASEDIR/data/local/derivatives/glm/0.0.1"/sub-*; do
+      ln -sfn "$sub" "derivatives/glm/0.0.1/output/$(basename "$sub")"
+    done
+    shopt -u nullglob
+
+    nipoppy track --pipeline glm --pipeline-version 0.0.1
   '
 
 singularity exec \
