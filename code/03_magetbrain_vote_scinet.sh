@@ -37,6 +37,8 @@ singularity run \
        run \
        vote \
        --subject ${SUBJECTS} \
+       -q parallel \
+       -j 8 \
        --stage-templatelib-walltime 24:00:00 \
        --stage-templatelib-procs 2 \
        --stage-voting-procs 1 \
