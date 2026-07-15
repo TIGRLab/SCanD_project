@@ -10,6 +10,7 @@ Example images for the four pipeline guidelines are in [qc_guidelines_assets/](q
 | FreeSurfer | [freesurfer_QC_guidelines.md](freesurfer_QC_guidelines.md) |
 | QSIPrep | [qsiprep_QC_guidelines.md](qsiprep_QC_guidelines.md) |
 | NODDIreg | [noddireg_QC_guidelines.md](noddireg_QC_guidelines.md) |
+| XCP-D | [xcpd_QC_guidelines.md](xcpd_QC_guidelines.md) |
 
 Shared outputs to review are under `data/share` (see [share-folder-checklist.md](share-folder-checklist.md)).
 
