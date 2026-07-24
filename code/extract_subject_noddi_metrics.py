@@ -14,7 +14,7 @@ Arguments:
 Options:
     --session <session>      BIDS session to pull the amico noddi values from
     --icvf-thresh <thres>    Threshold [default: 0.99] used for creating brainmask
-    --parcellation <parc>    List of parcellations to pull data from (defaults to all)
+    --parcellation <parc>...  List of parcellations to pull data from (defaults to all)
     --debug                  Debug logging
     -h, --help               Prints this message
 
@@ -360,11 +360,16 @@ def main():
             logger.error(f"No ACPC parcellations found in {parc_dir}/sub-{subject}/anat")
             return
     else:
-        parc = parc_list
-        parc_file = os.path.join(f"{parc_dir}/sub-{subject}/anat/sub-{subject}_space-ACPC_desc-{parc}_dseg.nii.gz")
-        if not os.path.exists(parc_file):
-            logger.error(f"Input parcellation file {parc_file} not found")
-            return
+        if isinstance(parc_list, str):
+            parc_list = [parc_list]
+
+        for parc in parc_list:
+            parc_file = os.path.join(
+                f"{parc_dir}/sub-{subject}/anat/sub-{subject}_space-ACPC_desc-{parc}_dseg.nii.gz"
+            )
+            if not os.path.exists(parc_file):
+                logger.error(f"Input parcellation file {parc_file} not found")
+                return
 
     if session:
         session = str(session).replace("ses-", "")
