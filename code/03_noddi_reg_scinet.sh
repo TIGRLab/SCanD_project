@@ -63,10 +63,90 @@ fix_fs_surf_names() {
   fi
 }
 
+export_fs_volume_parcellations() {
+  local SUBJ="$1"
+  local out_dir="${OUTPUT_DIR}/${SUBJ}/anat"
+  local pair src_mgz desc out_native
+
+  mkdir -p "${out_dir}"
+
+  for pair in "aparc+aseg:aparcaseg" "wmparc:wmparc"; do
+    src_mgz="${pair%%:*}"
+    desc="${pair##*:}"
+    out_native="${out_dir}/${SUBJ}_space-fsnative_desc-${desc}_dseg.nii.gz"
+
+    [[ -f "${SUBJECTS_DIR}/${SUBJ}/mri/${src_mgz}.mgz" ]] || {
+      echo "[ERROR] Missing FreeSurfer volume ${SUBJECTS_DIR}/${SUBJ}/mri/${src_mgz}.mgz"
+      exit 1
+    }
+    echo "[FS] Exporting ${src_mgz}.mgz -> ${out_native}"
+    singularity exec --cleanenv \
+      -B "${SUBJECTS_DIR}:/freesurfer" \
+      -B "${OUTPUT_DIR}:/parc" \
+      -B "${ORIG_FS_LICENSE}:/opt/freesurfer/license.txt" \
+      "${SING_CONTAINER}" \
+      bash -lc "export FREESURFER_HOME=/opt/freesurfer && export FS_LICENSE=/opt/freesurfer/license.txt && \
+        mri_convert /freesurfer/${SUBJ}/mri/${src_mgz}.mgz /parc/${SUBJ}/anat/${SUBJ}_space-fsnative_desc-${desc}_dseg.nii.gz"
+  done
+
+  [[ -f "${SUBJECTS_DIR}/${SUBJ}/mri/T1.mgz" ]] || {
+    echo "[ERROR] Missing ${SUBJECTS_DIR}/${SUBJ}/mri/T1.mgz"
+    exit 1
+  }
+  singularity exec --cleanenv \
+    -B "${SUBJECTS_DIR}:/freesurfer" \
+    -B "${OUTPUT_DIR}:/parc" \
+    -B "${ORIG_FS_LICENSE}:/opt/freesurfer/license.txt" \
+    "${SING_CONTAINER}" \
+    bash -lc "export FREESURFER_HOME=/opt/freesurfer && export FS_LICENSE=/opt/freesurfer/license.txt && \
+      mri_convert /freesurfer/${SUBJ}/mri/T1.mgz /parc/${SUBJ}/anat/${SUBJ}_space-fsnative_T1w.nii.gz"
+}
+
+register_fs_parcellations_to_qsiprep() {
+  local SUBJ="$1"
+  local out_dir="${OUTPUT_DIR}/${SUBJ}/anat"
+  local xfm_dir="${out_dir}/xfm_fsT1_to_qsiT1"
+  local aff="${xfm_dir}/fs2q_0GenericAffine.mat"
+  local desc in_native
+
+  mkdir -p "${xfm_dir}"
+
+  if [[ ! -f "${aff}" ]]; then
+    echo "[FS] Computing FreeSurfer T1 -> QSIPrep T1w affine for ${SUBJ}"
+    singularity exec --cleanenv \
+      -B "${QSIPREP_DIR}:/qsiprep" \
+      -B "${OUTPUT_DIR}:/parc" \
+      "${SING_CONTAINER}" \
+      antsRegistrationSyNQuick.sh -d 3 \
+        -f "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+        -m "/parc/${SUBJ}/anat/${SUBJ}_space-fsnative_T1w.nii.gz" \
+        -t a \
+        -o "/parc/${SUBJ}/anat/xfm_fsT1_to_qsiT1/fs2q_"
+  fi
+  [[ -f "${aff}" ]] || { echo "[ERROR] Missing fs2q affine for ${SUBJ}: ${aff}"; exit 1; }
+
+  for desc in wmparc aparcaseg; do
+    in_native="${out_dir}/${SUBJ}_space-fsnative_desc-${desc}_dseg.nii.gz"
+    [[ -f "${in_native}" ]] || { echo "[ERROR] Missing ${in_native}"; exit 1; }
+
+    echo "[FS] Registering ${desc} to QSIPrep T1w for ${SUBJ}"
+    singularity exec --cleanenv \
+      -B "${QSIPREP_DIR}:/qsiprep" \
+      -B "${OUTPUT_DIR}:/parc" \
+      "${SING_CONTAINER}" \
+      antsApplyTransforms -d 3 \
+        -i "/parc/${SUBJ}/anat/${SUBJ}_space-fsnative_desc-${desc}_dseg.nii.gz" \
+        -r "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+        -t "/parc/${SUBJ}/anat/xfm_fsT1_to_qsiT1/fs2q_0GenericAffine.mat" \
+        -n GenericLabel \
+        -o "/parc/${SUBJ}/anat/${SUBJ}_space-T1w_desc-${desc}_dseg.nii.gz"
+  done
+}
+
 for SUBJECT in ${SUBJECTS}; do
   for d in ${FREESURFER_DIR}/sub-${SUBJECT}_ses-*; do
     [[ -e "${d}" ]] || continue
-    subj="${d%%_ses-*}"
+    subj="$(basename "${d%%_ses-*}")"
     ln -sfn "$(basename "${d}")" "${subj}"
   done
   fix_fs_surf_names "${SUBJECT}"
@@ -98,12 +178,6 @@ for SUBJECT in ${SUBJECTS}; do
       "${subj_id}"
 
   mkdir -p "${OUTPUT_DIR}/${subj_id}/anat"
-
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/aparc+aseg.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-ciftifyT1_desc-aparcaseg_dseg.nii.gz"
-
-  cp "${CIFTIFY_DIR}/ciftify/${subj_id}/T1w/wmparc.nii.gz" \
-     "${OUTPUT_DIR}/${subj_id}/anat/${subj_id}_space-ciftifyT1_desc-wmparc_dseg.nii.gz"
 done
 
 ###############################################################################
@@ -162,6 +236,14 @@ for SUBJECT in ${SUBJECTS}; do
         -o "/parc/${SUBJ}/anat/xfm_ciftiT1_to_qsiT1/c2q_"
   fi
   [[ -f "${AFF}" ]] || { echo "[ERROR] Missing c2q affine for ${SUBJ}: ${AFF}"; exit 1; }
+
+  # -------------------------
+  # STEP 2.15: FreeSurfer wmparc/aparcaseg (bypass ciftify; ciftify truncates labels)
+  # -------------------------
+  rm -f "${OUTPUT_DIR}/${SUBJ}/anat/${SUBJ}_space-ciftifyT1_desc-wmparc_dseg.nii.gz" \
+        "${OUTPUT_DIR}/${SUBJ}/anat/${SUBJ}_space-ciftifyT1_desc-aparcaseg_dseg.nii.gz"
+  export_fs_volume_parcellations "${SUBJ}"
+  register_fs_parcellations_to_qsiprep "${SUBJ}"
 
   # -------------------------
   # STEP 2.2: apply c2q affine to parcels -> QSIPrep T1w parcels
