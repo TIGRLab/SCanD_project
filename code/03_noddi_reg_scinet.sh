@@ -238,15 +238,13 @@ for SUBJECT in ${SUBJECTS}; do
   [[ -f "${AFF}" ]] || { echo "[ERROR] Missing c2q affine for ${SUBJ}: ${AFF}"; exit 1; }
 
   # -------------------------
-  # STEP 2.15: FreeSurfer wmparc/aparcaseg (bypass ciftify; ciftify truncates labels)
+  # STEP 2.2: FreeSurfer wmparc/aparcaseg -> QSIPrep T1w
   # -------------------------
-  rm -f "${OUTPUT_DIR}/${SUBJ}/anat/${SUBJ}_space-ciftifyT1_desc-wmparc_dseg.nii.gz" \
-        "${OUTPUT_DIR}/${SUBJ}/anat/${SUBJ}_space-ciftifyT1_desc-aparcaseg_dseg.nii.gz"
   export_fs_volume_parcellations "${SUBJ}"
   register_fs_parcellations_to_qsiprep "${SUBJ}"
 
   # -------------------------
-  # STEP 2.2: apply c2q affine to parcels -> QSIPrep T1w parcels
+  # STEP 2.3: apply c2q affine to Schaefer parcels -> QSIPrep T1w
   # -------------------------
   for in_cifti in "${OUTPUT_DIR}/${SUBJ}/anat/${SUBJ}_space-ciftifyT1_desc-"*_dseg.nii.gz; do
     [[ -f "${in_cifti}" ]] || continue
