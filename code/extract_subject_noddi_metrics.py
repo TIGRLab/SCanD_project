@@ -147,7 +147,11 @@ def extract_noddi_parc_results(
 
     Fixes the previous bug by matching parcel results by actual label index, not by array position.
     """
-    parc_img = load_img(parc_file)
+    icvf_file = noddi_filename(noddi_dir, subject, session, "icvf")
+    icvf_img = load_img(icvf_file)
+
+    # Parcellation must share the NODDI ICVF grid (not index-only overlap).
+    parc_img = resample_to_img(load_img(parc_file), icvf_img, interpolation="nearest", copy=True)
     parc_data = parc_img.get_fdata().astype(np.int32)
 
     # voxel volume
@@ -183,8 +187,7 @@ def extract_noddi_parc_results(
     label_ids = results["index"].to_numpy()
 
     # Build valid mask from ICVF only
-    icvf_file = noddi_filename(noddi_dir, subject, session, "icvf")
-    icvf_data = load_img(icvf_file).get_fdata()
+    icvf_data = icvf_img.get_fdata()
 
     finite_icvf = np.isfinite(icvf_data)
     valid_mask = finite_icvf & (icvf_data > 0)
@@ -209,7 +212,7 @@ def extract_noddi_parc_results(
         noddi_file = noddi_filename(noddi_dir, subject, session, noddi_mdp)
         means, stdevs = _compute_metric_stats_by_label(
             metric_img=noddi_file,
-            label_img=parc_file,
+            label_img=parc_img,
             label_ids=label_ids,
             valid_mask=valid_mask
         )
@@ -228,7 +231,7 @@ def extract_noddi_parc_results(
         tissue_img = resample_to_img(qsiprep_dseg, parc_img, interpolation="nearest")
         tissue_probs = _compute_tissue_probabilities_by_label(
             tissue_img=tissue_img,
-            label_img=parc_file,
+            label_img=parc_img,
             label_ids=label_ids,
             valid_mask=valid_mask
         )
