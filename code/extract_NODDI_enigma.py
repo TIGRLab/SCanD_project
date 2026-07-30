@@ -53,6 +53,17 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
             image_i = os.path.join(noddi_dir, subject, session, "dwi", 
                                     subject + "_" + session + "_acq-multishelldir92_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
 
+        if not os.path.isfile(image_i):
+            matches = glob.glob(os.path.join(noddi_dir, subject, session, "dwi",
+                                subject + "_" + session + "_*model-noddi_*-" + NODDItag + "_dwimap.nii*"))
+            if not matches:
+                matches = glob.glob(os.path.join(noddi_dir, subject, "ses-*", "dwi",
+                                    subject + "_ses-*_*model-noddi_*-" + NODDItag + "_dwimap.nii*"))
+            if matches:
+                image_i = sorted(matches)[0]
+            else:
+                sys.exit("Could not find NODDI {} map for {} {}".format(NODDItag, subject, session))
+
         image_o = os.path.join(outputdir, subject + "_" + session, NODDItag, 'origdata', 
                                 subject + "_" + session + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
         docmd(['mkdir', '-p', os.path.join(outputdir, 
@@ -68,6 +79,14 @@ def fsl2std_noddi_output(NODDItag, noddi_dir, outputdir, subject, session):
             # Fallback to the second image path
             image_i = os.path.join(noddi_dir, subject, "dwi", 
                                     subject + "_acq-multishelldir92_run-1_space-T1w_desc-preproc_model-noddi_mdp-" + NODDItag + "_dwimap.nii.gz")
+
+        if not os.path.isfile(image_i):
+            matches = glob.glob(os.path.join(noddi_dir, subject, "dwi",
+                                subject + "_*model-noddi_*-" + NODDItag + "_dwimap.nii*"))
+            if matches:
+                image_i = sorted(matches)[0]
+            else:
+                sys.exit("Could not find NODDI {} map for {}".format(NODDItag, subject))
 
         image_o = os.path.join(outputdir, subject, NODDItag, 'origdata', 
                                 subject + "_space-T1w_desc-noddi_" + NODDItag + ".nii.gz")
@@ -95,6 +114,13 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
 
         if not os.path.isfile(temp):
             FA_stem = "{}_{}_acq-multishelldir92_run-1_space-T1w_desc-preproc_FA".format(subject, session)
+
+        if not os.path.isfile(os.path.join(FA_dir, FA_stem + '_mask.nii.gz')):
+            matches = glob.glob(os.path.join(FA_dir, "*_FA_mask.nii.gz"))
+            if matches:
+                FA_stem = os.path.basename(matches[0]).replace("_mask.nii.gz", "")
+            else:
+                sys.exit("Could not find ENIGMA FA mask for {} {}".format(subject, session))
          
     else:
         O_dir = os.path.join(outputdir, subject)
@@ -105,6 +131,13 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
 
         if not os.path.isfile(temp):
             FA_stem = "{}_acq-multishelldir92_run-1_space-T1w_desc-preproc_FA".format(subject)
+
+        if not os.path.isfile(os.path.join(FA_dir, FA_stem + '_mask.nii.gz')):
+            matches = glob.glob(os.path.join(FA_dir, "*_FA_mask.nii.gz"))
+            if matches:
+                FA_stem = os.path.basename(matches[0]).replace("_mask.nii.gz", "")
+            else:
+                sys.exit("Could not find ENIGMA FA mask for {}".format(subject))
 	
     masked =    os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '.nii.gz')
     to_target = os.path.join(O_dir, NODDItag, 'origdata', noddi_stem + NODDItag + '_to_target.nii.gz')
@@ -149,7 +182,7 @@ def run_non_FA(NODDItag, outputdir, enigmadir, subject, session):
     ## ROI average
     docmd([os.path.join(ENIGMAHOME, 'averageSubjectTracts_exe'), csvout1 + '.csv', csvout2 + '.csv'])
 
-    if not DRYRUN:
+    if not DRYRUN and os.path.isfile(skel):
          overlay_skel(skel_nii = skel, 
                       overlay_png_path = skelqa)
 
