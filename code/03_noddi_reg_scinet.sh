@@ -35,6 +35,24 @@ mkdir -p "${CIFTIFY_DIR}" "${OUTPUT_DIR}" logs
 
 export FREESURFER_DIR=${BASEDIR}/data/local/derivatives/fmriprep/25.2.4/sourcedata/freesurfer
 
+# Prefer compressed QSIPrep T1w; fall back to uncompressed .nii
+resolve_qsi_t1() {
+  local subj="$1"
+  local stem="${QSIPREP_DIR}/${subj}/anat/${subj}_desc-preproc_T1w"
+  if [[ -f "${stem}.nii.gz" ]]; then
+    printf '%s\n' "${stem}.nii.gz"
+  elif [[ -f "${stem}.nii" ]]; then
+    printf '%s\n' "${stem}.nii"
+  fi
+}
+qsi_t1_container_path() {
+  local subj="$1"
+  local qsi_t1
+  qsi_t1="$(resolve_qsi_t1 "${subj}")"
+  [[ -n "${qsi_t1}" ]] || return 1
+  printf '%s\n' "/qsiprep/${subj}/anat/$(basename "${qsi_t1}")"
+}
+
 # =========================
 # SUBJECT SELECTION
 # =========================
@@ -108,6 +126,8 @@ register_fs_parcellations_to_qsiprep() {
   local xfm_dir="${out_dir}/xfm_fsT1_to_qsiT1"
   local aff="${xfm_dir}/fs2q_0GenericAffine.mat"
   local desc in_native
+  local qsi_t1_c
+  qsi_t1_c="$(qsi_t1_container_path "${SUBJ}")"
 
   mkdir -p "${xfm_dir}"
 
@@ -118,7 +138,7 @@ register_fs_parcellations_to_qsiprep() {
       -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
       antsRegistrationSyNQuick.sh -d 3 \
-        -f "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+        -f "${qsi_t1_c}" \
         -m "/parc/${SUBJ}/anat/${SUBJ}_space-fsnative_T1w.nii.gz" \
         -t a \
         -o "/parc/${SUBJ}/anat/xfm_fsT1_to_qsiT1/fs2q_"
@@ -136,7 +156,7 @@ register_fs_parcellations_to_qsiprep() {
       "${SING_CONTAINER}" \
       antsApplyTransforms -d 3 \
         -i "/parc/${SUBJ}/anat/${SUBJ}_space-fsnative_desc-${desc}_dseg.nii.gz" \
-        -r "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+        -r "${qsi_t1_c}" \
         -t "/parc/${SUBJ}/anat/xfm_fsT1_to_qsiT1/fs2q_0GenericAffine.mat" \
         -n GenericLabel \
         -o "/parc/${SUBJ}/anat/${SUBJ}_space-T1w_desc-${desc}_dseg.nii.gz"
@@ -216,8 +236,9 @@ for SUBJECT in ${SUBJECTS}; do
   # -------------------------
   # STEP 2.1: compute ciftifyT1 -> QSIPrep T1w affine
   # -------------------------
-  QSI_T1="${QSIPREP_DIR}/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz"
-  [[ -f "${QSI_T1}" ]] || { echo "[ERROR] Missing QSIPrep T1w for ${SUBJ}"; exit 1; }
+  QSI_T1="$(resolve_qsi_t1 "${SUBJ}")"
+  [[ -n "${QSI_T1}" ]] || { echo "[ERROR] Missing QSIPrep T1w for ${SUBJ} (.nii.gz or .nii)"; exit 1; }
+  QSI_T1_C="/qsiprep/${SUBJ}/anat/$(basename "${QSI_T1}")"
 
   XFM_DIR="${OUTPUT_DIR}/${SUBJ}/anat/xfm_ciftiT1_to_qsiT1"
   mkdir -p "${XFM_DIR}"
@@ -230,7 +251,7 @@ for SUBJECT in ${SUBJECTS}; do
       -B "${OUTPUT_DIR}:/parc" \
       "${SING_CONTAINER}" \
       antsRegistrationSyNQuick.sh -d 3 \
-        -f "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+        -f "${QSI_T1_C}" \
         -m "/ciftify/ciftify/${SUBJ}/T1w/$(basename "${CIFTI_T1}")" \
         -t a \
         -o "/parc/${SUBJ}/anat/xfm_ciftiT1_to_qsiT1/c2q_"
@@ -258,7 +279,7 @@ for SUBJECT in ${SUBJECTS}; do
         "${SING_CONTAINER}" \
         antsApplyTransforms -d 3 \
           -i "/parc/${SUBJ}/anat/$(basename "${in_cifti}")" \
-          -r "/qsiprep/${SUBJ}/anat/${SUBJ}_desc-preproc_T1w.nii.gz" \
+          -r "${QSI_T1_C}" \
           -t "/parc/${SUBJ}/anat/xfm_ciftiT1_to_qsiT1/$(basename "${AFF}")" \
           -n GenericLabel \
           -o "/parc/${SUBJ}/anat/$(basename "${OUT_T1}")"
