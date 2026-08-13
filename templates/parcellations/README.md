@@ -2,7 +2,7 @@
 
 CIFTI atlases (`*.dlabel.nii`) in fsLR 91k space, plus matching label tables (`*.tsv`).
 
-These replaced the old Glasser + Tian S2 file. They come from [PennLINC/AtlasPack](https://github.com/PennLINC/AtlasPack) (same atlases used by XCP-D).
+They come from [PennLINC/AtlasPack](https://github.com/PennLINC/AtlasPack) (same atlases used by XCP-D).
 
 ## CIFTI maps
 
