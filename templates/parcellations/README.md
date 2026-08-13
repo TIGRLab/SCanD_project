@@ -1,24 +1,26 @@
 # parcellations
 
-## tpl-fsLR_res-91k_atlas-GlasserTianS2_dseg.dlabel.nii
+CIFTI atlases (`*.dlabel.nii`) in fsLR 91k space, plus matching label tables (`*.tsv`).
 
-Combined the Glasser Cortical (360 ROI) with Tian's subcortical parcellation - at the second level (S2).
+These replaced the old Glasser + Tian S2 file. They come from [PennLINC/AtlasPack](https://github.com/PennLINC/AtlasPack) (same atlases used by XCP-D).
 
+## CIFTI maps
 
-was downloaded from: 
+- `tpl-fsLR_res-91k_atlas-Glasser_dseg.dlabel.nii` — Glasser cortex (360 ROI)
+- `tpl-fsLR_res-91k_atlas-Gordon_dseg.dlabel.nii` — Gordon cortex (333 ROI)
+- `tpl-fsLR_res-91k_atlas-4S156Parcels_dseg.dlabel.nii` … `atlas-4S1056Parcels` — 4S atlases (Schaefer cortex + subcortex/cerebellum; 156–1056 parcels)
 
-https://github.com/yetianmed/subcortex/blob/ae747391f56fe12af625cc2793abe698c830c8f4/Group-Parcellation/3T/Cortex-Subcortex/Q1-Q6_RelatedValidation210.CorticalAreas_dil_Final_Final_Areas_Group_Colors.32k_fs_LR_Tian_Subcortex_S2.dlabel.nii
+## Label tables
 
-Citations:
+- `atlas-Glasser_dseg.tsv`, `atlas-Gordon_dseg.tsv`, `atlas-4S*Parcels_dseg.tsv` — labels for the CIFTI maps above
+- `atlas-Schaefer7N100_dseg.tsv`, `atlas-Schaefer7N400_dseg.tsv`, `atlas-Schaefer7N1000_dseg.tsv` — Schaefer 7-network labels
+- `atlas-Hammers_dseg.tsv` — Hammersmith atlas labels
+- `desc-FreeSurferAll_dseg.tsv` — FreeSurfer LUT (used for aparc+aseg / wmparc)
 
-Tian, Ye, Daniel S. Margulies, Michael Breakspear, and Andrew Zalesky. 2020. “Topographic Organization of the Human Subcortex Unveiled with Functional Connectivity Gradients.” Nature Neuroscience 23 (11): 1421–32.
+## Citations
 
-Glasser, Matthew F., Timothy S. Coalson, Emma C. Robinson, Carl D. Hacker, John Harwell, Essa Yacoub, Kamil Ugurbil, et al. 2016. “A Multi-Modal Parcellation of Human Cerebral Cortex.” Nature 536 (7615): 171–78.
+Glasser, Matthew F., et al. 2016. “A Multi-Modal Parcellation of Human Cerebral Cortex.” Nature 536 (7615): 171–78.
 
+Gordon, Evan M., et al. 2016. “Generation and Evaluation of a Cortical Area Parcellation from Resting-State Correlations.” Cerebral Cortex 26 (1): 288–303.
 
-## parcellations to add
- - Yeo plus FSSubcortical
- - Gordon plus FSSubcortical
- - Ji?
- - Schaefer - parcels?
- - something cerebellum
+Schaefer, Alexander, et al. 2018. “Local-Global Parcellation of the Human Cerebral Cortex from Intrinsic Functional Connectivity MRI.” Cerebral Cortex 28 (9): 3095–3114.
