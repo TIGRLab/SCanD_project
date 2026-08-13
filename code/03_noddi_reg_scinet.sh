@@ -147,7 +147,7 @@ for SUBJECT in ${SUBJECTS}; do
   for d in ${FREESURFER_DIR}/sub-${SUBJECT}_ses-*; do
     [[ -e "${d}" ]] || continue
     subj="$(basename "${d%%_ses-*}")"
-    ln -sfn "$(basename "${d}")" "${subj}"
+    ln -sfn "$(basename "${d}")" "${FREESURFER_DIR}/${subj}"
   done
   fix_fs_surf_names "${SUBJECT}"
 done
