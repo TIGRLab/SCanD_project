@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=64
-#SBATCH --time=14:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mem-per-cpu=4000
 
 module load apptainer/1.3.5
