@@ -197,6 +197,7 @@ rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> 
 To link existing data from another location on SciNet Nibi to this folder:
 
 ```sh
+rmdir ${SCRATCH}/SCanD_project/data/local/bids
 ln -s /your/data/on/scinet/bids ${SCRATCH}/SCanD_project/data/local/bids
 ```
 
