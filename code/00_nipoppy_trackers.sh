@@ -66,7 +66,7 @@ singularity exec \
 
     rm -rf "$NB_DIR/pipelines/processing"/*
 
-    first_subject=$(find "$BIDS_DIR" -maxdepth 1 -type d -name "sub-*" | head -n 1)
+    first_subject=$(find -H "$BIDS_DIR" -maxdepth 1 -type d -name "sub-*" | head -n 1)
 
     if [ -d "$first_subject" ]; then
       if compgen -G "$first_subject/ses-*" > /dev/null; then
