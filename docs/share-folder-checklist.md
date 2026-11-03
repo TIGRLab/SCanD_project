@@ -2,6 +2,81 @@
 
 Use this checklist to verify `data/share` after stage 6, before copying results to the consortium shared space. For visual QC of pipeline HTML reports and figures, see [qc-guide.md](qc-guide.md).
 
+## Full repository layout
+
+The README lists the top-level folders. The full layout, including container images and `data/share`, is below.
+
+```
+${SCRATCH}/SCanD_project/
+├── assets/
+│   ├── figures/                 # QC reference images for docs/qc-guide.md
+│   ├── pipeline-overview.png
+│   └── scand-logo.jpg
+├── docs/
+│   ├── fieldmaps.md
+│   ├── qc-guide.md
+│   ├── quick-start-workflow.md
+│   └── share-folder-checklist.md
+├── LICENSE
+├── README.md
+├── stage_1.sh … stage_6.sh
+├── templates/
+│   └── parcellations/           # pre-downloaded fMRIPrep templates (see setup)
+├── code/                        # pipeline scripts and configs
+├── containers/                  # Singularity images (alphabetical)
+│   ├── fmriprep-25.2.4.simg
+│   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
+│   ├── freesurfer-7.4.1.simg
+│   ├── glm-0.0.1.simg
+│   ├── magetbrain.sif
+│   ├── mriqc-24.0.0.simg
+│   ├── nipoppy.sif
+│   ├── noddi_postproc-v.1.0.simg
+│   ├── qsiprep-0.22.0.sif
+│   ├── tbss_2023-10-10.simg
+│   └── xcp_d-0.7.3.simg
+├── data/
+│   ├── local/
+│   │   ├── bids/                # defaced BIDS dataset
+│   │   ├── derivatives/         # pipeline outputs (alphabetical)
+│   │   │   ├── ciftify/
+│   │   │   ├── fmriprep/
+│   │   │   ├── freesurfer/
+│   │   │   ├── MAGeTbrain/
+│   │   │   ├── mriqc/
+│   │   │   ├── qsiprep/
+│   │   │   ├── smriprep/
+│   │   │   ├── xcp_d/
+│   │   │   └── xcp_noGSR/
+│   │   ├── dtifit/
+│   │   ├── enigmaDTI/
+│   │   ├── qsirecon/
+│   │   └── qsirecon-FSL/
+│   └── share/                   # consortium handoff subset (see the checklist below)
+│       ├── amico_noddi/
+│       ├── ciftify/
+│       ├── enigmaDTI/
+│       ├── fmriprep/25.2.4/
+│       ├── freesurfer_group/
+│       ├── glm/0.0.1/
+│       ├── magetbrain/
+│       ├── manifest.tsv
+│       ├── mriqc/24.0.0/
+│       ├── noddireg/
+│       ├── participants.tsv
+│       ├── processing_status.tsv
+│       ├── processing_status_fmriprep.tsv
+│       ├── processing_status_qsiprep.tsv
+│       ├── qsiprep/0.22.0/
+│       ├── smriprep/25.2.4/
+│       ├── tractify/
+│       ├── xcp_d/0.7.3/
+│       └── xcp_noGSR/
+├── logs/                        # cluster job logs
+├── Neurobagel/
+└── project_id/
+```
+
 **How to use this checklist**
 
 1. Confirm each top-level folder below exists under `${BASEDIR}/data/share`.

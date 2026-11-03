@@ -50,73 +50,20 @@ After [cloning](#cloning-this-repo), your study workspace is the **`SCanD_projec
 
 ```
 ${SCRATCH}/SCanD_project/
-├── assets/
-│   ├── figures/                 # QC reference images for docs/qc-guide.md
-│   ├── pipeline-overview.png
-│   └── scand-logo.jpg
-├── docs/
-│   ├── fieldmaps.md
-│   ├── qc-guide.md
-│   ├── quick-start-workflow.md
-│   └── share-folder-checklist.md
-├── LICENSE
-├── README.md
-├── stage_1.sh … stage_6.sh
-├── templates/
-│   └── parcellations/           # pre-downloaded fMRIPrep templates (see setup)
+├── assets/                      # logo and figures
 ├── code/                        # pipeline scripts and configs
-├── containers/                  # Singularity images (alphabetical)
-│   ├── fmriprep-25.2.4.simg
-│   ├── fmriprep_ciftity-v1.3.2-2.3.3.simg
-│   ├── freesurfer-7.4.1.simg
-│   ├── glm-0.0.1.simg
-│   ├── magetbrain.sif
-│   ├── mriqc-24.0.0.simg
-│   ├── nipoppy.sif
-│   ├── noddi_postproc-v.1.0.simg
-│   ├── qsiprep-0.22.0.sif
-│   ├── tbss_2023-10-10.simg
-│   └── xcp_d-0.7.3.simg
+├── containers/                  # Singularity images
 ├── data/
-│   ├── local/
-│   │   ├── bids/                # defaced BIDS dataset
-│   │   ├── derivatives/         # pipeline outputs (alphabetical)
-│   │   │   ├── ciftify/
-│   │   │   ├── fmriprep/
-│   │   │   ├── freesurfer/
-│   │   │   ├── MAGeTbrain/
-│   │   │   ├── mriqc/
-│   │   │   ├── qsiprep/
-│   │   │   ├── smriprep/
-│   │   │   ├── xcp_d/
-│   │   │   └── xcp_noGSR/
-│   │   ├── dtifit/
-│   │   ├── enigmaDTI/
-│   │   ├── qsirecon/
-│   │   └── qsirecon-FSL/
-│   └── share/                   # consortium handoff subset (see docs/share-folder-checklist.md)
-│       ├── amico_noddi/
-│       ├── ciftify/
-│       ├── enigmaDTI/
-│       ├── fmriprep/25.2.4/
-│       ├── freesurfer_group/
-│       ├── glm/0.0.1/
-│       ├── magetbrain/
-│       ├── manifest.tsv
-│       ├── mriqc/24.0.0/
-│       ├── noddireg/
-│       ├── participants.tsv
-│       ├── processing_status.tsv
-│       ├── processing_status_fmriprep.tsv
-│       ├── processing_status_qsiprep.tsv
-│       ├── qsiprep/0.22.0/
-│       ├── smriprep/25.2.4/
-│       ├── tractify/
-│       ├── xcp_d/0.7.3/
-│       └── xcp_noGSR/
+│   ├── local/                   # BIDS input and pipeline outputs
+│   └── share/                   # consortium handoff subset
+├── docs/
 ├── logs/                        # cluster job logs
 ├── Neurobagel/
-└── project_id/
+├── project_id/
+├── stage_1.sh … stage_6.sh
+├── templates/
+├── LICENSE
+└── README.md
 ```
 
 The logo file for slides, posters, and other materials is [assets/scand-logo.jpg](assets/scand-logo.jpg).
@@ -368,12 +315,12 @@ After setting up the SciNet environment and organizing your BIDS folder and `par
 <a id="running-pipelines"></a>
 ## 🔬 Running Pipelines and sharing results
 
-Participant-array pipelines chunk `participants.tsv` the same way as the `stage_*.sh` scripts. When submitting manually, source the shared helper first:
+Participant-array pipelines chunk `participants.tsv` the same way as the `stage_*.sh` scripts. From the repo root, pull and source the helper once. Each pipeline section is only the submit command. Blocks that compute a Slurm array size still include `source ./code/lib/slurm_array.sh` because they call `scand_slurm_array_max`.
 
 ```sh
 cd ${SCRATCH}/SCanD_project
+git pull
 source ./code/lib/slurm_array.sh
-scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ```
 
 The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless noted otherwise.
@@ -381,22 +328,12 @@ The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless
 ### Running mriqc
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ```
 
 ### Running freesurfer
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_freesurfer_long_scinet.sh 1
 ```
 
@@ -407,12 +344,6 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-# module load singularity/3.8.0 - singularity already on most nodes
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ```
 
@@ -420,16 +351,12 @@ scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
 ### Running qsiprep
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_qsiprep_scinet.sh 1
 ```
 After QSIPrep completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
+
 ./Neurobagel/derivatives/processing_status_qsiprep.tsv
 ```
 
@@ -442,11 +369,6 @@ This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobag
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/01_smriprep_scinet.sh 1
 ```
 
@@ -482,10 +404,6 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 #### Run the pipeline:
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 ## submit the array job to the queue
 sbatch  ./code/01_magetbrain_init_scinet.sh
 ```
@@ -497,16 +415,12 @@ Note -  the script enclosed uses some interesting extra options:
  - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_fmriprep_apply_scinet.sh 1
 ```
 After fMRIPrep apply completes, a per-pipeline sidecar with the distortion-correction method for each subject is written to:
 
 ```sh
+
 ./Neurobagel/derivatives/processing_status_fmriprep.tsv
 ```
 
@@ -517,22 +431,12 @@ This file is updated by the fMRIPrep apply nipoppy tracker block (not the main N
 ### Running qsirecon FSL
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
 ```
 ### Running amico noddi
 In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
 ```
 
@@ -541,22 +445,12 @@ scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
 
 
 ```sh
-# module load singularity/3.8.0 - singularity already on most nodes
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_freesurfer_atlas_parcellate_scinet.sh 1
 ```
 
 If you do not plan to run stage 6 (data sharing) and only wish to obtain the FreeSurfer group outputs, follow these steps to run the FreeSurfer group merge code after completing the FreeSurfer atlas parcellate processing:
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 bash ./code/freesurfer_group_merge.sh
 ```
 
@@ -568,32 +462,16 @@ The final output for the tractography pipeline will be a **.mat** file containin
 
 Multishell:
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_tractography_multi_scinet.sh 1
-
 ```
 Singleshell:
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/02_tractography_single_scinet.sh 1
-
 ```
 
 ### Running ciftify-anat
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 source ./code/lib/slurm_array.sh
 SUBJECTS_DIR=./data/local/derivatives/freesurfer/7.4.1
 if compgen -G "${SUBJECTS_DIR}/*long*" > /dev/null; then
@@ -609,10 +487,6 @@ sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ### Running magetbrain register
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 ## submit the array job to the queue
 sbatch  ./code/02_magetbrain_register_scinet.sh
 ```
@@ -623,6 +497,7 @@ If you're initiating the pipeline for the first time, it's crucial to acquire sp
 
 
 ```sh
+
 # First load a python module
 module load python/3.11.5
 
@@ -646,33 +521,18 @@ python -c "from templateflow.api import get; get(['fsaverage','fsLR', 'Fischer34
 If you've already set up the pipeline before, bypass the previously mentioned instructions and proceed directly to executing the XCP pipeline:
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 ```
 
 ### Running xcp-noGSR
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_xcp_noGSR_scinet.sh 1
 ```
 
 ### Running noddi-registration
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_noddi_reg_scinet.sh 1
 ```
 
@@ -694,10 +554,6 @@ This file defines the regressors in your design matrix and contrasts — the GLM
 For proper set-up, please read these instructions carefully which can be found in [here](code/glm/README.md)
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull         #in case you need to pull new code
-
 ## Provide a path to STUDY-specific model 
 MODEL=${PWD}/code/glm/examples/models/RTMSWM/model-001_smdl.json
 
@@ -707,7 +563,6 @@ if [ ! -f "$MODEL" ]; then
     exit 1
 fi
 
-source ./code/lib/slurm_array.sh
 
 ## submit the array job to the queue, passing your task-specific model JSON as an argument
 scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
@@ -717,10 +572,6 @@ scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
 ### Running magetbrain vote
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 source ./code/lib/slurm_array.sh
 N_SUBJECTS=$(ls ./data/local/derivatives/MAGeTbrain/magetbrain_data/input/subjects/brains/*.mnc | wc -l)
 max_task=$(scand_slurm_array_max "$N_SUBJECTS" 1)
@@ -732,31 +583,18 @@ sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
 ### Running enigma extract
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 source ./code/ENIGMA_ExtractCortical.sh
 ```
 
 ### Running qsirecon dtifit
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
-source ./code/lib/slurm_array.sh
 scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
 ```
 
 ### Running enigma-dti
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 ## submit the array job to the queue
 sbatch  ./code/04_enigma_dti_scinet.sh
 ```
@@ -764,10 +602,6 @@ sbatch  ./code/04_enigma_dti_scinet.sh
 ### Running extract-noddi
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 ## submit the array job to the queue
 sbatch  ./code/05_extract_noddi_scinet.sh
 ```
@@ -789,10 +623,6 @@ This step calls group-level BIDS apps to build summary sheets and HTML index pag
 Submit the Slurm extract job and run the login-node terminal script **together** (as in `stage_6.sh` and the commands below). The Slurm job may take up to ~8 hours on Slurm depending on dataset size; the terminal script runs immediately on the login node for MAGeTbrain QC, qsiprep metrics, and related steps.
 
 ```sh
-## go to the repo and pull new changes
-cd ${SCRATCH}/SCanD_project
-git pull
-
 sbatch ./code/06_extract_to_share_slurm.sh
 source ./code/06_extract_to_share_terminal.sh
 ```
@@ -802,6 +632,7 @@ When all pipelines are complete, verify `data/share` against [docs/share-folder-
 🎉 **You're done!** Hand off your `data/share` folder to the consortium.
 
 ```sh
+
 cd ${SCRATCH}/SCanD_project
 
 mkdir -p /scratch/arisvoin/shared/<groupName_studyName>
