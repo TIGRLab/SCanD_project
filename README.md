@@ -1050,11 +1050,7 @@ sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
 ```
 
 
-
-```
-
 ## Running enigma extract
-
 
 ```sh
 ssh tri-login01
