@@ -163,8 +163,6 @@ This branch targets the **SciNet Fir** cluster. Use the matching git branch when
 | | 05b | [Check TSV file](#check-tsv-file) | — |
 | 📤 stage 6 | 06a | [Extract and share to consortium folder](#syncing-the-data-to-the-share-directory) | ~8 hours on Slurm (Slurm + login-node scripts together) |
 
-> **Note:** Steps **01a–02g** follow the prompt order in `stage_1.sh` and `stage_2.sh` (ciftify-anat runs after tractography in stage 2).
-
 <a id="setting-your-scinet-environment-and-prepare-your-dataset"></a>
 ## ⚙️ Setting your SciNet environment and preparing your dataset
 
