@@ -18,7 +18,7 @@ This is the base repository for the **Schizophrenia Canadian Neuroimaging Databa
 
 **Stage 0.** [Clone and set up](#cloning-this-repo) · [BIDS](#organize-your-data-into-bids) · [Deface](#deface-the-bids-data-if-not-done-during-bids-conversion) · [participants.tsv](#put-your-bids-data-into-the-datalocal-folder-and-add-labels-to-participantstsv-file) · [Nipoppy trackers](#initializing-nipoppy-trackers) · [Fieldmaps](#edit-fmap-files)
 
-**Stage 1.** [MRIQC](#running-mriqc) · [QSIPrep](#running-qsiprep) · [fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer) · [FreeSurfer](#running-freesurfer) · [smriprep](#running-smriprep) · [MAGeTbrain init](#running-magetbrain-init)
+**Stage 1.** [MRIQC](#running-mriqc) · [QSIPrep](#running-qsiprep) · [fMRIPrep fit](#running-fmriprep-fit) · [FreeSurfer](#running-freesurfer) · [smriprep](#running-smriprep) · [MAGeTbrain init](#running-magetbrain-init)
 
 **Stage 2.** [fMRIPrep apply](#running-fmriprep-apply) · [FreeSurfer parcellation](#running-freesurfer-atlas-parcellate-analysis) · [qsirecon FSL](#running-qsirecon-fsl) · [AMICO NODDI](#running-amico-noddi) · [Tractography](#running-tractography) · [ciftify-anat](#running-ciftify-anat) · [MAGeTbrain register](#running-magetbrain-register)
 
@@ -85,7 +85,7 @@ This branch targets the **SciNet Trillium** cluster. Use the matching git branch
 | | 0f | [Edit fmap files](#edit-fmap-files) | ~2 minutes |
 | stage 1️⃣ | 01a | [Run MRIQC](#running-mriqc) | ~8 hours on Slurm |
 | | 01b | [Run QSIPrep](#running-qsiprep) | ~6 hours on Slurm |
-| | 01c | [Run fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer) | ~16 hours on Slurm |
+| | 01c | [Run fMRIPrep fit](#running-fmriprep-fit) | ~16 hours on Slurm |
 | | 01d | [Run FreeSurfer](#running-freesurfer) | ~23 hours on Slurm |
 | | 01e | [Run smriprep](#running-smriprep) | ~10 hours on Slurm |
 | | 01f | [Run MAGeTbrain init](#running-magetbrain-init) | ~1 hour on Slurm |
@@ -199,7 +199,7 @@ source ./code/00_nipoppy_trackers.sh
 <a id="edit-fmap-files"></a>
 #### Edit fieldmap files
 
-In some cases, dcm2niix conversion fails to add the BIDS `IntendedFor` field in fmap JSON files, which causes errors in the fmriprep_apply step. Back up the JSON files, then run the script with a YAML config that matches your dataset. An example config is [code/config/EPIPHANI_query_config.yaml](code/config/EPIPHANI_query_config.yaml). How to edit the query and mapping blocks is in [docs/fieldmaps.md](docs/fieldmaps.md).
+In some cases, dcm2niix does not write `IntendedFor` in the fmap JSON files. fMRIPrep fit and apply in this repo always pass `--use-syn-sdc`, so a missing `IntendedFor` does not stop those jobs. QSIPrep also passes `--use-syn-sdc`, and adds `--force-syn` only when a subject has no `*dwitopup*` fieldmap. Fill `IntendedFor` when you want QSIPrep to use your fieldmaps. Back up the JSON files, then run the script with a YAML config that matches your dataset. An example config is [code/config/EPIPHANI_query_config.yaml](code/config/EPIPHANI_query_config.yaml). How to edit the query and mapping blocks is in [docs/fieldmaps.md](docs/fieldmaps.md).
 
 ```sh
 mkdir bidsbackup_json
@@ -227,9 +227,7 @@ python3 ./code/fmap_intended_for.py ./data/local/bids --participant-label ./data
 
 #### Check "IntendedFor" in fieldmap
 
-If your study collected fieldmaps for diffusion data and you plan to use them for distortion correction, you must ensure the ``IntendedFor`` field in your fieldmap files is correctly specified before running stage 1 [Run fMRIPrep fit](#running-fmriprep-fit-includes-freesurfer), [Run fMRIPrep apply](#running-fmriprep-apply), and [Run QSIPrep](#running-qsiprep).
-
-If IntendedFor is missing, QSIPrep and fMRIPrep will still run, but they will **ignore** your fieldmap and apply a ``synthetic fieldmap`` instead.
+If your study collected fieldmaps and you want QSIPrep to use them, `IntendedFor` must point at the matching DWI or BOLD file before you run [QSIPrep](#running-qsiprep). fMRIPrep fit and apply in this repo always pass `--use-syn-sdc`, so they do not use those fieldmaps.
 
 This guide shows:
 1. A correct example of a fieldmap file with an ``IntendedFor`` field
@@ -244,7 +242,7 @@ grep "IntendedFor" -A10 data/local/bids/sub-CMH00000027/ses-01/fmap/sub-CMH00000
 You should see something like 
 ```json
 "IntendedFor": [
-    "ses-01/dwi/sub-CMH00000005_ses-01_dwi.nii.gz"
+    "ses-01/dwi/sub-CMH00000027_ses-01_dwi.nii.gz"
   ]
 ```
 This confirms that the fieldmap is correctly linked to your DWI scan.
@@ -294,7 +292,7 @@ You will see a summary table like this in the terminal:
 - ❌ Failed: 8 
 - Total: 8
 
-> Action: If a ❌ in the IntendedFor column, edit their fieldmap JSON to include the correct BOLD/DWI file paths before running fMRIPrep and QSIPrep.
+> Action: If a ❌ appears in the IntendedFor column, edit that fieldmap JSON before running QSIPrep.
 
 **Log File**: 
 
@@ -332,23 +330,6 @@ The examples below use `scand_submit_participant_array` with `SUB_SIZE=1` unless
 scand_submit_participant_array ./code/01_mriqc_scinet.sh 1
 ```
 
-### Running freesurfer
-
-```sh
-scand_submit_participant_array ./code/01_freesurfer_long_scinet.sh 1
-```
-
-### Running fmriprep fit (includes freesurfer)
-
-Note -  the script enclosed uses some interesting extra options:
- - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
- - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
-
-```sh
-scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
-```
-
-
 ### Running qsiprep
 
 ```sh
@@ -364,6 +345,24 @@ This file is updated by the QSIPrep nipoppy tracker block (not the main Neurobag
 - participant_id
 - session_id
 - qsiprep_sdc_method
+
+### Running fmriprep fit
+
+fMRIPrep runs its own recon inside the fMRIPrep output. Still run the FreeSurfer step. That job writes `data/local/derivatives/freesurfer/7.4.1`, which ciftify and the atlas parcellation read.
+
+Note -  the script enclosed uses some interesting extra options:
+ - it defaults to running all the fmri tasks - the `--task-id` flag can be used to filter from there
+ - it is running `synthetic distortion` correction by default - instead of trying to work with the datasets available fieldmaps - because fieldmaps correction can go wrong - but this does require that the phase encoding direction is specified in the json files (for example `"PhaseEncodingDirection": "j-"`).
+
+```sh
+scand_submit_participant_array ./code/01_fmriprep_fit_scinet.sh 1
+```
+
+### Running freesurfer
+
+```sh
+scand_submit_participant_array ./code/01_freesurfer_long_scinet.sh 1
+```
 
 ### Running smriprep
 If you want to only run structural data, you will need this pipeline. Otherwise, skip this pipeline.
@@ -404,7 +403,7 @@ To change the segmentation to **cerebellum, amygdala, or another region**:
 #### Run the pipeline:
 
 ```sh
-## submit the array job to the queue
+## submit one job for the dataset
 sbatch  ./code/01_magetbrain_init_scinet.sh
 ```
 
@@ -427,19 +426,6 @@ This file is updated by the fMRIPrep apply nipoppy tracker block (not the main N
 - participant_id
 - fmriprep_method (e.g., topup fieldmaps, synthetic fieldmaps, or no sdc done)
 
-### Running qsirecon FSL
-
-```sh
-scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
-```
-### Running amico noddi
-In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
-
-```sh
-scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
-```
-
-
 ### Running freesurfer atlas parcellate analysis
 
 
@@ -451,6 +437,19 @@ If you do not plan to run stage 6 (data sharing) and only wish to obtain the Fre
 
 ```sh
 bash ./code/freesurfer_group_merge.sh
+```
+
+### Running qsirecon FSL
+
+```sh
+scand_submit_participant_array ./code/02_qsirecon_FSL_scinet.sh 1
+```
+
+### Running amico noddi
+In case your data is multi-shell you need to run amico noddi pipeline, otherwise skip this step.
+
+```sh
+scand_submit_participant_array ./code/02_amico_noddi_scinet.sh 1
 ```
 
 ### Running tractography
@@ -486,7 +485,7 @@ sbatch --array=0-${max_task} ./code/02_ciftify_anat_scinet.sh
 ### Running magetbrain register
 
 ```sh
-## submit the array job to the queue
+## submit one job for the dataset
 sbatch  ./code/02_magetbrain_register_scinet.sh
 ```
 
@@ -528,12 +527,17 @@ scand_submit_participant_array ./code/03_xcp_scinet.sh 1
 scand_submit_participant_array ./code/03_xcp_noGSR_scinet.sh 1
 ```
 
+### Running qsirecon dtifit
+
+```sh
+scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
+```
+
 ### Running noddi-registration
 
 ```sh
 scand_submit_participant_array ./code/03_noddi_reg_scinet.sh 1
 ```
-
 
 ### Running GLM
 
@@ -565,7 +569,6 @@ fi
 scand_submit_participant_array ./code/03_glm_surface_scinet.sh 1 "${MODEL}"
 ```
 
-
 ### Running magetbrain vote
 
 ```sh
@@ -584,26 +587,19 @@ Stage 6 already sources this script while building `data/share`. Run it on its o
 source ./code/ENIGMA_ExtractCortical.sh
 ```
 
-### Running qsirecon dtifit
-
-```sh
-scand_submit_participant_array ./code/03_qsirecon_dtifit_scinet.sh 1
-```
-
 ### Running enigma-dti
 
 ```sh
-## submit the array job to the queue
+## submit one job for the dataset
 sbatch  ./code/04_enigma_dti_scinet.sh
 ```
 
 ### Running extract-noddi
 
 ```sh
-## submit the array job to the queue
+## submit one job for the dataset
 sbatch  ./code/05_extract_noddi_scinet.sh
 ```
-
 
 <a id="check-tsv-file"></a>
 ### ✅ Check TSV file
