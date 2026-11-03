@@ -1,6 +1,6 @@
-# 🧠 SCanD_project
-
-<img src="assets/scand-logo.jpg" alt="SCanD — Schizophrenia Canadian Neuroimaging Database" width="480">
+<p align="center">
+  <img src="assets/scand-logo.jpg" alt="SCanD — Schizophrenia Canadian Neuroimaging Database" width="720">
+</p>
 
 This is the base repository for the **Schizophrenia Canadian Neuroimaging Database** preprocessing and sharing workflow. Clone or fork this repo once per study cohort, then run the staged pipelines on SciNet.
 
