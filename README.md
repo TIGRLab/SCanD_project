@@ -21,7 +21,7 @@ This is the base repository for the **Schizophrenia Canadian Neuroimaging Databa
 
 **Stage 2.** [fMRIPrep apply](#running-fmriprep-apply) · [FreeSurfer parcellation](#running-freesurfer-atlas-parcellate-analysis) · [qsirecon FSL](#running-qsirecon-fsl) · [AMICO NODDI](#running-amico-noddi) · [Tractography](#running-tractography) · [ciftify-anat](#running-ciftify-anat) · [MAGeTbrain register](#running-magetbrain-register)
 
-**Stage 3.** [xcp-d](#running-xcp-d) · [xcp-noGSR](#running-xcp-nogsr) · [qsirecon dtifit](#running-qsirecon-dtifit) · [NODDI registration](#running-noddi-registration) · [GLM](#running-glm) · [MAGeTbrain vote](#running-magetbrain-vote) · [ENIGMA extract](#running-enigma-extract)
+**Stage 3.** [xcp-d](#running-xcp-d) · [xcp-noGSR](#running-xcp-nogsr) · [qsirecon dtifit](#running-qsirecon-dtifit) · [NODDI registration](#running-noddi-registration) · [GLM](#running-glm) · [MAGeTbrain vote](#running-magetbrain-vote)
 
 **Stage 4.** [ENIGMA-DTI](#running-enigma-dti)
 
@@ -66,7 +66,7 @@ ${SCRATCH}/SCanD_project/
 └── README.md
 ```
 
-The logo file for slides, posters, and other materials is [assets/scand-logo.jpg](assets/scand-logo.jpg).
+The logo file for slides, posters, and other materials is [assets/scand-logo.jpg](assets/scand-logo.jpg). Container images and the full `data/share` layout are in [docs/share-folder-checklist.md](docs/share-folder-checklist.md).
 
 This branch targets the **SciNet Fir** cluster. Use the matching git branch when cloning (`Fir`, `nibi`, or `trillium` for other clusters).
 
@@ -161,9 +161,8 @@ We want to put your data into:
 ./data/local/bids
 ```
 You can copy (`scp -r`), link (`ln -s`), or move the data to this location — your choice.
-If you are copying data from another computer or server, you should use the SciNet datamover (dm) node, not the login node!
+If you are copying data from another computer or server, use `rsync` on the login node. Fir has no separate datamover node.
 
-To switch into the dm node: 
 ```sh
 ssh <cc_username>@fir.alliancecan.ca
 rsync -av <local_server>@<local_server_address>:/<local>/<server>/<path>/<bids> ${SCRATCH}/SCanD_project/data/local/
@@ -581,6 +580,8 @@ sbatch --array=0-${max_task} ./code/03_magetbrain_vote_scinet.sh
 
 
 ### Running enigma extract
+
+Stage 6 already sources this script while building `data/share`. Run it on its own only if you need the cortical measures before that step.
 
 ```sh
 source ./code/ENIGMA_ExtractCortical.sh
